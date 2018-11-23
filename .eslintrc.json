@@ -1,0 +1,39 @@
+{
+  "extends": [
+    "@zendeskgarden",
+    "@zendeskgarden/eslint-config/plugins/notice.js",
+    "plugin:react/recommended",
+    "plugin:jest/recommended",
+    "plugin:jsx-a11y/recommended",
+    "prettier"
+  ],
+  "settings": {
+    "react": {
+      "version": "16.4.2"
+    }
+  },
+  "globals": {
+    "jest": true,
+    "BASE_PATH_NAME": true,
+    "PACKAGE_VERSION": true,
+    "COMPONENT_IDS": true
+  },
+  "plugins": ["prettier", "react", "jest", "jsx-a11y"],
+  "env": {
+    "es6": true,
+    "browser": true,
+    "node": true
+  },
+  "rules": {
+    "prettier/prettier": "error",
+    "indent": ["error", 2],
+    "sort-imports": "off",
+    "valid-jsdoc": "off",
+    "no-invalid-this": "off",
+    "no-unused-expressions": ["error", { "allowShortCircuit": true }],
+    "react/jsx-key": "off",
+    "react/display-name": "off",
+    "jsx-a11y/label-has-for": "off",
+    "jest/no-disabled-tests": "off"
+  }
+}
