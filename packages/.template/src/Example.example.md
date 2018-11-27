@@ -10,7 +10,6 @@ initialState = {
     <Col>
       <Example>
         <p>Current count: {state.counter.toString()}</p>
-        <p>(Hover to see styled-components styling)</p>
       </Example>
     </Col>
     <Col>

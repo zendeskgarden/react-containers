@@ -16,13 +16,7 @@ includes:
   the dependencies and scripts needed to manage the multi-package repo.
   _This package will never be published to the registry._
 * `└─── packages/` – the folder that contains individual `@zendeskgarden`
-  packages which are published to the registry.<br>
-  &nbsp;&nbsp;&nbsp;&nbsp;`├── .template/` – a special template package referenced by `yarn
-  new` to generate a component.<br>
-  &nbsp;&nbsp;&nbsp;&nbsp;`├── buttons/`<br>
-  &nbsp;&nbsp;&nbsp;&nbsp;`├── tabs/`<br>
-  &nbsp;&nbsp;&nbsp;&nbsp;`├── theming/`<br>
-  &nbsp;&nbsp;&nbsp;&nbsp;`└── etc.`
+  packages which are published to the registry.
 
 For an overview of our container architecture, view our [API
 documentation](API.md).
@@ -49,7 +43,7 @@ commands are available:
 
 - `yarn start` to launch Styleguidist with live reload.
 - `yarn test` to run Jest testing.
-- `yarn lint` to enforce consistent JavaScript, CSS, and
+- `yarn lint` to enforce consistent JavaScript and
   markdown code conventions across all component packages. Note this is
   run as a git `pre-commit` hook.
 - `yarn format` to enforce code style with opinionated

@@ -1,6 +1,6 @@
 <!-- structure the Title above as the first line of a
-     https://conventionalcommits.org/ message. example: "feat(buttons):
-     add a muted button component". the title informs the semantic
+     https://conventionalcommits.org/ message. example: "feat(selection):
+     add keydown event to handle rtl". the title informs the semantic
      version bump if this PR is merged. -->
 
 * [ ] **BREAKING CHANGE?** <!-- if so, indicate why under description -->
@@ -19,9 +19,6 @@
 
 ## Checklist
 
-* [ ] :ok_hand: design updates are Garden Designer approved (add the
-      designer as a reviewer)
-* [ ] :nail_care: view component styling is based on a Garden CSS
   component
 * [ ] :globe_with_meridians: Styleguidist demo is up-to-date (`yarn start`)
 * [ ] :arrow_left: renders as expected with reversed (RTL) direction

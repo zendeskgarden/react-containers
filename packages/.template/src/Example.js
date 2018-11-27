@@ -5,39 +5,21 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import classNames from 'classnames';
-import { retrieveTheme, isRtl } from '@zendeskgarden/react-theming';
 
-const COMPONENT_ID = 'example.component_id';
+export default class ExampleContainer extends Component {
+  static propTypes = {
+    coolProp: PropTypes.bool
+  };
 
-const Example = styled.div.attrs({
-  'data-garden-id': COMPONENT_ID,
-  'data-garden-version': PACKAGE_VERSION,
-  className: props =>
-    classNames('example-class', {
-      // RTL
-      'example-rtl-class': isRtl(props),
+  getCoolProps = ({ coolProp = 'cool', ...other }) => ({ coolProp, ...other });
 
-      // Styles
-      'example-cool-class': props.coolProp
-    })
-})`
-  color: red;
+  render() {
+    const { children, render = children } = this.props;
 
-  :hover {
-    color: blue;
+    render({
+      getCoolProps: props => this.getCoolProps(prop)
+    });
   }
-
-  direction: ${props => (isRtl(props) ? 'rtl' : 'ltr')};
-
-  ${props => retrieveTheme(COMPONENT_ID, props)};
-`;
-
-Example.propTypes = {
-  coolProp: PropTypes.bool
-};
-
-/** @component */
-export default Example;
+}
