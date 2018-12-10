@@ -14,10 +14,10 @@ to install.
 
 | Package                                                    | Version                                                     | Dependencies                                                                   |
 | ---------------------------------------------------------- | ----------------------------------------------------------- | ------------------------------------------------------------------------------ |
-| [`@zendeskgarden/selection-container`](packages/selection) | [![npm version][selection npm version]][selection npm link] | [![Dependency Status][selection dependency status]][selection dependency link] |
+| [`@zendeskgarden/container-selection`](packages/selection) | [![npm version][selection npm version]][selection npm link] | [![Dependency Status][selection dependency status]][selection dependency link] |
 
-[selection npm version]: https://img.shields.io/npm/v/@zendeskgarden/selection-container.svg?style=flat-square
-[selection npm link]: https://www.npmjs.com/package/@zendeskgarden/selection-container
+[selection npm version]: https://img.shields.io/npm/v/@zendeskgarden/container-selection.svg?style=flat-square
+[selection npm link]: https://www.npmjs.com/package/@zendeskgarden/container-selection
 [selection dependency status]: https://img.shields.io/david/zendeskgarden/react-containers.svg?path=packages/selection&style=flat-square
 [selection dependency link]: https://david-dm.org/zendeskgarden/react-containers?path=packages/selection
 
@@ -27,14 +27,14 @@ Our packages are easily consumable with [create-react-app](https://github.com/fa
 and standard webpack configs.
 
 All packages follow a similar installation process. Below is an example of
-consuming our [selection-container](https://www.npmjs.com/package/@zendeskgarden/selection-container)
+consuming our [container-selection](https://www.npmjs.com/package/@zendeskgarden/container-selection)
 package.
 
 ### Install dependencies
 
 ```sh
 # Install garden package
-npm install @zendeskgarden/selection-container
+npm install @zendeskgarden/container-selection
 ```
 
 ```jsx
@@ -42,7 +42,7 @@ import React, { Component } from 'react';
 import { render } from 'react-dom';
 
 /** Consume throughout app */
-import { KeyboardFocusContainer } from '@zendeskgarden/selection-container';
+import { KeyboardFocusContainer } from '@zendeskgarden/container-selection';
 
 class App extends Component {
   render() {

@@ -125,7 +125,7 @@ retrievePrompts()
     ]).then(() => {
       console.log(
         chalk.green(
-          `Successfully created package "@zendeskgarden/${packageName}" at "packages/${packageName}"`
+          `Successfully created package "@zendeskgarden/container-${packageName}" at "packages/${packageName}"`
         )
       );
 

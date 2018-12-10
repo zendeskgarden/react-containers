@@ -1,5 +1,5 @@
 {
-  "name": "@zendeskgarden/{{component}}-container",
+  "name": "@zendeskgarden/container-{{component}}",
   "description": "Containers relating to {{component}} in the Garden Design System",
   "license": "Apache-2.0",
   "author": "Zendesk Garden <garden@zendesk.com>",
@@ -10,7 +10,9 @@
   },
   "version": "0.0.0",
   "main": "./dist/index.js",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "../../utils/scripts/build.sh",
     "build:demo": "../../utils/scripts/build-demo.sh",

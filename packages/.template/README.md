@@ -1,4 +1,4 @@
-# @zendeskgarden/{{component}}-container [![npm version](https://img.shields.io/npm/v/@zendeskgarden/{{component}}-container.svg?style=flat-square)](https://www.npmjs.com/package/@zendeskgarden/{{component}}-container)
+# @zendeskgarden/container-{{component}} [![npm version](https://img.shields.io/npm/v/@zendeskgarden/container-{{component}}.svg?style=flat-square)](https://www.npmjs.com/package/@zendeskgarden/container-{{component}})
 
 This package includes containers relating to {{component}} in the
 [Garden Design System](https://zendeskgarden.github.io/).
@@ -6,15 +6,15 @@ This package includes containers relating to {{component}} in the
 ## Installation
 
 ```sh
-npm install @zendeskgarden/{{component}}-container
+npm install @zendeskgarden/container-{{component}}
 ```
 
 ## Usage
 
 ```jsx static
-import { Example } from '@zendeskgarden/{{component}}-container';
+import { ExampleContainer } from '@zendeskgarden/container-{{component}}';
 
-<Example>Lorem ipsum dolor sit amet, consectetur adipiscing elit...</Example>;
+<ExampleContainer>{({getExampleProps}) => (<div {...getExampleProps()} />)}</ExampleContainer>;
 ```
 
 <!--

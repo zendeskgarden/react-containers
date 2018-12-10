@@ -9,7 +9,7 @@ All packages must be implemented following the requirements listed below.
 
 ## Creating New Packages
 
-We have abstracted the creation of packages into the `yarn new` command. When prompted, provide a base name for your package (i.e. if provided "example" the command will create the `@zendeskgarden/example-container` package in the `packages/example` path).
+We have abstracted the creation of packages into the `yarn new` command. When prompted, provide a base name for your package (i.e. if provided "example" the command will create the `@zendeskgarden/container-example` package in the `packages/example` path).
 
 ### Dependencies
 
@@ -32,7 +32,7 @@ To start the documentation in development mode use the `yarn start` command.
 yarn start
 
 # Starts the individual package immediately
-yarn start --scope @zendeskgarden/tabs-container
+yarn start --scope @zendeskgarden/container-tabs
 ```
 
 ## Component Requirements
@@ -47,7 +47,7 @@ All containers must
 * Provide the minimum number of events and attributes to implement the appropriate [W3C WAI-ARIA Design Pattern](https://www.w3.org/TR/wai-aria-practices/#aria_ex)
 * Only use events and attributes that work with **ANY** DOM element (within reason)
 
-## Building Components
+## Building Containers
 
 The packages are built using webpack which creates several artifacts:
 

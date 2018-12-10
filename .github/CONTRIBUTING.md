@@ -2,7 +2,7 @@
 
 Keen to contribute to Garden? We're stoked to have you join us. You may
 find that opening an
-[issue](https://github.com/zendeskgarden/react-components/issues) is the
+[issue](https://github.com/zendeskgarden/react-containers/issues) is the
 best way to get a conversation started. When you're ready to submit a
 pull request, follow the [steps](#pull-request-workflow) below. We
 follow a [code of conduct](CODE_OF_CONDUCT.md) as our guide for
@@ -44,17 +44,17 @@ commands are available:
 - `yarn start` to launch Styleguidist with live reload.
 - `yarn test` to run Jest testing.
 - `yarn lint` to enforce consistent JavaScript and
-  markdown code conventions across all component packages. Note this is
+  markdown code conventions across all container packages. Note this is
   run as a git `pre-commit` hook.
 - `yarn format` to enforce code style with opinionated
-  formats across all component packages. Note this is run as a git
+  formats across all container packages. Note this is run as a git
   `pre-commit` hook.
 - `yarn build` to rebuild distributions across all packages.
   The build runs as part of the initial install. Operates as a facade
   over a Lerna command; operation may be modified using option
   [flags](https://github.com/lerna/lerna#flags) (i.e.  `scope`, `since`,
   or `ignore`).
-- `yarn new` to generate a new React component based on a package
+- `yarn new` to generate a new React container based on a package
   template.
 
 See our [development documentation](DEVELOPMENT.md) for package

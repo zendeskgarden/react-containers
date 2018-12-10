@@ -74,6 +74,6 @@ The render prop pattern is incredibly flexible in that it only enforces accessib
 
 ### Selection
 
-All keyboard navigation is provided by the `<SelectionContainer />` component within the [@zendeskgarden/selection-container](../packages/selection) package.
+All keyboard navigation is provided by the `<SelectionContainer />` component within the [@zendeskgarden/ontainer-selection-selection-selection-selection-selection-selection-selection-selection-selection](../packages/selection) package.
 
 This abstraction provides a base level of accessible keyboard navigation that is consumed within the other packages, but can also be used for custom components that require keyboard integration.
