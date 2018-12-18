@@ -12,7 +12,9 @@
     "lint:markdown": "markdownlint README.md packages/*/src/**/*.md packages/*/src/*.md packages/*/README.md",
     "new": "utils/scripts/create-package.js",
     "test": "yarn test:all --watch",
-    "test:all": "jest --config=utils/test/jest.config.js"
+    "test:all": "jest --config=utils/test/jest.config.js",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "devDependencies": {
     "@babel/cli": "7.2.0",
@@ -21,6 +23,13 @@
     "@babel/plugin-transform-object-assign": "7.2.0",
     "@babel/preset-env": "7.2.0",
     "@babel/preset-react": "7.0.0",
+    "@hot-loader/react-dom": "16.7.0-alpha.2",
+    "@storybook/addon-actions": "^4.1.2",
+    "@storybook/addon-knobs": "^4.1.2",
+    "@storybook/addon-links": "^4.1.2",
+    "@storybook/addon-storysource": "^4.1.2",
+    "@storybook/addons": "^4.1.2",
+    "@storybook/react": "^4.1.2",
     "@zendeskgarden/eslint-config": "^7.0.9",
     "babel-eslint": "^10.0.1",
     "babel-jest": "^23.6.0",
@@ -44,9 +53,8 @@
     "markdownlint-cli": "^0.13.0",
     "prettier": "^1.15.2",
     "prettier-package-json": "^2.0.1",
-    "react": "^16.6.3",
-    "react-dom": "^16.6.3",
-    "react-styleguidist": "^8.0.5",
+    "react": "16.7.0-alpha.2",
+    "react-dom": "16.7.0-alpha.2",
     "webpack": "^4.26.0",
     "webpack-bundle-analyzer": "^3.0.3",
     "webpack-cli": "^3.1.2"
@@ -55,5 +63,6 @@
     "hooks": {
       "pre-commit": "yarn lint && yarn format"
     }
-  }
+  },
+  "dependencies": {}
 }
