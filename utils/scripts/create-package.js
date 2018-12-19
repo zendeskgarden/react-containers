@@ -80,24 +80,6 @@ const updateReadme = ({ packageName }) => {
   });
 };
 
-const updateStyleguideConfig = ({ packageName }) => {
-  const styleguideConfigPath = path.resolve(
-    __dirname,
-    '..',
-    '..',
-    'packages',
-    packageName,
-    'styleguide.config.js'
-  );
-
-  return fs.readFile(styleguideConfigPath, 'utf-8').then(originalStyleguideConfigContent => {
-    const template = handlebars.compile(originalStyleguideConfigContent);
-    const newStyleguideConfigContent = template({ component: packageName });
-
-    return fs.writeFile(styleguideConfigPath, newStyleguideConfigContent);
-  });
-};
-
 const performLernaBootstrap = ({ packageName }) => {
   console.log(chalk.blue('Bootstrapping dependencies for new package...'));
 
@@ -118,27 +100,19 @@ welcomeSplashScreen();
 retrievePrompts()
   .then(copyDefaultPackage)
   .then(({ packageName }) => {
-    return Promise.all([
-      updatePackageJson({ packageName }),
-      updateReadme({ packageName }),
-      updateStyleguideConfig({ packageName })
-    ]).then(() => {
-      console.log(
-        chalk.green(
-          `Successfully created package "@zendeskgarden/container-${packageName}" at "packages/${packageName}"`
-        )
-      );
+    return Promise.all([updatePackageJson({ packageName }), updateReadme({ packageName })]).then(
+      () => {
+        console.log(
+          chalk.green(
+            `Successfully created package "@zendeskgarden/container-${packageName}" at "packages/${packageName}"`
+          )
+        );
 
-      return { packageName };
-    });
+        return { packageName };
+      }
+    );
   })
   .then(performLernaBootstrap)
-  .then(({ packageName }) => {
-    console.log(
-      pelorous(
-        `Start local development with: "${chalk.white(
-          `yarn start --scope @zendeskgarden/${packageName}`
-        )}"`
-      )
-    );
+  .then(() => {
+    console.log(pelorous(`Start local development with: "${chalk.white(`yarn start`)}"`));
   });

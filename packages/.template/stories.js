@@ -14,6 +14,6 @@ import { withKnobs } from '@storybook/addon-knobs';
 
 import { Button } from '@storybook/react/demo';
 
-storiesOf('Schedule Container', module)
+storiesOf('Example Container', module)
   .addDecorator(withKnobs)
   .add('with some text', () => <Button onClick={action('clicked')}>Click</Button>);

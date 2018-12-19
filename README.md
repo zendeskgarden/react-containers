@@ -1,4 +1,4 @@
-# Garden React Containers [![Build Status](https://img.shields.io/travis/zendeskgarden/react-containers/master.svg?style=flat-square)](https://travis-ci.org/zendeskgarden/react-containers) [![Dependency Status](https://img.shields.io/david/dev/zendeskgarden/react-containers.svg?style=flat-square)](https://david-dm.org/zendeskgarden/react-containers?type=dev) [![Coverage Status](https://img.shields.io/coveralls/github/zendeskgarden/react-containers/master.svg?style=flat-square)](https://coveralls.io/github/zendeskgarden/react-containers) <!-- markdownlint-disable -->
+# Garden React Containers [![Build Status](https://img.shields.io/travis/zendeskgarden/react-containers/master.svg?style=flat-square)](https://travis-ci.com/zendeskgarden/react-containers) [![Dependency Status](https://img.shields.io/david/dev/zendeskgarden/react-containers.svg?style=flat-square)](https://david-dm.org/zendeskgarden/react-containers?type=dev) [![Coverage Status](https://img.shields.io/coveralls/github/zendeskgarden/react-containers/master.svg?style=flat-square)](https://coveralls.io/github/zendeskgarden/react-containers) <!-- markdownlint-disable -->
 
 <!-- markdownlint-enable -->
 
@@ -78,6 +78,6 @@ conduct](.github/CODE_OF_CONDUCT.md). Please participate accordingly.
 
 ## License
 
-Copyright 2018 Zendesk
+Copyright 2019 Zendesk
 
 Licensed under the [Apache License, Version 2.0](LICENSE.md)
