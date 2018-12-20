@@ -5,7 +5,6 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React from 'react';
 import PropTypes from 'prop-types';
 
 import useSchedule from './useSchedule';
@@ -13,3 +12,9 @@ import useSchedule from './useSchedule';
 export default function ScheduleContainer({ children, ...props }) {
   return children(useSchedule(props));
 }
+
+ScheduleContainer.propTypes = {
+  duration: PropTypes.number,
+  loop: PropTypes.bool,
+  delayMS: PropTypes.number
+};

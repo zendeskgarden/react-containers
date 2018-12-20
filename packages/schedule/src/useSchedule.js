@@ -12,19 +12,22 @@ export default function useSchedule({ duration = 1250, delayMS = 750, loop = tru
 
   useLayoutEffect(
     () => {
-      let raf, renderingDelayTimeout, start;
+      let raf;
+      let start;
+      let loopTimeout;
+
+      const tick = () => {
+        // eslint-disable-next-line no-use-before-define
+        raf = requestAnimationFrame(performAnimationFrame);
+      };
 
       const performAnimationFrame = () => {
         setTime(Date.now() - start);
         tick();
       };
 
-      const tick = () => {
-        raf = requestAnimationFrame(performAnimationFrame);
-      };
-
       const onStart = () => {
-        const loopTimeout = setTimeout(() => {
+        loopTimeout = setTimeout(() => {
           cancelAnimationFrame(raf);
           setTime(Date.now() - start);
           if (loop) onStart();
@@ -35,14 +38,15 @@ export default function useSchedule({ duration = 1250, delayMS = 750, loop = tru
         tick();
       };
 
-      renderingDelayTimeout = setTimeout(onStart, delayMS);
+      const renderingDelayTimeout = setTimeout(onStart, delayMS);
 
       return () => {
         clearTimeout(renderingDelayTimeout);
+        clearTimeout(loopTimeout);
         cancelAnimationFrame(raf);
       };
     },
-    [duration, delayMS]
+    [duration, delayMS, loop]
   );
 
   return Math.min(1, elapsed / duration);
