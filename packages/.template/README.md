@@ -14,7 +14,7 @@ npm install @zendeskgarden/container-{{component}}
 ```jsx static
 import { ExampleContainer } from '@zendeskgarden/container-{{component}}';
 
-<ExampleContainer>{({getExampleProps}) => (<div {...getExampleProps()} />)}</ExampleContainer>;
+<ExampleContainer>{({ getExampleProps }) => <div {...getExampleProps()} />}</ExampleContainer>;
 ```
 
 <!--

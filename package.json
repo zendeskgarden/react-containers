@@ -2,9 +2,10 @@
   "name": "@zendeskgarden/react-containers",
   "private": true,
   "scripts": {
-    "format": "yarn format:js && yarn format:markdown",
+    "format": "yarn format:package_json && yarn format:js && yarn format:markdown",
     "format:js": "prettier --loglevel warn --write '{packages/**/!(dist|umd),utils/**}/*.js'",
     "format:markdown": "prettier --loglevel warn --write '{packages/**/!(dist)/!(CHANGELOG)*.md,README.md}'",
+    "format:package_json": "prettier-package-json --write && lerna exec -- prettier-package-json --write",
     "postinstall": "lerna bootstrap",
     "lint": "yarn lint:js && yarn lint:markdown",
     "lint:js": "eslint packages/*/src/ utils/ --max-warnings 0",
