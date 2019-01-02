@@ -1,7 +1,8 @@
 {
-  "name": "@zendeskgarden/react-containers",
   "private": true,
+  "name": "@zendeskgarden/react-containers",
   "scripts": {
+    "build-storybook": "build-storybook -o demo",
     "format": "yarn format:package_json && yarn format:js && yarn format:markdown",
     "format:js": "prettier --loglevel warn --write '{packages/**/!(dist|umd),utils/**}/*.js'",
     "format:markdown": "prettier --loglevel warn --write '{packages/**/!(dist)/!(CHANGELOG)*.md,README.md}'",
@@ -11,11 +12,11 @@
     "lint:js": "eslint packages/*/src/ utils/ --max-warnings 0",
     "lint:markdown": "markdownlint README.md packages/*/src/**/*.md packages/*/src/*.md packages/*/README.md",
     "new": "utils/scripts/create-package.js",
-    "test": "yarn test:all --watch",
-    "test:all": "jest --config=utils/test/jest.config.js",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "test": "yarn test:all --watch",
+    "test:all": "jest --config=utils/test/jest.config.js"
   },
+  "dependencies": {},
   "devDependencies": {
     "@babel/cli": "7.2.0",
     "@babel/core": "7.2.0",
@@ -63,6 +64,5 @@
     "hooks": {
       "pre-commit": "yarn lint && yarn format"
     }
-  },
-  "dependencies": {}
+  }
 }
