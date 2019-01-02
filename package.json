@@ -1,21 +1,21 @@
 {
   "name": "@zendeskgarden/react-containers",
-  "private": true,
   "scripts": {
+    "build-storybook": "build-storybook -o demo",
     "format": "yarn format:package_json && yarn format:js && yarn format:markdown",
     "format:js": "prettier --loglevel warn --write '{packages/**/!(dist|umd),utils/**}/*.js'",
     "format:markdown": "prettier --loglevel warn --write '{packages/**/!(dist)/!(CHANGELOG)*.md,README.md}'",
     "format:package_json": "prettier-package-json --write && lerna exec -- prettier-package-json --write",
     "postinstall": "lerna bootstrap",
     "lint": "yarn lint:js && yarn lint:markdown",
-    "lint:js": "eslint packages/*/src/ utils/ --max-warnings 0",
+    "lint:js": "eslint packages/*/src/ utils/ .storybook/ --max-warnings 0",
     "lint:markdown": "markdownlint README.md packages/*/src/**/*.md packages/*/src/*.md packages/*/README.md",
     "new": "utils/scripts/create-package.js",
-    "test": "yarn test:all --watch",
-    "test:all": "jest --config=utils/test/jest.config.js",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "test": "yarn test:all --watch",
+    "test:all": "jest --config=utils/test/jest.config.js"
   },
+  "dependencies": {},
   "devDependencies": {
     "@babel/cli": "7.2.0",
     "@babel/core": "7.2.0",
@@ -27,6 +27,7 @@
     "@storybook/addon-actions": "^4.1.2",
     "@storybook/addon-knobs": "^4.1.2",
     "@storybook/addon-links": "^4.1.2",
+    "@storybook/addon-options": "^4.1.4",
     "@storybook/addon-storysource": "^4.1.2",
     "@storybook/addons": "^4.1.2",
     "@storybook/react": "^4.1.2",
@@ -63,6 +64,5 @@
     "hooks": {
       "pre-commit": "yarn lint && yarn format"
     }
-  },
-  "dependencies": {}
+  }
 }

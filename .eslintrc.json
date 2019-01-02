@@ -29,6 +29,7 @@
     "indent": ["error", 2],
     "sort-imports": "off",
     "valid-jsdoc": "off",
+    "require-jsdoc": "off",
     "no-invalid-this": "off",
     "no-unused-expressions": ["error", { "allowShortCircuit": true }],
     "react/jsx-key": "off",
