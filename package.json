@@ -8,7 +8,7 @@
     "format:package_json": "prettier-package-json --write && lerna exec -- prettier-package-json --write",
     "postinstall": "lerna bootstrap",
     "lint": "yarn lint:js && yarn lint:markdown",
-    "lint:js": "eslint packages/*/src/ utils/ --max-warnings 0",
+    "lint:js": "eslint packages/*/src/ utils/ .storybook/ --max-warnings 0",
     "lint:markdown": "markdownlint README.md packages/*/src/**/*.md packages/*/src/*.md packages/*/README.md",
     "new": "utils/scripts/create-package.js",
     "storybook": "start-storybook -p 6006",

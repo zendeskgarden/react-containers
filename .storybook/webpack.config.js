@@ -7,5 +7,6 @@
 
 module.exports = (baseConfig, env, defaultConfig) => {
   defaultConfig.resolve.alias['react-dom'] = '@hot-loader/react-dom';
+
   return defaultConfig;
 };

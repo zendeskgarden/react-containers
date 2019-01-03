@@ -12,8 +12,8 @@ cache:
 install: yarn --frozen-lockfile --ignore-scripts
 
 script:
-  # Force eslint to exit 0 even if errors occur until we land our first package.
-  - yarn lint; exit 0
+  # Bypass npm script until we add our first package so it doesn't error
+  - yarn eslint utils/ .storybook/
   - yarn format
 
 after_success:
