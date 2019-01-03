@@ -1,5 +1,4 @@
 {
-  "private": true,
   "name": "@zendeskgarden/react-containers",
   "scripts": {
     "build-storybook": "build-storybook -o demo",
