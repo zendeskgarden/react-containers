@@ -7,6 +7,11 @@
 
 module.exports = (baseConfig, env, defaultConfig) => {
   defaultConfig.resolve.alias['react-dom'] = '@hot-loader/react-dom';
+  defaultConfig.module.rules.push({
+    test: /stories.js$/u,
+    loaders: [require.resolve('@storybook/addon-storysource/loader')],
+    enforce: 'pre'
+  });
 
   return defaultConfig;
 };
