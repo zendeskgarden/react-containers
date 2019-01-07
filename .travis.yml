@@ -1,0 +1,28 @@
+language: node_js
+
+branches:
+  only:
+    - master
+
+cache:
+  yarn: true
+  directories:
+    - node-modules
+
+install: yarn --frozen-lockfile --ignore-scripts
+
+script:
+  # Bypass npm script until we add our first package so it doesn't error
+  - yarn eslint utils/ .storybook/
+  - yarn format
+
+after_success:
+  - yarn build-storybook
+
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN
+  local_dir: demo
+  on:
+    branch: master

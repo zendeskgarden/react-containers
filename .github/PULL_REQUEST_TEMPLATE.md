@@ -20,7 +20,6 @@
 ## Checklist
 
   component
-* [ ] :globe_with_meridians: Styleguidist demo is up-to-date (`yarn start`)
-* [ ] :arrow_left: renders as expected with reversed (RTL) direction
-* [ ] :guardsman: includes new unit and snapshot tests
+* [ ] :globe_with_meridians: Storybook demo is up-to-date (`yarn storybook`)
+* [ ] :guardsman: includes new unit tests
 * [ ] :memo: tested in Chrome, Firefox, Safari, Edge, and IE11

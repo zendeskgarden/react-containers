@@ -20,8 +20,8 @@
   },
   "peerDependencies": {
     "prop-types": "^15.6.1",
-    "react": "^0.14.0 || ^15.0.0 || ^16.0.0",
-    "react-dom": "^0.14.0 || ^15.0.0 || ^16.0.0"
+    "react": "16.7.0-alpha.2",
+    "react-dom": "16.7.0-alpha.2"
   },
   "keywords": [
     "container",
