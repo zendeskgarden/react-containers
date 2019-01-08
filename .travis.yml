@@ -16,9 +16,9 @@ before_install:
 install: yarn --frozen-lockfile --ignore-scripts
 
 script:
-  # Bypass npm script until we add our first package so it doesn't error
-  - yarn eslint utils/ .storybook/
+  - yarn lint
   - yarn format
+  - yarn test:all --coverage --runInBand
 
 after_success:
   - yarn build-storybook

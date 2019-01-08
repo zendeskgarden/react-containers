@@ -24,11 +24,11 @@
     "react-dom": "16.7.0-alpha.2"
   },
   "keywords": [
-    "container",
-    "headless",
     "a11y",
     "accessible",
+    "container",
     "garden",
+    "headless",
     "react",
     "zendesk"
   ],

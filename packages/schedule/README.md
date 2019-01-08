@@ -11,17 +11,30 @@ npm install @zendeskgarden/container-schedule
 
 ## Usage
 
-```jsx static
-import { ExampleContainer } from '@zendeskgarden/container-schedule';
+### As a Render Prop Component
 
-<ExampleContainer>{({getExampleProps}) => (<div {...getExampleProps()} />)}</ExampleContainer>;
+```jsx static
+import { ScheduleContainer } from '@zendeskgarden/container-schedule';
+
+<ScheduleContainer duration={1000} delayMS={0}>
+  {elapsed => <p>Percentage: {(elapsed * 100).toFixed(0)}%</p>}
+</ScheduleContainer>;
 ```
 
-<!--
-  TODO:
+### As a hook
 
-  * [ ] Add schedule to root README table.
-  * [ ] Add schedule to demo `index.html`.
-  * [ ] Add schedule to `styleguide.base.config.js` webpack globals.
-  * [ ] Delete this comment block.
--->
+```jsx static
+import { useSchedule } from '@zendeskgarden/container-schedule';
+
+const Animation = () => {
+  const elapsed = useSchedule({ duration: 1000, delayMS: 0 });
+
+  return <p>Percentage: {(elapsed * 100).toFixed(0)}%</p>;
+};
+```
+
+## Info
+
+See [react-loaders][loaders link] component as a non-trivial use of this.
+
+[loaders link]: https://github.com/zendeskgarden/react-components/tree/master/packages/loaders
