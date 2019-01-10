@@ -51,6 +51,7 @@
     "jest": "^23.6.0",
     "jest-enzyme": "^7.0.1",
     "lerna": "^3.4.3",
+    "lint-staged": "^8.1.0",
     "markdownlint-cli": "^0.13.0",
     "prettier": "^1.15.2",
     "prettier-package-json": "^2.0.1",
@@ -59,10 +60,5 @@
     "webpack": "^4.26.0",
     "webpack-bundle-analyzer": "^3.0.3",
     "webpack-cli": "^3.1.2"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "yarn lint && yarn format"
-    }
   }
 }
