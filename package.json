@@ -60,6 +60,7 @@
     "lerna": "^3.4.3",
     "lint-staged": "8.1.0",
     "markdownlint-cli": "^0.13.0",
+    "mock-raf": "^1.0.1",
     "prettier": "^1.15.2",
     "prettier-package-json": "^2.0.1",
     "react": "16.8.0-alpha.0",

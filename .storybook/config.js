@@ -18,7 +18,6 @@ function loadStories() {
 addDecorator(
   withOptions({
     name: 'React Containers',
-    addonPanelInRight: true,
     url: 'https://github.com/zendeskgarden/react-containers'
   })
 );

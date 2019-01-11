@@ -7,6 +7,7 @@
 
 import React from 'react';
 import { mount } from 'enzyme';
+import createMockRaf from 'mock-raf';
 import ScheduleContainer from './ScheduleContainer';
 
 jest.useFakeTimers();
@@ -16,12 +17,16 @@ describe('ScheduleContainer', () => {
   let requestAnimationFrame;
   let cancelAnimationFrame;
 
+  const mockRaf = createMockRaf();
+
   const basicExample = ({ delayMS } = {}) => (
     <ScheduleContainer delayMS={delayMS}>{elapsed => <p>{elapsed}</p>}</ScheduleContainer>
   );
 
   beforeEach(() => {
-    requestAnimationFrame = jest.spyOn(window, 'requestAnimationFrame');
+    requestAnimationFrame = jest
+      .spyOn(window, 'requestAnimationFrame')
+      .mockImplementation(mockRaf.raf);
     cancelAnimationFrame = jest.spyOn(window, 'cancelAnimationFrame');
   });
 
@@ -33,6 +38,14 @@ describe('ScheduleContainer', () => {
     wrapper = mount(basicExample());
     jest.runOnlyPendingTimers();
     expect(requestAnimationFrame).toHaveBeenCalled();
+  });
+
+  it('updates elapsed render prop on each raf call', () => {
+    wrapper = mount(basicExample());
+    jest.runOnlyPendingTimers();
+    mockRaf.step({ count: 60 });
+    wrapper.update();
+    expect(parseFloat(wrapper.find('p').prop('children'))).not.toBe(0);
   });
 
   it('cancels requestAnimationFrame on duration end', () => {
