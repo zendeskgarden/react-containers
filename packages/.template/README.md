@@ -21,7 +21,6 @@ import { ExampleContainer } from '@zendeskgarden/container-{{component}}';
   TODO:
 
   * [ ] Add {{component}} to root README table.
-  * [ ] Add {{component}} to demo `index.html`.
-  * [ ] Add {{component}} to `styleguide.base.config.js` webpack globals.
+  * [ ] Add {{component}} stories.js.
   * [ ] Delete this comment block.
 -->
