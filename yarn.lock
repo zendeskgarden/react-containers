@@ -1207,10 +1207,15 @@
   resolved "https://registry.yarnpkg.com/@emotion/weak-memoize/-/weak-memoize-0.1.3.tgz#b700d97385fa91affed60c71dfd51c67e9dad762"
   integrity sha512-QsYGKdhhuDFNq7bjm2r44y0mp5xW3uO3csuTPDWZc0OIiMQv+AIY5Cqwd4mJiC5N8estVl7qlvOx1hbtOuUWbw==
 
-"@hot-loader/react-dom@16.7.0-alpha.2":
-  version "16.7.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/@hot-loader/react-dom/-/react-dom-16.7.0-alpha.2.tgz#7e183cb1b75ee616a9b0c576151b609b61256950"
-  integrity sha512-VUrIH2NTKkCChIQPmhtUM3jspGt78RDphnUpVQhWS+Ewq4/neC/4uBGlDw6CUek9Oo/2oQW5swVIo3vsxIA9aw==
+"@hot-loader/react-dom@16.8.0-alpha.0":
+  version "16.8.0-alpha.0"
+  resolved "https://registry.yarnpkg.com/@hot-loader/react-dom/-/react-dom-16.8.0-alpha.0.tgz#8652e1c8af304f0f5219ab02060c85828cad6954"
+  integrity sha512-UxC3+fUYsmLd0Dk3Pi3851gJu5EwE8tT2IVnCpQrDejFhCY7pb9LzO2fmJhmpPXaI7RGfzGVkcditMDnZCFk9w==
+  dependencies:
+    loose-envify "^1.1.0"
+    object-assign "^4.1.1"
+    prop-types "^15.6.2"
+    scheduler "^0.13.0-alpha.0"
 
 "@iamstarkov/listr-update-renderer@0.4.1":
   version "0.4.1"
@@ -9707,15 +9712,15 @@ react-docgen@^3.0.0-rc.1:
     node-dir "^0.1.10"
     recast "^0.16.0"
 
-react-dom@16.7.0-alpha.2:
-  version "16.7.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.7.0-alpha.2.tgz#16632880ed43676315991d8b412cce6975a30282"
-  integrity sha512-o0mMw8jBlwHjGZEy/vvKd/6giAX0+skREMOTs3/QHmgi+yAhUClp4My4Z9lsKy3SXV+03uPdm1l/QM7NTcGuMw==
+react-dom@16.8.0-alpha.0:
+  version "16.8.0-alpha.0"
+  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.8.0-alpha.0.tgz#47bbcf42593eab5468b577d3c3f3c27f251a65ef"
+  integrity sha512-OGfLUXGxtMgqLB1BqnB9flVCvc8VvAnhQYeFr+EUzwiODcD34dPrxtfa7ccK4dwzcPi8HRLSyBcaQi2OvVoUww==
   dependencies:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
     prop-types "^15.6.2"
-    scheduler "^0.12.0-alpha.2"
+    scheduler "^0.13.0-alpha.0"
 
 react-dom@^16.6.0, react-dom@^16.6.3:
   version "16.6.3"
@@ -9838,15 +9843,15 @@ react-treebeard@^3.1.0:
     shallowequal "^1.1.0"
     velocity-react "^1.4.1"
 
-react@16.7.0-alpha.2:
-  version "16.7.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/react/-/react-16.7.0-alpha.2.tgz#924f2ae843a46ea82d104a8def7a599fbf2c78ce"
-  integrity sha512-Xh1CC8KkqIojhC+LFXd21jxlVtzoVYdGnQAi/I2+dxbmos9ghbx5TQf9/nDxc4WxaFfUQJkya0w1k6rMeyIaxQ==
+react@16.8.0-alpha.0:
+  version "16.8.0-alpha.0"
+  resolved "https://registry.yarnpkg.com/react/-/react-16.8.0-alpha.0.tgz#8545eb79534cce5ba99ed40085f7f955e8857a19"
+  integrity sha512-B/nJJkNqV4JAJQ1M0Q38ZvhZ6BoYsjyZq29hbsIIPYayn/0DcYhu7tExpfzdtTC0SnUcA+RnDBTlXTEJ5b9PEg==
   dependencies:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
     prop-types "^15.6.2"
-    scheduler "^0.12.0-alpha.2"
+    scheduler "^0.13.0-alpha.0"
 
 react@^16.6.0, react@^16.6.3:
   version "16.6.3"
@@ -10349,7 +10354,7 @@ retry@^0.10.0:
   version "0.10.1"
   resolved "https://registry.yarnpkg.com/retry/-/retry-0.10.1.tgz#e76388d217992c252750241d3d3956fed98d8ff4"
 
-rimraf@2, rimraf@^2.2.8, rimraf@^2.5.4, rimraf@^2.6.1, rimraf@^2.6.2, rimraf@~2.6.2:
+rimraf@2, rimraf@2.6.2, rimraf@^2.2.8, rimraf@^2.5.4, rimraf@^2.6.1, rimraf@^2.6.2, rimraf@~2.6.2:
   version "2.6.2"
   resolved "https://registry.yarnpkg.com/rimraf/-/rimraf-2.6.2.tgz#2ed8150d24a16ea8651e6d6ef0f47c4158ce7a36"
   dependencies:
@@ -10449,10 +10454,10 @@ scheduler@^0.12.0:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
 
-scheduler@^0.12.0-alpha.2:
-  version "0.12.0-alpha.3"
-  resolved "https://registry.yarnpkg.com/scheduler/-/scheduler-0.12.0-alpha.3.tgz#59afcaba1cb79e3e8bee91de94eb8f42c9152c2b"
-  integrity sha512-KADuBlOWSrT/DCt/oA+NgsNamRCsfz7wj+leaeGjGHipNClsqhjOPogKkJgem6WLAv/QzxW8bE7zlGc9OxiYSQ==
+scheduler@^0.13.0-alpha.0:
+  version "0.13.0-alpha.0"
+  resolved "https://registry.yarnpkg.com/scheduler/-/scheduler-0.13.0-alpha.0.tgz#8fc1f01617b59e4543376735b2f954867d49110c"
+  integrity sha512-+DbRwO53hlLso4gzrSIqcfNe8eRMMaV4gd4eySGisbyLBrp5unTpAMR0UAbrqlQLTGhnOFNoQAfaZTz4iPj1RQ==
   dependencies:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
@@ -11399,12 +11404,26 @@ uc.micro@^1.0.1, uc.micro@^1.0.5:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/uc.micro/-/uc.micro-1.0.5.tgz#0c65f15f815aa08b560a61ce8b4db7ffc3f45376"
 
-uglify-js@3.4.x, uglify-js@^3.1.4:
+uglify-js@3.4.x, uglify-js@^3.0.0, uglify-js@^3.1.4:
   version "3.4.9"
   resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-3.4.9.tgz#af02f180c1207d76432e473ed24a28f4a782bae3"
   dependencies:
     commander "~2.17.1"
     source-map "~0.6.1"
+
+uglifyjs-webpack-plugin@2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/uglifyjs-webpack-plugin/-/uglifyjs-webpack-plugin-2.1.1.tgz#6937d7513a37280d4792f1fb536bef35e08e420a"
+  integrity sha512-TQEcyMNkObX/H+FfcKjiDgs5RcXX8vW2UUUrDTOfQgg3lrafztfeM5WAwXo+AzqozJK6NP9w98xNpG/dutzSsg==
+  dependencies:
+    cacache "^11.2.0"
+    find-cache-dir "^2.0.0"
+    schema-utils "^1.0.0"
+    serialize-javascript "^1.4.0"
+    source-map "^0.6.1"
+    uglify-js "^3.0.0"
+    webpack-sources "^1.1.0"
+    worker-farm "^1.5.2"
 
 uid-number@0.0.6:
   version "0.0.6"
@@ -11756,6 +11775,18 @@ webpack-log@^2.0.0:
   dependencies:
     ansi-colors "^3.0.0"
     uuid "^3.3.2"
+
+webpack-merge@4.1.5:
+  version "4.1.5"
+  resolved "https://registry.yarnpkg.com/webpack-merge/-/webpack-merge-4.1.5.tgz#2be31e846c20767d1bef56bdca64c328a681190a"
+  integrity sha512-sVcM+MMJv6DO0C0GLLltx8mUlGMKXE0zBsuMqZ9jz2X9gsekALw6Rs0cAfTWc97VuWS6NpVUa78959zANnMMLQ==
+  dependencies:
+    lodash "^4.17.5"
+
+webpack-node-externals@1.7.2:
+  version "1.7.2"
+  resolved "https://registry.yarnpkg.com/webpack-node-externals/-/webpack-node-externals-1.7.2.tgz#6e1ee79ac67c070402ba700ef033a9b8d52ac4e3"
+  integrity sha512-ajerHZ+BJKeCLviLUUmnyd5B4RavLF76uv3cs6KNuO8W+HuQaEs0y0L7o40NQxdPy5w0pcv8Ew7yPUAQG0UdCg==
 
 webpack-sources@^1.1.0, webpack-sources@^1.3.0:
   version "1.3.0"

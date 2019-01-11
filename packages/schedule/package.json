@@ -14,14 +14,12 @@
     "dist"
   ],
   "scripts": {
-    "build": "../../utils/scripts/build.sh",
-    "build:demo": "../../utils/scripts/build-demo.sh",
-    "start": "../../utils/scripts/start.sh"
+    "build": "../../utils/scripts/build.sh"
   },
   "peerDependencies": {
     "prop-types": "^15.6.1",
-    "react": "16.7.0-alpha.2",
-    "react-dom": "16.7.0-alpha.2"
+    "react": "16.8.0-alpha.0",
+    "react-dom": "16.8.0-alpha.0"
   },
   "keywords": [
     "a11y",

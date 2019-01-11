@@ -1,6 +1,7 @@
 {
   "name": "@zendeskgarden/react-containers",
   "scripts": {
+    "build": "lerna run build --stream",
     "build-storybook": "build-storybook -o demo",
     "format": "yarn format:package_json && yarn format:js && yarn format:markdown",
     "format:js": "prettier --loglevel warn --write '{packages/**/!(dist|umd),utils/**}/*.js'",
@@ -24,7 +25,7 @@
     "@babel/polyfill": "^7.2.5",
     "@babel/preset-env": "7.2.3",
     "@babel/preset-react": "7.0.0",
-    "@hot-loader/react-dom": "16.7.0-alpha.2",
+    "@hot-loader/react-dom": "16.8.0-alpha.0",
     "@storybook/addon-actions": "^4.1.2",
     "@storybook/addon-knobs": "^4.1.2",
     "@storybook/addon-links": "^4.1.2",
@@ -61,11 +62,15 @@
     "markdownlint-cli": "^0.13.0",
     "prettier": "^1.15.2",
     "prettier-package-json": "^2.0.1",
-    "react": "16.7.0-alpha.2",
-    "react-dom": "16.7.0-alpha.2",
+    "react": "16.8.0-alpha.0",
+    "react-dom": "16.8.0-alpha.0",
     "regenerator-runtime": "^0.13.1",
+    "rimraf": "2.6.2",
+    "uglifyjs-webpack-plugin": "2.1.1",
     "webpack": "^4.26.0",
     "webpack-bundle-analyzer": "^3.0.3",
-    "webpack-cli": "^3.1.2"
+    "webpack-cli": "^3.1.2",
+    "webpack-merge": "4.1.5",
+    "webpack-node-externals": "1.7.2"
   }
 }
