@@ -114,5 +114,5 @@ retrievePrompts()
   })
   .then(performLernaBootstrap)
   .then(() => {
-    console.log(pelorous(`Start local development with: "${chalk.white(`yarn storybook`)}"`));
+    console.log(pelorous(`Start local development with: "${chalk.white(`yarn start`)}"`));
   });

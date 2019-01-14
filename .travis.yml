@@ -21,7 +21,7 @@ script:
   - yarn test:all --coverage --runInBand
 
 after_success:
-  - yarn build-storybook
+  - yarn build:demo
 
 deploy:
   provider: pages

@@ -12,10 +12,10 @@ This is a multi-package repo which uses [Lerna](https://lernajs.io/) to
 manage shared and cross-package dependencies. The basic repo layout
 includes:
 
-* `├── package.json` – the top-level "project" package that contains
+- `├── package.json` – the top-level "project" package that contains
   the dependencies and scripts needed to manage the multi-package repo.
   _This package will never be published to the registry._
-* `└─── packages/` – the folder that contains individual `@zendeskgarden`
+- `└─── packages/` – the folder that contains individual `@zendeskgarden`
   packages which are published to the registry.
 
 For an overview of our container architecture, view our [API
@@ -41,7 +41,7 @@ on your system. After you clone this repo, run `yarn` to install
 dependencies needed for development. After installation, the following
 commands are available:
 
-- `yarn start` to launch Styleguidist with live reload.
+- `yarn start` to launch Storybook with live reload.
 - `yarn test` to run Jest testing.
 - `yarn lint` to enforce consistent JavaScript and
   markdown code conventions across all container packages. Note this is
@@ -52,7 +52,7 @@ commands are available:
 - `yarn build` to rebuild distributions across all packages.
   The build runs as part of the initial install. Operates as a facade
   over a Lerna command; operation may be modified using option
-  [flags](https://github.com/lerna/lerna#flags) (i.e.  `scope`, `since`,
+  [flags](https://github.com/lerna/lerna#flags) (i.e. `scope`, `since`,
   or `ignore`).
 - `yarn new` to generate a new React container based on a package
   template.
