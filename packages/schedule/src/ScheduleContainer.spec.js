@@ -19,8 +19,8 @@ describe('ScheduleContainer', () => {
 
   const mockRaf = createMockRaf();
 
-  const basicExample = ({ delayMS } = {}) => (
-    <ScheduleContainer delayMS={delayMS}>{elapsed => <p>{elapsed}</p>}</ScheduleContainer>
+  const basicExample = props => (
+    <ScheduleContainer {...props}>{elapsed => <p>{elapsed}</p>}</ScheduleContainer>
   );
 
   beforeEach(() => {
@@ -28,10 +28,12 @@ describe('ScheduleContainer', () => {
       .spyOn(window, 'requestAnimationFrame')
       .mockImplementation(mockRaf.raf);
     cancelAnimationFrame = jest.spyOn(window, 'cancelAnimationFrame');
+    setTimeout.mockClear();
   });
 
   afterEach(() => {
     window.requestAnimationFrame.mockRestore();
+    jest.clearAllTimers();
   });
 
   it('sets up requestAnimationFrame', () => {
@@ -61,5 +63,30 @@ describe('ScheduleContainer', () => {
     wrapper.unmount();
     expect(clearTimeout).toHaveBeenCalledTimes(2);
     expect(cancelAnimationFrame).toHaveBeenCalled();
+  });
+
+  it('passes correct ms delay to intitial setTimeout', () => {
+    wrapper = mount(basicExample({ delayMS: 1000 }));
+    expect(setTimeout).toHaveBeenCalledWith(expect.any(Function), 1000);
+  });
+
+  it('passes correct ms duration to setTimeout', () => {
+    wrapper = mount(basicExample({ duration: 500 }));
+    jest.runOnlyPendingTimers(); // trigger delayMS timeout
+    expect(setTimeout).toHaveBeenCalledWith(expect.any(Function), 500);
+  });
+
+  it('stops animation after single iteration if loop false is passed', () => {
+    wrapper = mount(basicExample({ loop: false }));
+    jest.runOnlyPendingTimers(); // delayTimer
+    jest.runOnlyPendingTimers(); // loopTimeout
+    expect(setTimeout).toHaveBeenCalledTimes(2);
+  });
+
+  it('animation loops once initial duration has completed', () => {
+    wrapper = mount(basicExample()); // loop = true is the default
+    jest.runOnlyPendingTimers(); // delayTimer
+    jest.runOnlyPendingTimers(); // loopTimeout
+    expect(setTimeout).toHaveBeenCalledTimes(3);
   });
 });
