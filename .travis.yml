@@ -23,10 +23,19 @@ script:
 after_success:
   - yarn build:demo
 
+before_deploy:
+  - npm config set //registry.npmjs.org/:_authToken $NPM_TOKEN
+
 deploy:
-  provider: pages
-  skip_cleanup: true
-  github_token: $GITHUB_TOKEN
-  local_dir: demo
-  on:
-    branch: master
+  - provider: pages
+    skip_cleanup: true
+    github_token: $GITHUB_TOKEN
+    local_dir: demo
+    on:
+      branch: master
+
+  - provider: script
+    script: yarn lerna publish from-git --no-verify-access --yes
+    skip_cleanup: true
+    on:
+      branch: master
