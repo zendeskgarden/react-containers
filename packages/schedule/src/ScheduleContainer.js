@@ -9,12 +9,14 @@ import PropTypes from 'prop-types';
 
 import useSchedule from './useSchedule';
 
-export default function ScheduleContainer({ children, ...props }) {
-  return children(useSchedule(props));
+export default function ScheduleContainer({ children, render = children, ...props }) {
+  return render(useSchedule(props));
 }
 
 ScheduleContainer.propTypes = {
   duration: PropTypes.number,
   loop: PropTypes.bool,
-  delayMS: PropTypes.number
+  delayMS: PropTypes.number,
+  children: PropTypes.func,
+  render: PropTypes.func
 };
