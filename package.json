@@ -13,6 +13,7 @@
     "lint:markdown": "markdownlint README.md packages/*/src/**/*.md packages/*/src/*.md packages/*/README.md",
     "new": "utils/scripts/create-package.js",
     "start": "start-storybook -p 6006",
+    "tag": "lerna version --conventional-commits",
     "test": "yarn test:all --watch",
     "test:all": "jest --config=utils/test/jest.config.js"
   },
