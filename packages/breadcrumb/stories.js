@@ -12,34 +12,23 @@ import { withKnobs } from '@storybook/addon-knobs';
 
 import { BreadcrumbContainer, useBreadcrumb } from './src';
 
-// This is easier than injecting via webpack shenanigans
-const breadcrumbscss = (
-  <link
-    href="https://unpkg.com/@zendeskgarden/css-breadcrumbs@0.2.2/dist/index.css"
-    rel="stylesheet"
-  />
-);
+import '@zendeskgarden/css-breadcrumbs';
 
 storiesOf('Breadcrumb Container', module)
   .addDecorator(withKnobs)
   .add('as a render prop container', () => (
-    <>
-      {breadcrumbscss}
-      <BreadcrumbContainer>
-        {({ getContainerProps, getCurrentPageProps }) => (
-          <div {...getContainerProps({ className: 'c-breadcrumb' })}>
-            <a href="#foo" className="c-breadcrumb__item">
-              Home
-            </a>
-            <a
-              {...getCurrentPageProps({ href: '#foo', className: 'c-breadcrumb__item is-current' })}
-            >
-              Items
-            </a>
-          </div>
-        )}
-      </BreadcrumbContainer>
-    </>
+    <BreadcrumbContainer>
+      {({ getContainerProps, getCurrentPageProps }) => (
+        <div {...getContainerProps({ className: 'c-breadcrumb' })}>
+          <a href="#foo" className="c-breadcrumb__item">
+            Home
+          </a>
+          <a {...getCurrentPageProps({ href: '#foo', className: 'c-breadcrumb__item is-current' })}>
+            Items
+          </a>
+        </div>
+      )}
+    </BreadcrumbContainer>
   ))
   .add('as a hook', () => {
     const Breadcrumb = () => {
@@ -57,10 +46,5 @@ storiesOf('Breadcrumb Container', module)
       );
     };
 
-    return (
-      <>
-        {breadcrumbscss}
-        <Breadcrumb />
-      </>
-    );
+    return <Breadcrumb />;
   });
