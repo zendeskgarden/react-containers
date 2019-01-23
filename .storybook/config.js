@@ -7,6 +7,7 @@
 
 import { configure, addDecorator } from '@storybook/react';
 import { withOptions } from '@storybook/addon-options';
+import centered from '@storybook/addon-centered';
 
 // automatically import all files ending in *.stories.js
 const req = require.context('../packages', true, /.stories.js$/u);
@@ -16,6 +17,7 @@ function loadStories() {
 }
 
 addDecorator(
+  centered,
   withOptions({
     name: 'React Containers',
     url: 'https://github.com/zendeskgarden/react-containers'
