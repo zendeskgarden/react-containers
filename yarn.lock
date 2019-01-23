@@ -1768,6 +1768,14 @@
     core-js "^2.5.7"
     global "^4.3.2"
 
+"@storybook/addon-centered@4.1.6":
+  version "4.1.6"
+  resolved "https://registry.yarnpkg.com/@storybook/addon-centered/-/addon-centered-4.1.6.tgz#1e0737ef09181cceff69c51593f1596fc9698eb0"
+  integrity sha512-LMjogRixUaOQQIhH8sGKCet1on79B0NhD+CA1GoxSCMboa5+xGyBONZEq6nJCcLzzm6NTJ8v6k/oqGm76lFKsA==
+  dependencies:
+    core-js "^2.5.7"
+    global "^4.3.2"
+
 "@storybook/addon-knobs@4.1.2":
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/@storybook/addon-knobs/-/addon-knobs-4.1.2.tgz#bb79d443a51788701dc2d97cd3b821267715cac1"
