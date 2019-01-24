@@ -18,12 +18,11 @@ install: yarn --frozen-lockfile --ignore-scripts
 script:
   - yarn lint
   - yarn format
+  - yarn lerna bootstrap --ignore-scripts
   - yarn test:all --coverage --runInBand
 
-after_success:
-  - yarn build:demo
-
 before_deploy:
+  - yarn build:demo
   - npm config set //registry.npmjs.org/:_authToken $NPM_TOKEN
 
 deploy:

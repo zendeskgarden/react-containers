@@ -1,6 +1,15 @@
 {
-  "packages": [
-    "packages/*"
-  ],
-  "version": "independent"
+  "npmClient": "yarn",
+  "version": "independent",
+  "ignoreChanges": ["*.md", "*.spec.js"],
+  "command": {
+    "publish": {
+      "registry": "https://registry.npmjs.org/"
+    },
+    "version": {
+      "push": false,
+      "allowBranch": "master",
+      "message": "chore(release): publish"
+    }
+  }
 }
