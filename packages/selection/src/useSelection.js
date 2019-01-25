@@ -53,13 +53,15 @@ function stateReducer(state, action) {
 
 function useSelection({
   defaultFocusedIndex,
-  defaultSelectedIndex = 0,
   direction = DIRECTION.HORIZONTAL,
+  selectedIndex,
+  focusedIndex,
+  onStateChange,
   defaultRefKey = 'ref'
 } = {}) {
   const [state, dispatch] = useReducer(stateReducer, {
-    focusedIndex: defaultFocusedIndex,
-    selectedIndex: defaultSelectedIndex
+    focusedIndex: focusedIndex || defaultFocusedIndex,
+    selectedIndex: selectedIndex
   });
 
   const refs = [];
@@ -102,13 +104,27 @@ function useSelection({
         : currentIndex === state.focusedIndex;
     const isSelected = currentIndex === state.selectedIndex;
 
+    let tabIndex = -1;
+
+    if (!isFocused && !isSelected) {
+      if (currentIndex === defaultFocusedIndex) {
+        tabIndex = 0;
+      } else if (defaultFocusedIndex === undefined && currentIndex === 0) {
+        tabIndex = 0;
+      } else if (defaultFocusedIndex === -1) {
+        // Figure out when it's the last child and set tabIndex to 0 for that
+      }
+    } else {
+      tabIndex = isFocused ? 0 : -1;
+    }
+
     refs[currentIndex] = createRef(null);
 
     numItems++;
 
     return {
       role,
-      tabIndex: isFocused ? 0 : -1,
+      tabIndex,
       [refKey]: refs[currentIndex],
       [selectedAriaKey]: isSelected,
       onFocus: composeEventHandlers(onFocus, () => {

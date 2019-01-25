@@ -97,6 +97,9 @@ storiesOf('Selection Containers', module)
           { vertical: DIRECTION.VERTICAL, horizontal: DIRECTION.HORIZONTAL },
           DIRECTION.VERTICAL
         )}
+        selectedIndex={number('selectedIndex')}
+        focusedIndex={number('focusedIndex')}
+        defaultFocusedIndex={number('defaultFocusedIndex')}
         onStateChange={newState => console.log(newState)}
       >
         {({ getContainerProps, getItemProps, focusedIndex, selectedIndex }) => (
@@ -126,7 +129,7 @@ storiesOf('Selection Containers', module)
   })
   .add('useSelection', () => {
     const items = ['One', 'Two', 'Three'];
-    const Selection = ({ focusedIndex, selectedIndex, direction }) => {
+    const Selection = ({ focusedIndex, selectedIndex, direction, defaultFocusedIndex }) => {
       const {
         getContainerProps,
         getItemProps,
@@ -135,7 +138,8 @@ storiesOf('Selection Containers', module)
       } = useSelection({
         selectedIndex,
         focusedIndex,
-        direction
+        direction,
+        defaultFocusedIndex
       });
 
       return (
@@ -147,8 +151,6 @@ storiesOf('Selection Containers', module)
             return (
               <li
                 {...getItemProps({
-                  selected,
-                  focused,
                   key: item
                 })}
               >
@@ -164,13 +166,14 @@ storiesOf('Selection Containers', module)
 
     return (
       <Selection
-        selectedIndex={number('selectedIndex')}
-        focusedIndex={number('focusedIndex')}
         direction={select(
           'Direction',
           { vertical: DIRECTION.VERTICAL, horizontal: DIRECTION.HORIZONTAL },
           DIRECTION.VERTICAL
         )}
+        selectedIndex={number('selectedIndex')}
+        focusedIndex={number('focusedIndex')}
+        defaultFocusedIndex={number('defaultFocusedIndex')}
       />
     );
   });

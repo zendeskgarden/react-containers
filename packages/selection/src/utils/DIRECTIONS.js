@@ -7,5 +7,6 @@
 
 export default {
   HORIZONTAL: 'horizontal',
-  VERTICAL: 'vertical'
+  VERTICAL: 'vertical',
+  BOTH: 'both'
 };

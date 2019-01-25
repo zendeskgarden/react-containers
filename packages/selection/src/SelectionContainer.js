@@ -8,12 +8,7 @@
 import PropTypes from 'prop-types';
 
 import useSelection from './useSelection';
-
-const KEYBOARD_DIRECTION = {
-  HORIZONTAL: 'horizontal',
-  VERTICAL: 'vertical',
-  BOTH: 'both'
-};
+import KEYBOARD_DIRECTION from './utils/DIRECTIONS';
 
 export default function SelectionContainer({ children, render = children, ...props }) {
   return render(useSelection(props));
@@ -33,19 +28,15 @@ SelectionContainer.propTypes = {
   /**
    * Unique key of currently focused item
    */
-  focusedKey: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  focusedIndex: PropTypes.number,
   /**
    * Unique key of currently selected item
    */
-  selectedKey: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  selectedIndex: PropTypes.number,
   /**
    * Callback for all state objects. Used when in 'controlled' mode.
    **/
   onStateChange: PropTypes.func,
-  /**
-   * The root ID to use for descendants. A unique ID is created if none is provided.
-   **/
-  id: PropTypes.string,
   /**
    * Same as children
    **/
