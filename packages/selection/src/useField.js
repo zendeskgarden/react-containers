@@ -8,15 +8,14 @@
 import IdManager from './utils/IdManager';
 import useControlledState from './useControlled';
 
-export default function useField(userID) {
-  const id = userID || IdManager.generateId('garden-field-container');
-  const [controlledState] = useControlledState({ id });
+export default function useField(idPrefix) {
+  const id = idPrefix || IdManager.generateId('garden-field-container');
 
-  const retrieveInputId = () => `${controlledState.id}--input`;
+  const retrieveInputId = () => `${id}--input`;
 
-  const retrieveLabelId = () => `${controlledState.id}--label`;
+  const retrieveLabelId = () => `${id}--label`;
 
-  const retrieveHintId = () => `${controlledState.id}--hint`;
+  const retrieveHintId = () => `${id}--hint`;
 
   const getLabelProps = ({
     id = retrieveLabelId(),
@@ -49,22 +48,9 @@ export default function useField(userID) {
     };
   };
 
-  const getMessageProps = props => {
-    if (process.env.NODE_ENV !== 'production') {
-      /* eslint-disable no-console */
-      console.warn(
-        'Warning: the `getMessageProps` render prop is deprecated. It will be removed in an upcoming major release.'
-      );
-      /* eslint-enable */
-    }
-
-    return props;
-  };
-
   return {
     getLabelProps,
     getInputProps,
-    getHintProps,
-    getMessageProps
+    getHintProps
   };
 }

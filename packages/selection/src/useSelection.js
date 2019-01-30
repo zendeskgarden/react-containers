@@ -7,7 +7,6 @@
 
 import { useReducer, useEffect, createRef } from 'react';
 
-import useControlledState from './useControlled';
 import composeEventHandlers from './utils/composeEventHandlers';
 import KEY_CODES from './utils/KEY_CODES';
 import DIRECTION from './utils/DIRECTIONS';
@@ -52,7 +51,7 @@ function stateReducer(state, action) {
 }
 
 function useSelection({
-  defaultFocusedIndex,
+  defaultFocusedIndex = 0,
   direction = DIRECTION.HORIZONTAL,
   selectedIndex,
   focusedIndex,
@@ -60,7 +59,7 @@ function useSelection({
   defaultRefKey = 'ref'
 } = {}) {
   const [state, dispatch] = useReducer(stateReducer, {
-    focusedIndex: focusedIndex || defaultFocusedIndex,
+    focusedIndex: focusedIndex,
     selectedIndex: selectedIndex
   });
 
@@ -107,15 +106,14 @@ function useSelection({
     let tabIndex = -1;
 
     if (!isFocused && !isSelected) {
-      if (currentIndex === defaultFocusedIndex) {
-        tabIndex = 0;
-      } else if (defaultFocusedIndex === undefined && currentIndex === 0) {
-        tabIndex = 0;
-      } else if (defaultFocusedIndex === -1) {
-        // Figure out when it's the last child and set tabIndex to 0 for that
+      if (defaultFocusedIndex === currentIndex) {
+        tabIndex =
+          (!state.focusedIndex && !state.selectedIndex) || state.selectedIndex === currentIndex
+            ? 0
+            : -1;
       }
     } else {
-      tabIndex = isFocused ? 0 : -1;
+      tabIndex = 0;
     }
 
     refs[currentIndex] = createRef(null);
@@ -128,6 +126,7 @@ function useSelection({
       [refKey]: refs[currentIndex],
       [selectedAriaKey]: isSelected,
       onFocus: composeEventHandlers(onFocus, () => {
+        console.log('onfocus: ', { currentIndex });
         dispatch({ type: ACTIONS.FOCUS, payload: currentIndex });
       }),
       onBlur: e => {
