@@ -5,8 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import IdManager from './utils/IdManager';
-import useControlledState from './useControlled';
+import IdManager from '../utils/IdManager';
 
 export default function useField(idPrefix) {
   const id = idPrefix || IdManager.generateId('garden-field-container');
@@ -18,32 +17,32 @@ export default function useField(idPrefix) {
   const retrieveHintId = () => `${id}--hint`;
 
   const getLabelProps = ({
-    id = retrieveLabelId(),
+    id: labelId = retrieveLabelId(),
     htmlFor = retrieveInputId(),
     ...other
   } = {}) => {
     return {
-      id,
+      id: labelId,
       htmlFor,
       ...other
     };
   };
 
   const getInputProps = (
-    { id = retrieveInputId(), ...other } = {},
+    { id: inputId = retrieveInputId(), ...other } = {},
     { isDescribed = false } = {}
   ) => {
     return {
-      id,
+      id: inputId,
       'aria-labelledby': retrieveLabelId(),
       'aria-describedby': isDescribed ? retrieveHintId() : null,
       ...other
     };
   };
 
-  const getHintProps = ({ id = retrieveHintId(), ...other } = {}) => {
+  const getHintProps = ({ id: hintId = retrieveHintId(), ...other } = {}) => {
     return {
-      id,
+      id: hintId,
       ...other
     };
   };

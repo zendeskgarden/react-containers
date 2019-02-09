@@ -5,15 +5,16 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React from 'react';
+import React, { useState, useContext } from 'react';
 
 import { storiesOf } from '@storybook/react';
-import { withKnobs, text, select, number } from '@storybook/addon-knobs';
+import { withKnobs, text, select, boolean } from '@storybook/addon-knobs';
 
 import {
+  LocaleProvider,
+  LocaleContext,
   KeyboardFocusContainer,
   FieldContainer,
-  SelectionContainer,
   useKeyboardFocus,
   useField,
   useSelection
@@ -23,6 +24,19 @@ import DIRECTION from './src/utils/DIRECTIONS';
 
 storiesOf('Selection Containers', module)
   .addDecorator(withKnobs)
+  .add('LocaleProvider', () => {
+    const LocaleExample = () => {
+      const currentLocale = useContext(LocaleContext);
+
+      return <div>{JSON.stringify(currentLocale)}</div>;
+    };
+
+    return (
+      <LocaleProvider rtl={boolean('Enable RTL Locale', false)}>
+        <LocaleExample />
+      </LocaleProvider>
+    );
+  })
   .add('KeyboardFocusContainer', () => (
     <KeyboardFocusContainer>
       {({ keyboardFocused, getFocusProps }) => (
@@ -62,6 +76,7 @@ storiesOf('Selection Containers', module)
       {({ getLabelProps, getInputProps, getHintProps }) => (
         <>
           <div>
+            {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
             <label {...getLabelProps()}>Accessible Native Input</label>
           </div>
           <div {...getHintProps()}>Optional Hint</div>
@@ -77,6 +92,7 @@ storiesOf('Selection Containers', module)
       return (
         <>
           <div>
+            {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
             <label {...getLabelProps()}>Accessible Native Input</label>
           </div>
           <div {...getHintProps()}>Optional Hint</div>
@@ -87,76 +103,45 @@ storiesOf('Selection Containers', module)
 
     return <Field id={text('id')} />;
   })
-  .add('SelectionContainer', () => {
-    const items = ['One', 'Two', 'Three'];
-
-    return (
-      <SelectionContainer
-        direction={select(
-          'Direction',
-          { vertical: DIRECTION.VERTICAL, horizontal: DIRECTION.HORIZONTAL },
-          DIRECTION.VERTICAL
-        )}
-        selectedIndex={number('selectedIndex')}
-        focusedIndex={number('focusedIndex')}
-        defaultFocusedIndex={number('defaultFocusedIndex')}
-        onStateChange={newState => console.log(newState)}
-      >
-        {({ getContainerProps, getItemProps, focusedIndex, selectedIndex }) => (
-          <ul {...getContainerProps()}>
-            {items.map((item, idx) => {
-              const selected = selectedIndex === idx;
-              const focused = focusedIndex === idx;
-
-              return (
-                <li
-                  {...getItemProps({
-                    selected,
-                    focused,
-                    key: item
-                  })}
-                >
-                  {item}
-                  {selected ? ' - Selected' : null}
-                  {focused ? ' - Focused' : null}
-                </li>
-              );
-            })}
-          </ul>
-        )}
-      </SelectionContainer>
-    );
-  })
   .add('useSelection', () => {
     const items = ['One', 'Two', 'Three'];
-    const Selection = ({ focusedIndex, selectedIndex, direction, defaultFocusedIndex }) => {
-      const {
-        getContainerProps,
-        getItemProps,
-        focusedIndex: focusedIdx,
-        selectedIndex: selectedIdx
-      } = useSelection({
-        selectedIndex,
-        focusedIndex,
+    const isRtl = boolean('Enable RTL', false);
+
+    // eslint-disable-next-line react/prop-types
+    const Selection = ({ direction }) => {
+      const [controlledSelectedItem, setControlledSelectedItem] = useState(items[0]);
+
+      const { focusedItem, selectedItem, getContainerProps, getItemProps } = useSelection({
         direction,
-        defaultFocusedIndex
+        selectedItem: controlledSelectedItem,
+        onSelect: setControlledSelectedItem
       });
 
       return (
-        <ul {...getContainerProps()}>
-          {items.map((item, idx) => {
-            const selected = selectedIdx === idx;
-            const focused = focusedIdx === idx;
+        <ul {...getContainerProps()} style={{ display: 'flex', direction: isRtl ? 'rtl' : 'ltr' }}>
+          {items.map(item => {
+            const itemRef = React.createRef();
+            const isSelected = selectedItem === item;
+            const isFocused = focusedItem === item;
 
             return (
               <li
                 {...getItemProps({
-                  key: item
+                  key: item,
+                  item,
+                  ref: itemRef,
+                  focusRef: itemRef
                 })}
+                style={{
+                  listStyle: 'none',
+                  margin: 16,
+                  padding: 8,
+                  textAlign: 'center'
+                }}
               >
                 {item}
-                {selected ? ' - Selected' : null}
-                {focused ? ' - Focused' : null}
+                {isSelected && <div>[Selected]</div>}
+                {isFocused && <div>(Focused)</div>}
               </li>
             );
           })}
@@ -165,15 +150,14 @@ storiesOf('Selection Containers', module)
     };
 
     return (
-      <Selection
-        direction={select(
-          'Direction',
-          { vertical: DIRECTION.VERTICAL, horizontal: DIRECTION.HORIZONTAL },
-          DIRECTION.VERTICAL
-        )}
-        selectedIndex={number('selectedIndex')}
-        focusedIndex={number('focusedIndex')}
-        defaultFocusedIndex={number('defaultFocusedIndex')}
-      />
+      <LocaleProvider rtl={isRtl}>
+        <Selection
+          direction={select(
+            'Direction',
+            { vertical: DIRECTION.VERTICAL, horizontal: DIRECTION.HORIZONTAL },
+            DIRECTION.HORIZONTAL
+          )}
+        />
+      </LocaleProvider>
     );
   });
