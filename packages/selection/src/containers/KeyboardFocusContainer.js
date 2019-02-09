@@ -6,13 +6,13 @@
  */
 
 import PropTypes from 'prop-types';
-
 import useKeyboardFocus from '../hooks/useKeyboardFocus';
 
 export default function KeyboardFocusContainer({ children, render = children }) {
   return render(useKeyboardFocus());
 }
 
+/** TODO: Update prop-types */
 KeyboardFocusContainer.propTypes = {
   children: PropTypes.func,
   render: PropTypes.func

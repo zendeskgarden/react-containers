@@ -6,16 +6,14 @@
  */
 
 import PropTypes from 'prop-types';
+import useSelection from '../hooks/useSelection';
 
-import useField from '../hooks/useField';
-
-export default function FieldContainer({ children, render = children, id }) {
-  return render(useField(id));
+export default function SelectionContainer({ children, render = children, ...options }) {
+  return render(useSelection(options));
 }
 
 /** TODO: Update prop-types */
-FieldContainer.propTypes = {
+SelectionContainer.propTypes = {
   children: PropTypes.func,
-  render: PropTypes.func,
-  id: PropTypes.string
+  render: PropTypes.func
 };

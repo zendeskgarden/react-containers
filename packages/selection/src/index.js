@@ -6,7 +6,7 @@
  */
 
 /* Components */
-export { default as LocaleProvider, LocaleContext } from './LocaleProvider';
+export { default as LocaleProvider, LocaleContext } from './components/LocaleProvider';
 
 /* Hooks */
 export { default as useKeyboardFocus } from './hooks/useKeyboardFocus';
@@ -16,6 +16,7 @@ export { default as useSelection } from './hooks/useSelection';
 /* Render-props */
 export { default as KeyboardFocusContainer } from './containers/KeyboardFocusContainer';
 export { default as FieldContainer } from './containers/FieldContainer';
+export { default as SelectionContainer } from './containers/SelectionContainer';
 
 /* Utils */
 export { default as composeEventHandlers } from './utils/composeEventHandlers';

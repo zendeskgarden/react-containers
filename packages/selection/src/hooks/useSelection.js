@@ -7,7 +7,7 @@
 
 import { useEffect, useContext, useReducer } from 'react';
 
-import { LocaleContext } from '../LocaleProvider';
+import { LocaleContext } from '../components/LocaleProvider';
 import composeEventHandlers from '../utils/composeEventHandlers';
 import getControlledValue from '../utils/getControlledValue';
 import KEY_CODES from '../utils/KEY_CODES';
