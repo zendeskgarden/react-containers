@@ -193,24 +193,17 @@ function useSelection({
     const isSelected = controlledSelectedItem === item;
     const isFocused =
       controlledFocusedItem === undefined ? isSelected : controlledFocusedItem === item;
-
-    const tabIndex = () => {
-      if (isFocused) {
-        return 0;
-      } else if (
-        state.selectedItem === undefined &&
+    const tabIndex =
+      isFocused ||
+      (state.selectedItem === undefined &&
         state.focusedItem === undefined &&
-        items.indexOf(item) === 0
-      ) {
-        return 0;
-      } else {
-        return -1;
-      }
-    };
+        items.indexOf(item) === 0)
+        ? 0
+        : -1;
 
     return {
       role,
-      tabIndex: tabIndex(),
+      tabIndex,
       [selectedAriaKey]: isSelected,
       onFocus: composeEventHandlers(onFocusCallback, () => {
         dispatch({ type: ACTIONS.FOCUS, payload: item, items });
