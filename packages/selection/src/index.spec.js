@@ -7,10 +7,25 @@
 
 import { getExports } from '@zendeskgarden/react-testing';
 import * as rootIndex from './';
+import * as locale from './components/LocaleProvider';
 
 describe('Index', () => {
   it('exports all components and utilities', async () => {
-    const exports = await getExports({ cwd: __dirname });
+    const exports = await getExports({
+      cwd: __dirname,
+      fileMapper: files => {
+        return files
+          .map(entry =>
+            entry
+              .replace(/\.js$/u, '')
+              .split('/')
+              .pop()
+          )
+          .filter(file => !/(ACTIONS|DIRECTIONS|getControlledValue)/u.test(file))
+          .concat(Object.keys(locale).filter(l => l !== 'default'))
+          .sort();
+      }
+    });
 
     expect(Object.keys(rootIndex).sort()).toEqual(exports);
   });
