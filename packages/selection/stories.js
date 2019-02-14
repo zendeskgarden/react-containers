@@ -187,8 +187,12 @@ storiesOf('Selection Containers', module)
         <Selection
           direction={select(
             'Direction',
-            { vertical: DIRECTION.VERTICAL, horizontal: DIRECTION.HORIZONTAL },
-            DIRECTION.HORIZONTAL
+            {
+              vertical: DIRECTIONS.VERTICAL,
+              horizontal: DIRECTIONS.HORIZONTAL,
+              both: DIRECTIONS.BOTH
+            },
+            DIRECTIONS.HORIZONTAL
           )}
         />
       </LocaleProvider>

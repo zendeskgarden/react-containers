@@ -200,6 +200,8 @@ export function useSelection({
         items.indexOf(item) === 0)
         ? 0
         : -1;
+    const reDirVertical = new RegExp(`^(${DIRECTIONS.VERTICAL}|${DIRECTIONS.BOTH})$`, 'u');
+    const reDirHorizontal = new RegExp(`^(${DIRECTIONS.HORIZONTAL}|${DIRECTIONS.BOTH})$`, 'u');
 
     return {
       role,
@@ -218,8 +220,8 @@ export function useSelection({
       }),
       onKeyDown: composeEventHandlers(onKeyDown, e => {
         if (
-          (e.keyCode === KEY_CODES.UP && direction === DIRECTION.VERTICAL) ||
-          (e.keyCode === KEY_CODES.LEFT && direction === DIRECTION.HORIZONTAL)
+          (e.keyCode === KEY_CODES.UP && reDirVertical.test(direction)) ||
+          (e.keyCode === KEY_CODES.LEFT && reDirHorizontal.test(direction))
         ) {
           if (rtl) {
             dispatch({ type: ACTIONS.INCREMENT, items });
@@ -229,8 +231,8 @@ export function useSelection({
 
           e.preventDefault();
         } else if (
-          (e.keyCode === KEY_CODES.DOWN && direction === DIRECTION.VERTICAL) ||
-          (e.keyCode === KEY_CODES.RIGHT && direction === DIRECTION.HORIZONTAL)
+          (e.keyCode === KEY_CODES.DOWN && reDirVertical.test(direction)) ||
+          (e.keyCode === KEY_CODES.RIGHT && reDirHorizontal.test(direction))
         ) {
           if (rtl) {
             dispatch({ type: ACTIONS.DECREMENT, items });
