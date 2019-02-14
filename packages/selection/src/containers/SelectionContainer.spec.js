@@ -445,49 +445,5 @@ describe('SelectionContainer', () => {
         expect(items.at(2)).toHaveProp('data-focused', false);
       });
     });
-
-    // TODO: Do we want to support this?
-    describe.skip('custom index ordering', () => {
-      it('applies custom focus ordering if index is provided', () => {
-        const customItems = [
-          { text: 'Item 1', index: 0 },
-          { text: 'Item 2', index: 2 },
-          { text: 'Item 3', index: 1 }
-        ];
-
-        wrapper = mount(
-          <SelectionContainer id="test-id">
-            {({ getContainerProps, getItemProps, focusedIndex, selectedIndex }) => (
-              <div {...getContainerProps({ 'data-test-id': 'container' })}>
-                {customItems.map(item => (
-                  <div
-                    {...getItemProps({
-                      key: item.text,
-                      index: item.index,
-                      'data-test-id': 'item',
-                      'data-focused': focusedIndex === item.text,
-                      'data-selected': selectedIndex === item.text
-                    })}
-                  >
-                    {item.text}
-                  </div>
-                ))}
-              </div>
-            )}
-          </SelectionContainer>
-        );
-
-        const container = findContainer(wrapper);
-
-        container.simulate('keydown', { keyCode: KEY_CODES.RIGHT });
-        expect(findItems(wrapper).first()).toHaveProp('data-focused', true);
-
-        container.simulate('keydown', { keyCode: KEY_CODES.RIGHT });
-        expect(findItems(wrapper).last()).toHaveProp('data-focused', true);
-
-        container.simulate('keydown', { keyCode: KEY_CODES.RIGHT });
-        expect(findItems(wrapper).at(1)).toHaveProp('data-focused', true);
-      });
-    });
   });
 });
