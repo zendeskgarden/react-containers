@@ -9,7 +9,7 @@ import { useState } from 'react';
 
 import composeEventHandlers from '../utils/composeEventHandlers';
 
-export default function useKeyboardFocus() {
+export function useKeyboardFocus() {
   const [keyboardFocused, setKeyboardFocused] = useState(false);
   let keyboardFocusable = true;
 

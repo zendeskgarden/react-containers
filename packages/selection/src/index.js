@@ -6,19 +6,19 @@
  */
 
 /* Components */
-export { default as LocaleProvider, LocaleContext } from './components/LocaleProvider';
+export { LocaleProvider, LocaleContext } from './components/LocaleProvider';
 
 /* Hooks */
-export { default as useKeyboardFocus } from './hooks/useKeyboardFocus';
-export { default as useField } from './hooks/useField';
-export { default as useSelection } from './hooks/useSelection';
+export { useKeyboardFocus } from './hooks/useKeyboardFocus';
+export { useField } from './hooks/useField';
+export { useSelection } from './hooks/useSelection';
 
 /* Render-props */
-export { default as KeyboardFocusContainer } from './containers/KeyboardFocusContainer';
-export { default as FieldContainer } from './containers/FieldContainer';
-export { default as SelectionContainer } from './containers/SelectionContainer';
+export { KeyboardFocusContainer } from './containers/KeyboardFocusContainer';
+export { FieldContainer } from './containers/FieldContainer';
+export { SelectionContainer } from './containers/SelectionContainer';
 
 /* Utils */
-export { default as composeEventHandlers } from './utils/composeEventHandlers';
-export { default as IdManager } from './utils/IdManager';
-export { default as KEY_CODES } from './utils/KEY_CODES';
+export { composeEventHandlers } from './utils/composeEventHandlers';
+export { generateId, setIdCounter } from './utils/IdManager';
+export { KEY_CODES } from './utils/KEY_CODES';

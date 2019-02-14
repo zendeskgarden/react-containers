@@ -7,9 +7,9 @@
 
 import PropTypes from 'prop-types';
 
-import useField from '../hooks/useField';
+import { useField } from '../hooks/useField';
 
-export default function FieldContainer({ children, render = children, id }) {
+export function FieldContainer({ children, render = children, id }) {
   return render(useField(id));
 }
 

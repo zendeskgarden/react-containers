@@ -7,7 +7,8 @@
 
 import React from 'react';
 import { mount } from 'enzyme';
-import KeyboardFocusContainer from './KeyboardFocusContainer';
+
+import { KeyboardFocusContainer } from './KeyboardFocusContainer';
 
 jest.useFakeTimers();
 

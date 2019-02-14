@@ -6,9 +6,10 @@
  */
 
 import PropTypes from 'prop-types';
-import useSelection from '../hooks/useSelection';
 
-export default function SelectionContainer({ children, render = children, ...options }) {
+import { useSelection } from '../hooks/useSelection';
+
+export function SelectionContainer({ children, render = children, ...options }) {
   return render(useSelection(options));
 }
 

@@ -8,6 +8,7 @@
 import { getExports } from '@zendeskgarden/react-testing';
 import * as rootIndex from './';
 import * as locale from './components/LocaleProvider';
+import * as IdManager from './utils/IdManager';
 
 describe('Index', () => {
   it('exports all components and utilities', async () => {
@@ -21,8 +22,8 @@ describe('Index', () => {
               .split('/')
               .pop()
           )
-          .filter(file => !/(ACTIONS|DIRECTIONS|getControlledValue)/u.test(file))
-          .concat(Object.keys(locale).filter(l => l !== 'default'))
+          .filter(file => !/(ACTIONS|DIRECTIONS|getControlledValue|IdManager)/u.test(file))
+          .concat(Object.keys(locale).filter(l => l === 'LocaleContext'), Object.keys(IdManager))
           .sort();
       }
     });

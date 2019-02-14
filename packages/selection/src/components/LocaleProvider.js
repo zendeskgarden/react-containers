@@ -13,12 +13,10 @@ export const LocaleContext = React.createContext({ rtl: false });
 /**
  * LocaleProvider component to apply global locale settings
  */
-function LocaleProvider({ rtl = false, children } = {}) {
+export function LocaleProvider({ rtl = false, children } = {}) {
   return <LocaleContext.Provider value={{ rtl }}>{children}</LocaleContext.Provider>;
 }
 
 LocaleProvider.propTypes = {
   rtl: PropTypes.bool
 };
-
-export default LocaleProvider;

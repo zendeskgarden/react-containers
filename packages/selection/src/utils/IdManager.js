@@ -12,7 +12,7 @@ let idCounter = 0;
  * @param {String} prefix the prefix for the id
  * @return {String} the unique ID
  */
-function generateId(prefix = 'garden') {
+export function generateId(prefix = 'garden') {
   return `${prefix}-${idCounter++}`;
 }
 
@@ -20,20 +20,6 @@ function generateId(prefix = 'garden') {
  * This is only used in tests... Could be useful in SSR?
  * @param {Number} num The number to set the idCountry to
  */
-function setIdCounter(num) {
+export function setIdCounter(num) {
   idCounter = num;
 }
-
-/**
- * Utility methods for ID management
- * - `generateId(prefix = 'garden')`
- *   - Generates a new unique ID based on current number of elements
- * - `setIdCounter(num)`
- *   - Useful for creating consistent ID's in a testing environment
- *
- * @component
- **/
-export default {
-  generateId,
-  setIdCounter
-};

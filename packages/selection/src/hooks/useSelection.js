@@ -10,9 +10,9 @@ import { useEffect, useContext, useReducer } from 'react';
 import { LocaleContext } from '../components/LocaleProvider';
 import composeEventHandlers from '../utils/composeEventHandlers';
 import getControlledValue from '../utils/getControlledValue';
-import KEY_CODES from '../utils/KEY_CODES';
-import DIRECTION from '../utils/DIRECTIONS';
-import ACTIONS from '../utils/ACTIONS';
+import { KEY_CODES } from '../utils/KEY_CODES';
+import { DIRECTIONS } from '../utils/DIRECTIONS';
+import { ACTIONS } from '../utils/ACTIONS';
 
 /* eslint-disable indent */
 function stateReducer(state, action, { focusedItem, selectedItem, onFocus, onSelect }) {
@@ -130,8 +130,8 @@ function stateReducer(state, action, { focusedItem, selectedItem, onFocus, onSel
  *
  * https://www.w3.org/TR/wai-aria-practices/#kbd_roving_tabindex
  */
-function useSelection({
-  direction = DIRECTION.HORIZONTAL,
+export function useSelection({
+  direction = DIRECTIONS.HORIZONTAL,
   selectedItem,
   focusedItem,
   onSelect,
@@ -265,5 +265,3 @@ function useSelection({
     getContainerProps
   };
 }
-
-export default useSelection;

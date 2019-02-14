@@ -8,7 +8,7 @@
 import React from 'react';
 import { mount } from 'enzyme';
 
-import FieldContainer from './FieldContainer';
+import { FieldContainer } from './FieldContainer';
 
 describe('FieldContainer', () => {
   const CONTAINER_ID = 'test';

@@ -5,7 +5,8 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-export default {
+export const DIRECTIONS = {
   HORIZONTAL: 'horizontal',
-  VERTICAL: 'vertical'
+  VERTICAL: 'vertical',
+  BOTH: 'both'
 };

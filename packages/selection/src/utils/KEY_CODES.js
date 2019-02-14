@@ -11,7 +11,7 @@
  *
  * @component
  */
-export default {
+export const KEY_CODES = {
   ALT: 18,
   BACKSPACE: 8,
   COMMA: 188,

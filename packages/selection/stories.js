@@ -21,7 +21,7 @@ import {
   useSelection
 } from './src';
 
-import DIRECTION from './src/utils/DIRECTIONS';
+import { DIRECTIONS } from './src/utils/DIRECTIONS';
 
 storiesOf('Selection Containers', module)
   .addDecorator(withKnobs)

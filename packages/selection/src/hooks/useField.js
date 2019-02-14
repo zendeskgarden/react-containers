@@ -5,10 +5,10 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import IdManager from '../utils/IdManager';
+import { generateId } from '../utils/IdManager';
 
-export default function useField(idPrefix) {
-  const id = idPrefix || IdManager.generateId('garden-field-container');
+export function useField(idPrefix) {
+  const id = idPrefix || generateId('garden-field-container');
 
   const retrieveInputId = () => `${id}--input`;
 
