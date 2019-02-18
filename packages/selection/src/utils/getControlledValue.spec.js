@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import getControlledValue from './getControlledValue';
+import { getControlledValue } from './getControlledValue';
 
 describe('getControlledValue', () => {
   it('returns first truthy value', () => {

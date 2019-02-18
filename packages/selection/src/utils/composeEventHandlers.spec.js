@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import composeEventHandlers from './composeEventHandlers';
+import { composeEventHandlers } from './composeEventHandlers';
 
 describe('composeEventHandlers', () => {
   it('should not call secondary event if primary is defaultPrevented', () => {

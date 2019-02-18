@@ -8,7 +8,7 @@
 /**
  * Utility to determine controlled vs uncontrolled values
  */
-export default function getControlledValue(...values) {
+export function getControlledValue(...values) {
   for (const value of values) {
     if (value !== undefined) {
       return value;
