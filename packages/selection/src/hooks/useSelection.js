@@ -132,6 +132,7 @@ function stateReducer(state, action, { focusedItem, selectedItem, onFocus, onSel
  */
 export function useSelection({
   direction = DIRECTIONS.HORIZONTAL,
+  defaultFocusedIndex = 0,
   selectedItem,
   focusedItem,
   onSelect,
@@ -197,7 +198,7 @@ export function useSelection({
       isFocused ||
       (state.selectedItem === undefined &&
         state.focusedItem === undefined &&
-        items.indexOf(item) === 0)
+        items.indexOf(item) === defaultFocusedIndex)
         ? 0
         : -1;
     const reDirVertical = new RegExp(`^(${DIRECTIONS.VERTICAL}|${DIRECTIONS.BOTH})$`, 'u');

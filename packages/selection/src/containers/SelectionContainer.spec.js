@@ -98,12 +98,10 @@ describe('SelectionContainer', () => {
         expect(findItems(wrapper).first()).toHaveProp('data-focused', true);
       });
 
-      it.skip('focuses last item if no item is currently selected and defaultFocusedIndex is provided', () => {
-        wrapper = mount(<BasicExample defaultFocusedIndex={-1} />);
+      it('focuses last item if no item is currently selected and defaultFocusedIndex is provided', () => {
+        wrapper = mount(<BasicExample defaultFocusedIndex={itemValues.length - 1} />);
 
-        findContainer(wrapper).simulate('focus');
-
-        expect(findItems(wrapper).last()).toHaveProp('data-focused', true);
+        expect(findItems(wrapper).last()).toHaveProp('tabIndex', 0);
       });
 
       it('will focus currently selected item if available', () => {

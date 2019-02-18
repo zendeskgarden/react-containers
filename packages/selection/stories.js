@@ -8,7 +8,7 @@
 import React, { useState, useContext } from 'react';
 
 import { storiesOf } from '@storybook/react';
-import { withKnobs, text, select, boolean } from '@storybook/addon-knobs';
+import { withKnobs, text, select, boolean, number } from '@storybook/addon-knobs';
 
 import {
   LocaleProvider,
@@ -108,7 +108,10 @@ storiesOf('Selection Containers', module)
     const items = ['Item 1', 'Item 2', 'Item 3'];
 
     return (
-      <SelectionContainer direction="vertical">
+      <SelectionContainer
+        direction="vertical"
+        defaultFocusedIndex={number('defaultFocusedIndex', 0)}
+      >
         {({ selectedItem, focusedItem, getContainerProps, getItemProps }) => (
           <ul {...getContainerProps()}>
             {items.map(item => {
@@ -141,13 +144,14 @@ storiesOf('Selection Containers', module)
     const isRtl = boolean('Enable RTL', false);
 
     // eslint-disable-next-line react/prop-types
-    const Selection = ({ direction }) => {
+    const Selection = ({ direction, defaultFocusedIndex }) => {
       const [controlledSelectedItem, setControlledSelectedItem] = useState(items[0]);
 
       const { focusedItem, selectedItem, getContainerProps, getItemProps } = useSelection({
         direction,
         selectedItem: controlledSelectedItem,
-        onSelect: setControlledSelectedItem
+        onSelect: setControlledSelectedItem,
+        defaultFocusedIndex
       });
 
       return (
