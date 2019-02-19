@@ -7,7 +7,7 @@
 
 import PropTypes from 'prop-types';
 
-import { useSelection } from '../hooks/useSelection';
+import { useSelection } from './useSelection';
 
 export function SelectionContainer({ children, render = children, ...options }) {
   return render(useSelection(options));

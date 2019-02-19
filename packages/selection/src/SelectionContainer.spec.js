@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { KEY_CODES } from '../utils/KEY_CODES';
+import { KEY_CODES } from './utils/KEY_CODES';
 import { SelectionContainer } from './SelectionContainer';
 import { mount } from 'enzyme';
 import { act } from 'react-dom/test-utils';

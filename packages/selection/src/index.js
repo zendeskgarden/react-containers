@@ -9,16 +9,11 @@
 export { LocaleProvider, LocaleContext } from './components/LocaleProvider';
 
 /* Hooks */
-export { useKeyboardFocus } from './hooks/useKeyboardFocus';
-export { useField } from './hooks/useField';
-export { useSelection } from './hooks/useSelection';
+export { useSelection } from './useSelection';
 
 /* Render-props */
-export { KeyboardFocusContainer } from './containers/KeyboardFocusContainer';
-export { FieldContainer } from './containers/FieldContainer';
-export { SelectionContainer } from './containers/SelectionContainer';
+export { SelectionContainer } from './SelectionContainer';
 
 /* Utils */
 export { composeEventHandlers } from './utils/composeEventHandlers';
-export { generateId, setIdCounter } from './utils/IdManager';
 export { KEY_CODES } from './utils/KEY_CODES';

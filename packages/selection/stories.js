@@ -8,18 +8,9 @@
 import React, { useState, useContext } from 'react';
 
 import { storiesOf } from '@storybook/react';
-import { withKnobs, text, select, boolean, number } from '@storybook/addon-knobs';
+import { withKnobs, select, boolean, number } from '@storybook/addon-knobs';
 
-import {
-  LocaleProvider,
-  LocaleContext,
-  KeyboardFocusContainer,
-  FieldContainer,
-  SelectionContainer,
-  useKeyboardFocus,
-  useField,
-  useSelection
-} from './src';
+import { LocaleProvider, LocaleContext, SelectionContainer, useSelection } from './src';
 
 import { DIRECTIONS } from './src/utils/DIRECTIONS';
 
@@ -37,72 +28,6 @@ storiesOf('Selection Containers', module)
         <LocaleExample />
       </LocaleProvider>
     );
-  })
-  .add('KeyboardFocusContainer', () => (
-    <KeyboardFocusContainer>
-      {({ keyboardFocused, getFocusProps }) => (
-        <div
-          {...getFocusProps({
-            style: {
-              color: keyboardFocused ? 'red' : 'inherit'
-            }
-          })}
-        >
-          {keyboardFocused ? 'Keyboard focused!' : 'Not keyboard focused'}
-        </div>
-      )}
-    </KeyboardFocusContainer>
-  ))
-  .add('useKeyboardFocus', () => {
-    const KeyboardFocus = () => {
-      const { getFocusProps, keyboardFocused } = useKeyboardFocus();
-
-      return (
-        <div
-          {...getFocusProps({
-            style: {
-              color: keyboardFocused ? 'red' : 'inherit'
-            }
-          })}
-        >
-          {keyboardFocused ? 'Keyboard focused!' : 'Not keyboard focused'}
-        </div>
-      );
-    };
-
-    return <KeyboardFocus />;
-  })
-  .add('FieldContainer', () => (
-    <FieldContainer id={text('id')}>
-      {({ getLabelProps, getInputProps, getHintProps }) => (
-        <>
-          <div>
-            {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
-            <label {...getLabelProps()}>Accessible Native Input</label>
-          </div>
-          <div {...getHintProps()}>Optional Hint</div>
-          <input {...getInputProps()} />
-        </>
-      )}
-    </FieldContainer>
-  ))
-  .add('useField', () => {
-    const Field = ({ id }) => {
-      const { getLabelProps, getInputProps, getHintProps } = useField(id);
-
-      return (
-        <>
-          <div>
-            {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
-            <label {...getLabelProps()}>Accessible Native Input</label>
-          </div>
-          <div {...getHintProps()}>Optional Hint</div>
-          <input {...getInputProps()} />
-        </>
-      );
-    };
-
-    return <Field id={text('id')} />;
   })
   .add('SelectionContainer', () => {
     const items = ['Item 1', 'Item 2', 'Item 3'];
