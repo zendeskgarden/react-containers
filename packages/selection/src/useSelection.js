@@ -14,7 +14,6 @@ import { KEY_CODES } from './utils/KEY_CODES';
 import { DIRECTIONS } from './utils/DIRECTIONS';
 import { ACTIONS } from './utils/ACTIONS';
 
-/* eslint-disable indent */
 function stateReducer(state, action, { focusedItem, selectedItem, onFocus, onSelect }) {
   const controlledFocusedItem = getControlledValue(focusedItem, state.focusedItem);
   const controlledSelectedItem = getControlledValue(selectedItem, state.selectedItem);
@@ -24,7 +23,7 @@ function stateReducer(state, action, { focusedItem, selectedItem, onFocus, onSel
       : action.items.indexOf(controlledFocusedItem);
 
   switch (action.type) {
-    case ACTIONS.FOCUS:
+    case ACTIONS.FOCUS: {
       if (onFocus) {
         onFocus(action.payload);
 
@@ -32,6 +31,7 @@ function stateReducer(state, action, { focusedItem, selectedItem, onFocus, onSel
       }
 
       return { ...state, focusedItem: action.payload };
+    }
     case ACTIONS.INCREMENT: {
       const newFocusedItem = action.items[(currentItemIndex + 1) % action.items.length];
 
@@ -55,7 +55,7 @@ function stateReducer(state, action, { focusedItem, selectedItem, onFocus, onSel
 
       return { ...state, focusedItem: newFocusedItem };
     }
-    case ACTIONS.HOME:
+    case ACTIONS.HOME: {
       if (onFocus) {
         onFocus(action.items[0]);
 
@@ -63,7 +63,8 @@ function stateReducer(state, action, { focusedItem, selectedItem, onFocus, onSel
       }
 
       return { ...state, focusedItem: action.items[0] };
-    case ACTIONS.END:
+    }
+    case ACTIONS.END: {
       if (onFocus) {
         onFocus(action.items[action.items.length - 1]);
 
@@ -71,10 +72,9 @@ function stateReducer(state, action, { focusedItem, selectedItem, onFocus, onSel
       }
 
       return { ...state, focusedItem: action.items[action.items.length - 1] };
-    case ACTIONS.MOUSE_SELECT:
-      // eslint-disable-next-line no-case-declarations
+    }
+    case ACTIONS.MOUSE_SELECT: {
       let isSelectControlled = false;
-      // eslint-disable-next-line no-case-declarations
       let isFocusControlled = false;
 
       if (onSelect) {
@@ -91,7 +91,6 @@ function stateReducer(state, action, { focusedItem, selectedItem, onFocus, onSel
         return state;
       }
 
-      // eslint-disable-next-line no-case-declarations
       const updatedState = { ...state };
 
       if (!isSelectControlled) {
@@ -103,7 +102,8 @@ function stateReducer(state, action, { focusedItem, selectedItem, onFocus, onSel
       }
 
       return updatedState;
-    case ACTIONS.KEYBOARD_SELECT:
+    }
+    case ACTIONS.KEYBOARD_SELECT: {
       if (onSelect) {
         onSelect(action.payload);
 
@@ -111,7 +111,8 @@ function stateReducer(state, action, { focusedItem, selectedItem, onFocus, onSel
       }
 
       return { ...state, selectedItem: action.payload };
-    case ACTIONS.EXIT_WIDGET:
+    }
+    case ACTIONS.EXIT_WIDGET: {
       if (onFocus) {
         onFocus(undefined);
 
@@ -119,11 +120,11 @@ function stateReducer(state, action, { focusedItem, selectedItem, onFocus, onSel
       }
 
       return { ...state, focusedItem: undefined };
+    }
     default:
       return new Error('Invalid reducer action');
   }
 }
-/* eslint-enable indent */
 
 /**
  * Custom hook to manage selection using the Roving Tab Index strategy
@@ -201,8 +202,9 @@ export function useSelection({
         items.indexOf(item) === defaultFocusedIndex)
         ? 0
         : -1;
-    const reDirVertical = new RegExp(`^(${DIRECTIONS.VERTICAL}|${DIRECTIONS.BOTH})$`, 'u');
-    const reDirHorizontal = new RegExp(`^(${DIRECTIONS.HORIZONTAL}|${DIRECTIONS.BOTH})$`, 'u');
+    const verticalDirection = direction === DIRECTIONS.VERTICAL || direction === DIRECTIONS.BOTH;
+    const horizontalDirection =
+      direction === DIRECTIONS.HORIZONTAL || direction === DIRECTIONS.BOTH;
 
     return {
       role,
@@ -221,8 +223,8 @@ export function useSelection({
       }),
       onKeyDown: composeEventHandlers(onKeyDown, e => {
         if (
-          (e.keyCode === KEY_CODES.UP && reDirVertical.test(direction)) ||
-          (e.keyCode === KEY_CODES.LEFT && reDirHorizontal.test(direction))
+          (e.keyCode === KEY_CODES.UP && verticalDirection) ||
+          (e.keyCode === KEY_CODES.LEFT && horizontalDirection)
         ) {
           if (rtl) {
             dispatch({ type: ACTIONS.INCREMENT, items });
@@ -232,8 +234,8 @@ export function useSelection({
 
           e.preventDefault();
         } else if (
-          (e.keyCode === KEY_CODES.DOWN && reDirVertical.test(direction)) ||
-          (e.keyCode === KEY_CODES.RIGHT && reDirHorizontal.test(direction))
+          (e.keyCode === KEY_CODES.DOWN && verticalDirection) ||
+          (e.keyCode === KEY_CODES.RIGHT && horizontalDirection)
         ) {
           if (rtl) {
             dispatch({ type: ACTIONS.DECREMENT, items });
