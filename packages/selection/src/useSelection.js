@@ -122,7 +122,7 @@ function stateReducer(state, action, { focusedItem, selectedItem, onFocus, onSel
       return { ...state, focusedItem: undefined };
     }
     default:
-      return new Error('Invalid reducer action');
+      return state;
   }
 }
 
