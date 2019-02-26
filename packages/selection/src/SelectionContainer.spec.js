@@ -17,8 +17,8 @@ describe('SelectionContainer', () => {
   const itemValues = ['Item-1', 'Item-2', 'Item-3'];
   let wrapper;
 
-  const BasicExample = ({ direction, defaultFocusedIndex, selectedAriaKey } = {}) => (
-    <SelectionContainer direction={direction} defaultFocusedIndex={defaultFocusedIndex}>
+  const BasicExample = ({ direction, defaultFocusedIndex, selectedAriaKey, rtl } = {}) => (
+    <SelectionContainer direction={direction} defaultFocusedIndex={defaultFocusedIndex} rtl={rtl}>
       {({ getContainerProps, getItemProps, focusedItem, selectedItem }) => (
         <div {...getContainerProps({ 'data-test-id': 'container' })}>
           {itemValues.map(item => {
@@ -188,10 +188,9 @@ describe('SelectionContainer', () => {
             });
           });
 
-          // TODO: enzyme doesn't yet support useContext
-          describe.skip('when dir is RTL', () => {
+          describe('when dir is RTL', () => {
             beforeEach(() => {
-              wrapper = mount(<BasicExample />, { rtl: true });
+              wrapper = mount(<BasicExample rtl={true} />);
             });
 
             it('increments focusedIndex if currently less than items length', () => {
@@ -204,12 +203,11 @@ describe('SelectionContainer', () => {
             });
 
             it('increments and wraps focusedIndex if currently greater than or equal to items length', () => {
-              const container = findContainer(wrapper);
+              const lastItem = findItems(wrapper).last();
 
-              findItems(wrapper)
-                .last()
-                .simulate('click');
-              container.simulate('keydown', { keyCode: KEY_CODES.LEFT });
+              lastItem.simulate('focus');
+              lastItem.simulate('keydown', { keyCode: KEY_CODES.LEFT });
+
               expect(findItems(wrapper).first()).toHaveProp('data-focused', true);
             });
           });
@@ -234,29 +232,26 @@ describe('SelectionContainer', () => {
             });
           });
 
-          // TODO: enzyme doesn't yet support useContext
-          describe.skip('when dir is RTL', () => {
+          describe('when dir is RTL', () => {
             beforeEach(() => {
-              wrapper = mount(<BasicExample />, { rtl: true });
+              wrapper = mount(<BasicExample rtl={true} />);
             });
 
             it('decrements focusedIndex if currently greater than 0', () => {
-              const container = findContainer(wrapper);
+              const secondItem = findItems(wrapper).at(1);
 
-              findItems(wrapper)
-                .at(1)
-                .simulate('click');
-              container.simulate('keydown', { keyCode: KEY_CODES.RIGHT });
+              secondItem.simulate('focus');
+              secondItem.simulate('keydown', { keyCode: KEY_CODES.RIGHT });
+
               expect(findItems(wrapper).first()).toHaveProp('data-focused', true);
             });
 
             it('decrements and wraps focusedIndex if currently 0', () => {
-              const container = findContainer(wrapper);
+              const firstItem = findItems(wrapper).first();
 
-              findItems(wrapper)
-                .first()
-                .simulate('click');
-              container.simulate('keydown', { keyCode: KEY_CODES.RIGHT });
+              firstItem.simulate('click');
+              firstItem.simulate('keydown', { keyCode: KEY_CODES.RIGHT });
+
               expect(findItems(wrapper).last()).toHaveProp('data-focused', true);
             });
           });

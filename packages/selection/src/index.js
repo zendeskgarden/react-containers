@@ -5,9 +5,6 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-/* Components */
-export { LocaleProvider, LocaleContext } from './components/LocaleProvider';
-
 /* Hooks */
 export { useSelection } from './useSelection';
 

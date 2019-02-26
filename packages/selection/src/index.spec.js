@@ -7,7 +7,6 @@
 
 import { getExports } from '@zendeskgarden/react-testing';
 import * as rootIndex from './';
-import * as locale from './components/LocaleProvider';
 
 describe('Index', () => {
   it('exports all components and utilities', async () => {
@@ -22,7 +21,6 @@ describe('Index', () => {
               .pop()
           )
           .filter(file => !/(ACTIONS|DIRECTIONS|getControlledValue)/u.test(file))
-          .concat(Object.keys(locale).filter(l => l === 'LocaleContext'))
           .sort();
       }
     });

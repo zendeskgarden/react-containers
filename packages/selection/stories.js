@@ -5,30 +5,17 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 
 import { storiesOf } from '@storybook/react';
 import { withKnobs, select, boolean, number } from '@storybook/addon-knobs';
 
-import { LocaleProvider, LocaleContext, SelectionContainer, useSelection } from './src';
+import { SelectionContainer, useSelection } from './src';
 
 import { DIRECTIONS } from './src/utils/DIRECTIONS';
 
 storiesOf('Selection Containers', module)
   .addDecorator(withKnobs)
-  .add('LocaleProvider', () => {
-    const LocaleExample = () => {
-      const currentLocale = useContext(LocaleContext);
-
-      return <div>{JSON.stringify(currentLocale)}</div>;
-    };
-
-    return (
-      <LocaleProvider rtl={boolean('Enable RTL Locale', false)}>
-        <LocaleExample />
-      </LocaleProvider>
-    );
-  })
   .add('SelectionContainer', () => {
     const items = ['Item 1', 'Item 2', 'Item 3'];
 
@@ -76,11 +63,12 @@ storiesOf('Selection Containers', module)
         direction,
         selectedItem: controlledSelectedItem,
         onSelect: setControlledSelectedItem,
-        defaultFocusedIndex
+        defaultFocusedIndex,
+        rtl: isRtl
       });
 
       return (
-        <ul {...getContainerProps()} style={{ display: 'flex', direction: isRtl ? 'rtl' : 'ltr' }}>
+        <ul {...getContainerProps()} style={{ display: 'flex' }}>
           {items.map(item => {
             const itemRef = React.createRef();
             const isSelected = selectedItem === item;
@@ -112,18 +100,16 @@ storiesOf('Selection Containers', module)
     };
 
     return (
-      <LocaleProvider rtl={isRtl}>
-        <Selection
-          direction={select(
-            'Direction',
-            {
-              vertical: DIRECTIONS.VERTICAL,
-              horizontal: DIRECTIONS.HORIZONTAL,
-              both: DIRECTIONS.BOTH
-            },
-            DIRECTIONS.HORIZONTAL
-          )}
-        />
-      </LocaleProvider>
+      <Selection
+        direction={select(
+          'Direction',
+          {
+            vertical: DIRECTIONS.VERTICAL,
+            horizontal: DIRECTIONS.HORIZONTAL,
+            both: DIRECTIONS.BOTH
+          },
+          DIRECTIONS.HORIZONTAL
+        )}
+      />
     );
   });

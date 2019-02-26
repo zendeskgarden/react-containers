@@ -5,9 +5,8 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import { useEffect, useContext, useReducer } from 'react';
+import { useEffect, useReducer } from 'react';
 
-import { LocaleContext } from './components/LocaleProvider';
 import { composeEventHandlers } from './utils/composeEventHandlers';
 import { getControlledValue } from './utils/getControlledValue';
 import { KEY_CODES } from './utils/KEY_CODES';
@@ -134,13 +133,12 @@ function stateReducer(state, action, { focusedItem, selectedItem, onFocus, onSel
 export function useSelection({
   direction = DIRECTIONS.HORIZONTAL,
   defaultFocusedIndex = 0,
+  rtl,
   selectedItem,
   focusedItem,
   onSelect,
   onFocus
 } = {}) {
-  const { rtl } = useContext(LocaleContext);
-
   const refs = [];
   const items = [];
 
