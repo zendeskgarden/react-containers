@@ -35,6 +35,7 @@
     "react/jsx-key": "off",
     "react/display-name": "off",
     "jsx-a11y/label-has-for": "off",
+    "jsx-a11y/label-has-associated-control": "off",
     "jest/no-disabled-tests": "off"
   }
 }
