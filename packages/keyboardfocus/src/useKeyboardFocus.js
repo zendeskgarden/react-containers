@@ -13,8 +13,12 @@ export function useKeyboardFocus() {
   const [keyboardFocused, setKeyboardFocused] = useState(false);
   let keyboardFocusable = true;
 
-  const onMouseDown = () => {
+  const onPointerDown = () => {
     keyboardFocusable = false;
+  };
+
+  const onMouseDown = () => {
+    onPointerDown();
 
     /**
      * This is necessary to recognize focus events caused by keyboard vs mouseDown.
@@ -41,6 +45,8 @@ export function useKeyboardFocus() {
       onBlur: composeEventHandlers(props.onBlur, onBlur),
       onFocus: composeEventHandlers(props.onFocus, onFocus),
       onMouseDown: composeEventHandlers(props.onMouseDown, onMouseDown),
+      onPointerDown: composeEventHandlers(props.onPointerDown, onPointerDown),
+      onTouchStart: composeEventHandlers(props.onTouchStart, onPointerDown),
       ...props
     };
   };

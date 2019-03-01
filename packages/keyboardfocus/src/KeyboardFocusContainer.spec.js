@@ -55,6 +55,28 @@ describe('KeyboardFocusContainer', () => {
       });
     });
 
+    describe('onPointerDown', () => {
+      it('should not apply focused prop if pointerdown is triggered', () => {
+        const wrapper = mount(basicExample);
+
+        findTrigger(wrapper).simulate('pointerdown');
+        jest.runOnlyPendingTimers();
+        wrapper.update();
+        expect(findTrigger(wrapper)).toHaveProp('data-focused', false);
+      });
+    });
+
+    describe('onTouchStart', () => {
+      it('should not apply focused prop if touchstart is triggered', () => {
+        const wrapper = mount(basicExample);
+
+        findTrigger(wrapper).simulate('touchstart');
+        jest.runOnlyPendingTimers();
+        wrapper.update();
+        expect(findTrigger(wrapper)).toHaveProp('data-focused', false);
+      });
+    });
+
     describe('onBlur', () => {
       it('should remove focused prop if blurred', () => {
         const wrapper = mount(basicExample);

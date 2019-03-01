@@ -10,6 +10,3 @@ export { useKeyboardFocus } from './useKeyboardFocus';
 
 /* Render-props */
 export { KeyboardFocusContainer } from './KeyboardFocusContainer';
-
-/* Utils */
-export { composeEventHandlers } from './utils/composeEventHandlers';
