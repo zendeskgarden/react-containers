@@ -13,7 +13,6 @@ export function FieldContainer({ children, render = children, id }) {
   return render(useField(id));
 }
 
-/** TODO: Update prop-types */
 FieldContainer.propTypes = {
   children: PropTypes.func,
   render: PropTypes.func,

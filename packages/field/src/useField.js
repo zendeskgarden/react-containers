@@ -5,44 +5,35 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
+import { useState } from 'react';
 import { generateId } from './utils/IdManager';
 
 export function useField(idPrefix) {
-  const id = idPrefix || generateId('garden-field-container');
+  const [prefix] = useState(idPrefix || generateId('garden-field-container'));
+  const inputId = `${prefix}--input`;
+  const labelId = `${prefix}--label`;
+  const hintId = `${prefix}--hint`;
 
-  const retrieveInputId = () => `${id}--input`;
-
-  const retrieveLabelId = () => `${id}--label`;
-
-  const retrieveHintId = () => `${id}--hint`;
-
-  const getLabelProps = ({
-    id: labelId = retrieveLabelId(),
-    htmlFor = retrieveInputId(),
-    ...other
-  } = {}) => {
+  const getLabelProps = ({ id = labelId, htmlFor = inputId, ...other } = {}) => {
     return {
-      id: labelId,
+      id,
       htmlFor,
       ...other
     };
   };
 
-  const getInputProps = (
-    { id: inputId = retrieveInputId(), ...other } = {},
-    { isDescribed = false } = {}
-  ) => {
+  const getInputProps = ({ id = inputId, ...other } = {}, { isDescribed = false } = {}) => {
     return {
-      id: inputId,
-      'aria-labelledby': retrieveLabelId(),
-      'aria-describedby': isDescribed ? retrieveHintId() : null,
+      id,
+      'aria-labelledby': labelId,
+      'aria-describedby': isDescribed ? hintId : null,
       ...other
     };
   };
 
-  const getHintProps = ({ id: hintId = retrieveHintId(), ...other } = {}) => {
+  const getHintProps = ({ id = hintId, ...other } = {}) => {
     return {
-      id: hintId,
+      id,
       ...other
     };
   };

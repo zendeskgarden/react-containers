@@ -17,12 +17,18 @@ storiesOf('Field Container', module)
   .add('useField', () => {
     const Field = ({ id }) => {
       const { getLabelProps, getInputProps, getHintProps } = useField(id);
+      const [value, setVal] = React.useState('');
 
       return (
         <>
           <label {...getLabelProps()}>Accessible Native Input</label>
           <div {...getHintProps()}>Optional Hint</div>
-          <input {...getInputProps()} />
+          <input
+            {...getInputProps(
+              { value, onChange: ({ target }) => setVal(target.value) },
+              { isDescribed: true }
+            )}
+          />
         </>
       );
     };
@@ -35,7 +41,7 @@ storiesOf('Field Container', module)
         <>
           <label {...getLabelProps()}>Accessible Native Input</label>
           <div {...getHintProps()}>Optional Hint</div>
-          <input {...getInputProps()} />
+          <input {...getInputProps({}, { isDescribed: true })} />
         </>
       )}
     </FieldContainer>
