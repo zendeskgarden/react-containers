@@ -4,7 +4,7 @@
     "build": "lerna run build --stream",
     "build:demo": "build-storybook -o demo",
     "format": "yarn format:package_json && yarn format:js && yarn format:markdown",
-    "format:js": "prettier --loglevel warn --write '{packages/**/!(dist|umd),utils/**}/*.js'",
+    "format:js": "prettier --loglevel warn --write '{packages/**/!(dist),utils/**}/*.js'",
     "format:markdown": "prettier --loglevel warn --write '{packages/**/!(dist)/!(CHANGELOG)*.md,README.md}'",
     "format:package_json": "prettier-package-json --write && lerna exec -- prettier-package-json --write",
     "postinstall": "lerna bootstrap",
@@ -71,7 +71,6 @@
     "webpack": "4.26.0",
     "webpack-bundle-analyzer": "3.0.3",
     "webpack-cli": "3.1.2",
-    "webpack-merge": "4.1.5",
     "webpack-node-externals": "1.7.2"
   }
 }
