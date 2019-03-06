@@ -17,7 +17,7 @@
     "build": "../../utils/scripts/build.sh"
   },
   "dependencies": {
-    "@zendeskgarden/container-selection": "^0.1.0"
+    "@zendeskgarden/container-selection": "^0.1.2"
   },
   "peerDependencies": {
     "prop-types": "^15.6.1",
@@ -36,7 +36,5 @@
   ],
   "publishConfig": {
     "access": "public"
-  },
-  "zendeskgarden:library": "GardenKeyboardfocus",
-  "zendeskgarden:src": "src/index.js"
+  }
 }
