@@ -35,7 +35,5 @@
   ],
   "publishConfig": {
     "access": "public"
-  },
-  "zendeskgarden:library": "GardenBreadcrumb",
-  "zendeskgarden:src": "src/index.js"
+  }
 }
