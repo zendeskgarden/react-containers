@@ -33,6 +33,5 @@
   "publishConfig": {
     "access": "public"
   },
-  "zendeskgarden:library": "GardenField",
   "zendeskgarden:src": "src/index.js"
 }
