@@ -17,18 +17,6 @@ export function useKeyboardFocus() {
     keyboardFocusable = false;
   };
 
-  const onMouseDown = () => {
-    onPointerDown();
-
-    /**
-     * This is necessary to recognize focus events caused by keyboard vs mouseDown.
-     * Due to React event ordering this is always called before onFocus.
-     */
-    setTimeout(() => {
-      keyboardFocusable = true;
-    }, 0);
-  };
-
   const onFocus = () => {
     if (keyboardFocusable) {
       setKeyboardFocused(true);
@@ -44,7 +32,7 @@ export function useKeyboardFocus() {
       tabIndex,
       onBlur: composeEventHandlers(props.onBlur, onBlur),
       onFocus: composeEventHandlers(props.onFocus, onFocus),
-      onMouseDown: composeEventHandlers(props.onMouseDown, onMouseDown),
+      onMouseDown: composeEventHandlers(props.onMouseDown, onPointerDown),
       onPointerDown: composeEventHandlers(props.onPointerDown, onPointerDown),
       onTouchStart: composeEventHandlers(props.onTouchStart, onPointerDown),
       ...props
