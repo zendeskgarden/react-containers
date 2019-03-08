@@ -14,8 +14,13 @@ to install.
 
 | Package                                                  | Version                                                   | Dependencies                                                                 |
 | -------------------------------------------------------- | --------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| [`@zendeskgarden/container-field`](packages/field)       | [![npm version][field npm version]][field npm link]       | [![Dependency Status][field dependency status]][field dependency link]       |
 | [`@zendeskgarden/container-schedule`](packages/schedule) | [![npm version][schedule npm version]][schedule npm link] | [![Dependency Status][schedule dependency status]][schedule dependency link] |
 
+[field npm version]: https://img.shields.io/npm/v/@zendeskgarden/container-field.svg?style=flat-square
+[field npm link]: https://www.npmjs.com/package/@zendeskgarden/container-field
+[field dependency status]: https://img.shields.io/david/zendeskgarden/react-containers.svg?path=packages/field&style=flat-square
+[field dependency link]: https://david-dm.org/zendeskgarden/react-containers?path=packages/field
 [schedule npm version]: https://img.shields.io/npm/v/@zendeskgarden/container-schedule.svg?style=flat-square
 [schedule npm link]: https://www.npmjs.com/package/@zendeskgarden/container-schedule
 [schedule dependency status]: https://img.shields.io/david/zendeskgarden/react-containers.svg?path=packages/schedule&style=flat-square
