@@ -1,6 +1,6 @@
 {
   "name": "@zendeskgarden/container-keyboardfocus",
-  "description": "Containers relating to keyboardfocus in the Garden Design System",
+  "description": "Containers relating to keyboard focus in the Garden Design System",
   "license": "Apache-2.0",
   "author": "Zendesk Garden <garden@zendesk.com>",
   "homepage": "https://garden.zendesk.com/",
