@@ -12,9 +12,9 @@ keyboard navigable and RTL aware components.
 See the individual package README for the React container you would like
 to install.
 
-| Package                                                  | Version                                                   | Dependencies                                                                 |
-| -------------------------------------------------------- | --------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| [`@zendeskgarden/container-field`](packages/field)       | [![npm version][field npm version]][field npm link]       | [![Dependency Status][field dependency status]][field dependency link]       |
+| Package                                                            | Version                                                             | Dependencies                                                                           |
+| ------------------------------------------------------------------ | ------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| [`@zendeskgarden/container-field`](packages/field)                 | [![npm version][field npm version]][field npm link]                 | [![Dependency Status][field dependency status]][field dependency link]                 |
 | [`@zendeskgarden/container-schedule`](packages/schedule)           | [![npm version][schedule npm version]][schedule npm link]           | [![Dependency Status][schedule dependency status]][schedule dependency link]           |
 | [`@zendeskgarden/container-keyboardfocus`](packages/keyboardfocus) | [![npm version][keyboardfocus npm version]][keyboardfocus npm link] | [![Dependency Status][keyboardfocus dependency status]][keyboardfocus dependency link] |
 
