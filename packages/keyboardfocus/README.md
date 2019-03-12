@@ -11,6 +11,8 @@ npm install @zendeskgarden/container-keyboardfocus
 
 ## Usage
 
+For live examples check out our [storybook](https://zendeskgarden.github.io/react-containers?selectedKind=KeyboardFocus%20Container).
+
 ### useKeyboardFocus
 
 The `useKeyboardFocus` hook supplies state and props that help you to distinguish

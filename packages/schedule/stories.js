@@ -14,21 +14,7 @@ import { ScheduleContainer, useSchedule } from './src';
 
 storiesOf('Schedule Container', module)
   .addDecorator(withKnobs)
-  .add('as render prop container', () => (
-    <ScheduleContainer
-      duration={number('duration', 1250)}
-      loop={boolean('loop', true)}
-      delayMS={number('delayMS', 750)}
-    >
-      {elapsed => (
-        <div>
-          Percentage: {(elapsed * 100).toFixed(0)}%<br />
-          Elapsed: {elapsed}
-        </div>
-      )}
-    </ScheduleContainer>
-  ))
-  .add('as a hook', () => {
+  .add('useSchedule', () => {
     const Animation = () => {
       const duration = number('duration', 1250);
       const loop = boolean('loop', true);
@@ -44,4 +30,18 @@ storiesOf('Schedule Container', module)
     };
 
     return <Animation />;
-  });
+  })
+  .add('ScheduleContainer', () => (
+    <ScheduleContainer
+      duration={number('duration', 1250)}
+      loop={boolean('loop', true)}
+      delayMS={number('delayMS', 750)}
+    >
+      {elapsed => (
+        <div>
+          Percentage: {(elapsed * 100).toFixed(0)}%<br />
+          Elapsed: {elapsed}
+        </div>
+      )}
+    </ScheduleContainer>
+  ));

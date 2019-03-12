@@ -11,6 +11,8 @@ npm install @zendeskgarden/container-schedule
 
 ## Usage
 
+For live examples check out our [storybook](https://zendeskgarden.github.io/react-containers?selectedKind=Schedule%20Container).
+
 ### As a Render Prop Component
 
 ```jsx static

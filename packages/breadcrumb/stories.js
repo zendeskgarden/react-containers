@@ -16,21 +16,7 @@ import '@zendeskgarden/css-breadcrumbs';
 
 storiesOf('Breadcrumb Container', module)
   .addDecorator(withKnobs)
-  .add('as a render prop container', () => (
-    <BreadcrumbContainer>
-      {({ getContainerProps, getCurrentPageProps }) => (
-        <div {...getContainerProps({ className: 'c-breadcrumb' })}>
-          <a href="#foo" className="c-breadcrumb__item">
-            Home
-          </a>
-          <a {...getCurrentPageProps({ href: '#foo', className: 'c-breadcrumb__item is-current' })}>
-            Items
-          </a>
-        </div>
-      )}
-    </BreadcrumbContainer>
-  ))
-  .add('as a hook', () => {
+  .add('useBreadcrumb', () => {
     const Breadcrumb = () => {
       const { getContainerProps, getCurrentPageProps } = useBreadcrumb();
 
@@ -47,4 +33,18 @@ storiesOf('Breadcrumb Container', module)
     };
 
     return <Breadcrumb />;
-  });
+  })
+  .add('BreadcrumbContainer', () => (
+    <BreadcrumbContainer>
+      {({ getContainerProps, getCurrentPageProps }) => (
+        <div {...getContainerProps({ className: 'c-breadcrumb' })}>
+          <a href="#foo" className="c-breadcrumb__item">
+            Home
+          </a>
+          <a {...getCurrentPageProps({ href: '#foo', className: 'c-breadcrumb__item is-current' })}>
+            Items
+          </a>
+        </div>
+      )}
+    </BreadcrumbContainer>
+  ));
