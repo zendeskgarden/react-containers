@@ -8,7 +8,7 @@
   "bugs": {
     "url": "https://github.com/zendeskgarden/react-containers/issues"
   },
-  "version": "0.0.0",
+  "version": "0.1.0",
   "main": "./dist/index.js",
   "files": [
     "dist"
@@ -17,14 +17,13 @@
     "build": "../../utils/scripts/build.sh"
   },
   "dependencies": {
-    "@zendeskgarden/container-selection": "^0.1.2"
+    "@zendeskgarden/container-selection": "^0.2.0"
   },
   "peerDependencies": {
     "prop-types": "^15.6.1",
     "react": "^16.8.0",
     "react-dom": "^16.8.0"
   },
-  "devDependencies": {},
   "keywords": [
     "a11y",
     "accessible",
