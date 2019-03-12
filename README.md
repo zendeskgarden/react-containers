@@ -14,22 +14,32 @@ to install.
 
 | Package                                                            | Version                                                             | Dependencies                                                                           |
 | ------------------------------------------------------------------ | ------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| [`@zendeskgarden/container-breadcrumb`](packages/breadcrumb)       | [![npm version][breadcrumb npm version]][breadcrumb npm link]       | [![Dependency Status][breadcrumb dependency status]][breadcrumb dependency link]       |
 | [`@zendeskgarden/container-field`](packages/field)                 | [![npm version][field npm version]][field npm link]                 | [![Dependency Status][field dependency status]][field dependency link]                 |
-| [`@zendeskgarden/container-schedule`](packages/schedule)           | [![npm version][schedule npm version]][schedule npm link]           | [![Dependency Status][schedule dependency status]][schedule dependency link]           |
+| [`@zendeskgarden/container-selection`](packages/selection)         | [![npm version][selection npm version]][selection npm link]         | [![Dependency Status][selection dependency status]][selection dependency link]         |
 | [`@zendeskgarden/container-keyboardfocus`](packages/keyboardfocus) | [![npm version][keyboardfocus npm version]][keyboardfocus npm link] | [![Dependency Status][keyboardfocus dependency status]][keyboardfocus dependency link] |
+| [`@zendeskgarden/container-schedule`](packages/schedule)           | [![npm version][schedule npm version]][schedule npm link]           | [![Dependency Status][schedule dependency status]][schedule dependency link]           |
 
+[breadcrumb npm version]: https://img.shields.io/npm/v/@zendeskgarden/container-breadcrumb.svg?style=flat-square
+[breadcrumb npm link]: https://www.npmjs.com/package/@zendeskgarden/container-breadcrumb
+[breadcrumb dependency status]: https://img.shields.io/david/zendeskgarden/react-containers.svg?path=packages/breadcrumb&style=flat-square
+[breadcrumb dependency link]: https://david-dm.org/zendeskgarden/react-containers?path=packages/breadcrumb
 [field npm version]: https://img.shields.io/npm/v/@zendeskgarden/container-field.svg?style=flat-square
 [field npm link]: https://www.npmjs.com/package/@zendeskgarden/container-field
 [field dependency status]: https://img.shields.io/david/zendeskgarden/react-containers.svg?path=packages/field&style=flat-square
 [field dependency link]: https://david-dm.org/zendeskgarden/react-containers?path=packages/field
-[schedule npm version]: https://img.shields.io/npm/v/@zendeskgarden/container-schedule.svg?style=flat-square
-[schedule npm link]: https://www.npmjs.com/package/@zendeskgarden/container-schedule
-[schedule dependency status]: https://img.shields.io/david/zendeskgarden/react-containers.svg?path=packages/schedule&style=flat-square
-[schedule dependency link]: https://david-dm.org/zendeskgarden/react-containers?path=packages/schedule
+[selection npm version]: https://img.shields.io/npm/v/@zendeskgarden/container-selection.svg?style=flat-square
+[selection npm link]: https://www.npmjs.com/package/@zendeskgarden/container-selection
+[selection dependency status]: https://img.shields.io/david/zendeskgarden/react-containers.svg?path=packages/selection&style=flat-square
+[selection dependency link]: https://david-dm.org/zendeskgarden/react-containers?path=packages/selection
 [keyboardfocus npm version]: https://img.shields.io/npm/v/@zendeskgarden/container-keyboardfocus.svg?style=flat-square
 [keyboardfocus npm link]: https://www.npmjs.com/package/@zendeskgarden/container-keyboardfocus
 [keyboardfocus dependency status]: https://img.shields.io/david/zendeskgarden/react-containers.svg?path=packages/keyboardfocus&style=flat-square
 [keyboardfocus dependency link]: https://david-dm.org/zendeskgarden/react-containers?path=packages/keyboardfocus
+[schedule npm version]: https://img.shields.io/npm/v/@zendeskgarden/container-schedule.svg?style=flat-square
+[schedule npm link]: https://www.npmjs.com/package/@zendeskgarden/container-schedule
+[schedule dependency status]: https://img.shields.io/david/zendeskgarden/react-containers.svg?path=packages/schedule&style=flat-square
+[schedule dependency link]: https://david-dm.org/zendeskgarden/react-containers?path=packages/schedule
 
 ## Usage
 
@@ -45,6 +55,28 @@ package.
 ```sh
 # Install garden package
 npm install @zendeskgarden/container-schedule
+```
+
+### Using as a hook
+
+```jsx
+import React from 'react';
+import { render } from 'react-dom';
+
+/** Consume throughout app */
+import { useSchedule } from '@zendeskgarden/container-schedule';
+
+const App = () => {
+  const elapsed = useSchedule({duration: 1000});
+  const x = 900;
+  const styles = {
+transform: translateX(`${900*elapsed}`px)
+  };
+
+  return <div style={styles} />;
+}
+
+render(<App />, document.getElementById('root'));
 ```
 
 ### Using as a render prop container
@@ -71,28 +103,6 @@ class App extends Component {
       </ScheduleContainer>
     );
   }
-}
-
-render(<App />, document.getElementById('root'));
-```
-
-### Using as a hook
-
-```jsx
-import React from 'react';
-import { render } from 'react-dom';
-
-/** Consume throughout app */
-import { useSchedule } from '@zendeskgarden/container-schedule';
-
-const App = () => {
-  const elapsed = useSchedule({duration: 1000});
-  const x = 900;
-  const styles = {
-    transform: translateX(`${900*elapsed}`px)
-  };
-
-  return <div style={styles} />;
 }
 
 render(<App />, document.getElementById('root'));
