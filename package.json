@@ -34,6 +34,7 @@
     "@storybook/addons": "5.0.0",
     "@storybook/react": "5.0.0",
     "@storybook/theming": "^5.0.0",
+    "@zendeskgarden/css-variables": "^6.2.1",
     "@zendeskgarden/eslint-config": "7.0.9",
     "@zendeskgarden/react-testing": "2.0.2",
     "babel-core": "7.0.0-bridge.0",

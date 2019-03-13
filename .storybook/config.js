@@ -9,6 +9,7 @@ import { configure, addParameters, addDecorator } from '@storybook/react';
 import { create } from '@storybook/theming';
 import centered from '@storybook/addon-centered';
 import { withA11y } from '@storybook/addon-a11y';
+import { zdFontFamilySystem, zdFontFamilyMonospace } from '@zendeskgarden/css-variables';
 
 // automatically import all files ending in *.stories.js
 const req = require.context('../packages', true, /.stories.js$/u);
@@ -25,7 +26,9 @@ addParameters({
     theme: create({
       brandTitle: 'React Containers',
       brandUrl: 'https://github.com/zendeskgarden/react-containers',
-      brandImage: 'https://garden.zendesk.com/favicon.ico'
+      brandImage: 'https://garden.zendesk.com/favicon.ico',
+      fontBase: zdFontFamilySystem,
+      fontCode: zdFontFamilyMonospace
     })
   }
 });
