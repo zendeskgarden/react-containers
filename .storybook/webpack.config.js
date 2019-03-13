@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-module.exports = ({ config, mode }) => {
+module.exports = ({ config }) => {
   config.module.rules.push({
     test: /stories.js$/u,
     loaders: [require.resolve('@storybook/addon-storysource/loader')],
