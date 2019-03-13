@@ -11,7 +11,7 @@ npm install @zendeskgarden/container-breadcrumb
 
 ## Usage
 
-For live examples check out our [storybook](https://zendeskgarden.github.io/react-containers?selectedKind=Bread%20Container).
+For live examples check out our [storybook](https://zendeskgarden.github.io/react-containers?path=/story/breadcrumb-container--usebreadcrumb).
 
 ### As a Render Prop Component
 

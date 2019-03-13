@@ -5,9 +5,11 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import { configure, addDecorator } from '@storybook/react';
-import { withOptions } from '@storybook/addon-options';
+import { configure, addParameters, addDecorator } from '@storybook/react';
+import { create } from '@storybook/theming';
 import centered from '@storybook/addon-centered';
+import { withA11y } from '@storybook/addon-a11y';
+import { zdFontFamilySystem, zdFontFamilyMonospace } from '@zendeskgarden/css-variables';
 
 // automatically import all files ending in *.stories.js
 const req = require.context('../packages', true, /.stories.js$/u);
@@ -16,12 +18,19 @@ function loadStories() {
   req.keys().forEach(filename => req(filename));
 }
 
-addDecorator(
-  centered,
-  withOptions({
-    name: 'React Containers',
-    url: 'https://github.com/zendeskgarden/react-containers'
-  })
-);
+addDecorator(centered);
+addDecorator(withA11y);
+
+addParameters({
+  options: {
+    theme: create({
+      brandTitle: 'React Containers',
+      brandUrl: 'https://github.com/zendeskgarden/react-containers',
+      brandImage: '/favicon.ico',
+      fontBase: zdFontFamilySystem,
+      fontCode: zdFontFamilyMonospace
+    })
+  }
+});
 
 configure(loadStories, module);

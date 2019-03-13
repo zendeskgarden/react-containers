@@ -11,7 +11,7 @@ npm install @zendeskgarden/container-selection
 
 ## Usage
 
-For live examples check out our [storybook](https://zendeskgarden.github.io/react-containers?selectedKind=Selection%20Containers).
+For live examples check out our [storybook](https://zendeskgarden.github.io/react-containers?path=/story/selection-containers--useselection).
 
 ### useSelection
 
