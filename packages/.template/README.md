@@ -11,6 +11,22 @@ npm install @zendeskgarden/container-{{component}}
 
 ## Usage
 
+For live examples check out our [storybook](https://zendeskgarden.github.io/react-containers).
+
+### useExample
+
+```jsx static
+import { useExample } from '@zendeskgarden/container-{{component}}';
+
+const Example = () => {
+  const { getExampleProps } = useExample();
+
+  return <div {...getExampleProps()} />;
+};
+```
+
+### ExampleContainer
+
 ```jsx static
 import { ExampleContainer } from '@zendeskgarden/container-{{component}}';
 

@@ -13,46 +13,11 @@ npm install @zendeskgarden/container-selection
 
 For live examples check out our [storybook](https://zendeskgarden.github.io/react-containers?selectedKind=Selection%20Containers).
 
-### SelectionContainer
-
-SelectionContainer is a render-prop around the `useSelection` hook which manages an items focus
-state including keyboard controls, aria attributes and RTL support. It uses the
-[roving tab index strategy](https://www.w3.org/TR/wai-aria-practices/#kbd_roving_tabindex).
-
-```jsx static
-import { SelectionContainer } from '@zendeskgarden/container-selection';
-
-const items = ['Item 1', 'Item 2', 'Item 3'];
-
-<SelectionContainer direction="vertical">
-  {({ selectedItem, focusedItem, getContainerProps, getItemProps }) => (
-    <ul {...getContainerProps()}>
-      {items.map(item => {
-        const ref = React.createRef();
-        const isSelected = item === selectedItem;
-        const isFocused = item === focusedItem;
-
-        return (
-          <li
-            {...getItemProps({
-              key: item,
-              item,
-              ref,
-              focusRef: ref
-            })}
-          >
-            {item}
-            {isSelected && <span> - Selected</span>}
-            {isFocused && <span> - Focused</span>}
-          </li>
-        );
-      })}
-    </ul>
-  )}
-</SelectionContainer>;
-```
-
 ### useSelection
+
+The `useSelection` hook which manages an items focus state including keyboard controls,
+aria attributes and RTL support. It uses the
+[roving tab index strategy](https://www.w3.org/TR/wai-aria-practices/#kbd_roving_tabindex).
 
 ```jsx static
 import { useSelection } from '@zendeskgarden/container-selection';
@@ -89,4 +54,39 @@ const Selection = ({ direction }) => {
     </ul>
   );
 };
+```
+
+### SelectionContainer
+
+```jsx static
+import { SelectionContainer } from '@zendeskgarden/container-selection';
+
+const items = ['Item 1', 'Item 2', 'Item 3'];
+
+<SelectionContainer direction="vertical">
+  {({ selectedItem, focusedItem, getContainerProps, getItemProps }) => (
+    <ul {...getContainerProps()}>
+      {items.map(item => {
+        const ref = React.createRef();
+        const isSelected = item === selectedItem;
+        const isFocused = item === focusedItem;
+
+        return (
+          <li
+            {...getItemProps({
+              key: item,
+              item,
+              ref,
+              focusRef: ref
+            })}
+          >
+            {item}
+            {isSelected && <span> - Selected</span>}
+            {isFocused && <span> - Focused</span>}
+          </li>
+        );
+      })}
+    </ul>
+  )}
+</SelectionContainer>;
 ```

@@ -16,41 +16,6 @@ import { DIRECTIONS } from './src/utils/DIRECTIONS';
 
 storiesOf('Selection Containers', module)
   .addDecorator(withKnobs)
-  .add('SelectionContainer', () => {
-    const items = ['Item 1', 'Item 2', 'Item 3'];
-
-    return (
-      <SelectionContainer
-        direction="vertical"
-        defaultFocusedIndex={number('defaultFocusedIndex', 0)}
-      >
-        {({ selectedItem, focusedItem, getContainerProps, getItemProps }) => (
-          <ul {...getContainerProps()}>
-            {items.map(item => {
-              const ref = React.createRef();
-              const isSelected = item === selectedItem;
-              const isFocused = item === focusedItem;
-
-              return (
-                <li
-                  {...getItemProps({
-                    key: item,
-                    item,
-                    ref,
-                    focusRef: ref
-                  })}
-                >
-                  {item}
-                  {isSelected && <span> - Selected</span>}
-                  {isFocused && <span> - Focused</span>}
-                </li>
-              );
-            })}
-          </ul>
-        )}
-      </SelectionContainer>
-    );
-  })
   .add('useSelection', () => {
     const items = ['One', 'Two', 'Three'];
     const isRtl = boolean('Enable RTL', false);
@@ -111,5 +76,40 @@ storiesOf('Selection Containers', module)
           DIRECTIONS.HORIZONTAL
         )}
       />
+    );
+  })
+  .add('SelectionContainer', () => {
+    const items = ['Item 1', 'Item 2', 'Item 3'];
+
+    return (
+      <SelectionContainer
+        direction="vertical"
+        defaultFocusedIndex={number('defaultFocusedIndex', 0)}
+      >
+        {({ selectedItem, focusedItem, getContainerProps, getItemProps }) => (
+          <ul {...getContainerProps()}>
+            {items.map(item => {
+              const ref = React.createRef();
+              const isSelected = item === selectedItem;
+              const isFocused = item === focusedItem;
+
+              return (
+                <li
+                  {...getItemProps({
+                    key: item,
+                    item,
+                    ref,
+                    focusRef: ref
+                  })}
+                >
+                  {item}
+                  {isSelected && <span> - Selected</span>}
+                  {isFocused && <span> - Focused</span>}
+                </li>
+              );
+            })}
+          </ul>
+        )}
+      </SelectionContainer>
     );
   });

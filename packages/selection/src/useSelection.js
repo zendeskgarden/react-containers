@@ -159,7 +159,7 @@ export function useSelection({
         refs[focusedIndex] && refs[focusedIndex].current.focus();
       }
     },
-    [controlledFocusedItem]
+    [controlledFocusedItem, items, refs]
   );
 
   const getContainerProps = ({ role = 'listbox', ...other } = {}) => ({

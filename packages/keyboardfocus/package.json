@@ -35,5 +35,6 @@
   ],
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "zendeskgarden:src": "src/index.js"
 }

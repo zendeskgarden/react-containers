@@ -18,7 +18,7 @@
     "PACKAGE_VERSION": true,
     "COMPONENT_IDS": true
   },
-  "plugins": ["prettier", "react", "jest", "jsx-a11y"],
+  "plugins": ["prettier", "react", "jest", "jsx-a11y", "react-hooks"],
   "env": {
     "es6": true,
     "browser": true,
@@ -36,6 +36,7 @@
     "react/display-name": "off",
     "jsx-a11y/label-has-for": "off",
     "jsx-a11y/label-has-associated-control": "off",
-    "jest/no-disabled-tests": "off"
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn"
   }
 }

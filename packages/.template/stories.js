@@ -10,8 +10,19 @@ import React from 'react';
 import { storiesOf } from '@storybook/react';
 import { withKnobs } from '@storybook/addon-knobs';
 
-import { Button } from '@storybook/react/demo';
+import { ExampleContainer, useExample } from './src';
 
 storiesOf('Example Container', module)
   .addDecorator(withKnobs)
-  .add('with some text', () => <Button onClick={action('clicked')}>Click</Button>);
+  .add('useExample', () => {
+    const Example = ({ coolProp }) => {
+      const { getCoolProps } = useExample({ coolProp });
+
+      return <div {...getCoolProps()} />;
+    };
+
+    return <Example coolProp />;
+  })
+  .add('ExampleContainer', () => (
+    <ExampleContainer>{({ getCoolProps }) => <div {...getCoolProps()} />}</ExampleContainer>
+  ));

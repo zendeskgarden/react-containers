@@ -5,21 +5,16 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-export default class ExampleContainer extends Component {
-  static propTypes = {
-    coolProp: PropTypes.bool
-  };
+import { useExample } from './useExample';
 
-  getCoolProps = ({ coolProp = 'cool', ...other }) => ({ coolProp, ...other });
-
-  render() {
-    const { children, render = children } = this.props;
-
-    render({
-      getCoolProps: props => this.getCoolProps(prop)
-    });
-  }
+export function ExampleContainer({ children, render = children, coolProp }) {
+  return render(useExample({ coolProp }));
 }
+
+ExampleContainer.propTypes = {
+  children: PropTypes.func,
+  render: PropTypes.func,
+  coolProp: PropTypes.string
+};
