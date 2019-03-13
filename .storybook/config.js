@@ -26,7 +26,7 @@ addParameters({
     theme: create({
       brandTitle: 'React Containers',
       brandUrl: 'https://github.com/zendeskgarden/react-containers',
-      brandImage: 'https://garden.zendesk.com/favicon.ico',
+      brandImage: '/favicon.ico',
       fontBase: zdFontFamilySystem,
       fontCode: zdFontFamilyMonospace
     })

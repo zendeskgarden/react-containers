@@ -2678,7 +2678,7 @@
   resolved "https://registry.yarnpkg.com/@xtuc/long/-/long-4.2.2.tgz#d291c6a4e97989b5c61d9acf396ae4fe133a718d"
   integrity sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==
 
-"@zendeskgarden/css-variables@^6.2.1":
+"@zendeskgarden/css-variables@6.2.1":
   version "6.2.1"
   resolved "https://registry.yarnpkg.com/@zendeskgarden/css-variables/-/css-variables-6.2.1.tgz#87945ab106e4460fd0f0770146ff3ed874999d56"
   integrity sha512-IhmL0VtQvcVOftPJ9wVYslc/mpWJiFAjKCtslzhwnZmrfxmMyqZ6HgGTFXXIRW1kJyw3E2LISriHbDUiQqlX5A==

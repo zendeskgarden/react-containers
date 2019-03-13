@@ -2,7 +2,7 @@
   "name": "@zendeskgarden/react-containers",
   "scripts": {
     "build": "lerna run build --stream",
-    "build:demo": "build-storybook -o demo",
+    "build:demo": "build-storybook -s ./public -o demo",
     "format": "yarn format:package_json && yarn format:js && yarn format:markdown",
     "format:js": "prettier --loglevel warn --write '{packages/**/!(dist),utils/**}/*.js'",
     "format:markdown": "prettier --loglevel warn --write '{packages/**/!(dist)/!(CHANGELOG)*.md,README.md}'",
@@ -12,7 +12,8 @@
     "lint:js": "eslint packages/*/src/ packages/*/stories.js utils/ .storybook/ --max-warnings 0",
     "lint:markdown": "markdownlint README.md packages/*/src/**/*.md packages/*/src/*.md packages/*/README.md",
     "new": "utils/scripts/create-package.js",
-    "start": "start-storybook -p 6006",
+    "prepare": "yarn build",
+    "start": "start-storybook -s ./public -p 6006",
     "tag": "lerna version --conventional-commits",
     "test": "yarn test:all --watch",
     "test:all": "jest --config=utils/test/jest.config.js"
@@ -33,7 +34,7 @@
     "@storybook/addons": "5.0.1",
     "@storybook/react": "5.0.1",
     "@storybook/theming": "5.0.1",
-    "@zendeskgarden/css-variables": "^6.2.1",
+    "@zendeskgarden/css-variables": "6.2.1",
     "@zendeskgarden/eslint-config": "7.0.9",
     "@zendeskgarden/react-testing": "2.0.2",
     "babel-core": "7.0.0-bridge.0",
