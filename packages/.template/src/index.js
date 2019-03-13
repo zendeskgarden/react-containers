@@ -5,4 +5,8 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-export { default as Example } from './Example';
+/* Hooks */
+export { useExample } from './useExample';
+
+/* Render-props */
+export { ExampleContainer } from './ExampleContainer';

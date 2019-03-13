@@ -10,7 +10,7 @@ import { useState } from 'react';
 export function useExample({ coolProp }) {
   const [example, setExample] = useState(0);
 
-  const getCoolProps = ({ coolProp = 'cool', ...other }) => ({ coolProp, ...other });
+  const getCoolProps = ({ coolProp = 'cool', ...other } = {}) => ({ coolProp, ...other });
 
   return {
     getCoolProps
