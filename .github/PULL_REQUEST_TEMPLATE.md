@@ -20,5 +20,6 @@
 ## Checklist
 
 - [ ] :globe_with_meridians: Storybook demo is up-to-date (`yarn storybook`)
+- [ ] :wheelchair: analyzed via [axe](https://www.deque.com/axe/) and evaluated using VoiceOver
 - [ ] :guardsman: includes new unit tests
 - [ ] :memo: tested in Chrome, Firefox, Safari, Edge, and IE11
