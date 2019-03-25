@@ -20,36 +20,36 @@ export function usePagination(options) {
     getItemProps
   } = useSelection(options);
 
-  const getContainerProps = (props = {}) => {
+  const getContainerProps = ({ ariaLabel, ...props } = {}) => {
     return {
-      'aria-label': 'Pagination navigation',
+      'aria-label': ariaLabel || 'Pagination navigation',
       ...props
     };
   };
 
-  const getPreviousPageProps = (props = {}) => {
+  const getPreviousPageProps = ({ ariaLabel, ...props } = {}) => {
     return {
-      'aria-label': 'Previous Page',
+      'aria-label': ariaLabel || 'Previous Page',
       ...props
     };
   };
 
-  const getNextPageProps = (props = {}) => {
+  const getNextPageProps = ({ ariaLabel, ...props } = {}) => {
     return {
-      'aria-label': 'Next Page',
+      'aria-label': ariaLabel || 'Next Page',
       ...props
     };
   };
 
-  const getPageProps = ({ page, current, ...other } = {}) => {
-    let ariaLabel = `Page ${page}`;
+  const getPageProps = ({ ariaLabel, page, current, ...other } = {}) => {
+    let ariaLabelText = `Page ${page}`;
 
     if (current) {
-      ariaLabel = `Current page, Page ${page}`;
+      ariaLabelText = `Current page, Page ${page}`;
     }
 
     return {
-      'aria-label': ariaLabel,
+      'aria-label': ariaLabel || ariaLabelText,
       current,
       ...other
     };
