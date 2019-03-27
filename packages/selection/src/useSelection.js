@@ -195,8 +195,8 @@ export function useSelection({
       controlledFocusedItem === undefined ? isSelected : controlledFocusedItem === item;
     const tabIndex =
       isFocused ||
-      (state.selectedItem === undefined &&
-        state.focusedItem === undefined &&
+      (controlledSelectedItem === undefined &&
+        controlledFocusedItem === undefined &&
         items.indexOf(item) === defaultFocusedIndex)
         ? 0
         : -1;
