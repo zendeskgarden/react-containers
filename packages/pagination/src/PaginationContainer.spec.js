@@ -125,7 +125,7 @@ describe('PaginationContainer', () => {
     it('applies correct accessibility attributes', () => {
       const container = findContainer(wrapper);
 
-      expect(container).toHaveProp('role', 'listbox');
+      expect(container).toHaveProp('role', 'navigation');
       expect(container).toHaveProp('aria-label', 'Pagination navigation');
     });
 

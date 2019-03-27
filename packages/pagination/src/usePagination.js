@@ -7,11 +7,6 @@
 
 import { useSelection } from '@zendeskgarden/container-selection';
 
-/**
- * A React Hook used to create accessible widgets with the Pagination Interaction Pattern
- *
- * https://www.w3.org/TR/wai-aria-practices/#Listbox
- */
 export function usePagination(options) {
   const {
     selectedItem,
@@ -20,8 +15,9 @@ export function usePagination(options) {
     getItemProps
   } = useSelection(options);
 
-  const getContainerProps = ({ ariaLabel, ...props } = {}) => {
+  const getContainerProps = ({ role = 'navigation', ariaLabel, ...props } = {}) => {
     return {
+      role,
       'aria-label': ariaLabel || 'Pagination navigation',
       ...props
     };
@@ -44,7 +40,7 @@ export function usePagination(options) {
   const getPageProps = ({ ariaLabel, page, current, ...other } = {}) => {
     let ariaLabelText = `Page ${page}`;
 
-    if (current) {
+    if (current && !ariaLabel) {
       ariaLabelText = `Current page, Page ${page}`;
     }
 

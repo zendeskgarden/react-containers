@@ -51,54 +51,56 @@ storiesOf('Pagination Container', module)
       });
 
       return (
-        <ul {...getContainerProps({ style: { display: 'flex', role: 'navigation' } })}>
-          <li
-            {...getPreviousPageProps({
-              current: selectedItem === 'prev',
-              focused: focusedItem === 'prev',
-              item: 'prev',
-              focusRef: previousPageRef,
-              ref: previousPageRef,
-              key: 'previous-page'
+        <nav {...getContainerProps({ role: null })}>
+          <ul style={{ display: 'flex' }}>
+            <li
+              {...getPreviousPageProps({
+                current: selectedItem === 'prev',
+                focused: focusedItem === 'prev',
+                item: 'prev',
+                focusRef: previousPageRef,
+                ref: previousPageRef,
+                key: 'previous-page'
+              })}
+            >
+              Prev
+            </li>
+            {pages.map((page, index) => {
+              return (
+                <li
+                  {...getPageProps({
+                    focused: index === focusedItem,
+                    current: index === selectedItem,
+                    page: index,
+                    item: index,
+                    focusRef: pageRefs[index],
+                    ref: pageRefs[index],
+                    key: `page-${index}`,
+                    style: {
+                      outline: index === focusedItem && '3px solid red',
+                      background: index === selectedItem && 'gray',
+                      padding: '0 6px'
+                    }
+                  })}
+                >
+                  {index + 1}
+                </li>
+              );
             })}
-          >
-            Prev
-          </li>
-          {pages.map((page, index) => {
-            return (
-              <li
-                {...getPageProps({
-                  focused: index === focusedItem,
-                  current: index === selectedItem,
-                  page: index,
-                  item: index,
-                  focusRef: pageRefs[index],
-                  ref: pageRefs[index],
-                  key: `page-${index}`,
-                  style: {
-                    outline: index === focusedItem && '3px solid red',
-                    background: index === selectedItem && 'gray',
-                    padding: '0 6px'
-                  }
-                })}
-              >
-                {index + 1}
-              </li>
-            );
-          })}
-          <li
-            {...getNextPageProps({
-              current: selectedItem === 'next',
-              focused: focusedItem === 'next',
-              item: 'next',
-              focusRef: nextPageRef,
-              ref: nextPageRef,
-              key: 'next-page'
-            })}
-          >
-            Next
-          </li>
-        </ul>
+            <li
+              {...getNextPageProps({
+                current: selectedItem === 'next',
+                focused: focusedItem === 'next',
+                item: 'next',
+                focusRef: nextPageRef,
+                ref: nextPageRef,
+                key: 'next-page'
+              })}
+            >
+              Next
+            </li>
+          </ul>
+        </nav>
       );
     };
 
@@ -140,54 +142,56 @@ storiesOf('Pagination Container', module)
             getPageProps
           }) => {
             return (
-              <ul {...getContainerProps({ style: { display: 'flex', role: 'navigation' } })}>
-                <li
-                  {...getPreviousPageProps({
-                    current: selectedItem === 'prev',
-                    focused: focusedItem === 'prev',
-                    item: 'prev',
-                    focusRef: previousPageRef,
-                    ref: previousPageRef,
-                    key: 'previous-page'
+              <nav {...getContainerProps({ role: null })}>
+                <ul style={{ display: 'flex' }}>
+                  <li
+                    {...getPreviousPageProps({
+                      current: selectedItem === 'prev',
+                      focused: focusedItem === 'prev',
+                      item: 'prev',
+                      focusRef: previousPageRef,
+                      ref: previousPageRef,
+                      key: 'previous-page'
+                    })}
+                  >
+                    Prev
+                  </li>
+                  {pages.map((page, index) => {
+                    return (
+                      <li
+                        {...getPageProps({
+                          focused: index === focusedItem,
+                          current: index === selectedItem,
+                          page: index,
+                          item: index,
+                          focusRef: pageRefs[index],
+                          ref: pageRefs[index],
+                          key: `page-${index}`,
+                          style: {
+                            outline: index === focusedItem && '3px solid red',
+                            background: index === selectedItem && 'gray',
+                            padding: '0 6px'
+                          }
+                        })}
+                      >
+                        {index + 1}
+                      </li>
+                    );
                   })}
-                >
-                  Prev
-                </li>
-                {pages.map((page, index) => {
-                  return (
-                    <li
-                      {...getPageProps({
-                        focused: index === focusedItem,
-                        current: index === selectedItem,
-                        page: index,
-                        item: index,
-                        focusRef: pageRefs[index],
-                        ref: pageRefs[index],
-                        key: `page-${index}`,
-                        style: {
-                          outline: index === focusedItem && '3px solid red',
-                          background: index === selectedItem && 'gray',
-                          padding: '0 6px'
-                        }
-                      })}
-                    >
-                      {index + 1}
-                    </li>
-                  );
-                })}
-                <li
-                  {...getNextPageProps({
-                    current: selectedItem === 'next',
-                    focused: focusedItem === 'next',
-                    item: 'next',
-                    focusRef: nextPageRef,
-                    ref: nextPageRef,
-                    key: 'next-page'
-                  })}
-                >
-                  Next
-                </li>
-              </ul>
+                  <li
+                    {...getNextPageProps({
+                      current: selectedItem === 'next',
+                      focused: focusedItem === 'next',
+                      item: 'next',
+                      focusRef: nextPageRef,
+                      ref: nextPageRef,
+                      key: 'next-page'
+                    })}
+                  >
+                    Next
+                  </li>
+                </ul>
+              </nav>
             );
           }}
         </PaginationContainer>
