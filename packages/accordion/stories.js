@@ -5,51 +5,98 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 
 import { storiesOf } from '@storybook/react';
-import { withKnobs, number } from '@storybook/addon-knobs';
+import { boolean, number, withKnobs } from '@storybook/addon-knobs';
 
 import { AccordionContainer, useAccordion } from './src';
 
 storiesOf('Accordion Container', module)
   .addDecorator(withKnobs)
   .add('useAccordion', () => {
-    const Section = props => {
-      const { getHeaderProps, getTriggerProps, getPanelProps, expanded } = useAccordion(props);
+    // eslint-disable-next-line react/prop-types
+    const Accordion = ({ sections, expandable = true, collapsible = true }) => {
+      const [_sections, setSections] = useState(sections);
+
+      const handleToggle = index => {
+        setSections(
+          _sections.map((section, _index) => {
+            if (index === _index) {
+              section.expanded = collapsible ? !section.expanded : true;
+            } else if (!expandable) {
+              section.expanded = false;
+            }
+
+            return {
+              id: section.id,
+              expanded: section.expanded
+            };
+          })
+        );
+      };
+
+      return (
+        <div>
+          {_sections.map((section, index) => (
+            <Section
+              expanded={section.expanded}
+              disabled={section.expanded && !collapsible}
+              id={section.id}
+              key={section.id}
+              onToggle={() => handleToggle(index)}
+            />
+          ))}
+        </div>
+      );
+    };
+
+    const Section = ({ expanded, disabled, id, onToggle }) => {
+      const { getHeaderProps, getTriggerProps, getPanelProps } = useAccordion(id);
 
       return (
         <>
           <h2 {...getHeaderProps({ role: null, ariaLevel: null })}>
             <button
               {...getTriggerProps({
-                role: null
+                role: null,
+                ariaExpanded: expanded,
+                disabled,
+                onClick: () => {
+                  onToggle();
+                }
               })}
-            >{`Trigger ${props.id}`}</button>
+            >
+              {`Trigger ${id}`}
+              {disabled && ' [disabled]'}
+            </button>
           </h2>
           <section
             {...getPanelProps({
               role: null,
+              ariaHidden: !expanded,
               hidden: !expanded
             })}
-          >{`Panel ${props.id}`}</section>
+          >{`Panel ${id}`}</section>
         </>
       );
     };
 
-    const total = number('Total Sections', 3);
-    const values = [];
+    const sections = [];
 
-    for (let x = 1; x <= total; x++) {
-      values.push(x);
+    for (let x = 0; x < number('Total Sections', 3); x++) {
+      sections.push({
+        id: x,
+        expanded: x === 0
+      });
     }
 
     return (
-      <div>
-        {values.map(value => (
-          <Section expanded={value === 1} id={value} key={value} />
-        ))}
-      </div>
+      <Accordion
+        sections={sections}
+        expandable={boolean('Expandable', true)}
+        collapsible={boolean('Collapsible', true)}
+      />
     );
   })
   .add('AccordionContainer', () => (

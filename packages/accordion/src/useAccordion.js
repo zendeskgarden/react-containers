@@ -7,11 +7,9 @@
 
 import { useState } from 'react';
 import { generateId } from './utils/IdManager';
-import { composeEventHandlers } from './utils/composeEventHandlers';
 
-export function useAccordion({ key, expanded }) {
-  const [isExpanded, setExpanded] = useState(expanded);
-  const [prefix] = useState(key || generateId('garden-accordion-container'));
+export function useAccordion({ accordionId }) {
+  const [prefix] = useState(accordionId || generateId('garden-accordion-container'));
   const triggerId = `${prefix}--trigger`;
   const panelId = `${prefix}--panel`;
 
@@ -32,31 +30,25 @@ export function useAccordion({ key, expanded }) {
   const getTriggerProps = ({
     id = triggerId,
     role = 'button',
-    disabled = false,
+    ariaDisabled = false,
+    ariaExpanded = false,
     ...props
   } = {}) => {
-    const onClick = () => {
-      if (!disabled) {
-        setExpanded(!isExpanded);
-      }
-    };
-
     return {
       id,
       role,
       'aria-controls': panelId,
-      'aria-disabled': disabled,
-      'aria-expanded': isExpanded,
-      onClick: composeEventHandlers(props.onClick, onClick),
+      'aria-disabled': ariaDisabled,
+      'aria-expanded': ariaExpanded,
       ...props
     };
   };
 
-  const getPanelProps = ({ id = panelId, role = 'region', ...props } = {}) => {
+  const getPanelProps = ({ id = panelId, role = 'region', ariaHidden = true, ...props } = {}) => {
     return {
       id,
       role,
-      'aria-hidden': !isExpanded,
+      'aria-hidden': ariaHidden,
       'aria-labelledby': triggerId,
       ...props
     };
@@ -65,7 +57,6 @@ export function useAccordion({ key, expanded }) {
   return {
     getHeaderProps,
     getTriggerProps,
-    getPanelProps,
-    expanded: isExpanded
+    getPanelProps
   };
 }
