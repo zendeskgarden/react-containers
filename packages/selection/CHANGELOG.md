@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.2](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-selection@0.2.1...@zendeskgarden/container-selection@0.2.2) (2019-04-01)
+
+
+### Bug Fixes
+
+* **selection:** correctly use controlled state to avoid weird bugs ([#21](https://github.com/zendeskgarden/react-containers/issues/21)) ([07f0d94](https://github.com/zendeskgarden/react-containers/commit/07f0d94))
+
+
+
+
+
 ## [0.2.1](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-selection@0.2.0...@zendeskgarden/container-selection@0.2.1) (2019-03-13)
 
 **Note:** Version bump only for package @zendeskgarden/container-selection
