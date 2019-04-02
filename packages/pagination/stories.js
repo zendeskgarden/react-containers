@@ -50,6 +50,7 @@ storiesOf('Pagination Container', module)
         }
       });
 
+      // role="null" is applied due to implied role="navigation" semantics of <nav />
       return (
         <nav {...getContainerProps({ role: null })}>
           <ul style={{ display: 'flex' }}>
