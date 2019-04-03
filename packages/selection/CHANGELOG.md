@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.3](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-selection@0.2.2...@zendeskgarden/container-selection@0.2.3) (2019-04-03)
+
+
+### Bug Fixes
+
+* **selection:** check if keyboard select is in controlled mode ([#22](https://github.com/zendeskgarden/react-containers/issues/22)) ([2cbe8f5](https://github.com/zendeskgarden/react-containers/commit/2cbe8f5))
+
+
+
+
+
 ## [0.2.2](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-selection@0.2.1...@zendeskgarden/container-selection@0.2.2) (2019-04-01)
 
 
