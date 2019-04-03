@@ -106,7 +106,7 @@ function stateReducer(state, action, { focusedItem, selectedItem, onFocus, onSel
       if (onSelect) {
         onSelect(action.payload);
 
-        return state;
+        return { ...state };
       }
 
       return { ...state, selectedItem: action.payload };
