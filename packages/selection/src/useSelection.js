@@ -103,20 +103,13 @@ function stateReducer(state, action, { focusedItem, selectedItem, onFocus, onSel
       return updatedState;
     }
     case ACTIONS.KEYBOARD_SELECT: {
-      let isSelectControlled = false;
-
       if (onSelect) {
         onSelect(action.payload);
-        isSelectControlled = true;
+
+        return { ...state };
       }
 
-      const updatedState = { ...state };
-
-      if (!isSelectControlled) {
-        updatedState.selectedItem = action.payload;
-      }
-
-      return updatedState;
+      return { ...state, selectedItem: action.payload };
     }
     case ACTIONS.EXIT_WIDGET: {
       if (onFocus) {
