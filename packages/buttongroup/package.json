@@ -17,8 +17,7 @@
     "build": "../../utils/scripts/build.sh"
   },
   "dependencies": {
-    "@zendeskgarden/container-selection": "^0.2.3",
-    "dom-helpers": "^3.4.0"
+    "@zendeskgarden/container-selection": "^0.2.3"
   },
   "peerDependencies": {
     "prop-types": "^15.6.1",

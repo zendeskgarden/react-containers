@@ -7,12 +7,8 @@
 
 import React, { createRef } from 'react';
 import { mount } from 'enzyme';
-import closest from 'dom-helpers/query/closest';
 
 import { ButtonGroupContainer } from './ButtonGroupContainer';
-
-jest.mock('dom-helpers/query/closest');
-closest.mockImplementation(() => ({ focus: jest.fn() }));
 
 describe('ButtonGroupContainer', () => {
   let wrapper;
@@ -57,20 +53,6 @@ describe('ButtonGroupContainer', () => {
   });
 
   describe('getButtonProps', () => {
-    it('throws if key is not provided', () => {
-      console.error = jest.fn(); // eslint-disable-line no-console
-
-      expect(() => {
-        mount(
-          <ButtonGroupContainer>
-            {({ getButtonProps }) => <div {...getButtonProps()}>Test button</div>}
-          </ButtonGroupContainer>
-        );
-      }).toThrow(
-        '"key" must be defined within getButtonProps regardless of being used within a .map()'
-      );
-    });
-
     it('applies the correct accessibility role', () => {
       findButtons(wrapper).forEach(button => {
         expect(button).toHaveProp('role', 'button');
@@ -94,14 +76,6 @@ describe('ButtonGroupContainer', () => {
         .first()
         .simulate('click');
       expect(findButtons(wrapper).first()).toHaveProp('aria-pressed', true);
-    });
-
-    it('moves focus to the ButtonGroupView if a button receives focus', () => {
-      findButtons(wrapper)
-        .at(0)
-        .simulate('focus');
-
-      expect(closest).toHaveBeenCalled();
     });
   });
 });
