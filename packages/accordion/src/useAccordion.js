@@ -5,14 +5,9 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import { useState } from 'react';
-import { generateId } from './utils/IdManager';
+import { composeEventHandlers } from './utils/composeEventHandlers';
 
-export function useAccordion({ accordionId }) {
-  const [prefix] = useState(accordionId || generateId('garden-accordion-container'));
-  const triggerId = `${prefix}--trigger`;
-  const panelId = `${prefix}--panel`;
-
+export function useAccordion() {
   const getHeaderProps = ({ role = 'heading', ariaLevel, ...props } = {}) => {
     if (ariaLevel === undefined) {
       throw new Error(
@@ -28,27 +23,50 @@ export function useAccordion({ accordionId }) {
   };
 
   const getTriggerProps = ({
-    id = triggerId,
+    id,
+    panelId,
     role = 'button',
-    ariaDisabled = false,
     ariaExpanded = false,
+    ariaDisabled = false,
+    onToggle,
     ...props
   } = {}) => {
+    if (id === undefined) {
+      throw new Error('Accessibility Error: You must apply an `id` prop to the trigger element.');
+    }
+
+    if (panelId === undefined) {
+      throw new Error(
+        'Accessibility Error: You must apply a `panelId` prop that identifies the panel this trigger controls.'
+      );
+    }
+
     return {
       id,
       role,
       'aria-controls': panelId,
       'aria-disabled': ariaDisabled,
       'aria-expanded': ariaExpanded,
+      onClick: composeEventHandlers(props.onClick, onToggle),
       ...props
     };
   };
 
-  const getPanelProps = ({ id = panelId, role = 'region', ariaHidden = true, ...props } = {}) => {
+  const getPanelProps = ({ id, triggerId, role = 'region', ariaHidden = true, ...props } = {}) => {
+    if (id === undefined) {
+      throw new Error('Accessibility Error: You must apply an `id` prop to the panel element.');
+    }
+
+    if (triggerId === undefined) {
+      throw new Error(
+        'Accessibility Error: You must apply a `triggerId` prop that identifies the trigger this panel is labeled by.'
+      );
+    }
+
     return {
       id,
       role,
-      'aria-hidden': ariaHidden,
+      'aria-hidden': !ariaHidden,
       'aria-labelledby': triggerId,
       ...props
     };

@@ -9,12 +9,11 @@ import PropTypes from 'prop-types';
 
 import { useAccordion } from './useAccordion';
 
-export function AccordionContainer({ children, render = children, key, expanded }) {
-  return render(useAccordion({ key, expanded }));
+export function AccordionContainer({ children, render = children, ...props }) {
+  return render(useAccordion(props));
 }
 
 AccordionContainer.propTypes = {
   children: PropTypes.func,
-  render: PropTypes.func,
-  id: PropTypes.string
+  render: PropTypes.func
 };

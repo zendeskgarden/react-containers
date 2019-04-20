@@ -12,102 +12,159 @@ import { boolean, number, withKnobs } from '@storybook/addon-knobs';
 
 import { AccordionContainer, useAccordion } from './src';
 
+const getToggled = (toggledIndex, toggledState, expandable, collapsible) => {
+  return toggledState.map((_, index) => {
+    let retVal;
+
+    if (index === toggledIndex) {
+      retVal = collapsible ? !toggledState[index] : true;
+    } else if (expandable) {
+      retVal = toggledState[index];
+    } else {
+      retVal = false;
+    }
+
+    return retVal;
+  });
+};
+
 storiesOf('Accordion Container', module)
   .addDecorator(withKnobs)
   .add('useAccordion', () => {
-    // eslint-disable-next-line react/prop-types
-    const Accordion = ({ sections, expandable = true, collapsible = true }) => {
-      const [_sections, setSections] = useState(sections);
+    const size = number('Sections', 5, { range: true, min: 1, max: 9 });
+    const sections = Array(size).fill(false);
+
+    const Accordion = ({ expandable = true, collapsible = true } = {}) => {
+      const [toggled, setToggled] = useState(sections);
 
       const handleToggle = index => {
-        setSections(
-          _sections.map((section, _index) => {
-            if (index === _index) {
-              section.expanded = collapsible ? !section.expanded : true;
-            } else if (!expandable) {
-              section.expanded = false;
-            }
+        const state = getToggled(index, toggled, expandable, collapsible);
 
-            return {
-              id: section.id,
-              expanded: section.expanded
-            };
-          })
-        );
+        setToggled(state);
       };
 
-      return (
-        <div>
-          {_sections.map((section, index) => (
-            <Section
-              expanded={section.expanded}
-              disabled={section.expanded && !collapsible}
-              id={section.id}
-              key={section.id}
-              onToggle={() => handleToggle(index)}
-            />
-          ))}
-        </div>
-      );
-    };
-
-    const Section = ({ expanded, disabled, id, onToggle }) => {
-      const { getHeaderProps, getTriggerProps, getPanelProps } = useAccordion(id);
+      const { getHeaderProps, getTriggerProps, getPanelProps } = useAccordion();
 
       return (
         <>
-          <h2 {...getHeaderProps({ role: null, ariaLevel: null })}>
-            <button
-              {...getTriggerProps({
-                role: null,
-                ariaExpanded: expanded,
-                disabled,
-                onClick: () => {
-                  onToggle();
-                }
-              })}
-            >
-              {`Trigger ${id}`}
-              {disabled && ' [disabled]'}
-            </button>
-          </h2>
-          <section
-            {...getPanelProps({
-              role: null,
-              ariaHidden: !expanded,
-              hidden: !expanded
-            })}
-          >{`Panel ${id}`}</section>
+          {sections.map((_, index) => {
+            const triggerId = `trigger-${index}`;
+            const panelId = `panel-${index}`;
+            const expanded = toggled[index];
+
+            return (
+              <div key={index} style={{ width: 300 }}>
+                <h2 {...getHeaderProps({ role: null, ariaLevel: null })}>
+                  <button
+                    {...getTriggerProps({
+                      id: triggerId,
+                      panelId,
+                      role: null,
+                      ariaExpanded: expanded,
+                      ariaDisabled: expanded && !collapsible,
+                      disabled: expanded && !collapsible,
+                      onToggle: () => handleToggle(index),
+                      style: { width: '100%', textAlign: 'unset' }
+                    })}
+                  >
+                    {`Trigger ${index + 1}`}
+                  </button>
+                </h2>
+                <section
+                  {...getPanelProps({
+                    id: panelId,
+                    triggerId,
+                    role: null,
+                    ariaHidden: !expanded,
+                    hidden: !expanded
+                  })}
+                >
+                  {`[Panel ${index + 1}] `}
+                  Veggies es bonus vobis, proinde vos postulo essum magis kohlrabi welsh onion
+                  daikon amaranth tatsoi tomatillo melon azuki bean garlic.
+                </section>
+              </div>
+            );
+          })}
         </>
       );
     };
 
-    const sections = [];
-
-    for (let x = 0; x < number('Total Sections', 3); x++) {
-      sections.push({
-        id: x,
-        expanded: x === 0
-      });
-    }
-
     return (
       <Accordion
-        sections={sections}
         expandable={boolean('Expandable', true)}
         collapsible={boolean('Collapsible', true)}
       />
     );
   })
-  .add('AccordionContainer', () => (
-    <AccordionContainer>
-      {({ getHeaderProps, getTriggerProps, getPanelProps, expanded }) => (
-        <>
-          <div {...getHeaderProps({ ariaLevel: 2 })}>
-            <div {...getTriggerProps()}>Trigger</div>
-          </div>
-          <div {...getPanelProps({ hidden: !expanded })}>Panel</div>
-        </>
-      )}
-    </AccordionContainer>
-  ));
+  .add('AccordionContainer', () => {
+    const size = number('Sections', 5, { range: true, min: 1, max: 9 });
+    const sections = Array(size).fill(false);
+
+    const Accordion = ({ expandable = true, collapsible = true } = {}) => {
+      const [toggled, setToggled] = useState(sections);
+
+      const handleToggle = index => {
+        const state = getToggled(index, toggled, expandable, collapsible);
+
+        setToggled(state);
+      };
+
+      return (
+        <AccordionContainer>
+          {({ getHeaderProps, getTriggerProps, getPanelProps }) => (
+            <>
+              {sections.map((_, index) => {
+                const triggerId = `trigger-${index}`;
+                const panelId = `panel-${index}`;
+                const expanded = toggled[index];
+
+                return (
+                  <div key={index} style={{ width: 300 }}>
+                    <div
+                      {...getHeaderProps({
+                        ariaLevel: 2,
+                        style: { WebkitAppearance: 'button', padding: 1, cursor: 'pointer' }
+                      })}
+                    >
+                      <div
+                        {...getTriggerProps({
+                          id: triggerId,
+                          panelId,
+                          ariaExpanded: expanded,
+                          ariaDisabled: expanded && !collapsible,
+                          disabled: expanded && !collapsible,
+                          onToggle: () => handleToggle(index)
+                        })}
+                      >
+                        {`Trigger ${index + 1}`}
+                      </div>
+                    </div>
+                    <p
+                      {...getPanelProps({
+                        id: panelId,
+                        triggerId,
+                        ariaHidden: !expanded,
+                        hidden: !expanded
+                      })}
+                    >
+                      {`[Panel ${index + 1}] `}
+                      Veggies es bonus vobis, proinde vos postulo essum magis kohlrabi welsh onion
+                      daikon amaranth tatsoi tomatillo melon azuki bean garlic.
+                    </p>
+                  </div>
+                );
+              })}
+            </>
+          )}
+        </AccordionContainer>
+      );
+    };
+
+    return (
+      <Accordion
+        expandable={boolean('Expandable', true)}
+        collapsible={boolean('Collapsible', true)}
+      />
+    );
+  });
