@@ -5,6 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
+// This is for the storybook example only not exported or published in the package
 import { useState, useEffect, useRef } from 'react';
 import PopperJS from 'popper.js';
 

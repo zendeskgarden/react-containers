@@ -20,7 +20,7 @@ describe('Index', () => {
               .split('/')
               .pop()
           )
-          .filter(file => !/(gardenPlacements|usePopper)/u.test(file))
+          .filter(file => !/(usePopper)/u.test(file))
           .sort();
       }
     });

@@ -16,6 +16,9 @@
   "scripts": {
     "build": "../../utils/scripts/build.sh"
   },
+  "dependencies": {
+    "@zendeskgarden/container-selection": "^0.2.3"
+  },
   "peerDependencies": {
     "prop-types": "^15.6.1",
     "react": "^16.8.0",
@@ -33,9 +36,5 @@
   "publishConfig": {
     "access": "public"
   },
-  "zendeskgarden:src": "src/index.js",
-  "dependencies": {
-    "@zendeskgarden/container-selection": "^0.2.3",
-    "popper.js": "^1.15.0"
-  }
+  "zendeskgarden:src": "src/index.js"
 }

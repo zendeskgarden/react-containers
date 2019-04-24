@@ -6,41 +6,36 @@
  */
 
 import React, { useRef } from 'react';
-
 import { storiesOf } from '@storybook/react';
-import { withKnobs, select, number, boolean } from '@storybook/addon-knobs';
+import { withKnobs, number, boolean } from '@storybook/addon-knobs';
 
 import { TooltipContainer, useTooltip } from './src';
-import { GARDEN_PLACEMENTS } from './src/utils/gardenPlacements';
+import { usePopper } from './usePopper';
 
 storiesOf('Tooltip Container', module)
   .addDecorator(withKnobs)
   .add('useTooltip', () => {
     const Tooltip = () => {
-      const triggerRef = useRef(null);
-      const popperRef = useRef(null);
+      const tooltipRef = useRef(null);
 
-      const { style, placement, getTooltipProps, getTriggerProps } = useTooltip({
-        triggerRef,
-        popperRef,
+      const { isVisible, getTooltipProps, getTriggerProps } = useTooltip({
+        tooltipRef,
         isVisible: boolean('isVisible', false),
-        delayMilliseconds: number('Tooltip delay', 500),
-        placement: select('Placement', Object.values(GARDEN_PLACEMENTS), 'top')
+        delayMilliseconds: number('Tooltip delay', 500)
       });
 
       const styles = {
-        ...style,
+        visibility: isVisible ? 'visible' : 'hidden',
         background: '#1f73b7',
         padding: '10px',
-        margin: '6px',
+        margin: '6px 0',
         color: '#fff'
       };
+
       return (
         <>
-          <button {...getTriggerProps({ ref: triggerRef })}>Trigger</button>
-          <div {...getTooltipProps({ ref: popperRef, style: styles, 'data-placement': placement })}>
-            Tooltip
-          </div>
+          <div {...getTooltipProps({ ref: tooltipRef, style: styles })}>Tooltip</div>
+          <button {...getTriggerProps()}>Trigger</button>
         </>
       );
     };
@@ -49,41 +44,69 @@ storiesOf('Tooltip Container', module)
   })
   .add('TooltipContainer', () => {
     const Tooltip = () => {
-      const triggerRef = useRef(null);
-      const popperRef = useRef(null);
+      const tooltipRef = useRef(null);
 
       return (
         <TooltipContainer
-          triggerRef={triggerRef}
-          popperRef={popperRef}
+          tooltipRef={tooltipRef}
           isVisible={boolean('isVisible', false)}
           delayMilliseconds={number('Tooltip delay', 500)}
-          placement={select('Placement', Object.values(GARDEN_PLACEMENTS), 'top')}
         >
-          {({ style, placement, getTooltipProps, getTriggerProps }) => {
+          {({ isVisible, getTooltipProps, getTriggerProps }) => {
             const styles = {
-              ...style,
+              visibility: isVisible ? 'visible' : 'hidden',
               background: '#1f73b7',
               padding: '10px',
-              margin: '6px',
+              margin: '6px 0',
               color: '#fff'
             };
+
             return (
               <>
-                <button {...getTriggerProps({ ref: triggerRef })}>Trigger</button>
                 <div
                   {...getTooltipProps({
-                    ref: popperRef,
-                    style: styles,
-                    'data-placement': placement
+                    ref: tooltipRef,
+                    style: styles
                   })}
                 >
                   Tooltip
                 </div>
+                <button {...getTriggerProps()}>Trigger</button>
               </>
             );
           }}
         </TooltipContainer>
+      );
+    };
+
+    return <Tooltip />;
+  })
+  .add('useTooltip with Popper.js', () => {
+    const Tooltip = () => {
+      const tooltipRef = useRef(null);
+      const triggerRef = useRef(null);
+
+      const { isVisible, getTooltipProps, getTriggerProps } = useTooltip({
+        tooltipRef,
+        isVisible: boolean('isVisible', false),
+        delayMilliseconds: number('Tooltip delay', 500)
+      });
+      const { style } = usePopper({ referenceRef: triggerRef, popperRef: tooltipRef });
+
+      const styles = {
+        ...style,
+        visibility: isVisible ? 'visible' : 'hidden',
+        background: '#1f73b7',
+        padding: '10px',
+        margin: '6px 0',
+        color: '#fff'
+      };
+
+      return (
+        <>
+          <div {...getTooltipProps({ ref: tooltipRef, style: styles })}>Tooltip</div>
+          <button {...getTriggerProps({ ref: triggerRef })}>Trigger</button>
+        </>
       );
     };
 

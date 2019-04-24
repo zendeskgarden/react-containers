@@ -13,80 +13,69 @@ npm install @zendeskgarden/container-tooltip
 
 For live examples check out our [storybook](https://zendeskgarden.github.io/react-containers?path=/story/tooltip-container--usetooltip).
 
-### useExample
+### useTooltip
 
 ```jsx static
 import { useRef } from 'react';
 import { useTooltip } from '@zendeskgarden/container-tooltip';
 
 const Tooltip = () => {
-  const triggerRef = useRef(null);
-  const popperRef = useRef(null);
+  const tooltipRef = useRef(null);
 
-  const { style, placement, getTooltipProps, getTriggerProps } = useTooltip({
-    triggerRef,
-    popperRef,
-    isVisible: boolean('isVisible', false),
-    delayMilliseconds: number('Tooltip delay', 500),
-    placement: select('Placement', Object.values(GARDEN_PLACEMENTS), 'top')
+  const { isVisible, getTooltipProps, getTriggerProps } = useTooltip({
+    tooltipRef,
+    isVisible: false,
+    delayMilliseconds: 500
   });
 
   const styles = {
-    ...style,
+    visibility: isVisible ? 'visible' : 'hidden',
     background: '#1f73b7',
     padding: '10px',
-    margin: '6px',
+    margin: '6px 0',
     color: '#fff'
   };
+
   return (
     <>
+      <div {...getTooltipProps({ ref: tooltipRef, style: styles })}>Tooltip</div>
       <button {...getTriggerProps({ ref: triggerRef })}>Trigger</button>
-      <div {...getTooltipProps({ ref: popperRef, style: styles, 'data-placement': placement })}>
-        Tooltip
-      </div>
     </>
   );
 };
 ```
 
-### ExampleContainer
+### TooltipContainer
 
 ```jsx static
 import { useRef } from 'react';
 import { TooltipContainer } from '@zendeskgarden/container-tooltip';
 
 const Tooltip = () => {
-  const triggerRef = useRef(null);
-  const popperRef = useRef(null);
+  const tooltipRef = useRef(null);
 
   return (
-    <TooltipContainer
-      triggerRef={triggerRef}
-      popperRef={popperRef}
-      isVisible={boolean('isVisible', false)}
-      delayMilliseconds={number('Tooltip delay', 500)}
-      placement={select('Placement', Object.values(GARDEN_PLACEMENTS), 'top')}
-    >
-      {({ style, placement, getTooltipProps, getTriggerProps }) => {
+    <TooltipContainer tooltipRef={tooltipRef} isVisible={false} delayMilliseconds={500}>
+      {({ isVisible, getTooltipProps, getTriggerProps }) => {
         const styles = {
-          ...style,
+          visibility: isVisible ? 'visible' : 'hidden',
           background: '#1f73b7',
           padding: '10px',
-          margin: '6px',
+          margin: '6px 0',
           color: '#fff'
         };
+
         return (
           <>
-            <button {...getTriggerProps({ ref: triggerRef })}>Trigger</button>
             <div
               {...getTooltipProps({
-                ref: popperRef,
-                style: styles,
-                'data-placement': placement
+                ref: tooltipRef,
+                style: styles
               })}
             >
               Tooltip
             </div>
+            <button {...getTriggerProps()}>Trigger</button>
           </>
         );
       }}

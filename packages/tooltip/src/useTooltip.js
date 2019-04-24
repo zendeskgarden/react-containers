@@ -5,33 +5,11 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { composeEventHandlers } from '@zendeskgarden/container-selection';
 
-import { usePopper } from './usePopper';
-import { convertGardenToPopperPlacement } from './utils/gardenPlacements';
-
-export function useTooltip({
-  placement,
-  triggerRef,
-  popperRef,
-  delayMilliseconds = 500,
-  eventsEnabled = true,
-  isVisible = false,
-  popperModifiers,
-  rtl
-} = {}) {
+export function useTooltip({ tooltipRef, delayMilliseconds = 500 } = {}) {
   const [visibility, setVisibility] = useState(false);
-
-  const { style, outOfBoundaries, scheduleUpdate } = usePopper({
-    placement: convertGardenToPopperPlacement(placement, rtl),
-    eventsEnabled,
-    referenceRef: triggerRef,
-    popperRef,
-    modifiers: popperModifiers
-  });
-
-  const styles = useRef({ visibility: isVisible ? 'visible' : 'hidden' });
 
   let openTooltipTimeout;
   let closeTooltipTimeout;
@@ -40,8 +18,7 @@ export function useTooltip({
     clearTimeout(closeTooltipTimeout);
 
     openTooltipTimeout = setTimeout(() => {
-      if (popperRef.current) {
-        styles.current.visibility = 'visible';
+      if (tooltipRef.current) {
         setVisibility(true);
       }
     }, delayMs);
@@ -51,8 +28,7 @@ export function useTooltip({
     clearTimeout(openTooltipTimeout);
 
     closeTooltipTimeout = setTimeout(() => {
-      if (popperRef.current) {
-        styles.current.visibility = 'hidden';
+      if (tooltipRef.current) {
         setVisibility(false);
       }
     }, delayMs);
@@ -99,11 +75,7 @@ export function useTooltip({
   };
 
   return {
-    style: { ...styles.current, ...style },
-    placement,
     isVisible: visibility,
-    outOfBoundaries,
-    scheduleUpdate,
     getTooltipProps,
     getTriggerProps
   };
