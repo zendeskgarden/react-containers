@@ -10,7 +10,7 @@ import { storiesOf } from '@storybook/react';
 import { withKnobs, number, boolean } from '@storybook/addon-knobs';
 
 import { TooltipContainer, useTooltip } from './src';
-import { usePopper } from './usePopper';
+import { usePopper } from '../../utils/usePopper';
 
 storiesOf('Tooltip Container', module)
   .addDecorator(withKnobs)
