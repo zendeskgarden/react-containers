@@ -6,10 +6,12 @@
  */
 
 import { useState, useEffect } from 'react';
-import { composeEventHandlers } from '@zendeskgarden/container-selection';
+import { composeEventHandlers, KEY_CODES } from '@zendeskgarden/container-selection';
+import { generateId } from '@zendeskgarden/container-field';
 
-export function useTooltip({ tooltipRef, delayMilliseconds = 500 } = {}) {
+export function useTooltip({ tooltipRef, delayMilliseconds = 500, id } = {}) {
   const [visibility, setVisibility] = useState(false);
+  const [_id] = useState(id || generateId('garden-tooltip-container'));
 
   let openTooltipTimeout;
   let closeTooltipTimeout;
@@ -51,6 +53,7 @@ export function useTooltip({ tooltipRef, delayMilliseconds = 500 } = {}) {
     onMouseLeave,
     onFocus,
     onBlur,
+    onKeyDown,
     ...other
   } = {}) => {
     return {
@@ -60,6 +63,12 @@ export function useTooltip({ tooltipRef, delayMilliseconds = 500 } = {}) {
       onFocus: composeEventHandlers(onFocus, () => openTooltip()),
       // Close menu immediately when blurred
       onBlur: composeEventHandlers(onBlur, () => closeTooltip(0)),
+      onKeyDown: composeEventHandlers(onKeyDown, event => {
+        if (event.keyCode === KEY_CODES.ESCAPE) {
+          closeTooltip(0);
+        }
+      }),
+      'aria-describedby': _id,
       ...other
     };
   };
@@ -70,6 +79,7 @@ export function useTooltip({ tooltipRef, delayMilliseconds = 500 } = {}) {
       onMouseEnter: composeEventHandlers(onMouseEnter, () => openTooltip()),
       onMouseLeave: composeEventHandlers(onMouseLeave, () => closeTooltip()),
       'aria-hidden': !visibility,
+      id: _id,
       ...other
     };
   };

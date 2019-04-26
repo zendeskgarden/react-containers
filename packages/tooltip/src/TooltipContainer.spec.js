@@ -15,12 +15,13 @@ jest.useFakeTimers();
 
 describe('TooltipContainer', () => {
   let wrapper;
+  const TOOLTIP_ID = 'test';
 
   const BasicExample = props => {
     const tooltipRef = useRef(null);
 
     return (
-      <TooltipContainer tooltipRef={tooltipRef} {...props}>
+      <TooltipContainer tooltipRef={tooltipRef} id={TOOLTIP_ID} {...props}>
         {({ getTooltipProps, getTriggerProps }) => (
           <>
             <div {...getTriggerProps({ 'data-test-id': 'trigger' })}>trigger</div>
@@ -55,8 +56,9 @@ describe('TooltipContainer', () => {
   });
 
   describe('getTriggerProps', () => {
-    it('should have tabIndex of 0', () => {
+    it('applies correct accessibility attributes', () => {
       expect(findTrigger(wrapper)).toHaveProp('tabIndex', 0);
+      expect(findTrigger(wrapper)).toHaveProp('aria-describedby', TOOLTIP_ID);
     });
 
     describe('onFocus()', () => {
@@ -152,9 +154,39 @@ describe('TooltipContainer', () => {
         expect(findTooltip(wrapper).prop('aria-hidden')).toBe(true);
       });
     });
+
+    describe('onKeyDown()', () => {
+      it('should hide tooltip when escape is pressed', () => {
+        act(() => {
+          findTrigger(wrapper).simulate('focus');
+          findTrigger(wrapper).simulate('keydown', { keyCode: 27 });
+          jest.runOnlyPendingTimers();
+        });
+
+        wrapper.update();
+        expect(findTooltip(wrapper).prop('aria-hidden')).toBe(true);
+      });
+
+      it('should not hide tooltip if escape is not pressed', () => {
+        act(() => {
+          findTrigger(wrapper).simulate('focus');
+          findTrigger(wrapper).simulate('keydown', { keyCode: 31 });
+          jest.runOnlyPendingTimers();
+        });
+
+        wrapper.update();
+        expect(findTooltip(wrapper).prop('aria-hidden')).toBe(false);
+      });
+    });
   });
 
   describe('getTooltipProps', () => {
+    it('applies correct accessibility attributes', () => {
+      expect(findTooltip(wrapper)).toHaveProp('role', 'tooltip');
+      expect(findTooltip(wrapper)).toHaveProp('aria-hidden', true);
+      expect(findTooltip(wrapper)).toHaveProp('id', TOOLTIP_ID);
+    });
+
     it('should not close tooltip if mouseenter during close delay period', () => {
       act(() => {
         findTrigger(wrapper).simulate('mouseenter');

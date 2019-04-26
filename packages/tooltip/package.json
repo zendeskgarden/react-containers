@@ -17,6 +17,7 @@
     "build": "../../utils/scripts/build.sh"
   },
   "dependencies": {
+    "@zendeskgarden/container-field": "^0.1.0",
     "@zendeskgarden/container-selection": "^0.2.3"
   },
   "peerDependencies": {
