@@ -55,6 +55,14 @@ describe('TooltipContainer', () => {
     });
   });
 
+  it('defaults visibility state with isVisible prop', () => {
+    act(() => {
+      wrapper = mount(<BasicExample isVisible={true} />);
+    });
+
+    expect(findTooltip(wrapper).prop('aria-hidden')).toBe(false);
+  });
+
   describe('getTriggerProps', () => {
     it('applies correct accessibility attributes', () => {
       expect(findTrigger(wrapper)).toHaveProp('tabIndex', 0);

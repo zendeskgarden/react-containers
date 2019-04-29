@@ -9,8 +9,8 @@ import { useState, useEffect } from 'react';
 import { composeEventHandlers, KEY_CODES } from '@zendeskgarden/container-selection';
 import { generateId } from '@zendeskgarden/container-field';
 
-export function useTooltip({ tooltipRef, delayMilliseconds = 500, id } = {}) {
-  const [visibility, setVisibility] = useState(false);
+export function useTooltip({ tooltipRef, delayMilliseconds = 500, id, isVisible } = {}) {
+  const [visibility, setVisibility] = useState(isVisible);
   const [_id] = useState(id || generateId('garden-tooltip-container'));
 
   let openTooltipTimeout;
@@ -87,6 +87,8 @@ export function useTooltip({ tooltipRef, delayMilliseconds = 500, id } = {}) {
   return {
     isVisible: visibility,
     getTooltipProps,
-    getTriggerProps
+    getTriggerProps,
+    openTooltip,
+    closeTooltip
   };
 }
