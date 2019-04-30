@@ -42,6 +42,19 @@ describe('KeyboardFocusContainer', () => {
         findTrigger(wrapper).simulate('focus');
         expect(findTrigger(wrapper)).toHaveProp('data-focused', true);
       });
+
+      it('should apply focused prop if focused by keyboard after mouse event', () => {
+        const wrapper = mount(basicExample);
+
+        findTrigger(wrapper).simulate('mousedown');
+        jest.runOnlyPendingTimers();
+        wrapper.update();
+
+        expect(findTrigger(wrapper)).toHaveProp('data-focused', false);
+
+        findTrigger(wrapper).simulate('focus');
+        expect(findTrigger(wrapper)).toHaveProp('data-focused', true);
+      });
     });
 
     describe('onMouseDown', () => {

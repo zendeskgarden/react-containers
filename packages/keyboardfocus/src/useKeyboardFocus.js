@@ -5,20 +5,35 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 import { composeEventHandlers } from '@zendeskgarden/container-selection';
 
 export function useKeyboardFocus() {
   const [keyboardFocused, setKeyboardFocused] = useState(false);
-  let keyboardFocusable = true;
+  const focusableTimeoutRef = useRef(undefined);
+  const isKeyboardFocusableRef = useRef(true);
+
+  useEffect(() => {
+    return () => {
+      clearTimeout(focusableTimeoutRef.current);
+    };
+  }, []);
 
   const onPointerDown = () => {
-    keyboardFocusable = false;
+    isKeyboardFocusableRef.current = false;
+
+    /**
+     * This is necessary to recognize focus events caused by keyboard vs mouseDown.
+     * Due to event ordering this is always called before onFocus.
+     */
+    focusableTimeoutRef.current = setTimeout(() => {
+      isKeyboardFocusableRef.current = true;
+    }, 0);
   };
 
   const onFocus = () => {
-    if (keyboardFocusable) {
+    if (isKeyboardFocusableRef.current) {
       setKeyboardFocused(true);
     }
   };
@@ -38,6 +53,8 @@ export function useKeyboardFocus() {
       ...props
     };
   };
+
+  console.log(keyboardFocused);
 
   return {
     getFocusProps,
