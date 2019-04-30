@@ -19,6 +19,7 @@ to install.
 | [`@zendeskgarden/container-field`](packages/field)                 | [![npm version][field npm version]][field npm link]                 | [![Dependency Status][field dependency status]][field dependency link]                 |
 | [`@zendeskgarden/container-focusjail`](packages/focusjail)         | [![npm version][focusjail npm version]][focusjail npm link]         | [![Dependency Status][focusjail dependency status]][focusjail dependency link]         |
 | [`@zendeskgarden/container-keyboardfocus`](packages/keyboardfocus) | [![npm version][keyboardfocus npm version]][keyboardfocus npm link] | [![Dependency Status][keyboardfocus dependency status]][keyboardfocus dependency link] |
+| [`@zendeskgarden/container-modal`](packages/modal)                 | [![npm version][modal npm version]][modal npm link]                 | [![Dependency Status][modal dependency status]][modal dependency link]                 |
 | [`@zendeskgarden/container-pagination`](packages/pagination)       | [![npm version][pagination npm version]][pagination npm link]       | [![Dependency Status][pagination dependency status]][pagination dependency link]       |
 | [`@zendeskgarden/container-schedule`](packages/schedule)           | [![npm version][schedule npm version]][schedule npm link]           | [![Dependency Status][schedule dependency status]][schedule dependency link]           |
 | [`@zendeskgarden/container-selection`](packages/selection)         | [![npm version][selection npm version]][selection npm link]         | [![Dependency Status][selection dependency status]][selection dependency link]         |
@@ -44,6 +45,10 @@ to install.
 [keyboardfocus npm link]: https://www.npmjs.com/package/@zendeskgarden/container-keyboardfocus
 [keyboardfocus dependency status]: https://img.shields.io/david/zendeskgarden/react-containers.svg?path=packages/keyboardfocus&style=flat-square
 [keyboardfocus dependency link]: https://david-dm.org/zendeskgarden/react-containers?path=packages/keyboardfocus
+[modal npm version]: https://img.shields.io/npm/v/@zendeskgarden/container-modal.svg?style=flat-square
+[modal npm link]: https://www.npmjs.com/package/@zendeskgarden/container-modal
+[modal dependency status]: https://img.shields.io/david/zendeskgarden/react-containers.svg?path=packages/modal&style=flat-square
+[modal dependency link]: https://david-dm.org/zendeskgarden/react-containers?path=packages/modal
 [pagination npm version]: https://img.shields.io/npm/v/@zendeskgarden/container-pagination.svg?style=flat-square
 [pagination npm link]: https://www.npmjs.com/package/@zendeskgarden/container-pagination
 [pagination dependency status]: https://img.shields.io/david/zendeskgarden/react-containers.svg?path=packages/pagination&style=flat-square
