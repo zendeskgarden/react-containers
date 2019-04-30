@@ -5,13 +5,22 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { composeEventHandlers, KEY_CODES } from '@zendeskgarden/container-selection';
 import tabbable from 'tabbable';
 import activeElement from 'dom-helpers/activeElement';
 
-export function useFocusJail({ focusOnMount = true, environment, focusElem } = {}) {
-  const containerRef = useRef(null);
+export function useFocusJail({ focusOnMount = true, environment, focusElem, containerRef } = {}) {
+  // To support conditional rendering we need to store the ref in state and
+  // trigger a re-render if the ref updates once rendered since react will
+  // skip changes to a ref on first render
+  const [currentRef, setCurrentRef] = useState(containerRef.current);
+
+  useEffect(() => {
+    if (containerRef.current !== currentRef) {
+      setCurrentRef(containerRef.current);
+    }
+  });
 
   const focusElement = useCallback(
     element => {
@@ -27,7 +36,7 @@ export function useFocusJail({ focusOnMount = true, environment, focusElem } = {
   );
 
   const validateContainerRef = () => {
-    if (!containerRef.current) {
+    if (!currentRef) {
       throw new Error(
         'Accessibility Error: You must apply the ref prop to your containing element.'
       );
@@ -37,13 +46,13 @@ export function useFocusJail({ focusOnMount = true, environment, focusElem } = {
   const getInitialFocusNode = () => {
     const doc = environment ? environment : document;
     const activeElem = activeElement(doc);
-    const containerElem = containerRef.current;
+    const containerElem = currentRef;
 
     return containerElem.contains(activeElem) ? activeElem : containerElem;
   };
 
   const getTabbableNodes = () => {
-    const elements = tabbable(containerRef.current);
+    const elements = tabbable(currentRef);
 
     return {
       firstItem: elements[0] || getInitialFocusNode(),
@@ -64,7 +73,7 @@ export function useFocusJail({ focusOnMount = true, environment, focusElem } = {
 
         if (
           event.shiftKey &&
-          (event.target === tabbableNodes.firstItem || event.target === containerRef.current)
+          (event.target === tabbableNodes.firstItem || event.target === currentRef)
         ) {
           focusElement(tabbableNodes.lastItem);
           event.preventDefault();
@@ -82,17 +91,14 @@ export function useFocusJail({ focusOnMount = true, environment, focusElem } = {
   useEffect(
     () => {
       if (focusOnMount) {
-        focusElement(containerRef.current);
+        focusElement(currentRef);
       }
-
-      validateContainerRef();
     },
-    [focusOnMount, focusElement]
+    [focusOnMount, focusElement, currentRef]
   );
 
   return {
     getContainerProps,
-    containerRef,
     focusElement
   };
 }

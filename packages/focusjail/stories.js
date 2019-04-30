@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React from 'react';
+import React, { useRef, createRef } from 'react';
 
 import { storiesOf } from '@storybook/react';
 import { withKnobs, boolean } from '@storybook/addon-knobs';
@@ -16,8 +16,10 @@ storiesOf('FocusJail Container', module)
   .addDecorator(withKnobs)
   .add('useFocusJail', () => {
     const FocusJail = () => {
-      const { getContainerProps, containerRef } = useFocusJail({
-        focusOnMount: boolean('focusOnMount', true)
+      const containerRef = useRef(null);
+      const { getContainerProps } = useFocusJail({
+        focusOnMount: boolean('focusOnMount', true),
+        containerRef
       });
 
       return (
@@ -34,17 +36,21 @@ storiesOf('FocusJail Container', module)
 
     return <FocusJail />;
   })
-  .add('FocusJailContainer', () => (
-    <FocusJailContainer focusOnMount={boolean('focusOnMount', true)}>
-      {({ getContainerProps, containerRef }) => (
-        <>
-          <input />
-          <div {...getContainerProps({ ref: containerRef, tabIndex: -1 })}>
-            <p>Focus is locked within the parent element</p>
+  .add('FocusJailContainer', () => {
+    const containerRef = createRef(null);
+
+    return (
+      <FocusJailContainer containerRef={containerRef} focusOnMount={boolean('focusOnMount', true)}>
+        {({ getContainerProps }) => (
+          <>
             <input />
-            <button>Focusable Items</button>
-          </div>
-        </>
-      )}
-    </FocusJailContainer>
-  ));
+            <div {...getContainerProps({ ref: containerRef, tabIndex: -1 })}>
+              <p>Focus is locked within the parent element</p>
+              <input />
+              <button>Focusable Items</button>
+            </div>
+          </>
+        )}
+      </FocusJailContainer>
+    );
+  });

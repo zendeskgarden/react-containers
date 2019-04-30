@@ -19,12 +19,15 @@ The `useFocusJail` hook allows you to trap focus to a container element. Useful
 for modals and widgets. Garden uses this in react-components for the modals package.
 
 ```jsx static
+import { useRef } from 'react';
 import { useFocusJail } from '@zendeskgarden/container-focusjail';
 
 const FocusJail = () => {
-  const { getContainerProps, containerRef } = useFocusJail({
+  const containerRef = useRef(null);
+  const { getContainerProps } = useFocusJail({
     focusOnMount: false,
-    environment: window.parent.document
+    environment: window.parent.document,
+    containerRef
   });
 
   return (
@@ -45,10 +48,17 @@ const FocusJail = () => {
 `FocusJailContainer` is a render-prop wrapper for the `useFocusJail` hook.
 
 ```jsx static
+import { createRef } from 'react';
 import { FocusJailContainer } from '@zendeskgarden/container-focusjail';
 
-<FocusJailContainer focusOnMount={false} environment={window.parent.document}>
-  {({ getContainerProps, containerRef }) => (
+const containerRef = createRef(null);
+
+<FocusJailContainer
+  containerRef={containerRef}
+  focusOnMount={false}
+  environment={window.parent.document}
+>
+  {({ getContainerProps }) => (
     <>
       <input />
       <div {...getContainerProps({ ref: containerRef, tabIndex: -1 })}>
