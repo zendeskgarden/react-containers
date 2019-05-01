@@ -167,6 +167,10 @@ describe('TooltipContainer', () => {
       it('should hide tooltip when escape is pressed', () => {
         act(() => {
           findTrigger(wrapper).simulate('focus');
+          jest.runOnlyPendingTimers();
+        });
+
+        act(() => {
           findTrigger(wrapper).simulate('keydown', { keyCode: 27 });
           jest.runOnlyPendingTimers();
         });

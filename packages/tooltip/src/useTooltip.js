@@ -64,7 +64,7 @@ export function useTooltip({ tooltipRef, delayMilliseconds = 500, id, isVisible 
       // Close menu immediately when blurred
       onBlur: composeEventHandlers(onBlur, () => closeTooltip(0)),
       onKeyDown: composeEventHandlers(onKeyDown, event => {
-        if (event.keyCode === KEY_CODES.ESCAPE) {
+        if (event.keyCode === KEY_CODES.ESCAPE && visibility) {
           closeTooltip(0);
         }
       }),
