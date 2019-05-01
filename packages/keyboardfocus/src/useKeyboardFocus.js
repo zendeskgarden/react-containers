@@ -54,8 +54,6 @@ export function useKeyboardFocus() {
     };
   };
 
-  console.log(keyboardFocused);
-
   return {
     getFocusProps,
     keyboardFocused
