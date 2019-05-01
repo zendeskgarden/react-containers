@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React from 'react';
+import React, { useRef } from 'react';
 import { KEY_CODES } from '@zendeskgarden/container-selection';
 import { mount } from 'enzyme';
 import { act } from 'react-dom/test-utils';
@@ -17,26 +17,34 @@ describe('FocusJailContainer', () => {
   let focusSpy;
   let containerReference;
 
-  const basicExample = ({ focusOnMount, focusElem = focusSpy } = {}) => (
-    <FocusJailContainer focusOnMount={focusOnMount} focusElem={focusElem}>
-      {({ getContainerProps, containerRef }) => {
-        containerReference = containerRef;
+  const BasicExample = ({ focusOnMount, focusElem = focusSpy } = {}) => {
+    const containerRef = useRef(null);
 
-        return (
-          <div
-            {...getContainerProps({
-              'data-test-id': 'container',
-              ref: containerRef
-            })}
-          >
-            <p>non-focusable test</p>
-            <button data-test-id="button">focusable button</button>
-            <input data-test-id="input" />
-          </div>
-        );
-      }}
-    </FocusJailContainer>
-  );
+    return (
+      <FocusJailContainer
+        containerRef={containerRef}
+        focusOnMount={focusOnMount}
+        focusElem={focusElem}
+      >
+        {({ getContainerProps }) => {
+          containerReference = containerRef;
+
+          return (
+            <div
+              {...getContainerProps({
+                'data-test-id': 'container',
+                ref: containerRef
+              })}
+            >
+              <p>non-focusable test</p>
+              <button data-test-id="button">focusable button</button>
+              <input data-test-id="input" />
+            </div>
+          );
+        }}
+      </FocusJailContainer>
+    );
+  };
 
   const findContainer = enzymeWrapper => enzymeWrapper.find('[data-test-id="container"]');
 
@@ -44,7 +52,7 @@ describe('FocusJailContainer', () => {
     focusSpy = jest.fn();
 
     act(() => {
-      wrapper = mount(basicExample());
+      wrapper = mount(<BasicExample />);
     });
   });
 
@@ -63,7 +71,7 @@ describe('FocusJailContainer', () => {
   describe('render', () => {
     it('focuses container element by default', () => {
       act(() => {
-        wrapper = mount(basicExample({ focusElem: focusSpy }));
+        wrapper = mount(<BasicExample focusElem={focusSpy} />);
       });
 
       expect(focusSpy).toHaveBeenCalled();
@@ -72,7 +80,7 @@ describe('FocusJailContainer', () => {
     it('does not focus container element if focusOnMount is false', () => {
       focusSpy.mockClear();
       act(() => {
-        wrapper = mount(basicExample({ focusOnMount: false }));
+        wrapper = mount(<BasicExample focusOnMount={false} />);
       });
 
       expect(focusSpy).not.toHaveBeenCalled();
@@ -93,7 +101,7 @@ describe('FocusJailContainer', () => {
             </FocusJailContainer>
           );
         });
-      }).toThrow('Accessibility Error: You must apply the ref prop to your containing element.');
+      }).toThrow();
     });
   });
 
@@ -109,25 +117,32 @@ describe('FocusJailContainer', () => {
         });
 
         // Container is still focused during initial mount
-        expect(focusSpy).toHaveBeenCalledTimes(1);
+        expect(focusSpy).toHaveBeenCalledTimes(2);
       });
 
       it('focuses container if no tabbable elements found', () => {
         focusSpy.mockClear();
         act(() => {
-          wrapper = mount(
-            <FocusJailContainer focusElem={focusSpy}>
-              {({ getContainerProps, containerRef }) => (
-                <div {...getContainerProps({ 'data-test-id': 'container', ref: containerRef })}>
-                  <p>non-focusable test</p>
-                </div>
-              )}
-            </FocusJailContainer>
-          );
-          wrapper.simulate('keydown', { keyCode: KEY_CODES.TAB });
+          const FocusJail = () => {
+            const containerRef = useRef(null);
+
+            return (
+              <FocusJailContainer containerRef={containerRef} focusElem={focusSpy}>
+                {({ getContainerProps }) => (
+                  <div {...getContainerProps({ 'data-test-id': 'container', ref: containerRef })}>
+                    <p>non-focusable test</p>
+                  </div>
+                )}
+              </FocusJailContainer>
+            );
+          };
+
+          wrapper = mount(<FocusJail />);
         });
 
-        expect(focusSpy).toHaveBeenCalledTimes(2);
+        wrapper.simulate('keydown', { keyCode: KEY_CODES.TAB });
+
+        expect(focusSpy).toHaveBeenCalledTimes(3);
         expect(focusSpy).toHaveBeenLastCalledWith(findContainer(wrapper).getDOMNode());
       });
 
@@ -153,21 +168,27 @@ describe('FocusJailContainer', () => {
 
       it("doesn't intercept tab key if not the first or last tabbable item", () => {
         act(() => {
-          wrapper = mount(
-            <FocusJailContainer>
-              {({ getContainerProps, containerRef }) => (
-                <div {...getContainerProps({ 'data-test-id': 'container', ref: containerRef })}>
-                  <p>non-focusable test</p>
-                  <button>Focusable button</button>
-                  <input ref={ref => setTimeout(() => ref && ref.focus())} />
-                  <button>Another button</button>
-                </div>
-              )}
-            </FocusJailContainer>
-          );
+          const FocusJail = () => {
+            const containerRef = useRef(null);
+
+            return (
+              <FocusJailContainer containerRef={containerRef}>
+                {({ getContainerProps }) => (
+                  <div {...getContainerProps({ 'data-test-id': 'container', ref: containerRef })}>
+                    <p>non-focusable test</p>
+                    <button>Focusable button</button>
+                    <input ref={ref => setTimeout(() => ref && ref.focus())} />
+                    <button>Another button</button>
+                  </div>
+                )}
+              </FocusJailContainer>
+            );
+          };
+
+          wrapper = mount(<FocusJail />);
           focusSpy.mockClear();
-          wrapper.simulate('keydown', { keyCode: KEY_CODES.TAB });
         });
+        wrapper.simulate('keydown', { keyCode: KEY_CODES.TAB });
 
         expect(focusSpy).toHaveBeenCalledTimes(0);
       });

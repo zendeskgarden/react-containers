@@ -17,5 +17,6 @@ FocusJailContainer.propTypes = {
   children: PropTypes.func,
   render: PropTypes.func,
   focusOnMount: PropTypes.bool,
-  environment: PropTypes.object
+  environment: PropTypes.object,
+  containerRef: PropTypes.object.isRequired
 };
