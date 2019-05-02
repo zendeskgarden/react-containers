@@ -1,6 +1,6 @@
 {
-  "name": "@zendeskgarden/container-keyboardfocus",
-  "description": "Containers relating to keyboard focus in the Garden Design System",
+  "name": "@zendeskgarden/container-tooltip",
+  "description": "Containers relating to tooltip in the Garden Design System",
   "license": "Apache-2.0",
   "author": "Zendesk Garden <garden@zendesk.com>",
   "homepage": "https://garden.zendesk.com/",
@@ -8,7 +8,7 @@
   "bugs": {
     "url": "https://github.com/zendeskgarden/react-containers/issues"
   },
-  "version": "0.1.4",
+  "version": "0.1.0",
   "main": "./dist/index.js",
   "files": [
     "dist"
@@ -17,6 +17,7 @@
     "build": "../../utils/scripts/build.sh"
   },
   "dependencies": {
+    "@zendeskgarden/container-field": "^0.1.0",
     "@zendeskgarden/container-selection": "^0.2.3"
   },
   "peerDependencies": {
