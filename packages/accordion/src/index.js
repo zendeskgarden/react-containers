@@ -11,3 +11,4 @@ export { useSection } from './useSection';
 
 /* Render-props */
 export { AccordionContainer } from './AccordionContainer';
+export { SectionContainer } from './SectionContainer';

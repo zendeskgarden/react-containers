@@ -5,16 +5,16 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React, { createRef } from 'react';
+import React, { createRef, useState } from 'react';
 
 import { storiesOf } from '@storybook/react';
 import { boolean, number, withKnobs } from '@storybook/addon-knobs';
 
-import { AccordionContainer, useAccordion } from './src';
+import { AccordionContainer, useAccordion, SectionContainer, useSection } from './src';
 
 storiesOf('Accordion Container', module)
   .addDecorator(withKnobs)
-  .add('useSection', () => {
+  .add('useAccordion', () => {
     const size = number('Sections', 5, { range: true, min: 1, max: 9 });
     const sections = Array(size)
       .fill()
@@ -28,12 +28,12 @@ storiesOf('Accordion Container', module)
       });
 
       return (
-        <>
+        <div style={{ width: 300 }}>
           {sections.map((section, index) => {
             const sectionProps = getSectionProps({ section, idPrefix: index });
 
             return (
-              <div key={index} style={{ width: 300 }}>
+              <div key={index}>
                 <h2 {...sectionProps.getHeaderProps({ role: null, ariaLevel: null })}>
                   <button
                     {...sectionProps.getTriggerProps({
@@ -58,7 +58,7 @@ storiesOf('Accordion Container', module)
               </div>
             );
           })}
-        </>
+        </div>
       );
     };
 
@@ -69,58 +69,92 @@ storiesOf('Accordion Container', module)
       />
     );
   })
+  .add('useSection', () => {
+    const Section = ({ expanded = false, disabled = false } = {}) => {
+      const [isExpanded, setExpanded] = useState(expanded);
+      const { getHeaderProps, getTriggerProps, getPanelProps } = useSection({
+        expanded: isExpanded,
+        onToggle: () => !disabled && setExpanded(!isExpanded)
+      });
+
+      return (
+        <div style={{ width: 300 }}>
+          <h2 {...getHeaderProps({ role: null, ariaLevel: null })}>
+            <button
+              {...getTriggerProps({
+                role: null,
+                disabled,
+                style: { width: '100%', textAlign: 'unset' }
+              })}
+            >
+              Trigger
+            </button>
+          </h2>
+          <section
+            {...getPanelProps({
+              role: null,
+              hidden: !isExpanded
+            })}
+          >
+            [Panel] Veggies es bonus vobis, proinde vos postulo essum magis kohlrabi welsh onion
+            daikon amaranth tatsoi tomatillo melon azuki bean garlic.
+          </section>
+        </div>
+      );
+    };
+
+    return <Section expanded={boolean('Expanded', true)} disabled={boolean('Disabled', false)} />;
+  })
   .add('AccordionContainer', () => {
     const size = number('Sections', 5, { range: true, min: 1, max: 9 });
     const sections = Array(size)
       .fill()
       .map(() => createRef());
 
-    const Accordion = ({ expandable = true, collapsible = true } = {}) => {
-      return (
-        <AccordionContainer
-          expandedSections={[sections[0]]}
-          expandable={expandable}
-          collapsible={collapsible}
-        >
-          {({ getSectionProps }) => (
-            <>
-              {sections.map((section, index) => {
-                const sectionProps = getSectionProps({ section, idPrefix: index });
+    const Accordion = ({ expandable = true, collapsible = true } = {}) => (
+      <AccordionContainer
+        expandedSections={[sections[0]]}
+        expandable={expandable}
+        collapsible={collapsible}
+      >
+        {({ getSectionProps }) => (
+          <div style={{ width: 300 }}>
+            {sections.map((section, index) => {
+              const sectionProps = getSectionProps({ section, idPrefix: index });
 
-                return (
-                  <div key={index} style={{ width: 300 }}>
+              return (
+                <div key={index}>
+                  <div
+                    {...sectionProps.getHeaderProps({
+                      ariaLevel: 2,
+                      style: { WebkitAppearance: 'button', padding: 1, cursor: 'pointer' }
+                    })}
+                  >
                     <div
-                      {...sectionProps.getHeaderProps({
-                        ariaLevel: 2,
-                        style: { WebkitAppearance: 'button', padding: 1, cursor: 'pointer' }
+                      {...sectionProps.getTriggerProps({
+                        disabled: sectionProps.disabled,
+                        style: { opacity: sectionProps.disabled ? 0.4 : 1 }
                       })}
                     >
-                      <div
-                        {...sectionProps.getTriggerProps({
-                          disabled: sectionProps.disabled
-                        })}
-                      >
-                        {`Trigger ${index + 1}`}
-                        {sectionProps.disabled && ' [disabled]'}
-                      </div>
+                      {`Trigger ${index + 1}`}
                     </div>
-                    <p
-                      {...sectionProps.getPanelProps({
-                        hidden: !sectionProps.expanded
-                      })}
-                    >
-                      {`[Panel ${index + 1}] `}
-                      Veggies es bonus vobis, proinde vos postulo essum magis kohlrabi welsh onion
-                      daikon amaranth tatsoi tomatillo melon azuki bean garlic.
-                    </p>
                   </div>
-                );
-              })}
-            </>
-          )}
-        </AccordionContainer>
-      );
-    };
+                  <p
+                    {...sectionProps.getPanelProps({
+                      hidden: !sectionProps.expanded
+                    })}
+                  >
+                    {`[Panel ${index + 1}] `}
+                    Veggies es bonus vobis, proinde vos postulo essum magis kohlrabi welsh onion
+                    daikon amaranth tatsoi tomatillo melon azuki bean garlic.
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </AccordionContainer>
+    );
 
     return (
       <Accordion
@@ -128,4 +162,47 @@ storiesOf('Accordion Container', module)
         collapsible={boolean('Collapsible', true)}
       />
     );
+  })
+  .add('SectionContainer', () => {
+    const Section = ({ expanded = false, disabled = false } = {}) => {
+      const [isExpanded, setExpanded] = useState(expanded);
+
+      return (
+        <SectionContainer
+          expanded={isExpanded}
+          disabled={disabled}
+          onToggle={() => !disabled && setExpanded(!isExpanded)}
+        >
+          {({ getHeaderProps, getTriggerProps, getPanelProps }) => (
+            <div style={{ width: 300 }}>
+              <div
+                {...getHeaderProps({
+                  ariaLevel: 2,
+                  style: { WebkitAppearance: 'button', padding: 1, cursor: 'pointer' }
+                })}
+              >
+                <div
+                  {...getTriggerProps({
+                    disabled,
+                    style: { opacity: disabled ? 0.4 : 1 }
+                  })}
+                >
+                  Trigger
+                </div>
+              </div>
+              <p
+                {...getPanelProps({
+                  hidden: !isExpanded
+                })}
+              >
+                [Panel] Veggies es bonus vobis, proinde vos postulo essum magis kohlrabi welsh onion
+                daikon amaranth tatsoi tomatillo melon azuki bean garlic.
+              </p>
+            </div>
+          )}
+        </SectionContainer>
+      );
+    };
+
+    return <Section expanded={boolean('Expanded', true)} disabled={boolean('Disabled', false)} />;
   });
