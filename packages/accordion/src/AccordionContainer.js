@@ -15,5 +15,8 @@ export function AccordionContainer({ children, render = children, ...props }) {
 
 AccordionContainer.propTypes = {
   children: PropTypes.func,
-  render: PropTypes.func
+  render: PropTypes.func,
+  expandedSections: PropTypes.array,
+  expandable: PropTypes.bool,
+  collapsible: PropTypes.bool
 };

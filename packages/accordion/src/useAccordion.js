@@ -5,76 +5,55 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import { composeEventHandlers } from './utils/composeEventHandlers';
+import { useReducer } from 'react';
+import { useSection } from './useSection';
 
-export function useAccordion() {
-  const getHeaderProps = ({ role = 'heading', ariaLevel, ...props } = {}) => {
-    if (ariaLevel === undefined) {
+export function useAccordion({
+  expandedSections = [],
+  expandable = true,
+  collapsible = true
+} = {}) {
+  const reducer = (state, action) => {
+    const retVal = [];
+
+    action.sections.forEach(section => {
+      let expanded = false;
+
+      if (section === action.section) {
+        expanded = collapsible ? state.indexOf(section) === -1 : true;
+      } else if (expandable) {
+        expanded = state.indexOf(section) !== -1;
+      }
+
+      if (expanded) {
+        retVal.push(section);
+      }
+    });
+
+    return retVal;
+  };
+  const [state, dispatch] = useReducer(reducer, expandedSections);
+  const sections = [];
+
+  const Section = ({ section, idPrefix } = {}) => {
+    if (section === undefined) {
       throw new Error(
-        'Accessibility Error: You must apply the `ariaLevel` prop to the element that contains your heading.'
+        'Accessibility Error: You must provide a `section` option to `getSectionProps()`'
       );
     }
 
-    return {
-      role,
-      'aria-level': ariaLevel,
-      ...props
-    };
+    const expanded = state.indexOf(section) !== -1;
+    const disabled = expanded && !collapsible;
+
+    sections.push(section);
+
+    return useSection({
+      idPrefix,
+      expanded,
+      disabled,
+      onToggle: () => dispatch({ section, sections })
+    });
   };
 
-  const getTriggerProps = ({
-    id,
-    panelId,
-    role = 'button',
-    ariaExpanded = false,
-    ariaDisabled = false,
-    onToggle,
-    ...props
-  } = {}) => {
-    if (id === undefined) {
-      throw new Error('Accessibility Error: You must apply an `id` prop to the trigger element.');
-    }
-
-    if (panelId === undefined) {
-      throw new Error(
-        'Accessibility Error: You must apply a `panelId` prop that identifies the panel this trigger controls.'
-      );
-    }
-
-    return {
-      id,
-      role,
-      'aria-controls': panelId,
-      'aria-disabled': ariaDisabled,
-      'aria-expanded': ariaExpanded,
-      onClick: composeEventHandlers(props.onClick, onToggle),
-      ...props
-    };
-  };
-
-  const getPanelProps = ({ id, triggerId, role = 'region', ariaHidden = true, ...props } = {}) => {
-    if (id === undefined) {
-      throw new Error('Accessibility Error: You must apply an `id` prop to the panel element.');
-    }
-
-    if (triggerId === undefined) {
-      throw new Error(
-        'Accessibility Error: You must apply a `triggerId` prop that identifies the trigger this panel is labeled by.'
-      );
-    }
-
-    return {
-      id,
-      role,
-      'aria-hidden': !ariaHidden,
-      'aria-labelledby': triggerId,
-      ...props
-    };
-  };
-
-  return {
-    getHeaderProps,
-    getTriggerProps,
-    getPanelProps
-  };
+  return { getSectionProps: Section };
 }

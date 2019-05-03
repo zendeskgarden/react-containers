@@ -5,65 +5,40 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React, { useState } from 'react';
+import React, { createRef } from 'react';
 
 import { storiesOf } from '@storybook/react';
 import { boolean, number, withKnobs } from '@storybook/addon-knobs';
 
 import { AccordionContainer, useAccordion } from './src';
 
-const getToggled = (toggledIndex, toggledState, expandable, collapsible) => {
-  return toggledState.map((_, index) => {
-    let retVal;
-
-    if (index === toggledIndex) {
-      retVal = collapsible ? !toggledState[index] : true;
-    } else if (expandable) {
-      retVal = toggledState[index];
-    } else {
-      retVal = false;
-    }
-
-    return retVal;
-  });
-};
-
 storiesOf('Accordion Container', module)
   .addDecorator(withKnobs)
-  .add('useAccordion', () => {
+  .add('useSection', () => {
     const size = number('Sections', 5, { range: true, min: 1, max: 9 });
-    const sections = Array(size).fill(false);
+    const sections = Array(size)
+      .fill()
+      .map(() => createRef());
 
     const Accordion = ({ expandable = true, collapsible = true } = {}) => {
-      const [toggled, setToggled] = useState(sections);
-
-      const handleToggle = index => {
-        const state = getToggled(index, toggled, expandable, collapsible);
-
-        setToggled(state);
-      };
-
-      const { getHeaderProps, getTriggerProps, getPanelProps } = useAccordion();
+      const { getSectionProps } = useAccordion({
+        expandedSections: [sections[0]],
+        expandable,
+        collapsible
+      });
 
       return (
         <>
-          {sections.map((_, index) => {
-            const triggerId = `trigger-${index}`;
-            const panelId = `panel-${index}`;
-            const expanded = toggled[index];
+          {sections.map((section, index) => {
+            const sectionProps = getSectionProps({ section, idPrefix: index });
 
             return (
               <div key={index} style={{ width: 300 }}>
-                <h2 {...getHeaderProps({ role: null, ariaLevel: null })}>
+                <h2 {...sectionProps.getHeaderProps({ role: null, ariaLevel: null })}>
                   <button
-                    {...getTriggerProps({
-                      id: triggerId,
-                      panelId,
+                    {...sectionProps.getTriggerProps({
                       role: null,
-                      ariaExpanded: expanded,
-                      ariaDisabled: expanded && !collapsible,
-                      disabled: expanded && !collapsible,
-                      onToggle: () => handleToggle(index),
+                      disabled: sectionProps.disabled,
                       style: { width: '100%', textAlign: 'unset' }
                     })}
                   >
@@ -71,12 +46,9 @@ storiesOf('Accordion Container', module)
                   </button>
                 </h2>
                 <section
-                  {...getPanelProps({
-                    id: panelId,
-                    triggerId,
+                  {...sectionProps.getPanelProps({
                     role: null,
-                    ariaHidden: !expanded,
-                    hidden: !expanded
+                    hidden: !sectionProps.expanded
                   })}
                 >
                   {`[Panel ${index + 1}] `}
@@ -99,53 +71,42 @@ storiesOf('Accordion Container', module)
   })
   .add('AccordionContainer', () => {
     const size = number('Sections', 5, { range: true, min: 1, max: 9 });
-    const sections = Array(size).fill(false);
+    const sections = Array(size)
+      .fill()
+      .map(() => createRef());
 
     const Accordion = ({ expandable = true, collapsible = true } = {}) => {
-      const [toggled, setToggled] = useState(sections);
-
-      const handleToggle = index => {
-        const state = getToggled(index, toggled, expandable, collapsible);
-
-        setToggled(state);
-      };
-
       return (
-        <AccordionContainer>
-          {({ getHeaderProps, getTriggerProps, getPanelProps }) => (
+        <AccordionContainer
+          expandedSections={[sections[0]]}
+          expandable={expandable}
+          collapsible={collapsible}
+        >
+          {({ getSectionProps }) => (
             <>
-              {sections.map((_, index) => {
-                const triggerId = `trigger-${index}`;
-                const panelId = `panel-${index}`;
-                const expanded = toggled[index];
+              {sections.map((section, index) => {
+                const sectionProps = getSectionProps({ section, idPrefix: index });
 
                 return (
                   <div key={index} style={{ width: 300 }}>
                     <div
-                      {...getHeaderProps({
+                      {...sectionProps.getHeaderProps({
                         ariaLevel: 2,
                         style: { WebkitAppearance: 'button', padding: 1, cursor: 'pointer' }
                       })}
                     >
                       <div
-                        {...getTriggerProps({
-                          id: triggerId,
-                          panelId,
-                          ariaExpanded: expanded,
-                          ariaDisabled: expanded && !collapsible,
-                          disabled: expanded && !collapsible,
-                          onToggle: () => handleToggle(index)
+                        {...sectionProps.getTriggerProps({
+                          disabled: sectionProps.disabled
                         })}
                       >
                         {`Trigger ${index + 1}`}
+                        {sectionProps.disabled && ' [disabled]'}
                       </div>
                     </div>
                     <p
-                      {...getPanelProps({
-                        id: panelId,
-                        triggerId,
-                        ariaHidden: !expanded,
-                        hidden: !expanded
+                      {...sectionProps.getPanelProps({
+                        hidden: !sectionProps.expanded
                       })}
                     >
                       {`[Panel ${index + 1}] `}

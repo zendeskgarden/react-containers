@@ -7,6 +7,7 @@
 
 /* Hooks */
 export { useAccordion } from './useAccordion';
+export { useSection } from './useSection';
 
 /* Render-props */
 export { AccordionContainer } from './AccordionContainer';
