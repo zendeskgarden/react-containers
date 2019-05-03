@@ -33,7 +33,6 @@ storiesOf('ButtonGroup Container', module)
                 key: button,
                 item: button,
                 focusRef: buttonRefs[index],
-                ref: buttonRefs[index],
                 style: {
                   boxShadow: button === focusedItem && 'inset 0 0 0 3px rgba(31,115,183, 0.35)',
                   outline: 'none',
@@ -62,7 +61,6 @@ storiesOf('ButtonGroup Container', module)
                 key: button,
                 item: button,
                 focusRef: buttonRefs[index],
-                ref: buttonRefs[index],
                 style: {
                   boxShadow: button === focusedItem && 'inset 0 0 0 3px rgba(31,115,183, 0.35)',
                   outline: 'none',

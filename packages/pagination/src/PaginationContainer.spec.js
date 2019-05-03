@@ -37,7 +37,6 @@ describe('PaginationContainer', () => {
                 key: 'previous',
                 item: 'prev',
                 focusRef: previousPageRef,
-                ref: previousPageRef,
                 'data-focused': focusedItem === 'previous',
                 'data-selected': selectedItem === 'previous'
               })}
@@ -48,7 +47,6 @@ describe('PaginationContainer', () => {
                   key: page,
                   item: page,
                   focusRef: pageRefs[page - 1],
-                  ref: pageRefs[page - 1],
                   page,
                   current: page === selectedItem ? 'current' : undefined,
                   'data-test-id': 'page',
@@ -65,7 +63,6 @@ describe('PaginationContainer', () => {
                 key: 'next',
                 item: 'next',
                 focusRef: nextPageRef,
-                ref: nextPageRef,
                 'data-focused': focusedItem === 'next',
                 'data-selected': selectedItem === 'next'
               })}
@@ -154,13 +151,13 @@ describe('PaginationContainer', () => {
 
       it('if item prop is not provided', () => {
         expect(component({ focusRef: ref })).toThrow(
-          'Accessibility Error: You must provide an "item" option to "getItemProps()"'
+          'Accessibility Error: You must provide an "item" option to "getPreviousPageProps()"'
         );
       });
 
       it('if focusRef prop is not provided', () => {
         expect(component({ item: 1 })).toThrow(
-          'Accessibility Error: You must provide a "focusRef" option to "getItemProps()"'
+          'Accessibility Error: You must provide a "focusRef" option to "getPreviousPageProps()"'
         );
       });
     });
@@ -199,13 +196,13 @@ describe('PaginationContainer', () => {
 
       it('if item prop is not provided', () => {
         expect(component({ focusRef: ref })).toThrow(
-          'Accessibility Error: You must provide an "item" option to "getItemProps()"'
+          'Accessibility Error: You must provide an "item" option to "getNextPageProps()"'
         );
       });
 
       it('if focusRef prop is not provided', () => {
         expect(component({ item: 1 })).toThrow(
-          'Accessibility Error: You must provide a "focusRef" option to "getItemProps()"'
+          'Accessibility Error: You must provide a "focusRef" option to "getNextPageProps()"'
         );
       });
     });
@@ -244,13 +241,13 @@ describe('PaginationContainer', () => {
 
       it('if item prop is not provided', () => {
         expect(component({ focusRef: ref })).toThrow(
-          'Accessibility Error: You must provide an "item" option to "getItemProps()"'
+          'Accessibility Error: You must provide an "item" option to "getPageProps()"'
         );
       });
 
       it('if focusRef prop is not provided', () => {
         expect(component({ item: 1 })).toThrow(
-          'Accessibility Error: You must provide a "focusRef" option to "getItemProps()"'
+          'Accessibility Error: You must provide a "focusRef" option to "getPageProps()"'
         );
       });
     });

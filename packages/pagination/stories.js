@@ -60,7 +60,6 @@ storiesOf('Pagination Container', module)
                 focused: focusedItem === 'prev',
                 item: 'prev',
                 focusRef: previousPageRef,
-                ref: previousPageRef,
                 key: 'previous-page'
               })}
             >
@@ -75,7 +74,6 @@ storiesOf('Pagination Container', module)
                     page: index,
                     item: index,
                     focusRef: pageRefs[index],
-                    ref: pageRefs[index],
                     key: `page-${index}`,
                     style: {
                       outline: index === focusedItem && '3px solid red',
@@ -94,7 +92,6 @@ storiesOf('Pagination Container', module)
                 focused: focusedItem === 'next',
                 item: 'next',
                 focusRef: nextPageRef,
-                ref: nextPageRef,
                 key: 'next-page'
               })}
             >

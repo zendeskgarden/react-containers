@@ -34,7 +34,6 @@ describe('SelectionContainer', () => {
                     key: item,
                     item,
                     focusRef: ref,
-                    ref,
                     selectedAriaKey,
                     'data-test-id': 'item',
                     'data-focused': isFocused,

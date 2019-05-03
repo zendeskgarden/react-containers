@@ -44,7 +44,6 @@ storiesOf('Selection Containers', module)
                 {...getItemProps({
                   key: item,
                   item,
-                  ref: itemRef,
                   focusRef: itemRef
                 })}
                 style={{
@@ -98,7 +97,6 @@ storiesOf('Selection Containers', module)
                   {...getItemProps({
                     key: item,
                     item,
-                    ref,
                     focusRef: ref
                   })}
                 >

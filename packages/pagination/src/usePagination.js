@@ -55,8 +55,9 @@ export function usePagination(options) {
     selectedItem,
     focusedItem,
     getContainerProps: props => getControlledContainerProps(getContainerProps(props)),
-    getPageProps: props => getItemProps(getPageProps(props)),
-    getPreviousPageProps: props => getItemProps(getPreviousPageProps(props)),
-    getNextPageProps: props => getItemProps(getNextPageProps(props))
+    getPageProps: props => getItemProps(getPageProps(props), 'getPageProps'),
+    getPreviousPageProps: props =>
+      getItemProps(getPreviousPageProps(props), 'getPreviousPageProps'),
+    getNextPageProps: props => getItemProps(getNextPageProps(props), 'getNextPageProps')
   };
 }
