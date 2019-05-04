@@ -18,11 +18,13 @@ storiesOf('Example Container', module)
     const Example = ({ coolProp }) => {
       const { getCoolProps } = useExample({ coolProp });
 
-      return <div {...getCoolProps()} />;
+      return <div {...getCoolProps()}>Hello World</div>;
     };
 
-    return <Example coolProp />;
+    return <Example coolProp="test" />;
   })
   .add('ExampleContainer', () => (
-    <ExampleContainer>{({ getCoolProps }) => <div {...getCoolProps()} />}</ExampleContainer>
+    <ExampleContainer>
+      {({ getCoolProps }) => <div {...getCoolProps({ ariaLabel: 'test' })}>Hello World</div>}
+    </ExampleContainer>
   ));

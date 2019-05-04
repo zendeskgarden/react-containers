@@ -29,7 +29,7 @@ describe('ExampleContainer', () => {
     it('applies correct accessibility role', () => {
       const div = findDiv(wrapper);
 
-      expect(div).toHaveProp('cool', true);
+      expect(div).toHaveProp('role', 'region');
     });
   });
 });
