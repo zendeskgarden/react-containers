@@ -10,44 +10,41 @@ import { useState, useLayoutEffect } from 'react';
 export default function useSchedule({ duration = 1250, delayMS = 750, loop = true } = {}) {
   const [elapsed, setTime] = useState(0);
 
-  useLayoutEffect(
-    () => {
-      let raf;
-      let start;
-      let loopTimeout;
+  useLayoutEffect(() => {
+    let raf;
+    let start;
+    let loopTimeout;
 
-      const tick = () => {
-        // eslint-disable-next-line no-use-before-define
-        raf = requestAnimationFrame(performAnimationFrame);
-      };
+    const tick = () => {
+      // eslint-disable-next-line no-use-before-define
+      raf = requestAnimationFrame(performAnimationFrame);
+    };
 
-      const performAnimationFrame = () => {
-        setTime(Date.now() - start);
-        tick();
-      };
+    const performAnimationFrame = () => {
+      setTime(Date.now() - start);
+      tick();
+    };
 
-      const onStart = () => {
-        loopTimeout = setTimeout(() => {
-          cancelAnimationFrame(raf);
-          setTime(Date.now() - start);
-          if (loop) onStart();
-        }, duration);
-
-        // Start the loop
-        start = Date.now();
-        tick();
-      };
-
-      const renderingDelayTimeout = setTimeout(onStart, delayMS);
-
-      return () => {
-        clearTimeout(renderingDelayTimeout);
-        clearTimeout(loopTimeout);
+    const onStart = () => {
+      loopTimeout = setTimeout(() => {
         cancelAnimationFrame(raf);
-      };
-    },
-    [duration, delayMS, loop]
-  );
+        setTime(Date.now() - start);
+        if (loop) onStart();
+      }, duration);
+
+      // Start the loop
+      start = Date.now();
+      tick();
+    };
+
+    const renderingDelayTimeout = setTimeout(onStart, delayMS);
+
+    return () => {
+      clearTimeout(renderingDelayTimeout);
+      clearTimeout(loopTimeout);
+      cancelAnimationFrame(raf);
+    };
+  }, [duration, delayMS, loop]);
 
   return Math.min(1, elapsed / duration);
 }

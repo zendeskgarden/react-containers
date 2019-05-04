@@ -6,8 +6,7 @@
  */
 
 import { useState, useEffect } from 'react';
-import { composeEventHandlers, KEY_CODES } from '@zendeskgarden/container-selection';
-import { generateId } from '@zendeskgarden/container-field';
+import { composeEventHandlers, generateId, KEY_CODES } from '@zendeskgarden/container-utilities';
 
 export function useTooltip({ tooltipRef, delayMilliseconds = 500, id, isVisible } = {}) {
   const [visibility, setVisibility] = useState(isVisible);
@@ -37,15 +36,12 @@ export function useTooltip({ tooltipRef, delayMilliseconds = 500, id, isVisible 
   };
 
   // Clean up stray timeouts if tooltip unmounts
-  useEffect(
-    () => {
-      return () => {
-        clearTimeout(openTooltipTimeout);
-        clearTimeout(closeTooltipTimeout);
-      };
-    },
-    [closeTooltipTimeout, openTooltipTimeout]
-  );
+  useEffect(() => {
+    return () => {
+      clearTimeout(openTooltipTimeout);
+      clearTimeout(closeTooltipTimeout);
+    };
+  }, [closeTooltipTimeout, openTooltipTimeout]);
 
   const getTriggerProps = ({
     tabIndex = 0,

@@ -7,4 +7,5 @@
 
 export { composeEventHandlers } from './utils/composeEventHandlers';
 export { generateId, setIdCounter } from './utils/IdManager';
+export { getControlledValue } from './utils/getControlledValue';
 export { KEY_CODES } from './utils/KEY_CODES';

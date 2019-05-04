@@ -6,8 +6,7 @@
  */
 
 import { useState } from 'react';
-import { composeEventHandlers, KEY_CODES } from '@zendeskgarden/container-selection';
-import { generateId } from '@zendeskgarden/container-field';
+import { composeEventHandlers, generateId, KEY_CODES } from '@zendeskgarden/container-utilities';
 import { useFocusJail } from '@zendeskgarden/container-focusjail';
 
 export function useModal({ onClose, modalRef, id: _id } = {}) {

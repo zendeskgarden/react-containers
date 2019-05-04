@@ -7,9 +7,11 @@
 
 import { useEffect, useReducer } from 'react';
 
-import { composeEventHandlers } from './utils/composeEventHandlers';
-import { getControlledValue } from './utils/getControlledValue';
-import { KEY_CODES } from './utils/KEY_CODES';
+import {
+  composeEventHandlers,
+  getControlledValue,
+  KEY_CODES
+} from '@zendeskgarden/container-utilities';
 import { DIRECTIONS } from './utils/DIRECTIONS';
 import { ACTIONS } from './utils/ACTIONS';
 
@@ -151,16 +153,13 @@ export function useSelection({
   const controlledFocusedItem = getControlledValue(focusedItem, state.focusedItem);
   const controlledSelectedItem = getControlledValue(selectedItem, state.selectedItem);
 
-  useEffect(
-    () => {
-      if (controlledFocusedItem !== undefined) {
-        const focusedIndex = items.indexOf(controlledFocusedItem);
+  useEffect(() => {
+    if (controlledFocusedItem !== undefined) {
+      const focusedIndex = items.indexOf(controlledFocusedItem);
 
-        refs[focusedIndex] && refs[focusedIndex].current.focus();
-      }
-    },
-    [controlledFocusedItem, items, refs]
-  );
+      refs[focusedIndex] && refs[focusedIndex].current.focus();
+    }
+  }, [controlledFocusedItem, items, refs]);
 
   const getContainerProps = ({ role = 'listbox', ...other } = {}) => ({
     role,

@@ -6,7 +6,7 @@
  */
 
 import { useState } from 'react';
-import { generateId } from './utils/IdManager';
+import { generateId } from '@zendeskgarden/container-utilities';
 
 export function useField(idPrefix) {
   const [prefix] = useState(idPrefix || generateId('garden-field-container'));

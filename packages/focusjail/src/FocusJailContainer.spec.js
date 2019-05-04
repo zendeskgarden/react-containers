@@ -6,7 +6,7 @@
  */
 
 import React, { useRef } from 'react';
-import { KEY_CODES } from '@zendeskgarden/container-selection';
+import { KEY_CODES } from '@zendeskgarden/container-utilities';
 import { mount } from 'enzyme';
 import { act } from 'react-dom/test-utils';
 

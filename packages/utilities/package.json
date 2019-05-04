@@ -1,6 +1,6 @@
 {
   "name": "@zendeskgarden/container-utilities",
-  "description": "Containers relating to utilities in the Garden Design System",
+  "description": "Container utilities in the Garden Design System",
   "license": "Apache-2.0",
   "author": "Zendesk Garden <garden@zendesk.com>",
   "homepage": "https://garden.zendesk.com/",

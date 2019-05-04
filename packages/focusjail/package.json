@@ -17,7 +17,7 @@
     "build": "../../utils/scripts/build.sh"
   },
   "dependencies": {
-    "@zendeskgarden/container-selection": "^0.2.3",
+    "@zendeskgarden/container-utilities": "^0.0.0",
     "dom-helpers": "^3.4.0",
     "tabbable": "^4.0.0"
   },

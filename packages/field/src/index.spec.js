@@ -7,25 +7,10 @@
 
 import { getExports } from '@zendeskgarden/react-testing';
 import * as rootIndex from './';
-import * as IdManager from './utils/IdManager';
 
 describe('Index', () => {
   it('exports all components and utilities', async () => {
-    const exports = await getExports({
-      cwd: __dirname,
-      fileMapper: files => {
-        return files
-          .map(entry =>
-            entry
-              .replace(/\.js$/u, '')
-              .split('/')
-              .pop()
-          )
-          .filter(file => !/(IdManager)/u.test(file))
-          .concat(Object.keys(IdManager))
-          .sort();
-      }
-    });
+    const exports = await getExports({ cwd: __dirname });
 
     expect(Object.keys(rootIndex).sort()).toEqual(exports);
   });

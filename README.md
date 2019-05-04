@@ -24,6 +24,7 @@ to install.
 | [`@zendeskgarden/container-schedule`](packages/schedule)           | [![npm version][schedule npm version]][schedule npm link]           | [![Dependency Status][schedule dependency status]][schedule dependency link]           |
 | [`@zendeskgarden/container-selection`](packages/selection)         | [![npm version][selection npm version]][selection npm link]         | [![Dependency Status][selection dependency status]][selection dependency link]         |
 | [`@zendeskgarden/container-tooltip`](packages/tooltip)             | [![npm version][tooltip npm version]][tooltip npm link]             | [![Dependency Status][tooltip dependency status]][tooltip dependency link]             |
+| [`@zendeskgarden/container-utilities`](packages/utilities)         | [![npm version][utilities npm version]][utilities npm link]         | [![Dependency Status][utilities dependency status]][utilities dependency link]         |
 
 [breadcrumb npm version]: https://img.shields.io/npm/v/@zendeskgarden/container-breadcrumb.svg?style=flat-square
 [breadcrumb npm link]: https://www.npmjs.com/package/@zendeskgarden/container-breadcrumb
@@ -65,6 +66,10 @@ to install.
 [tooltip npm link]: https://www.npmjs.com/package/@zendeskgarden/container-tooltip
 [tooltip dependency status]: https://img.shields.io/david/zendeskgarden/react-containers.svg?path=packages/tooltip&style=flat-square
 [tooltip dependency link]: https://david-dm.org/zendeskgarden/react-containers?path=packages/tooltip
+[utilities npm version]: https://img.shields.io/npm/v/@zendeskgarden/container-utilities.svg?style=flat-square
+[utilities npm link]: https://www.npmjs.com/package/@zendeskgarden/container-utilities
+[utilities dependency status]: https://img.shields.io/david/zendeskgarden/react-containers.svg?path=packages/utilities&style=flat-square
+[utilities dependency link]: https://david-dm.org/zendeskgarden/react-containers?path=packages/utilities
 
 ## Usage
 

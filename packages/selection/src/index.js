@@ -10,7 +10,3 @@ export { useSelection } from './useSelection';
 
 /* Render-props */
 export { SelectionContainer } from './SelectionContainer';
-
-/* Utils */
-export { composeEventHandlers } from './utils/composeEventHandlers';
-export { KEY_CODES } from './utils/KEY_CODES';
