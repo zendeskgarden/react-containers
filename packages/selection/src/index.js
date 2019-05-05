@@ -10,3 +10,6 @@ export { useSelection } from './useSelection';
 
 /* Render-props */
 export { SelectionContainer } from './SelectionContainer';
+
+/* Utils */
+export { composeEventHandlers, KEY_CODES } from '@zendeskgarden/container-utilities';

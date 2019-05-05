@@ -7,10 +7,24 @@
 
 import { getExports } from '@zendeskgarden/react-testing';
 import * as rootIndex from './';
+import { generateId, setIdCounter } from '@zendeskgarden/container-utilities';
 
 describe('Index', () => {
   it('exports all components and utilities', async () => {
-    const exports = await getExports({ cwd: __dirname });
+    const exports = await getExports({
+      cwd: __dirname,
+      fileMapper: files => {
+        return files
+          .map(entry =>
+            entry
+              .replace(/\.js$/u, '')
+              .split('/')
+              .pop()
+          )
+          .concat(Object.keys({ generateId, setIdCounter }))
+          .sort();
+      }
+    });
 
     expect(Object.keys(rootIndex).sort()).toEqual(exports);
   });

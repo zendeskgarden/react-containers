@@ -7,6 +7,7 @@
 
 import { getExports } from '@zendeskgarden/react-testing';
 import * as rootIndex from './';
+import { composeEventHandlers, KEY_CODES } from '@zendeskgarden/container-utilities';
 
 describe('Index', () => {
   it('exports all components and utilities', async () => {
@@ -21,6 +22,7 @@ describe('Index', () => {
               .pop()
           )
           .filter(file => !/ACTIONS|DIRECTIONS/u.test(file))
+          .concat(Object.keys({ composeEventHandlers, KEY_CODES }))
           .sort();
       }
     });

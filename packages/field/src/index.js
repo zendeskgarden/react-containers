@@ -10,3 +10,6 @@ export { useField } from './useField';
 
 /* Render-props */
 export { FieldContainer } from './FieldContainer';
+
+/* Utils */
+export { generateId, setIdCounter } from '@zendeskgarden/container-utilities';
