@@ -20,7 +20,7 @@ describe('Index', () => {
               .split('/')
               .pop()
           )
-          .filter(file => !/(usePopper)/u.test(file))
+          .filter(file => !/usePopper/u.test(file))
           .sort();
       }
     });

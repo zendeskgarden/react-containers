@@ -21,7 +21,7 @@ describe('Index', () => {
               .split('/')
               .pop()
           )
-          .filter(file => !/(IdManager)/u.test(file))
+          .filter(file => !/IdManager/u.test(file))
           .concat(Object.keys(IdManager))
           .sort();
       }

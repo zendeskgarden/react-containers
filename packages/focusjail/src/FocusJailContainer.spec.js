@@ -17,6 +17,7 @@ describe('FocusJailContainer', () => {
   let focusSpy;
   let containerReference;
 
+  // eslint-disable-next-line react/prop-types
   const BasicExample = ({ focusOnMount, focusElem = focusSpy } = {}) => {
     const containerRef = useRef(null);
 
