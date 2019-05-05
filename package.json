@@ -43,6 +43,7 @@
     "babel-loader": "8.0.5",
     "chalk": "2.4.2",
     "core-js": "3.0.1",
+    "coveralls": "3.0.3",
     "enzyme": "3.9.0",
     "enzyme-adapter-react-16": "1.12.1",
     "enzyme-to-json": "3.3.5",
