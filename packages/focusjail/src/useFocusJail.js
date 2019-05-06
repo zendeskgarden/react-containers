@@ -20,7 +20,7 @@ export function useFocusJail({ focusOnMount = true, environment, focusElem, cont
     if (containerRef.current !== currentRef) {
       setCurrentRef(containerRef.current);
     }
-  }, [containerRef, currentRef]);
+  });
 
   const focusElement = useCallback(
     element => {
