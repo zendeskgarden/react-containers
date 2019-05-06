@@ -12,4 +12,4 @@ export { useField } from './useField';
 export { FieldContainer } from './FieldContainer';
 
 /* Utils */
-export { generateId, setIdCounter } from './utils/IdManager';
+export { generateId, setIdCounter } from '@zendeskgarden/container-utilities';

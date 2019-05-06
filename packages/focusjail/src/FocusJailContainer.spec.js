@@ -6,7 +6,7 @@
  */
 
 import React, { useRef } from 'react';
-import { KEY_CODES } from '@zendeskgarden/container-selection';
+import { KEY_CODES } from '@zendeskgarden/container-utilities';
 import { mount } from 'enzyme';
 import { act } from 'react-dom/test-utils';
 
@@ -17,6 +17,7 @@ describe('FocusJailContainer', () => {
   let focusSpy;
   let containerReference;
 
+  // eslint-disable-next-line react/prop-types
   const BasicExample = ({ focusOnMount, focusElem = focusSpy } = {}) => {
     const containerRef = useRef(null);
 

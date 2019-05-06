@@ -12,7 +12,7 @@ import { withKnobs, number, boolean } from '@storybook/addon-knobs';
 import { TooltipContainer, useTooltip } from './src';
 import { usePopper } from '../../utils/usePopper';
 
-storiesOf('Tooltip Container/useTooltip')
+storiesOf('Tooltip Container/useTooltip', module)
   .addDecorator(withKnobs)
   .add('default', () => {
     const Tooltip = () => {

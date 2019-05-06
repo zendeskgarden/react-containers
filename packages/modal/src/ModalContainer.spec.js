@@ -7,7 +7,7 @@
 
 import React, { createRef } from 'react';
 import { mount } from 'enzyme';
-import { KEY_CODES } from '@zendeskgarden/container-selection';
+import { KEY_CODES } from '@zendeskgarden/container-utilities';
 import { ModalContainer } from './ModalContainer';
 
 describe('FocusJailContainer', () => {

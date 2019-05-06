@@ -7,6 +7,7 @@
 
 import { getExports } from '@zendeskgarden/react-testing';
 import * as rootIndex from './';
+import * as IdManager from './utils/IdManager';
 
 describe('Index', () => {
   it('exports all components and utilities', async () => {
@@ -20,7 +21,8 @@ describe('Index', () => {
               .split('/')
               .pop()
           )
-          .filter(file => !/usePopper/u.test(file))
+          .filter(file => !/IdManager/u.test(file))
+          .concat(Object.keys(IdManager))
           .sort();
       }
     });

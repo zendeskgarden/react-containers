@@ -7,7 +7,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 
-import { composeEventHandlers } from '@zendeskgarden/container-selection';
+import { composeEventHandlers } from '@zendeskgarden/container-utilities';
 
 export function useKeyboardFocus() {
   const [keyboardFocused, setKeyboardFocused] = useState(false);

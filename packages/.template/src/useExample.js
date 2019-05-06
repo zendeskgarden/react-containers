@@ -8,9 +8,13 @@
 import { useState } from 'react';
 
 export function useExample({ coolProp }) {
-  const [example, setExample] = useState(0);
+  const [label] = useState(coolProp || 'cool');
 
-  const getCoolProps = ({ coolProp = 'cool', ...other } = {}) => ({ coolProp, ...other });
+  const getCoolProps = ({ role = 'region', ariaLabel = label, ...props } = {}) => ({
+    role,
+    'aria-label': ariaLabel,
+    ...props
+  });
 
   return {
     getCoolProps
