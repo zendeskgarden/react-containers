@@ -6,8 +6,7 @@
  */
 
 import { useState } from 'react';
-import { composeEventHandlers } from './utils/composeEventHandlers';
-import { generateId } from './utils/IdManager';
+import { composeEventHandlers, generateId } from '@zendeskgarden/container-utilities';
 
 export function useSection({ idPrefix, expanded = false, disabled = false, onToggle } = {}) {
   const [prefix] = useState(idPrefix || generateId('garden-field-container'));

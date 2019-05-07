@@ -8,28 +8,16 @@
 import React from 'react';
 import { mount } from 'enzyme';
 
-import { ExampleContainer } from './ExampleContainer';
+import AccordionContainer from './AccordionContainer';
 
-describe('ExampleContainer', () => {
+describe('AccordionContainer', () => {
   let wrapper;
 
-  const basicExample = () => (
-    <ExampleContainer>
-      {({ getCoolProps }) => <div {...getCoolProps({ 'data-test-id': 'div' })} />}
-    </ExampleContainer>
-  );
-
   beforeEach(() => {
-    wrapper = mount(basicExample());
+    wrapper = mount(<AccordionContainer />);
   });
 
-  const findDiv = enzymeWrapper => enzymeWrapper.find('[data-test-id="div"]');
-
-  describe('getCoolProps', () => {
-    it('applies correct accessibility role', () => {
-      const div = findDiv(wrapper);
-
-      expect(div).toHaveProp('cool', true);
-    });
+  describe('getSectionProps()', () => {
+    console.log(wrapper);
   });
 });
