@@ -8,7 +8,7 @@
   "bugs": {
     "url": "https://github.com/zendeskgarden/react-containers/issues"
   },
-  "version": "0.1.3",
+  "version": "0.2.0",
   "main": "./dist/index.js",
   "files": [
     "dist"
@@ -18,8 +18,8 @@
   },
   "peerDependencies": {
     "prop-types": "^15.6.1",
-    "react": "16.8.0-alpha.0",
-    "react-dom": "16.8.0-alpha.0"
+    "react": "^16.8.0",
+    "react-dom": "^16.8.0"
   },
   "devDependencies": {
     "@zendeskgarden/css-breadcrumbs": "^0.2.2"

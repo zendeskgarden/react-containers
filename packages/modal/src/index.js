@@ -6,10 +6,7 @@
  */
 
 /* Hooks */
-export { useField } from './useField';
+export { useModal } from './useModal';
 
 /* Render-props */
-export { FieldContainer } from './FieldContainer';
-
-/* Utils */
-export { generateId, setIdCounter } from '@zendeskgarden/container-utilities';
+export { ModalContainer } from './ModalContainer';

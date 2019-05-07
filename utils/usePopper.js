@@ -32,38 +32,35 @@ export function usePopper(options) {
   }));
   const popperInstance = useRef();
 
-  useEffect(
-    () => {
-      if (referenceRef.current && popperRef.current) {
-        popperInstance.current = new PopperJS(referenceRef.current, popperRef.current, {
-          placement: popperPlacement,
-          eventsEnabled,
-          positionFixed,
-          modifiers: {
-            ...modifiers,
-            applyStyle: { enabled: false },
-            updateStateModifier: {
-              enabled: true,
-              order: 900,
-              fn: data => {
-                const { placement } = data;
+  useEffect(() => {
+    if (referenceRef.current && popperRef.current) {
+      popperInstance.current = new PopperJS(referenceRef.current, popperRef.current, {
+        placement: popperPlacement,
+        eventsEnabled,
+        positionFixed,
+        modifiers: {
+          ...modifiers,
+          applyStyle: { enabled: false },
+          updateStateModifier: {
+            enabled: true,
+            order: 900,
+            fn: data => {
+              const { placement } = data;
 
-                setState({ data, placement });
-              }
+              setState({ data, placement });
             }
           }
-        });
-      }
-
-      return () => {
-        if (popperInstance.current) {
-          popperInstance.current.destroy();
-          popperInstance.current = null;
         }
-      };
-    },
-    [popperRef, referenceRef, modifiers, popperPlacement, positionFixed, eventsEnabled]
-  );
+      });
+    }
+
+    return () => {
+      if (popperInstance.current) {
+        popperInstance.current.destroy();
+        popperInstance.current = null;
+      }
+    };
+  }, [popperRef, referenceRef, modifiers, popperPlacement, positionFixed, eventsEnabled]);
 
   const style =
     !popperRef.current || !state.data

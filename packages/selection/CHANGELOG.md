@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-selection@0.2.3...@zendeskgarden/container-selection@0.3.0) (2019-05-06)
+
+
+### Features
+
+* **utilities:** add new `@zendesgarden/container-utilities` package ([#30](https://github.com/zendeskgarden/react-containers/issues/30)) ([fa901cc](https://github.com/zendeskgarden/react-containers/commit/fa901cc))
+
+
+
+
+
 ## [0.2.3](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-selection@0.2.2...@zendeskgarden/container-selection@0.2.3) (2019-04-03)
 
 

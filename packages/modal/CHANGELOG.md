@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-# [0.2.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-field@0.1.0...@zendeskgarden/container-field@0.2.0) (2019-05-06)
+# [0.2.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-modal@0.1.0...@zendeskgarden/container-modal@0.2.0) (2019-05-06)
 
 
 ### Features
@@ -14,9 +14,9 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# 0.1.0 (2019-03-08)
+# 0.1.0 (2019-05-03)
 
 
 ### Features
 
-* **field:** Introduce useField hook and FieldContainer ([#11](https://github.com/zendeskgarden/react-containers/issues/11)) ([be9f683](https://github.com/zendeskgarden/react-containers/commit/be9f683))
+* **modal:** Introduce useModal and ModalContainer ([#28](https://github.com/zendeskgarden/react-containers/issues/28)) ([399f992](https://github.com/zendeskgarden/react-containers/commit/399f992))

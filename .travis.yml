@@ -21,6 +21,8 @@ script:
   - yarn lerna bootstrap --ignore-scripts
   - yarn test:all --coverage --runInBand
 
+after_success: yarn coveralls < demo/coverage/lcov.info
+
 before_deploy:
   - yarn build
   - yarn build:demo

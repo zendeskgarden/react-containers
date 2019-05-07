@@ -6,7 +6,7 @@
  */
 
 import { useEffect, useState, useCallback } from 'react';
-import { composeEventHandlers, KEY_CODES } from '@zendeskgarden/container-selection';
+import { composeEventHandlers, KEY_CODES } from '@zendeskgarden/container-utilities';
 import tabbable from 'tabbable';
 import activeElement from 'dom-helpers/activeElement';
 
@@ -16,6 +16,7 @@ export function useFocusJail({ focusOnMount = true, environment, focusElem, cont
   // skip changes to a ref on first render
   const [currentRef, setCurrentRef] = useState(containerRef.current);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (containerRef.current !== currentRef) {
       setCurrentRef(containerRef.current);
@@ -88,14 +89,11 @@ export function useFocusJail({ focusOnMount = true, environment, focusElem, cont
     };
   };
 
-  useEffect(
-    () => {
-      if (focusOnMount) {
-        focusElement(currentRef);
-      }
-    },
-    [focusOnMount, focusElement, currentRef]
-  );
+  useEffect(() => {
+    if (focusOnMount) {
+      focusElement(currentRef);
+    }
+  }, [focusOnMount, focusElement, currentRef]);
 
   return {
     getContainerProps,

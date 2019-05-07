@@ -7,7 +7,7 @@
 
 import { getExports } from '@zendeskgarden/react-testing';
 import * as rootIndex from './';
-import * as IdManager from './utils/IdManager';
+import { generateId, setIdCounter } from '@zendeskgarden/container-utilities';
 
 describe('Index', () => {
   it('exports all components and utilities', async () => {
@@ -21,8 +21,7 @@ describe('Index', () => {
               .split('/')
               .pop()
           )
-          .filter(file => !/(IdManager)/u.test(file))
-          .concat(Object.keys(IdManager))
+          .concat(Object.keys({ generateId, setIdCounter }))
           .sort();
       }
     });

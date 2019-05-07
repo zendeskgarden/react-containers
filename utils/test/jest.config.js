@@ -17,7 +17,7 @@ module.exports = {
   },
   moduleFileExtensions: ['js', 'ts', 'tsx'],
   snapshotSerializers: ['enzyme-to-json/serializer'],
-  setupTestFrameworkScriptFile: '<rootDir>/utils/test/jest.setup.js',
+  setupFilesAfterEnv: ['<rootDir>/utils/test/jest.setup.js'],
   collectCoverageFrom: [
     '<rootDir>/packages/*/src/**/*.{js,jsx}',
     '!<rootDir>/packages/*/src/index.js',

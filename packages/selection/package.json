@@ -8,13 +8,16 @@
   "bugs": {
     "url": "https://github.com/zendeskgarden/react-containers/issues"
   },
-  "version": "0.2.3",
+  "version": "0.3.0",
   "main": "./dist/index.js",
   "files": [
     "dist"
   ],
   "scripts": {
     "build": "../../utils/scripts/build.sh"
+  },
+  "dependencies": {
+    "@zendeskgarden/container-utilities": "^0.1.0"
   },
   "peerDependencies": {
     "prop-types": "^15.6.1",

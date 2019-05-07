@@ -12,5 +12,4 @@ export { useSelection } from './useSelection';
 export { SelectionContainer } from './SelectionContainer';
 
 /* Utils */
-export { composeEventHandlers } from './utils/composeEventHandlers';
-export { KEY_CODES } from './utils/KEY_CODES';
+export { composeEventHandlers, KEY_CODES } from '@zendeskgarden/container-utilities';

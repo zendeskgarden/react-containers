@@ -1,6 +1,6 @@
 {
-  "name": "@zendeskgarden/container-schedule",
-  "description": "Containers relating to schedule in the Garden Design System",
+  "name": "@zendeskgarden/container-utilities",
+  "description": "Container utilities in the Garden Design System",
   "license": "Apache-2.0",
   "author": "Zendesk Garden <garden@zendesk.com>",
   "homepage": "https://garden.zendesk.com/",
@@ -8,7 +8,7 @@
   "bugs": {
     "url": "https://github.com/zendeskgarden/react-containers/issues"
   },
-  "version": "0.3.0",
+  "version": "0.1.0",
   "main": "./dist/index.js",
   "files": [
     "dist"

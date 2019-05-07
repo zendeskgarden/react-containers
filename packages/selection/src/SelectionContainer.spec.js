@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { KEY_CODES } from './utils/KEY_CODES';
+import { KEY_CODES } from '@zendeskgarden/container-utilities';
 import { SelectionContainer } from './SelectionContainer';
 import { mount } from 'enzyme';
 import { act } from 'react-dom/test-utils';
@@ -17,6 +17,7 @@ describe('SelectionContainer', () => {
   const itemValues = ['Item-1', 'Item-2', 'Item-3'];
   let wrapper;
 
+  // eslint-disable-next-line react/prop-types
   const BasicExample = ({ direction, defaultFocusedIndex, selectedAriaKey, rtl } = {}) => (
     <SelectionContainer direction={direction} defaultFocusedIndex={defaultFocusedIndex} rtl={rtl}>
       {({ getContainerProps, getItemProps, focusedItem, selectedItem }) => (
