@@ -35,6 +35,7 @@
   },
   "zendeskgarden:src": "src/index.js",
   "dependencies": {
-    "@zendeskgarden/container-selection": "^0.2.3"
+    "@zendeskgarden/container-selection": "^0.2.3",
+    "@zendeskgarden/container-utilities": "^0.1.0"
   }
 }

@@ -6,6 +6,7 @@
  */
 
 import { useSelection } from '@zendeskgarden/container-selection';
+import { generateId } from '@zendeskgarden/container-utilities';
 
 export function useTabs({ vertical, ...options } = {}) {
   const { selectedItem, focusedItem, getContainerProps, getItemProps } = useSelection({
