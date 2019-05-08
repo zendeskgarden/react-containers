@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-field@0.2.0...@zendeskgarden/container-field@1.0.0) (2019-05-07)
+
+
+### chore
+
+* **field|selection:** remove utility re-exports ([#32](https://github.com/zendeskgarden/react-containers/issues/32)) ([8dbc27f](https://github.com/zendeskgarden/react-containers/commit/8dbc27f))
+
+
+### BREAKING CHANGES
+
+* **field|selection:** remove temporary re-exports of `@zendeskgarden/container-utilities` made in https://github.com/zendeskgarden/react-containers/pull/30. 
+
+
+
+
+
 # [0.2.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-field@0.1.0...@zendeskgarden/container-field@0.2.0) (2019-05-06)
 
 
