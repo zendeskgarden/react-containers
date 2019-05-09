@@ -21,7 +21,7 @@ storiesOf('Tabs Container', module)
     const Tabs = () => {
       const [selectedItem, setSelectedItem] = useState(tabs[0]);
       const vertical = boolean('vertical', false);
-      const { getTabProps, getTabListProps, getTabPanelProps } = useTabs({
+      const { getTabProps, getTabListProps, getTabPanelProps, getTabsProps } = useTabs({
         selectedItem,
         onSelect: setSelectedItem,
         vertical
@@ -37,31 +37,38 @@ storiesOf('Tabs Container', module)
               }
             })}
           >
-            {tabs.map((tab, index) => (
-              <li
-                {...getTabProps({
-                  item: tab,
-                  focusRef: tabRefs[index],
-                  style: {
-                    padding: '5px 5px 0',
-                    borderBottom:
-                      !vertical && `3px solid ${tab === selectedItem ? '#1f73b7' : 'transparent'}`,
-                    borderLeft:
-                      vertical && `3px solid ${tab === selectedItem ? '#1f73b7' : 'transparent'}`,
-                    color: tab === selectedItem && '#1f73b7'
-                  }
-                })}
-              >
-                {tab}
-              </li>
-            ))}
+            {tabs.map((tab, index) => {
+              return (
+                <li
+                  {...getTabProps({
+                    item: tab,
+                    index,
+                    focusRef: tabRefs[index],
+                    ref: tabRefs[index],
+                    key: tab,
+                    style: {
+                      padding: '5px 5px 0',
+                      borderBottom:
+                        !vertical &&
+                        `3px solid ${tab === selectedItem ? '#1f73b7' : 'transparent'}`,
+                      borderLeft:
+                        vertical && `3px solid ${tab === selectedItem ? '#1f73b7' : 'transparent'}`,
+                      color: tab === selectedItem && '#1f73b7'
+                    }
+                  })}
+                >
+                  {tab}
+                </li>
+              );
+            })}
           </ul>
-          {tabs.map(tab => (
+          {tabs.map((tab, index) => (
             <div
               {...getTabPanelProps({
+                index,
+                item: tab,
                 key: tab,
                 style: {
-                  display: tab === selectedItem ? 'block' : 'none',
                   padding: !vertical && '10px 0',
                   borderTop: !vertical && '1px solid'
                 }
