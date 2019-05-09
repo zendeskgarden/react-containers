@@ -10,8 +10,8 @@ import { composeEventHandlers, generateId } from '@zendeskgarden/container-utili
 
 export function useSection({ idPrefix, expanded = false, disabled = false, onToggle } = {}) {
   const [prefix] = useState(idPrefix || generateId('garden-field-container'));
-  const triggerId = `${prefix}--trigger`;
-  const panelId = `${prefix}--panel`;
+  const TRIGGER_ID = `${prefix}--trigger`;
+  const PANEL_ID = `${prefix}--panel`;
 
   const getHeaderProps = ({ role = 'heading', ariaLevel, ...props } = {}) => {
     if (ariaLevel === undefined) {
@@ -29,9 +29,9 @@ export function useSection({ idPrefix, expanded = false, disabled = false, onTog
 
   const getTriggerProps = ({ role = 'button', ...props } = {}) => {
     return {
-      id: triggerId,
+      id: TRIGGER_ID,
       role,
-      'aria-controls': panelId,
+      'aria-controls': PANEL_ID,
       'aria-disabled': disabled,
       'aria-expanded': expanded,
       onClick: composeEventHandlers(props.onClick, onToggle),
@@ -41,10 +41,10 @@ export function useSection({ idPrefix, expanded = false, disabled = false, onTog
 
   const getPanelProps = ({ role = 'region', ...props } = {}) => {
     return {
-      id: panelId,
+      id: PANEL_ID,
       role,
       'aria-hidden': !expanded,
-      'aria-labelledby': triggerId,
+      'aria-labelledby': TRIGGER_ID,
       ...props
     };
   };

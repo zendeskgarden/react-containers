@@ -13,16 +13,16 @@ export function useAccordion({
   expandable = true,
   collapsible = true
 } = {}) {
-  const reducer = (state, action) => {
+  const [state, dispatch] = useReducer((_state, action) => {
     const retVal = [];
 
     action.sections.forEach(section => {
       let expanded = false;
 
       if (section === action.section) {
-        expanded = collapsible ? state.indexOf(section) === -1 : true;
+        expanded = collapsible ? _state.indexOf(section) === -1 : true;
       } else if (expandable) {
-        expanded = state.indexOf(section) !== -1;
+        expanded = _state.indexOf(section) !== -1;
       }
 
       if (expanded) {
@@ -31,8 +31,7 @@ export function useAccordion({
     });
 
     return retVal;
-  };
-  const [state, dispatch] = useReducer(reducer, expandedSections);
+  }, expandedSections);
   const sections = [];
 
   const Section = ({ section, idPrefix } = {}) => {
