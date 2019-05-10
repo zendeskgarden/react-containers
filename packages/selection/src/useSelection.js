@@ -175,6 +175,7 @@ export function useSelection({
       onClick,
       item,
       focusRef,
+      refKey = 'ref',
       ...other
     } = {},
     propGetterName = 'getItemProps'
@@ -212,7 +213,7 @@ export function useSelection({
       role,
       tabIndex,
       [selectedAriaKey]: isSelected,
-      ref: focusRef,
+      [refKey]: focusRef,
       onFocus: composeEventHandlers(onFocusCallback, () => {
         dispatch({ type: ACTIONS.FOCUS, payload: item, items });
       }),
