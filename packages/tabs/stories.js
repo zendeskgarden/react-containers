@@ -8,7 +8,7 @@
 import React, { useState, createRef } from 'react';
 
 import { storiesOf } from '@storybook/react';
-import { withKnobs, boolean } from '@storybook/addon-knobs';
+import { withKnobs, boolean, text } from '@storybook/addon-knobs';
 
 import { TabsContainer, useTabs } from './src';
 
@@ -21,10 +21,53 @@ storiesOf('Tabs Container', module)
     const Tabs = () => {
       const [selectedItem, setSelectedItem] = useState(tabs[0]);
       const vertical = boolean('vertical', false);
-      const { getTabProps, getTabListProps, getTabPanelProps, getTabsProps } = useTabs({
+      const { getTabProps, getTabListProps, getTabPanelProps } = useTabs({
         selectedItem,
         onSelect: setSelectedItem,
-        vertical
+        vertical,
+        idPrefix: text('idPrefix')
+      });
+      const tabComponents = [];
+      const tabPanels = [];
+
+      tabs.forEach((tab, index) => {
+        tabComponents.push(
+          <li
+            {...getTabProps({
+              item: tab,
+              index,
+              focusRef: tabRefs[index],
+              ref: tabRefs[index],
+              key: tab,
+              style: {
+                padding: '5px 5px 0',
+                borderBottom:
+                  !vertical && `3px solid ${tab === selectedItem ? '#1f73b7' : 'transparent'}`,
+                borderLeft:
+                  vertical && `3px solid ${tab === selectedItem ? '#1f73b7' : 'transparent'}`,
+                color: tab === selectedItem && '#1f73b7'
+              }
+            })}
+          >
+            {tab}
+          </li>
+        );
+
+        tabPanels.push(
+          <div
+            {...getTabPanelProps({
+              index,
+              item: tab,
+              key: tab,
+              style: {
+                padding: !vertical && '10px 0',
+                borderTop: !vertical && '1px solid'
+              }
+            })}
+          >
+            {tab} Content
+          </div>
+        );
       });
 
       return (
@@ -37,8 +80,34 @@ storiesOf('Tabs Container', module)
               }
             })}
           >
-            {tabs.map((tab, index) => {
-              return (
+            {tabComponents}
+          </ul>
+          {tabPanels}
+        </div>
+      );
+    };
+
+    return <Tabs />;
+  })
+  .add('TabsContainer', () => {
+    const Tabs = () => {
+      const [selectedItem, setSelectedItem] = useState(tabs[0]);
+      const vertical = boolean('vertical', false);
+      const idPrefix = text('idPrefix');
+
+      return (
+        <TabsContainer
+          vertical={vertical}
+          selectedItem={selectedItem}
+          onSelect={setSelectedItem}
+          idPrefix={idPrefix}
+        >
+          {({ getTabProps, getTabListProps, getTabPanelProps }) => {
+            const tabComponents = [];
+            const tabPanels = [];
+
+            tabs.forEach((tab, index) => {
+              tabComponents.push(
                 <li
                   {...getTabProps({
                     item: tab,
@@ -60,74 +129,14 @@ storiesOf('Tabs Container', module)
                   {tab}
                 </li>
               );
-            })}
-          </ul>
-          {tabs.map((tab, index) => (
-            <div
-              {...getTabPanelProps({
-                index,
-                item: tab,
-                key: tab,
-                style: {
-                  padding: !vertical && '10px 0',
-                  borderTop: !vertical && '1px solid'
-                }
-              })}
-            >
-              {tab} Content
-            </div>
-          ))}
-        </div>
-      );
-    };
 
-    return <Tabs />;
-  })
-  .add('TabsContainer', () => {
-    const Tabs = () => {
-      const [selectedItem, setSelectedItem] = useState(tabs[0]);
-      const vertical = boolean('vertical', false);
-
-      return (
-        <TabsContainer vertical={vertical} selectedItem={selectedItem} onSelect={setSelectedItem}>
-          {({ getTabProps, getTabListProps, getTabPanelProps }) => (
-            <div style={{ display: vertical && 'flex' }}>
-              <ul
-                {...getTabListProps({
-                  style: {
-                    display: 'flex',
-                    flexDirection: vertical && 'column'
-                  }
-                })}
-              >
-                {tabs.map((tab, index) => (
-                  <li
-                    {...getTabProps({
-                      item: tab,
-                      key: tab,
-                      focusRef: tabRefs[index],
-                      style: {
-                        padding: '5px 5px 0',
-                        borderBottom:
-                          !vertical &&
-                          `3px solid ${tab === selectedItem ? '#1f73b7' : 'transparent'}`,
-                        borderLeft:
-                          vertical &&
-                          `3px solid ${tab === selectedItem ? '#1f73b7' : 'transparent'}`,
-                        color: tab === selectedItem && '#1f73b7'
-                      }
-                    })}
-                  >
-                    {tab}
-                  </li>
-                ))}
-              </ul>
-              {tabs.map(tab => (
+              tabPanels.push(
                 <div
                   {...getTabPanelProps({
+                    index,
+                    item: tab,
                     key: tab,
                     style: {
-                      display: tab === selectedItem ? 'block' : 'none',
                       padding: !vertical && '10px 0',
                       borderTop: !vertical && '1px solid'
                     }
@@ -135,9 +144,25 @@ storiesOf('Tabs Container', module)
                 >
                   {tab} Content
                 </div>
-              ))}
-            </div>
-          )}
+              );
+            });
+
+            return (
+              <div style={{ display: vertical && 'flex' }}>
+                <ul
+                  {...getTabListProps({
+                    style: {
+                      display: 'flex',
+                      flexDirection: vertical && 'column'
+                    }
+                  })}
+                >
+                  {tabComponents}
+                </ul>
+                {tabPanels}
+              </div>
+            );
+          }}
         </TabsContainer>
       );
     };

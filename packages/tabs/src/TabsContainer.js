@@ -16,5 +16,6 @@ export function TabsContainer({ children, render = children, ...options }) {
 TabsContainer.propTypes = {
   children: PropTypes.func,
   render: PropTypes.func,
-  vertical: PropTypes.bool
+  vertical: PropTypes.bool,
+  idPrefix: PropTypes.string
 };

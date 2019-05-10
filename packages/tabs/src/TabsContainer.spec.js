@@ -13,17 +13,22 @@ import { TabsContainer } from './TabsContainer';
 
 describe('TabsContainer', () => {
   let wrapper;
+  const idPrefix = 'test_id';
   const tabs = ['tab-1', 'tab-2', 'tab-3'];
   const tabRefs = tabs.map(() => createRef(null));
+  const getPanelId = index => `${idPrefix}--panel:${index}`;
+  const getTabId = index => `${idPrefix}--tab:${index}`;
 
+  // eslint-disable-next-line react/prop-types
   const basicExample = ({ vertical, onSelect } = {}) => (
-    <TabsContainer vertical={vertical} onSelect={onSelect}>
+    <TabsContainer vertical={vertical} onSelect={onSelect} idPrefix={idPrefix}>
       {({ getTabListProps, getTabProps, getTabPanelProps, selectedItem, focusedItem }) => (
         <div>
           <div {...getTabListProps({ 'data-test-id': 'tab-list' })}>
             {tabs.map((tab, index) => (
               <div
                 {...getTabProps({
+                  index,
                   key: tab,
                   item: tab,
                   focusRef: tabRefs[index],
@@ -36,8 +41,8 @@ describe('TabsContainer', () => {
               </div>
             ))}
           </div>
-          {tabs.map(tab => (
-            <div {...getTabPanelProps({ key: tab, 'data-test-id': 'tab-panel' })}>
+          {tabs.map((tab, index) => (
+            <div {...getTabPanelProps({ index, item: tab, key: tab, 'data-test-id': 'tab-panel' })}>
               {tab} content
             </div>
           ))}
@@ -72,8 +77,10 @@ describe('TabsContainer', () => {
 
     describe('Tab', () => {
       it('applies the correct accessibility role', () => {
-        findTabs(wrapper).forEach(tab => {
+        findTabs(wrapper).forEach((tab, index) => {
           expect(tab).toHaveProp('role', 'tab');
+          expect(tab).toHaveProp('id', getTabId(index));
+          expect(tab).toHaveProp('aria-controls', getPanelId(index));
         });
       });
     });
@@ -81,8 +88,11 @@ describe('TabsContainer', () => {
 
   describe('TabPanel', () => {
     it('applies the correct accessibility role', () => {
-      findTabPanels(wrapper).forEach(tabPanel => {
+      findTabPanels(wrapper).forEach((tabPanel, index) => {
         expect(tabPanel).toHaveProp('role', 'tabpanel');
+        expect(tabPanel).toHaveProp('id', getPanelId(index));
+        expect(tabPanel).toHaveProp('tabIndex', 0);
+        expect(tabPanel).toHaveProp('aria-labelledby', getTabId(index));
       });
     });
 
@@ -94,15 +104,47 @@ describe('TabsContainer', () => {
       });
 
       it('enables aria-hidden if tab is currently not selected', () => {
-        expect(findTabPanels(wrapper).at(1)).toHaveProp('aria-hidden', false);
+        expect(findTabPanels(wrapper).at(1)).toHaveProp('hidden', false);
       });
 
       it('disables aria-hidden if tab is currently selected', () => {
         const items = findTabPanels(wrapper);
 
-        expect(items.at(0)).toHaveProp('aria-hidden', true);
-        expect(items.at(2)).toHaveProp('aria-hidden', true);
+        expect(items.at(0)).toHaveProp('hidden', true);
+        expect(items.at(2)).toHaveProp('hidden', true);
       });
+    });
+  });
+
+  describe('getTabProps', () => {
+    console.error = jest.fn(); // eslint-disable-line no-console
+
+    it('throws if no index prop is applied', () => {
+      expect(() => {
+        mount(<TabsContainer>{({ getTabProps }) => <div {...getTabProps()} />}</TabsContainer>);
+      }).toThrow('Accessibility Error: You must provide an "index" option to "getTabProps()"');
+    });
+  });
+
+  describe('getTabPanelProps', () => {
+    console.error = jest.fn(); // eslint-disable-line no-console
+
+    it('throws if no index prop is applied', () => {
+      expect(() => {
+        mount(
+          <TabsContainer>{({ getTabPanelProps }) => <div {...getTabPanelProps()} />}</TabsContainer>
+        );
+      }).toThrow('Accessibility Error: You must provide an "index" option to "getTabPanelProps()"');
+    });
+
+    it('throws if no item prop is applied', () => {
+      expect(() => {
+        mount(
+          <TabsContainer>
+            {({ getTabPanelProps }) => <div {...getTabPanelProps({ index: 0 })} />}
+          </TabsContainer>
+        );
+      }).toThrow('Accessibility Error: You must provide an "item" option to "getTabPanelProps()"');
     });
   });
 });
