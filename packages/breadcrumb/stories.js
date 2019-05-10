@@ -12,8 +12,6 @@ import { withKnobs } from '@storybook/addon-knobs';
 
 import { BreadcrumbContainer, useBreadcrumb } from './src';
 
-import '@zendeskgarden/css-breadcrumbs';
-
 storiesOf('Breadcrumb Container', module)
   .addDecorator(withKnobs)
   .add('useBreadcrumb', () => {
@@ -21,13 +19,10 @@ storiesOf('Breadcrumb Container', module)
       const { getContainerProps, getCurrentPageProps } = useBreadcrumb();
 
       return (
-        <div {...getContainerProps({ className: 'c-breadcrumb' })}>
-          <a href="#foo" className="c-breadcrumb__item">
-            Home
-          </a>
-          <a {...getCurrentPageProps({ href: '#', className: 'c-breadcrumb__item is-current' })}>
-            Items
-          </a>
+        <div {...getContainerProps()}>
+          <a href="#foo">Home</a>
+          <span aria-hidden="true">&gt;</span>
+          <a {...getCurrentPageProps({ href: '#' })}>Items</a>
         </div>
       );
     };
@@ -37,13 +32,10 @@ storiesOf('Breadcrumb Container', module)
   .add('BreadcrumbContainer', () => (
     <BreadcrumbContainer>
       {({ getContainerProps, getCurrentPageProps }) => (
-        <div {...getContainerProps({ className: 'c-breadcrumb' })}>
-          <a href="#foo" className="c-breadcrumb__item">
-            Home
-          </a>
-          <a {...getCurrentPageProps({ href: '#foo', className: 'c-breadcrumb__item is-current' })}>
-            Items
-          </a>
+        <div {...getContainerProps()}>
+          <a href="#foo">Home</a>
+          <span aria-hidden="true">&gt;</span>
+          <a {...getCurrentPageProps({ href: '#foo' })}>Items</a>
         </div>
       )}
     </BreadcrumbContainer>
