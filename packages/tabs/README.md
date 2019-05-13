@@ -11,17 +11,73 @@ npm install @zendeskgarden/container-tabs
 
 ## Usage
 
-For live examples check out our [storybook](https://zendeskgarden.github.io/react-containers).
+For live examples check out our [storybook](https://zendeskgarden.github.io/react-containers?path=/story/tabs-container--usetabs).
 
 ### useTabs
 
 ```jsx static
 import { useTabs } from '@zendeskgarden/container-tabs';
 
-const Tabs = () => {
-  const { getTabsProps } = useTabs();
+const tabs = ['Tab 1', 'Tab 2', 'Tab 3'];
+const tabRefs = tabs.map(() => createRef(null));
 
-  return <div {...getTabsProps()} />;
+const Tabs = () => {
+  const [selectedItem, setSelectedItem] = useState(tabs[0]);
+  const { getTabProps, getTabListProps, getTabPanelProps } = useTabs({
+    selectedItem,
+    onSelect: setSelectedItem
+  });
+  const tabComponents = [];
+  const tabPanels = [];
+
+  tabs.forEach((tab, index) => {
+    tabComponents.push(
+      <li
+        {...getTabProps({
+          item: tab,
+          index,
+          ref: tabRefs[index],
+          key: tab,
+          style: {
+            borderBottom: `3px solid ${tab === selectedItem ? '#1f73b7' : 'transparent'}`
+          }
+        })}
+      >
+        {tab}
+      </li>
+    );
+
+    tabPanels.push(
+      <div
+        {...getTabPanelProps({
+          index,
+          item: tab,
+          key: tab,
+          style: {
+            padding: '10px 0',
+            borderTop: '1px solid'
+          }
+        })}
+      >
+        {tab} Content
+      </div>
+    );
+  });
+
+  return (
+    <>
+      <ul
+        {...getTabListProps({
+          style: {
+            display: 'flex'
+          }
+        })}
+      >
+        {tabComponents}
+      </ul>
+      {tabPanels}
+    </>
+  );
 };
 ```
 
@@ -30,13 +86,65 @@ const Tabs = () => {
 ```jsx static
 import { TabsContainer } from '@zendeskgarden/container-tabs';
 
-<TabsContainer>{({ getTabsProps }) => <div {...getTabsProps()} />}</TabsContainer>;
+const Tabs = () => {
+  const [selectedItem, setSelectedItem] = useState(tabs[0]);
+  const tabComponents = [];
+  const tabPanels = [];
+
+  return (
+    <TabsContainer selectedItem={selectedItem} onSelect={setSelectedItem}>
+      {({ getTabProps, getTabListProps, getTabPanelProps }) => {
+        tabs.forEach((tab, index) => {
+          tabComponents.push(
+            <li
+              {...getTabProps({
+                item: tab,
+                index,
+                ref: tabRefs[index],
+                key: tab,
+                style: {
+                  borderBottom: `3px solid ${tab === selectedItem ? '#1f73b7' : 'transparent'}`
+                }
+              })}
+            >
+              {tab}
+            </li>
+          );
+
+          tabPanels.push(
+            <div
+              {...getTabPanelProps({
+                index,
+                item: tab,
+                key: tab,
+                style: {
+                  padding: '10px 0',
+                  borderTop: '1px solid'
+                }
+              })}
+            >
+              {tab} Content
+            </div>
+          );
+        });
+
+        return (
+          <>
+            <ul
+              {...getTabListProps({
+                style: {
+                  display: 'flex'
+                }
+              })}
+            >
+              {tabComponents}
+            </ul>
+            {tabPanels}
+          </>
+        );
+      }}
+      }
+    </TabsContainer>
+  );
+};
 ```
-
-<!--
-  TODO:
-
-  * [ ] Add tabs to root README table.
-  * [ ] Add tabs stories.js.
-  * [ ] Delete this comment block.
--->

@@ -23,8 +23,8 @@ export function useTabs({ vertical, idPrefix, ...options } = {}) {
     ...options
   });
   const [_id] = useState(idPrefix || generateId('garden-tabs-container'));
-  const panelId = `${_id}--panel`;
-  const tabId = `${_id}--tab`;
+  const PANEL_ID = `${_id}--panel`;
+  const TAB_ID = `${_id}--tab`;
 
   const getTabListProps = ({ role = 'tablist', ...other } = {}) => {
     return {
@@ -37,8 +37,8 @@ export function useTabs({ vertical, idPrefix, ...options } = {}) {
     requiredArguments(index, 'index', 'getTabProps');
 
     return {
-      id: `${tabId}:${index}`,
-      'aria-controls': `${panelId}:${index}`,
+      id: `${TAB_ID}:${index}`,
+      'aria-controls': `${PANEL_ID}:${index}`,
       role,
       ...other
     };
@@ -53,9 +53,9 @@ export function useTabs({ vertical, idPrefix, ...options } = {}) {
     return {
       role,
       tabIndex: 0,
-      id: `${panelId}:${index}`,
+      id: `${PANEL_ID}:${index}`,
       hidden: isHidden,
-      'aria-labelledby': `${tabId}:${index}`,
+      'aria-labelledby': `${TAB_ID}:${index}`,
       ...other
     };
   };
