@@ -25,7 +25,6 @@ describe('ButtonGroupContainer', () => {
                 key: button,
                 item: button,
                 focusRef: buttonRefs[index],
-                ref: buttonRefs[index],
                 'data-test-id': 'button',
                 'data-selected': button === selectedKey,
                 'data-focused': button === focusedKey

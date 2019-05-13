@@ -35,6 +35,6 @@ export function useButtonGroup(options) {
     selectedItem,
     focusedItem,
     getGroupProps: props => getContainerProps(getGroupProps(props)),
-    getButtonProps: props => getItemProps(getButtonProps(props))
+    getButtonProps: props => getItemProps(getButtonProps(props), 'getButtonProps')
   };
 }
