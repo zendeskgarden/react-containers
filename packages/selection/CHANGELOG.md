@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.1](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-selection@1.0.0...@zendeskgarden/container-selection@1.0.1) (2019-05-13)
+
+
+### Bug Fixes
+
+* **selection|buttongroup|pagination:** Pass focusRef through as ref ([#29](https://github.com/zendeskgarden/react-containers/issues/29)) ([9eb0528](https://github.com/zendeskgarden/react-containers/commit/9eb0528))
+
+
+
+
+
 # [1.0.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-selection@0.3.0...@zendeskgarden/container-selection@1.0.0) (2019-05-07)
 
 
