@@ -16,6 +16,10 @@
   "scripts": {
     "build": "../../utils/scripts/build.sh"
   },
+  "dependencies": {
+    "@zendeskgarden/container-selection": "^1.0.1",
+    "@zendeskgarden/container-utilities": "^0.1.0"
+  },
   "peerDependencies": {
     "prop-types": "^15.6.1",
     "react": "^16.8.0",
@@ -33,9 +37,5 @@
   "publishConfig": {
     "access": "public"
   },
-  "zendeskgarden:src": "src/index.js",
-  "dependencies": {
-    "@zendeskgarden/container-selection": "^0.2.3",
-    "@zendeskgarden/container-utilities": "^0.1.0"
-  }
+  "zendeskgarden:src": "src/index.js"
 }

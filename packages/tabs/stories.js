@@ -37,7 +37,6 @@ storiesOf('Tabs Container', module)
               item: tab,
               index,
               focusRef: tabRefs[index],
-              ref: tabRefs[index],
               key: tab,
               style: {
                 padding: '5px 5px 0',
@@ -113,7 +112,6 @@ storiesOf('Tabs Container', module)
                     item: tab,
                     index,
                     focusRef: tabRefs[index],
-                    ref: tabRefs[index],
                     key: tab,
                     style: {
                       padding: '5px 5px 0',
