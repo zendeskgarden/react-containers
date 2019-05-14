@@ -6,16 +6,15 @@
  */
 
 import React, { createRef } from 'react';
-import { mount } from 'enzyme';
+import { render, fireEvent } from 'react-testing-library';
 
 import { ButtonGroupContainer } from './ButtonGroupContainer';
 
 describe('ButtonGroupContainer', () => {
-  let wrapper;
   const buttons = ['button-1', 'button-2', 'button-3'];
   const buttonRefs = buttons.map(() => createRef(null));
 
-  const basicExample = () => (
+  const BasicExample = () => (
     <ButtonGroupContainer>
       {({ getGroupProps, getButtonProps, selectedKey, focusedKey }) => (
         <div {...getGroupProps({ 'data-test-id': 'group' })}>
@@ -38,43 +37,46 @@ describe('ButtonGroupContainer', () => {
     </ButtonGroupContainer>
   );
 
-  beforeEach(() => {
-    wrapper = mount(basicExample());
-  });
-
-  const findButtonGroup = enzymeWrapper => enzymeWrapper.find('[data-test-id="group"]');
-  const findButtons = enzymeWrapper => enzymeWrapper.find('[data-test-id="button"]');
-
   describe('getGroupProps', () => {
     it('applies correct accessibility role', () => {
-      expect(findButtonGroup(wrapper)).toHaveProp('role', 'group');
+      const { getByTestId } = render(<BasicExample />);
+
+      expect(getByTestId('group')).toHaveAttribute('role', 'group');
     });
   });
 
   describe('getButtonProps', () => {
     it('applies the correct accessibility role', () => {
-      findButtons(wrapper).forEach(button => {
-        expect(button).toHaveProp('role', 'button');
+      const { getAllByTestId } = render(<BasicExample />);
+
+      getAllByTestId('button').forEach(button => {
+        expect(button).toHaveAttribute('role', 'button');
       });
     });
 
     it('applies the correct accessibility tabIndex', () => {
-      findButtons(wrapper).forEach((button, index) => {
-        const tabIndex = index === 0 ? 0 : -1;
+      const { getAllByTestId } = render(<BasicExample />);
 
-        expect(button).toHaveProp('tabIndex', tabIndex);
+      getAllByTestId('button').forEach((button, index) => {
+        const tabIndex = index === 0 ? '0' : '-1';
+
+        expect(button).toHaveAttribute('tabIndex', tabIndex);
       });
     });
 
     it('applies the correct accessibility selected value when not selected', () => {
-      expect(findButtons(wrapper).first()).toHaveProp('aria-pressed', false);
+      const { getAllByTestId } = render(<BasicExample />);
+
+      expect(getAllByTestId('button')[0]).toHaveAttribute('aria-pressed', 'false');
     });
 
     it('applies the correct accessibility selected value when selected', () => {
-      findButtons(wrapper)
-        .first()
-        .simulate('click');
-      expect(findButtons(wrapper).first()).toHaveProp('aria-pressed', true);
+      const { getAllByTestId } = render(<BasicExample />);
+      const firstButton = getAllByTestId('button')[0];
+
+      fireEvent.click(firstButton);
+
+      expect(firstButton).toHaveAttribute('aria-pressed', 'true');
     });
   });
 });
