@@ -163,6 +163,7 @@ export function useSelection({
 
   const getContainerProps = ({ role = 'listbox', ...other } = {}) => ({
     role,
+    'aria-orientation': direction === DIRECTIONS.BOTH ? undefined : direction,
     ...other
   });
 
