@@ -23,6 +23,7 @@ to install.
 | [`@zendeskgarden/container-pagination`](packages/pagination)       | [![npm version][pagination npm version]][pagination npm link]       | [![Dependency Status][pagination dependency status]][pagination dependency link]       |
 | [`@zendeskgarden/container-schedule`](packages/schedule)           | [![npm version][schedule npm version]][schedule npm link]           | [![Dependency Status][schedule dependency status]][schedule dependency link]           |
 | [`@zendeskgarden/container-selection`](packages/selection)         | [![npm version][selection npm version]][selection npm link]         | [![Dependency Status][selection dependency status]][selection dependency link]         |
+| [`@zendeskgarden/container-tabs`](packages/tabs)                   | [![npm version][tabs npm version]][tabs npm link]                   | [![Dependency Status][tabs dependency status]][tabs dependency link]                   |
 | [`@zendeskgarden/container-tooltip`](packages/tooltip)             | [![npm version][tooltip npm version]][tooltip npm link]             | [![Dependency Status][tooltip dependency status]][tooltip dependency link]             |
 | [`@zendeskgarden/container-utilities`](packages/utilities)         | [![npm version][utilities npm version]][utilities npm link]         | [![Dependency Status][utilities dependency status]][utilities dependency link]         |
 
@@ -62,6 +63,10 @@ to install.
 [selection npm link]: https://www.npmjs.com/package/@zendeskgarden/container-selection
 [selection dependency status]: https://img.shields.io/david/zendeskgarden/react-containers.svg?path=packages/selection&style=flat-square
 [selection dependency link]: https://david-dm.org/zendeskgarden/react-containers?path=packages/selection
+[tabs npm version]: https://img.shields.io/npm/v/@zendeskgarden/container-tabs.svg?style=flat-square
+[tabs npm link]: https://www.npmjs.com/package/@zendeskgarden/container-tabs
+[tabs dependency status]: https://img.shields.io/david/zendeskgarden/react-containers.svg?path=packages/tabs&style=flat-square
+[tabs dependency link]: https://david-dm.org/zendeskgarden/react-containers?path=packages/tabs
 [tooltip npm version]: https://img.shields.io/npm/v/@zendeskgarden/container-tooltip.svg?style=flat-square
 [tooltip npm link]: https://www.npmjs.com/package/@zendeskgarden/container-tooltip
 [tooltip dependency status]: https://img.shields.io/david/zendeskgarden/react-containers.svg?path=packages/tooltip&style=flat-square

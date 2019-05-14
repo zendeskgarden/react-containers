@@ -1,0 +1,41 @@
+{
+  "name": "@zendeskgarden/container-tabs",
+  "description": "Containers relating to tabs in the Garden Design System",
+  "license": "Apache-2.0",
+  "author": "Zendesk Garden <garden@zendesk.com>",
+  "homepage": "https://garden.zendesk.com/",
+  "repository": "https://github.com/zendeskgarden/react-containers",
+  "bugs": {
+    "url": "https://github.com/zendeskgarden/react-containers/issues"
+  },
+  "version": "0.0.0",
+  "main": "./dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "../../utils/scripts/build.sh"
+  },
+  "dependencies": {
+    "@zendeskgarden/container-selection": "^1.0.2",
+    "@zendeskgarden/container-utilities": "^0.1.0"
+  },
+  "peerDependencies": {
+    "prop-types": "^15.6.1",
+    "react": "^16.8.0",
+    "react-dom": "^16.8.0"
+  },
+  "keywords": [
+    "a11y",
+    "accessible",
+    "container",
+    "garden",
+    "headless",
+    "react",
+    "zendesk"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "zendeskgarden:src": "src/index.js"
+}
