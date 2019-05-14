@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.2](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-selection@1.0.1...@zendeskgarden/container-selection@1.0.2) (2019-05-14)
+
+
+### Bug Fixes
+
+* **selection:** Add aria-orientation when direction is changed ([#35](https://github.com/zendeskgarden/react-containers/issues/35)) ([6a7720a](https://github.com/zendeskgarden/react-containers/commit/6a7720a))
+
+
+
+
+
 ## [1.0.1](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-selection@1.0.0...@zendeskgarden/container-selection@1.0.1) (2019-05-13)
 
 
