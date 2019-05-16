@@ -6,15 +6,14 @@
  */
 
 import React from 'react';
-import { mount } from 'enzyme';
+import { render } from 'react-testing-library';
 
 import { FieldContainer } from './FieldContainer';
 
 describe('FieldContainer', () => {
   const CONTAINER_ID = 'test';
-  let wrapper;
 
-  const basicExample = () => (
+  const BasicExample = () => (
     <FieldContainer id={CONTAINER_ID}>
       {({ getLabelProps, getInputProps, getHintProps }) => (
         <div>
@@ -26,34 +25,28 @@ describe('FieldContainer', () => {
     </FieldContainer>
   );
 
-  beforeEach(() => {
-    wrapper = mount(basicExample());
-  });
-
-  const findLabel = enzymeWrapper => enzymeWrapper.find('[data-test-id="label"]');
-  const findInput = enzymeWrapper => enzymeWrapper.find('[data-test-id="input"]');
-  const findHint = enzymeWrapper => enzymeWrapper.find('[data-test-id="hint"]');
-
   describe('getLabelProps', () => {
     it('applies correct accessibility role', () => {
-      const label = findLabel(wrapper);
+      const { getByTestId } = render(<BasicExample />);
+      const label = getByTestId('label');
 
-      expect(label).toHaveProp('id', `${CONTAINER_ID}--label`);
-      expect(label).toHaveProp('htmlFor', `${CONTAINER_ID}--input`);
+      expect(label).toHaveAttribute('id', `${CONTAINER_ID}--label`);
+      expect(label).toHaveAttribute('for', `${CONTAINER_ID}--input`);
     });
   });
 
   describe('getInputProps', () => {
     it('applies correct accessibility attributes', () => {
-      const input = findInput(wrapper);
+      const { getByTestId } = render(<BasicExample />);
+      const input = getByTestId('input');
 
-      expect(input).toHaveProp('id', `${CONTAINER_ID}--input`);
-      expect(input).toHaveProp('aria-labelledby', `${CONTAINER_ID}--label`);
-      expect(input).toHaveProp('aria-describedby', null);
+      expect(input).toHaveAttribute('id', `${CONTAINER_ID}--input`);
+      expect(input).toHaveAttribute('aria-labelledby', `${CONTAINER_ID}--label`);
+      expect(input).not.toHaveAttribute('aria-describedby');
     });
 
     it('includes aria-describedby if option is provided', () => {
-      wrapper = mount(
+      const { getByTestId } = render(
         <FieldContainer id={CONTAINER_ID}>
           {({ getInputProps }) => (
             <div>
@@ -63,13 +56,15 @@ describe('FieldContainer', () => {
         </FieldContainer>
       );
 
-      expect(findInput(wrapper)).toHaveProp('aria-describedby', `${CONTAINER_ID}--hint`);
+      expect(getByTestId('input')).toHaveAttribute('aria-describedby', `${CONTAINER_ID}--hint`);
     });
   });
 
   describe('getHintProps', () => {
     it('applies correct accessibility role', () => {
-      expect(findHint(wrapper)).toHaveProp('id', `${CONTAINER_ID}--hint`);
+      const { getByTestId } = render(<BasicExample />);
+
+      expect(getByTestId('hint')).toHaveAttribute('id', `${CONTAINER_ID}--hint`);
     });
   });
 });

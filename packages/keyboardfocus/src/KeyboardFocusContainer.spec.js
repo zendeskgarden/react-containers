@@ -6,14 +6,14 @@
  */
 
 import React from 'react';
-import { mount } from 'enzyme';
+import { render, fireEvent } from 'react-testing-library';
 
 import { KeyboardFocusContainer } from './KeyboardFocusContainer';
 
 jest.useFakeTimers();
 
 describe('KeyboardFocusContainer', () => {
-  const basicExample = (
+  const BasicExample = () => (
     <KeyboardFocusContainer>
       {({ getFocusProps, keyboardFocused }) => (
         <div {...getFocusProps({ 'data-test-id': 'trigger', 'data-focused': keyboardFocused })}>
@@ -23,81 +23,83 @@ describe('KeyboardFocusContainer', () => {
     </KeyboardFocusContainer>
   );
 
-  const findTrigger = wrapper => wrapper.find('[data-test-id="trigger"]');
-
   describe('getFocusProps', () => {
     describe('onFocus', () => {
       it('should not apply focused prop if focused by mouse', () => {
-        const wrapper = mount(basicExample);
+        const { container, getByTestId } = render(<BasicExample />);
 
-        findTrigger(wrapper).simulate('mousedown');
+        fireEvent.mouseDown(container);
         jest.runOnlyPendingTimers();
-        wrapper.update();
-        expect(findTrigger(wrapper)).toHaveProp('data-focused', false);
+        expect(getByTestId('trigger')).toHaveAttribute('data-focused', 'false');
       });
 
       it('should apply focused prop if focused by keyboard', () => {
-        const wrapper = mount(basicExample);
+        const { getByTestId } = render(<BasicExample />);
+        const trigger = getByTestId('trigger');
 
-        findTrigger(wrapper).simulate('focus');
-        expect(findTrigger(wrapper)).toHaveProp('data-focused', true);
+        fireEvent.focus(trigger);
+        expect(trigger).toHaveAttribute('data-focused', 'true');
       });
 
       it('should apply focused prop if focused by keyboard after mouse event', () => {
-        const wrapper = mount(basicExample);
+        const { getByTestId } = render(<BasicExample />);
+        const trigger = getByTestId('trigger');
 
-        findTrigger(wrapper).simulate('mousedown');
+        fireEvent.mouseDown(trigger);
         jest.runOnlyPendingTimers();
-        wrapper.update();
 
-        expect(findTrigger(wrapper)).toHaveProp('data-focused', false);
+        expect(trigger).toHaveAttribute('data-focused', 'false');
 
-        findTrigger(wrapper).simulate('focus');
-        expect(findTrigger(wrapper)).toHaveProp('data-focused', true);
+        fireEvent.focus(trigger);
+        expect(trigger).toHaveAttribute('data-focused', 'true');
       });
     });
 
     describe('onMouseDown', () => {
       it('should not apply focused prop if mouseddown', () => {
-        const wrapper = mount(basicExample);
+        const { getByTestId } = render(<BasicExample />);
+        const trigger = getByTestId('trigger');
 
-        findTrigger(wrapper).simulate('mousedown');
+        fireEvent.mouseDown(trigger);
         jest.runOnlyPendingTimers();
-        wrapper.update();
-        expect(findTrigger(wrapper)).toHaveProp('data-focused', false);
+
+        expect(trigger).toHaveAttribute('data-focused', 'false');
       });
     });
 
     describe('onPointerDown', () => {
       it('should not apply focused prop if pointerdown is triggered', () => {
-        const wrapper = mount(basicExample);
+        const { getByTestId } = render(<BasicExample />);
+        const trigger = getByTestId('trigger');
 
-        findTrigger(wrapper).simulate('pointerdown');
+        fireEvent(trigger, new MouseEvent('pointerdown'));
         jest.runOnlyPendingTimers();
-        wrapper.update();
-        expect(findTrigger(wrapper)).toHaveProp('data-focused', false);
+
+        expect(trigger).toHaveAttribute('data-focused', 'false');
       });
     });
 
     describe('onTouchStart', () => {
       it('should not apply focused prop if touchstart is triggered', () => {
-        const wrapper = mount(basicExample);
+        const { getByTestId } = render(<BasicExample />);
+        const trigger = getByTestId('trigger');
 
-        findTrigger(wrapper).simulate('touchstart');
+        fireEvent.touchStart(trigger);
         jest.runOnlyPendingTimers();
-        wrapper.update();
-        expect(findTrigger(wrapper)).toHaveProp('data-focused', false);
+
+        expect(trigger).toHaveAttribute('data-focused', 'false');
       });
     });
 
     describe('onBlur', () => {
       it('should remove focused prop if blurred', () => {
-        const wrapper = mount(basicExample);
+        const { getByTestId } = render(<BasicExample />);
+        const trigger = getByTestId('trigger');
 
-        findTrigger(wrapper).simulate('focus');
-        expect(findTrigger(wrapper)).toHaveProp('data-focused', true);
-        findTrigger(wrapper).simulate('blur');
-        expect(findTrigger(wrapper)).toHaveProp('data-focused', false);
+        fireEvent.focus(trigger);
+        expect(trigger).toHaveAttribute('data-focused', 'true');
+        fireEvent.blur(trigger);
+        expect(trigger).toHaveAttribute('data-focused', 'false');
       });
     });
   });
