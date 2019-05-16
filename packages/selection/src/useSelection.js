@@ -163,26 +163,33 @@ export function useSelection({
 
   const getContainerProps = ({ role = 'listbox', ...other } = {}) => ({
     role,
+    'aria-orientation': direction === DIRECTIONS.BOTH ? undefined : direction,
     ...other
   });
 
-  const getItemProps = ({
-    selectedAriaKey = 'aria-selected',
-    role = 'option',
-    onFocus: onFocusCallback,
-    onKeyDown,
-    onClick,
-    item,
-    focusRef,
-    ...other
-  } = {}) => {
+  const getItemProps = (
+    {
+      selectedAriaKey = 'aria-selected',
+      role = 'option',
+      onFocus: onFocusCallback,
+      onKeyDown,
+      onClick,
+      item,
+      focusRef,
+      refKey = 'ref',
+      ...other
+    } = {},
+    propGetterName = 'getItemProps'
+  ) => {
     if (item === undefined) {
-      throw new Error('Accessibility Error: You must provide an "item" option to "getItemProps()"');
+      throw new Error(
+        `Accessibility Error: You must provide an "item" option to "${propGetterName}()"`
+      );
     }
 
     if (focusRef === undefined) {
       throw new Error(
-        'Accessibility Error: You must provide a "focusRef" option to "getItemProps()"'
+        `Accessibility Error: You must provide a "focusRef" option to "${propGetterName}()"`
       );
     }
 
@@ -207,6 +214,7 @@ export function useSelection({
       role,
       tabIndex,
       [selectedAriaKey]: isSelected,
+      [refKey]: focusRef,
       onFocus: composeEventHandlers(onFocusCallback, () => {
         dispatch({ type: ACTIONS.FOCUS, payload: item, items });
       }),

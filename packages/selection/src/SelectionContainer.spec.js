@@ -34,7 +34,6 @@ describe('SelectionContainer', () => {
                     key: item,
                     item,
                     focusRef: ref,
-                    ref,
                     selectedAriaKey,
                     'data-test-id': 'item',
                     'data-focused': isFocused,
@@ -68,6 +67,19 @@ describe('SelectionContainer', () => {
       const container = findContainer(wrapper);
 
       expect(container).toHaveProp('role', 'listbox');
+      expect(container).toHaveProp('aria-orientation', 'horizontal');
+    });
+
+    describe('while using vertical direction', () => {
+      beforeEach(() => {
+        wrapper = mount(<BasicExample direction="vertical" />);
+      });
+
+      it('applies accessibility role', () => {
+        const container = findContainer(wrapper);
+
+        expect(container).toHaveProp('aria-orientation', 'vertical');
+      });
     });
 
     it('first item in container defaults as the only initial focusable item', () => {
