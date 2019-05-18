@@ -73,10 +73,10 @@ export function useAccordion({
     sections.push(index);
 
     return {
-      id: `${TRIGGER_ID}:{index}`,
+      id: `${TRIGGER_ID}:${index}`,
       role,
       tabIndex,
-      'aria-controls': PANEL_ID,
+      'aria-controls': `${PANEL_ID}:${index}`,
       'aria-disabled': toggledSections.disabled.indexOf(index) !== -1,
       'aria-expanded': toggledSections.expanded.indexOf(index) !== -1,
       onClick: composeEventHandlers(props.onClick, () => toggle(index)),
@@ -98,10 +98,10 @@ export function useAccordion({
     }
 
     return {
-      id: `${PANEL_ID}:{index}`,
+      id: `${PANEL_ID}:${index}`,
       role,
       'aria-hidden': toggledSections.expanded.indexOf(index) === -1,
-      'aria-labelledby': TRIGGER_ID,
+      'aria-labelledby': `${TRIGGER_ID}:${index}`,
       ...props
     };
   };
