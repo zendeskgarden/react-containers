@@ -1,6 +1,6 @@
 # @zendeskgarden/container-accordion [![npm version](https://img.shields.io/npm/v/@zendeskgarden/container-accordion.svg?style=flat-square)](https://www.npmjs.com/package/@zendeskgarden/container-accordion)
 
-This package includes containers relating to accordion in the
+This package includes containers relating to accordions in the
 [Garden Design System](https://zendeskgarden.github.io/).
 
 ## Installation
@@ -11,32 +11,116 @@ npm install @zendeskgarden/container-accordion
 
 ## Usage
 
-For live examples check out our [storybook](https://zendeskgarden.github.io/react-containers).
+For live examples check out our
+[storybook](https://zendeskgarden.github.io/react-containers/?path=/story/accordion-container--useaccordion).
 
-### useExample
+### useAccordion
+
+The `useAccordion` hook manages toggle state and required accessibility
+attributes for a group of sections.
 
 ```jsx static
-import { useExample } from '@zendeskgarden/container-accordion';
+import { useAccordion } from '@zendeskgarden/container-accordion';
 
-const Example = () => {
-  const { getExampleProps } = useExample();
+const Accordion = ({ expandable = true, collapsible = true } = {}) => {
+  const {
+    getHeaderProps,
+    getTriggerProps,
+    getPanelProps,
+    expandedSections,
+    disabledSections
+  } = useAccordion({
+    expandedSections: [0],
+    expandable,
+    collapsible
+  });
 
-  return <div {...getExampleProps()} />;
+  return (
+    <>
+      {sections.map((section, index) => {
+        const disabled = disabledSections.indexOf(index) !== -1;
+        const hidden = expandedSections.indexOf(index) === -1;
+
+        return (
+          <div key={index}>
+            <h2 {...getHeaderProps({ role: null, ariaLevel: null })}>
+              <button
+                {...getTriggerProps({
+                  index,
+                  role: null,
+                  tabIndex: null,
+                  disabled,
+                  style: { width: '100%' }
+                })}
+              >
+                {index}
+              </button>
+            </h2>
+            <section
+              {...getPanelProps({
+                index,
+                role: null,
+                hidden
+              })}
+            >
+              {section}
+            </section>
+          </div>
+        );
+      })}
+    </>
+  );
 };
+
+return <Accordion expandable={true} collapsible={true} />;
 ```
 
-### ExampleContainer
+### AccordionContainer
+
+`AccordionContainer` is a render-prop wrapper for the `useAccordion` hook.
 
 ```jsx static
-import { ExampleContainer } from '@zendeskgarden/container-accordion';
+import { AccordionContainer } from '@zendeskgarden/container-accordion';
 
-<ExampleContainer>{({ getExampleProps }) => <div {...getExampleProps()} />}</ExampleContainer>;
+const Accordion = ({ expandable = true, collapsible = true } = {}) => (
+  <AccordionContainer expandable={expandable} collapsible={collapsible}>
+    {({ getHeaderProps, getTriggerProps, getPanelProps, expandedSections, disabledSections }) => (
+      <>
+        {sections.map((section, index) => {
+          const disabled = disabledSections.indexOf(index) !== -1;
+          const hidden = expandedSections.indexOf(index) === -1;
+
+          return (
+            <div key={index}>
+              <h2 {...getHeaderProps({ role: null, ariaLevel: null })}>
+                <button
+                  {...getTriggerProps({
+                    index,
+                    role: null,
+                    tabIndex: null,
+                    disabled,
+                    style: { width: '100%' }
+                  })}
+                >
+                  {index}
+                </button>
+              </h2>
+              <section
+                {...getPanelProps({
+                  index,
+                  role: null,
+                  hidden
+                })}
+              >
+                {section}
+              </section>
+            </div>
+          );
+        })}
+      </>
+    )}
+  </AccordionContainer>
+);
+
+return <Accordion expandable={true} collapsible={true} />;
 ```
-
-<!--
-  TODO:
-
-  * [ ] Add accordion to root README table.
-  * [ ] Add accordion stories.js.
-  * [ ] Delete this comment block.
--->
