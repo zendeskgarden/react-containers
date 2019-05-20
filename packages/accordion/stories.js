@@ -101,17 +101,18 @@ storiesOf('Accordion Container', module)
 
               return (
                 <div key={index}>
-                  <div
-                    {...getHeaderProps({
-                      ariaLevel: 2,
-                      style: { WebkitAppearance: 'button', padding: 1, cursor: 'pointer' }
-                    })}
-                  >
+                  <div {...getHeaderProps({ ariaLevel: 2 })}>
                     <div
                       {...getTriggerProps({
                         index,
                         disabled,
-                        style: { opacity: disabled ? 0.4 : 1 }
+                        style: {
+                          WebkitAppearance: 'button',
+                          border: '1px solid',
+                          opacity: disabled ? 0.4 : 1,
+                          padding: 1,
+                          cursor: 'pointer'
+                        }
                       })}
                     >
                       {`Trigger ${index + 1}`}
