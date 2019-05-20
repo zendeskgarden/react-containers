@@ -17,36 +17,33 @@ export function useAccordion({
   const [prefix] = useState(idPrefix || generateId('garden-field-container'));
   const TRIGGER_ID = `${prefix}--trigger`;
   const PANEL_ID = `${prefix}--panel`;
-  const [toggledSections, setToggledSections] = useState({
-    expanded: expandedSections,
-    disabled: collapsible ? [] : expandedSections
-  });
+  const [expandedState, setExpandedState] = useState(expandedSections);
+  const [disabledState, setDisabledState] = useState(collapsible ? [] : expandedSections);
   const sections = [];
   const toggle = index => {
-    const state = {
-      expanded: [],
-      disabled: []
-    };
+    const expanded = [];
+    const disabled = [];
 
     sections.forEach(section => {
-      let expanded = false;
+      let isExpanded = false;
 
       if (section === index) {
-        expanded = collapsible ? toggledSections.expanded.indexOf(section) === -1 : true;
+        isExpanded = collapsible ? expandedState.indexOf(section) === -1 : true;
       } else if (expandable) {
-        expanded = toggledSections.expanded.indexOf(section) !== -1;
+        isExpanded = expandedState.indexOf(section) !== -1;
       }
 
-      if (expanded) {
-        state.expanded.push(section);
+      if (isExpanded) {
+        expanded.push(section);
 
         if (!collapsible) {
-          state.disabled.push(section);
+          disabled.push(section);
         }
       }
     });
 
-    setToggledSections(state);
+    setExpandedState(expanded);
+    setDisabledState(disabled);
   };
 
   const getHeaderProps = ({ role = 'heading', ariaLevel, ...props } = {}) => {
@@ -77,8 +74,8 @@ export function useAccordion({
       role,
       tabIndex,
       'aria-controls': `${PANEL_ID}:${index}`,
-      'aria-disabled': toggledSections.disabled.indexOf(index) !== -1,
-      'aria-expanded': toggledSections.expanded.indexOf(index) !== -1,
+      'aria-disabled': disabledState.indexOf(index) !== -1,
+      'aria-expanded': expandedState.indexOf(index) !== -1,
       onClick: composeEventHandlers(props.onClick, () => toggle(index)),
       onKeyDown: composeEventHandlers(props.onKeyDown, event => {
         if (event.keyCode === KEY_CODES.SPACE || event.keyCode === KEY_CODES.ENTER) {
@@ -100,7 +97,7 @@ export function useAccordion({
     return {
       id: `${PANEL_ID}:${index}`,
       role,
-      'aria-hidden': toggledSections.expanded.indexOf(index) === -1,
+      'aria-hidden': expandedState.indexOf(index) === -1,
       'aria-labelledby': `${TRIGGER_ID}:${index}`,
       ...props
     };
@@ -110,7 +107,7 @@ export function useAccordion({
     getHeaderProps,
     getTriggerProps,
     getPanelProps,
-    expandedSections: toggledSections.expanded,
-    disabledSections: toggledSections.disabled
+    expandedSections: expandedState,
+    disabledSections: disabledState
   };
 }
