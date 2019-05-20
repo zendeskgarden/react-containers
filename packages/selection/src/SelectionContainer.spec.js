@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /**
  * Copyright Zendesk, Inc.
  *
@@ -7,15 +8,14 @@
 
 import React from 'react';
 import { KEY_CODES } from '@zendeskgarden/container-utilities';
+import { render, fireEvent } from 'react-testing-library';
+
 import { SelectionContainer } from './SelectionContainer';
-import { mount } from 'enzyme';
-import { act } from 'react-dom/test-utils';
 
 jest.useFakeTimers();
 
 describe('SelectionContainer', () => {
   const itemValues = ['Item-1', 'Item-2', 'Item-3'];
-  let wrapper;
 
   // eslint-disable-next-line react/prop-types
   const BasicExample = ({ direction, defaultFocusedIndex, selectedAriaKey, rtl } = {}) => (
@@ -53,130 +53,131 @@ describe('SelectionContainer', () => {
     </SelectionContainer>
   );
 
-  const findItems = enzymeWrapper => enzymeWrapper.find('[data-test-id="item"]');
-  const findContainer = enzymeWrapper => enzymeWrapper.find('[data-test-id="container"]');
-
-  beforeEach(() => {
-    act(() => {
-      wrapper = mount(<BasicExample />);
-    });
-  });
+  const itemProps = props => {
+    return render(
+      <SelectionContainer>
+        {({ getItemProps }) => <div {...getItemProps(props)}>Example</div>}
+      </SelectionContainer>
+    );
+  };
 
   describe('getContainerProps', () => {
     it('applies accessibility role', () => {
-      const container = findContainer(wrapper);
+      const { getByTestId } = render(<BasicExample />);
+      const container = getByTestId('container');
 
-      expect(container).toHaveProp('role', 'listbox');
-      expect(container).toHaveProp('aria-orientation', 'horizontal');
+      expect(container).toHaveAttribute('role', 'listbox');
+      expect(container).toHaveAttribute('aria-orientation', 'horizontal');
     });
 
     describe('while using vertical direction', () => {
-      beforeEach(() => {
-        wrapper = mount(<BasicExample direction="vertical" />);
-      });
-
       it('applies accessibility role', () => {
-        const container = findContainer(wrapper);
+        const { getByTestId } = render(<BasicExample direction="vertical" />);
 
-        expect(container).toHaveProp('aria-orientation', 'vertical');
+        expect(getByTestId('container')).toHaveAttribute('aria-orientation', 'vertical');
       });
     });
 
     it('first item in container defaults as the only initial focusable item', () => {
-      let item = findItems(wrapper).first();
+      const { getAllByTestId } = render(<BasicExample />);
+      const [item] = getAllByTestId('item');
 
-      item.simulate('focus');
-
-      // Need to requery item to get update dom attribute
-      item = findItems(wrapper).first();
-      expect(item).toHaveProp('tabIndex', 0);
-      expect(item).toHaveProp('data-focused', true);
+      fireEvent.focus(item);
+      expect(item).toHaveAttribute('tabIndex', '0');
+      expect(item).toHaveAttribute('data-focused', 'true');
     });
 
     describe('onFocus', () => {
       it('does not focus item if item is moused down', () => {
-        findItems(wrapper)
-          .first()
-          .simulate('click');
+        const { getAllByTestId } = render(<BasicExample />);
+        const [item] = getAllByTestId('item');
 
-        expect(findItems(wrapper).first()).toHaveProp('data-focused', false);
-        expect(findItems(wrapper).first()).toHaveProp('data-selected', true);
+        fireEvent.click(item);
+        expect(item).toHaveAttribute('data-focused', 'false');
+        expect(item).toHaveAttribute('data-selected', 'true');
       });
 
       it('focuses first item if no item is currently selected', () => {
-        findItems(wrapper)
-          .first()
-          .simulate('focus');
+        const { getAllByTestId } = render(<BasicExample />);
+        const [item] = getAllByTestId('item');
 
-        expect(findItems(wrapper).first()).toHaveProp('data-focused', true);
+        fireEvent.focus(item);
+        expect(item).toHaveAttribute('data-focused', 'true');
       });
 
       it('focuses last item if no item is currently selected and defaultFocusedIndex is provided', () => {
-        wrapper = mount(<BasicExample defaultFocusedIndex={itemValues.length - 1} />);
+        const { getAllByTestId } = render(
+          <BasicExample defaultFocusedIndex={itemValues.length - 1} />
+        );
+        const [, , item] = getAllByTestId('item');
 
-        expect(findItems(wrapper).last()).toHaveProp('tabIndex', 0);
+        expect(item).toHaveAttribute('tabIndex', '0');
       });
 
       it('will focus currently selected item if available', () => {
-        findItems(wrapper)
-          .last()
-          .simulate('click');
+        const { getAllByTestId } = render(<BasicExample />);
+        const [, , item] = getAllByTestId('item');
 
-        expect(findItems(wrapper).last()).toHaveProp('tabIndex', 0);
+        fireEvent.click(item);
+        expect(item).toHaveAttribute('tabIndex', '0');
       });
     });
 
     describe('onBlur', () => {
       it('clears currently focused item', () => {
-        const firstItem = findItems(wrapper)
-          .first()
-          .simulate('focus');
+        const { getAllByTestId } = render(<BasicExample />);
+        const [item] = getAllByTestId('item');
 
-        expect(findItems(wrapper).first()).toHaveProp('data-focused', true);
+        fireEvent.focus(item);
+        expect(item).toHaveAttribute('data-focused', 'true');
 
-        firstItem.simulate('blur');
-        expect(findItems(wrapper).first()).toHaveProp('data-focused', false);
+        fireEvent.blur(item);
+        expect(item).toHaveAttribute('data-focused', 'false');
       });
     });
 
     describe('onKeyDown', () => {
       describe('ENTER keyCode', () => {
         it('selects currently focused item', () => {
-          const firstItem = findItems(wrapper).first();
+          const { getAllByTestId } = render(<BasicExample />);
+          const [item] = getAllByTestId('item');
 
-          firstItem.simulate('focus');
-          firstItem.simulate('keydown', { keyCode: KEY_CODES.ENTER });
-          expect(findItems(wrapper).first()).toHaveProp('data-selected', true);
+          fireEvent.focus(item);
+          fireEvent.keyDown(item, { keyCode: KEY_CODES.ENTER });
+          expect(item).toHaveAttribute('data-selected', 'true');
         });
       });
 
       describe('SPACE keyCode', () => {
         it('selects currently focused item', () => {
-          const firstItem = findItems(wrapper).first();
+          const { getAllByTestId } = render(<BasicExample />);
+          const [item] = getAllByTestId('item');
 
-          firstItem.simulate('focus');
-          firstItem.simulate('keydown', { keyCode: KEY_CODES.SPACE });
-          expect(findItems(wrapper).first()).toHaveProp('data-selected', true);
+          fireEvent.focus(item);
+          fireEvent.keyDown(item, { keyCode: KEY_CODES.SPACE });
+          expect(item).toHaveAttribute('data-selected', 'true');
         });
       });
 
       describe('HOME keyCode', () => {
         it('focuses first available item', () => {
-          const lastItem = findItems(wrapper).last();
+          const { getAllByTestId } = render(<BasicExample />);
+          const [item] = getAllByTestId('item');
 
-          lastItem.simulate('focus');
-          lastItem.simulate('keydown', { keyCode: KEY_CODES.HOME });
-          expect(findItems(wrapper).first()).toHaveProp('data-focused', true);
+          fireEvent.focus(item);
+          fireEvent.keyDown(item, { keyCode: KEY_CODES.HOME });
+          expect(item).toHaveAttribute('data-focused', 'true');
         });
       });
 
       describe('END keyCode', () => {
         it('focuses last available item', () => {
-          const firstItem = findItems(wrapper).first();
+          const { getAllByTestId } = render(<BasicExample />);
+          const [item, , lastItem] = getAllByTestId('item');
 
-          firstItem.simulate('focus');
-          firstItem.simulate('keydown', { keyCode: KEY_CODES.END });
-          expect(findItems(wrapper).last()).toHaveProp('data-focused', true);
+          fireEvent.focus(item);
+          fireEvent.keyDown(item, { keyCode: KEY_CODES.END });
+          expect(lastItem).toHaveAttribute('data-focused', 'true');
         });
       });
 
@@ -184,44 +185,44 @@ describe('SelectionContainer', () => {
         describe('LEFT keyCode', () => {
           describe('when dir is LTR', () => {
             it('decrements focusedIndex if currently greater than 0', () => {
-              const secondItem = findItems(wrapper).at(1);
+              const { getAllByTestId } = render(<BasicExample />);
+              const [item, secondItem] = getAllByTestId('item');
 
-              secondItem.simulate('focus');
-              secondItem.simulate('keydown', { keyCode: KEY_CODES.LEFT });
+              fireEvent.focus(secondItem);
+              fireEvent.keyDown(secondItem, { keyCode: KEY_CODES.LEFT });
 
-              expect(findItems(wrapper).first()).toHaveProp('data-focused', true);
+              expect(item).toHaveAttribute('data-focused', 'true');
             });
 
             it('decrements and wraps focusedIndex if currently less than or equal to 0', () => {
-              const firstItem = findItems(wrapper).first();
+              const { getAllByTestId } = render(<BasicExample />);
+              const [item, , lastItem] = getAllByTestId('item');
 
-              firstItem.simulate('focus');
-              firstItem.simulate('keydown', { keyCode: KEY_CODES.LEFT });
-              expect(findItems(wrapper).last()).toHaveProp('data-focused', true);
+              fireEvent.focus(item);
+              fireEvent.keyDown(item, { keyCode: KEY_CODES.LEFT });
+              expect(lastItem).toHaveAttribute('data-focused', 'true');
             });
           });
 
           describe('when dir is RTL', () => {
-            beforeEach(() => {
-              wrapper = mount(<BasicExample rtl={true} />);
-            });
-
             it('increments focusedIndex if currently less than items length', () => {
-              const firstItem = findItems(wrapper).first();
+              const { getAllByTestId } = render(<BasicExample rtl={true} />);
+              const [item, secondItem] = getAllByTestId('item');
 
-              firstItem.simulate('focus');
-              firstItem.simulate('keydown', { keyCode: KEY_CODES.LEFT });
+              fireEvent.focus(item);
+              fireEvent.keyDown(item, { keyCode: KEY_CODES.LEFT });
 
-              expect(findItems(wrapper).at(1)).toHaveProp('data-focused', true);
+              expect(secondItem).toHaveAttribute('data-focused', 'true');
             });
 
             it('increments and wraps focusedIndex if currently greater than or equal to items length', () => {
-              const lastItem = findItems(wrapper).last();
+              const { getAllByTestId } = render(<BasicExample rtl={true} />);
+              const [item, , lastItem] = getAllByTestId('item');
 
-              lastItem.simulate('focus');
-              lastItem.simulate('keydown', { keyCode: KEY_CODES.LEFT });
+              fireEvent.focus(lastItem);
+              fireEvent.keyDown(lastItem, { keyCode: KEY_CODES.LEFT });
 
-              expect(findItems(wrapper).first()).toHaveProp('data-focused', true);
+              expect(item).toHaveAttribute('data-focused', 'true');
             });
           });
         });
@@ -229,142 +230,146 @@ describe('SelectionContainer', () => {
         describe('RIGHT keyCode', () => {
           describe('when dir is LTR', () => {
             it('increments focusedIndex if currently less than items length', () => {
-              const firstItem = findItems(wrapper).first();
+              const { getAllByTestId } = render(<BasicExample />);
+              const [item, secondItem] = getAllByTestId('item');
 
-              firstItem.simulate('click');
-              firstItem.simulate('keydown', { keyCode: KEY_CODES.RIGHT });
-              expect(findItems(wrapper).at(1)).toHaveProp('data-focused', true);
+              fireEvent.click(item);
+              fireEvent.keyDown(item, { keyCode: KEY_CODES.RIGHT });
+              expect(secondItem).toHaveAttribute('data-focused', 'true');
             });
 
             it('increments and wrap focusedIndex if currently greater than or equal to items length', () => {
-              const lastItem = findItems(wrapper).last();
+              const { getAllByTestId } = render(<BasicExample />);
+              const [item, , lastItem] = getAllByTestId('item');
 
-              lastItem.simulate('click');
-              lastItem.simulate('keydown', { keyCode: KEY_CODES.RIGHT });
-              expect(findItems(wrapper).first()).toHaveProp('data-focused', true);
+              fireEvent.focus(lastItem);
+              fireEvent.keyDown(lastItem, { keyCode: KEY_CODES.RIGHT });
+              expect(item).toHaveAttribute('data-focused', 'true');
             });
           });
 
           describe('when dir is RTL', () => {
-            beforeEach(() => {
-              wrapper = mount(<BasicExample rtl={true} />);
-            });
-
             it('decrements focusedIndex if currently greater than 0', () => {
-              const secondItem = findItems(wrapper).at(1);
+              const { getAllByTestId } = render(<BasicExample rtl={true} />);
+              const [item, secondItem] = getAllByTestId('item');
 
-              secondItem.simulate('focus');
-              secondItem.simulate('keydown', { keyCode: KEY_CODES.RIGHT });
+              fireEvent.focus(secondItem);
+              fireEvent.keyDown(secondItem, { keyCode: KEY_CODES.RIGHT });
 
-              expect(findItems(wrapper).first()).toHaveProp('data-focused', true);
+              expect(item).toHaveAttribute('data-focused', 'true');
             });
 
             it('decrements and wraps focusedIndex if currently 0', () => {
-              const firstItem = findItems(wrapper).first();
+              const { getAllByTestId } = render(<BasicExample rtl={true} />);
+              const [item, , lastItem] = getAllByTestId('item');
 
-              firstItem.simulate('click');
-              firstItem.simulate('keydown', { keyCode: KEY_CODES.RIGHT });
+              fireEvent.focus(item);
+              fireEvent.keyDown(item, { keyCode: KEY_CODES.RIGHT });
 
-              expect(findItems(wrapper).last()).toHaveProp('data-focused', true);
+              expect(lastItem).toHaveAttribute('data-focused', 'true');
             });
           });
         });
 
         describe('UP keyCode', () => {
           it('does not perform any action', () => {
-            const firstItem = findItems(wrapper).first();
+            const { getAllByTestId } = render(<BasicExample />);
+            const [item, secondItem, lastItem] = getAllByTestId('item');
 
-            firstItem.simulate('click');
-            firstItem.simulate('keydown', { keyCode: KEY_CODES.UP });
-            const items = findItems(wrapper);
+            fireEvent.click(item);
+            fireEvent.keyDown(item, { keyCode: KEY_CODES.UP });
 
-            expect(items.at(0)).toHaveProp('data-focused', false);
-            expect(items.at(1)).toHaveProp('data-focused', false);
-            expect(items.at(2)).toHaveProp('data-focused', false);
+            expect(item).toHaveAttribute('data-focused', 'false');
+            expect(secondItem).toHaveAttribute('data-focused', 'false');
+            expect(lastItem).toHaveAttribute('data-focused', 'false');
           });
         });
 
         describe('DOWN keyCode', () => {
           it('does not perform any action', () => {
-            const firstItem = findItems(wrapper).first();
+            const { getAllByTestId } = render(<BasicExample />);
+            const [item, secondItem, lastItem] = getAllByTestId('item');
 
-            firstItem.simulate('click');
-            firstItem.simulate('keydown', { keyCode: KEY_CODES.DOWN });
-            const items = findItems(wrapper);
+            fireEvent.click(item);
+            fireEvent.keyDown(item, { keyCode: KEY_CODES.DOWN });
 
-            expect(items.at(0)).toHaveProp('data-focused', false);
-            expect(items.at(1)).toHaveProp('data-focused', false);
-            expect(items.at(2)).toHaveProp('data-focused', false);
+            expect(item).toHaveAttribute('data-focused', 'false');
+            expect(secondItem).toHaveAttribute('data-focused', 'false');
+            expect(lastItem).toHaveAttribute('data-focused', 'false');
           });
         });
       });
 
       describe('while using vertical direction', () => {
-        beforeEach(() => {
-          wrapper = mount(<BasicExample direction="vertical" />);
-        });
-
         describe('UP keyCode', () => {
           it('decrements focusedIndex if currently greater than 0', () => {
-            const secondItem = findItems(wrapper).at(1);
+            const { getAllByTestId } = render(<BasicExample direction="vertical" />);
+            const [item, secondItem] = getAllByTestId('item');
 
-            secondItem.simulate('click');
-            secondItem.simulate('keydown', { keyCode: KEY_CODES.UP });
-            expect(findItems(wrapper).first()).toHaveProp('data-focused', true);
+            fireEvent.click(secondItem);
+            fireEvent.keyDown(secondItem, { keyCode: KEY_CODES.UP });
+
+            expect(item).toHaveAttribute('data-focused', 'true');
           });
 
           it('decrements and wraps focusedIndex if currently less than or equal to 0', () => {
-            const firstItem = findItems(wrapper).first();
+            const { getAllByTestId } = render(<BasicExample direction="vertical" />);
+            const [item, , lastItem] = getAllByTestId('item');
 
-            firstItem.simulate('click');
-            firstItem.simulate('keydown', { keyCode: KEY_CODES.UP });
-            expect(findItems(wrapper).last()).toHaveProp('data-focused', true);
+            fireEvent.click(item);
+            fireEvent.keyDown(item, { keyCode: KEY_CODES.UP });
+
+            expect(lastItem).toHaveAttribute('data-focused', 'true');
           });
         });
 
         describe('DOWN keyCode', () => {
           it('increments focusedIndex if currently less than items length', () => {
-            const firstItem = findItems(wrapper).first();
+            const { getAllByTestId } = render(<BasicExample direction="vertical" />);
+            const [item, secondItem] = getAllByTestId('item');
 
-            firstItem.simulate('click');
-            firstItem.simulate('keydown', { keyCode: KEY_CODES.DOWN });
-            expect(findItems(wrapper).at(1)).toHaveProp('data-focused', true);
+            fireEvent.click(item);
+            fireEvent.keyDown(item, { keyCode: KEY_CODES.DOWN });
+
+            expect(secondItem).toHaveAttribute('data-focused', 'true');
           });
 
           it('increments and wraps focusedIndex if currently greater than or equal to items length', () => {
-            const lastItem = findItems(wrapper).last();
+            const { getAllByTestId } = render(<BasicExample direction="vertical" />);
+            const [item, , lastItem] = getAllByTestId('item');
 
-            lastItem.simulate('click');
-            lastItem.simulate('keydown', { keyCode: KEY_CODES.DOWN });
-            expect(findItems(wrapper).first()).toHaveProp('data-focused', true);
+            fireEvent.click(lastItem);
+            fireEvent.keyDown(lastItem, { keyCode: KEY_CODES.DOWN });
+
+            expect(item).toHaveAttribute('data-focused', 'true');
           });
         });
 
         describe('LEFT keyCode', () => {
           it('does not perform any action', () => {
-            const firstItem = findItems(wrapper).first();
+            const { getAllByTestId } = render(<BasicExample direction="vertical" />);
+            const [item, secondItem, lastItem] = getAllByTestId('item');
 
-            firstItem.simulate('click');
-            firstItem.simulate('keydown', { keyCode: KEY_CODES.LEFT });
-            const items = findItems(wrapper);
+            fireEvent.click(item);
+            fireEvent.keyDown(item, { keyCode: KEY_CODES.LEFT });
 
-            expect(items.at(0)).toHaveProp('data-focused', false);
-            expect(items.at(1)).toHaveProp('data-focused', false);
-            expect(items.at(2)).toHaveProp('data-focused', false);
+            expect(item).toHaveAttribute('data-focused', 'false');
+            expect(secondItem).toHaveAttribute('data-focused', 'false');
+            expect(lastItem).toHaveAttribute('data-focused', 'false');
           });
         });
 
         describe('RIGHT keyCode', () => {
           it('does not perform any action', () => {
-            const firstItem = findItems(wrapper).first();
+            const { getAllByTestId } = render(<BasicExample direction="vertical" />);
+            const [item, secondItem, lastItem] = getAllByTestId('item');
 
-            firstItem.simulate('click');
-            firstItem.simulate('keydown', { keyCode: KEY_CODES.RIGHT });
-            const items = findItems(wrapper);
+            fireEvent.click(item);
+            fireEvent.keyDown(item, { keyCode: KEY_CODES.RIGHT });
 
-            expect(items.at(0)).toHaveProp('data-focused', false);
-            expect(items.at(1)).toHaveProp('data-focused', false);
-            expect(items.at(2)).toHaveProp('data-focused', false);
+            expect(item).toHaveAttribute('data-focused', 'false');
+            expect(secondItem).toHaveAttribute('data-focused', 'false');
+            expect(lastItem).toHaveAttribute('data-focused', 'false');
           });
         });
       });
@@ -373,82 +378,75 @@ describe('SelectionContainer', () => {
 
   describe('getItemProps', () => {
     it('throws if no item is applied', () => {
+      const originalError = console.error;
+
       console.error = jest.fn(); // eslint-disable-line no-console
 
       expect(() => {
-        mount(
-          <SelectionContainer>
-            {({ getContainerProps, getItemProps }) => (
-              <div {...getContainerProps()}>
-                <div {...getItemProps()}>Example</div>
-              </div>
-            )}
-          </SelectionContainer>
-        );
+        itemProps();
       }).toThrow('Accessibility Error: You must provide an "item" option to "getItemProps()"');
+
+      console.error = originalError;
     });
 
     it('throws if no focusRef prop is applied', () => {
+      const originalError = console.error;
+
       console.error = jest.fn(); // eslint-disable-line no-console
 
       expect(() => {
-        mount(
-          <SelectionContainer>
-            {({ getContainerProps, getItemProps }) => (
-              <div {...getContainerProps()}>
-                <div {...getItemProps({ item: 'example' })}>Example</div>
-              </div>
-            )}
-          </SelectionContainer>
-        );
+        itemProps({ item: 'example' });
       }).toThrow('Accessibility Error: You must provide a "focusRef" option to "getItemProps()"');
+
+      console.error = originalError;
     });
 
     it('does not throw if item and focusRef props are applied', () => {
       expect(() => {
-        mount(
-          <SelectionContainer>
-            {({ getContainerProps, getItemProps }) => (
-              <div {...getContainerProps()}>
-                <div {...getItemProps({ item: 'example', focusRef: {} })}>Example</div>
-              </div>
-            )}
-          </SelectionContainer>
-        );
+        itemProps({ item: 'example', focusRef: React.createRef() });
       }).not.toThrow();
     });
 
     it('applies accessibility role attribute', () => {
-      expect(findItems(wrapper).first()).toHaveProp('role', 'option');
+      const { getAllByTestId } = render(<BasicExample />);
+      const [item] = getAllByTestId('item');
+
+      expect(item).toHaveAttribute('role', 'option');
     });
 
     it('applies default selected aria value if none provided', () => {
-      expect(findItems(wrapper).first()).toHaveProp('aria-selected');
+      const { getAllByTestId } = render(<BasicExample />);
+      const [item] = getAllByTestId('item');
+
+      expect(item).toHaveAttribute('aria-selected');
     });
 
     it('applies custom selected aria value if provided', () => {
-      wrapper = mount(<BasicExample selectedAriaKey="aria-pressed" />);
-      expect(findItems(wrapper).first()).toHaveProp('aria-pressed');
+      const { getAllByTestId } = render(<BasicExample selectedAriaKey="aria-pressed" />);
+      const [item] = getAllByTestId('item');
+
+      expect(item).toHaveAttribute('aria-pressed');
     });
 
     describe('onClick', () => {
       it('should select item that was clicked', () => {
-        findItems(wrapper)
-          .last()
-          .simulate('click');
-        expect(findItems(wrapper).last()).toHaveProp('aria-selected', true);
+        const { getAllByTestId } = render(<BasicExample />);
+        const [, , lastItem] = getAllByTestId('item');
+
+        fireEvent.click(lastItem);
+
+        expect(lastItem).toHaveAttribute('aria-selected', 'true');
       });
 
       it('should remove focus from all items', () => {
-        findItems(wrapper)
-          .last()
-          .simulate('click');
+        const { getAllByTestId } = render(<BasicExample />);
+        const [item, secondItem, lastItem] = getAllByTestId('item');
 
-        const items = findItems(wrapper);
+        fireEvent.click(lastItem);
 
-        expect(items.at(0)).toHaveProp('data-focused', false);
-        expect(items.at(1)).toHaveProp('data-focused', false);
-        expect(items.at(2)).toHaveProp('data-focused', false);
+        expect(item).toHaveAttribute('data-focused', 'false');
+        expect(secondItem).toHaveAttribute('data-focused', 'false');
+        expect(lastItem).toHaveAttribute('data-focused', 'false');
       });
     });
   });
