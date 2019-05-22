@@ -61,7 +61,6 @@
     "lerna": "3.13.4",
     "lint-staged": "8.1.6",
     "markdownlint-cli": "0.15.0",
-    "mock-raf": "1.0.1",
     "popper.js": "1.15.0",
     "prettier": "1.17.0",
     "prettier-package-json": "2.1.0",

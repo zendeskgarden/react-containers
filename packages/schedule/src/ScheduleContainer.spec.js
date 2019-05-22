@@ -8,7 +8,6 @@
 
 import React from 'react';
 import { render } from 'react-testing-library';
-import createMockRaf from 'mock-raf';
 import { act } from 'react-dom/test-utils';
 
 import ScheduleContainer from './ScheduleContainer';
@@ -16,11 +15,6 @@ import ScheduleContainer from './ScheduleContainer';
 jest.useFakeTimers();
 
 describe('ScheduleContainer', () => {
-  let requestAnimationFrame;
-  let cancelAnimationFrame;
-
-  const mockRaf = createMockRaf();
-
   const BasicExample = props => (
     <ScheduleContainer {...props}>
       {elapsed => <p data-test-id="schedule">{elapsed}</p>}
@@ -28,15 +22,16 @@ describe('ScheduleContainer', () => {
   );
 
   beforeEach(() => {
-    requestAnimationFrame = jest
-      .spyOn(window, 'requestAnimationFrame')
-      .mockImplementation(mockRaf.raf);
-    cancelAnimationFrame = jest.spyOn(window, 'cancelAnimationFrame');
+    jest.spyOn(window, 'requestAnimationFrame').mockImplementation(cb => {
+      setTimeout(() => {
+        cb();
+      }, 1000 / 60);
+    });
+    jest.spyOn(window, 'cancelAnimationFrame');
     clearTimeout.mockClear();
   });
 
   afterEach(() => {
-    window.requestAnimationFrame.mockRestore();
     jest.clearAllTimers();
     jest.clearAllMocks();
   });
@@ -44,29 +39,20 @@ describe('ScheduleContainer', () => {
   it('sets up requestAnimationFrame', () => {
     render(<BasicExample />);
 
-    act(() => {
-      jest.runOnlyPendingTimers();
-    });
+    jest.runOnlyPendingTimers();
 
     expect(requestAnimationFrame).toHaveBeenCalled();
   });
 
   it('updates elapsed render prop on each raf call', () => {
     const { getByTestId } = render(<BasicExample />);
-    const originalError = console.error;
-
-    console.error = jest.fn();
 
     act(() => {
       jest.runOnlyPendingTimers();
-      // This throws a state error but I don't think it's an actual problem
-      // with the code itself since it has a clean up function
-      mockRaf.step({ count: 60 });
+      jest.advanceTimersByTime(1000);
     });
 
     expect(getByTestId('schedule').textContent).not.toBe('0');
-
-    console.error = originalError;
   });
 
   it('cancels requestAnimationFrame on duration end', () => {
@@ -98,9 +84,7 @@ describe('ScheduleContainer', () => {
   it('passes correct ms duration to setTimeout', () => {
     render(<BasicExample duration={500} />);
 
-    act(() => {
-      jest.runOnlyPendingTimers(); // trigger delayMS timeout
-    });
+    jest.runOnlyPendingTimers(); // trigger delayMS timeout
 
     expect(setTimeout).toHaveBeenCalledWith(expect.any(Function), 500);
   });
@@ -108,22 +92,21 @@ describe('ScheduleContainer', () => {
   it('stops animation after single iteration if loop false is passed', () => {
     render(<BasicExample loop={false} />);
 
-    act(() => {
-      jest.runOnlyPendingTimers(); // delayTimer
-      jest.runOnlyPendingTimers(); // loopTimeout
-    });
+    jest.runOnlyPendingTimers(); // delayTimer
+    jest.runOnlyPendingTimers(); // loopTimeout
 
-    expect(setTimeout).toHaveBeenCalledTimes(2);
+    expect(setTimeout).toHaveBeenCalledTimes(4);
   });
 
   it('animation loops once initial duration has completed', () => {
     render(<BasicExample />); // loop = true is the default
 
+    // Is wrapped in act as rAF triggers state update in hook
     act(() => {
       jest.runOnlyPendingTimers(); // delayTimer
       jest.runOnlyPendingTimers(); // loopTimeout
     });
 
-    expect(setTimeout).toHaveBeenCalledTimes(3);
+    expect(setTimeout).toHaveBeenCalledTimes(6);
   });
 });
