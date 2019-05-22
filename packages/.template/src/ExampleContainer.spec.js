@@ -6,30 +6,22 @@
  */
 
 import React from 'react';
-import { mount } from 'enzyme';
+import { render } from 'react-testing-library';
 
 import { ExampleContainer } from './ExampleContainer';
 
 describe('ExampleContainer', () => {
-  let wrapper;
-
-  const basicExample = () => (
+  const BasicExample = () => (
     <ExampleContainer>
       {({ getCoolProps }) => <div {...getCoolProps({ 'data-test-id': 'div' })} />}
     </ExampleContainer>
   );
 
-  beforeEach(() => {
-    wrapper = mount(basicExample());
-  });
-
-  const findDiv = enzymeWrapper => enzymeWrapper.find('[data-test-id="div"]');
-
   describe('getCoolProps', () => {
     it('applies correct accessibility role', () => {
-      const div = findDiv(wrapper);
+      const { getByTestId } = render(<BasicExample />);
 
-      expect(div).toHaveProp('role', 'region');
+      expect(getByTestId('div')).toHaveAttribute('role', 'region');
     });
   });
 });
