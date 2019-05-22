@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /**
  * Copyright Zendesk, Inc.
  *
@@ -6,8 +7,7 @@
  */
 
 import React from 'react';
-import { mount } from 'enzyme';
-import createMockRaf from 'mock-raf';
+import { render } from 'react-testing-library';
 import { act } from 'react-dom/test-utils';
 
 import ScheduleContainer from './ScheduleContainer';
@@ -15,89 +15,98 @@ import ScheduleContainer from './ScheduleContainer';
 jest.useFakeTimers();
 
 describe('ScheduleContainer', () => {
-  let wrapper;
-  let requestAnimationFrame;
-  let cancelAnimationFrame;
-
-  const mockRaf = createMockRaf();
-
-  const basicExample = props => (
-    <ScheduleContainer {...props}>{elapsed => <p>{elapsed}</p>}</ScheduleContainer>
+  const BasicExample = props => (
+    <ScheduleContainer {...props}>
+      {elapsed => <p data-test-id="schedule">{elapsed}</p>}
+    </ScheduleContainer>
   );
 
   beforeEach(() => {
-    requestAnimationFrame = jest
-      .spyOn(window, 'requestAnimationFrame')
-      .mockImplementation(mockRaf.raf);
-    cancelAnimationFrame = jest.spyOn(window, 'cancelAnimationFrame');
-    setTimeout.mockClear();
+    jest.spyOn(window, 'requestAnimationFrame').mockImplementation(cb => {
+      setTimeout(() => {
+        cb();
+      }, 1000 / 60);
+    });
+    jest.spyOn(window, 'cancelAnimationFrame');
+    clearTimeout.mockClear();
   });
 
   afterEach(() => {
-    window.requestAnimationFrame.mockRestore();
     jest.clearAllTimers();
+    jest.clearAllMocks();
   });
 
   it('sets up requestAnimationFrame', () => {
-    wrapper = mount(basicExample());
+    render(<BasicExample />);
 
     jest.runOnlyPendingTimers();
+
     expect(requestAnimationFrame).toHaveBeenCalled();
   });
 
   it('updates elapsed render prop on each raf call', () => {
-    wrapper = mount(basicExample());
+    const { getByTestId } = render(<BasicExample />);
 
-    jest.runOnlyPendingTimers();
     act(() => {
-      mockRaf.step({ count: 60 });
+      jest.runOnlyPendingTimers();
+      jest.advanceTimersByTime(1000);
     });
-    wrapper.update();
-    expect(parseFloat(wrapper.find('p').prop('children'))).not.toBe(0);
+
+    expect(getByTestId('schedule').textContent).not.toBe('0');
   });
 
   it('cancels requestAnimationFrame on duration end', () => {
-    wrapper = mount(basicExample());
+    render(<BasicExample />);
 
-    jest.runOnlyPendingTimers(); // delayTimer
-    jest.runOnlyPendingTimers(); // loopTimeout
+    act(() => {
+      jest.runOnlyPendingTimers(); // delayTimer
+      jest.runOnlyPendingTimers(); // loopTimeout
+    });
+
     expect(cancelAnimationFrame).toHaveBeenCalled();
   });
 
   it('cleans up on unmount', () => {
-    wrapper = mount(basicExample());
+    const { unmount } = render(<BasicExample />);
 
-    wrapper.unmount();
+    unmount();
+
     expect(clearTimeout).toHaveBeenCalledTimes(2);
     expect(cancelAnimationFrame).toHaveBeenCalled();
   });
 
   it('passes correct ms delay to intitial setTimeout', () => {
-    wrapper = mount(basicExample({ delayMS: 1000 }));
+    render(<BasicExample delayMS={1000} />);
 
     expect(setTimeout).toHaveBeenCalledWith(expect.any(Function), 1000);
   });
 
   it('passes correct ms duration to setTimeout', () => {
-    wrapper = mount(basicExample({ duration: 500 }));
+    render(<BasicExample duration={500} />);
 
     jest.runOnlyPendingTimers(); // trigger delayMS timeout
+
     expect(setTimeout).toHaveBeenCalledWith(expect.any(Function), 500);
   });
 
   it('stops animation after single iteration if loop false is passed', () => {
-    wrapper = mount(basicExample({ loop: false }));
+    render(<BasicExample loop={false} />);
 
     jest.runOnlyPendingTimers(); // delayTimer
     jest.runOnlyPendingTimers(); // loopTimeout
-    expect(setTimeout).toHaveBeenCalledTimes(2);
+
+    expect(setTimeout).toHaveBeenCalledTimes(4);
   });
 
   it('animation loops once initial duration has completed', () => {
-    wrapper = mount(basicExample()); // loop = true is the default
+    render(<BasicExample />); // loop = true is the default
 
-    jest.runOnlyPendingTimers(); // delayTimer
-    jest.runOnlyPendingTimers(); // loopTimeout
-    expect(setTimeout).toHaveBeenCalledTimes(3);
+    // Is wrapped in act as rAF triggers state update in hook
+    act(() => {
+      jest.runOnlyPendingTimers(); // delayTimer
+      jest.runOnlyPendingTimers(); // loopTimeout
+    });
+
+    expect(setTimeout).toHaveBeenCalledTimes(6);
   });
 });

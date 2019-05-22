@@ -7,12 +7,11 @@
  */
 
 import React, { createRef } from 'react';
-import { mount } from 'enzyme';
+import { render, fireEvent } from 'react-testing-library';
 
 import { TabsContainer } from './TabsContainer';
 
 describe('TabsContainer', () => {
-  let wrapper;
   const idPrefix = 'test_id';
   const tabs = ['tab-1', 'tab-2', 'tab-3'];
   const tabRefs = tabs.map(() => createRef(null));
@@ -20,7 +19,7 @@ describe('TabsContainer', () => {
   const getTabId = index => `${idPrefix}--tab:${index}`;
 
   // eslint-disable-next-line react/prop-types
-  const basicExample = ({ vertical, onSelect } = {}) => (
+  const BasicExample = ({ vertical, onSelect } = {}) => (
     <TabsContainer vertical={vertical} onSelect={onSelect} idPrefix={idPrefix}>
       {({ getTabListProps, getTabProps, getTabPanelProps, selectedItem, focusedItem }) => (
         <div>
@@ -51,36 +50,32 @@ describe('TabsContainer', () => {
     </TabsContainer>
   );
 
-  beforeEach(() => {
-    wrapper = mount(basicExample());
-  });
-
-  const findTabList = enzymeWrapper => enzymeWrapper.find('[data-test-id="tab-list"]');
-  const findTabs = enzymeWrapper => enzymeWrapper.find('[data-test-id="tab"]');
-  const findTabPanels = enzymeWrapper => enzymeWrapper.find('[data-test-id="tab-panel"]');
-
   it('calls onSelect with selectedItem when Tab is selected', () => {
     const onSelectSpy = jest.fn();
+    const { getAllByTestId } = render(<BasicExample onSelect={onSelectSpy} />);
+    const [tab] = getAllByTestId('tab');
 
-    wrapper = mount(basicExample({ onSelect: onSelectSpy }));
-    findTabs(wrapper)
-      .first()
-      .simulate('click');
+    fireEvent.click(tab);
 
     expect(onSelectSpy).toHaveBeenCalledWith('tab-1');
   });
 
   describe('TabList', () => {
     it('applies correct accessibility role', () => {
-      expect(findTabList(wrapper)).toHaveProp('role', 'tablist');
+      const { getByTestId } = render(<BasicExample />);
+
+      expect(getByTestId('tab-list')).toHaveAttribute('role', 'tablist');
     });
 
     describe('Tab', () => {
       it('applies the correct accessibility role', () => {
-        findTabs(wrapper).forEach((tab, index) => {
-          expect(tab).toHaveProp('role', 'tab');
-          expect(tab).toHaveProp('id', getTabId(index));
-          expect(tab).toHaveProp('aria-controls', getPanelId(index));
+        const { getAllByTestId } = render(<BasicExample />);
+        const tabItems = getAllByTestId('tab');
+
+        tabItems.forEach((tab, index) => {
+          expect(tab).toHaveAttribute('role', 'tab');
+          expect(tab).toHaveAttribute('id', getTabId(index));
+          expect(tab).toHaveAttribute('aria-controls', getPanelId(index));
         });
       });
     });
@@ -88,63 +83,84 @@ describe('TabsContainer', () => {
 
   describe('TabPanel', () => {
     it('applies the correct accessibility role', () => {
-      findTabPanels(wrapper).forEach((tabPanel, index) => {
-        expect(tabPanel).toHaveProp('role', 'tabpanel');
-        expect(tabPanel).toHaveProp('id', getPanelId(index));
-        expect(tabPanel).toHaveProp('tabIndex', 0);
-        expect(tabPanel).toHaveProp('aria-labelledby', getTabId(index));
+      const { getAllByTestId } = render(<BasicExample />);
+      const tabPanels = getAllByTestId('tab-panel');
+
+      tabPanels.forEach((tabPanel, index) => {
+        expect(tabPanel).toHaveAttribute('role', 'tabpanel');
+        expect(tabPanel).toHaveAttribute('id', getPanelId(index));
+        expect(tabPanel).toHaveAttribute('tabIndex', '0');
+        expect(tabPanel).toHaveAttribute('aria-labelledby', getTabId(index));
       });
     });
 
     describe('when tab selected', () => {
-      beforeEach(() => {
-        findTabs(wrapper)
-          .at(1)
-          .simulate('click');
+      it('enables hidden if tab is currently not selected', () => {
+        const { getAllByTestId } = render(<BasicExample />);
+        const [, , tab] = getAllByTestId('tab');
+        const [firstPanel, secondPanel] = getAllByTestId('tab-panel');
+
+        fireEvent.click(tab);
+
+        expect(firstPanel).toHaveAttribute('hidden');
+        expect(secondPanel).toHaveAttribute('hidden');
       });
 
-      it('enables aria-hidden if tab is currently not selected', () => {
-        expect(findTabPanels(wrapper).at(1)).toHaveProp('hidden', false);
-      });
+      it('disables hidden if tab is currently selected', () => {
+        const { getAllByTestId } = render(<BasicExample />);
+        const [, tab] = getAllByTestId('tab');
+        const [, tabPanel] = getAllByTestId('tab-panel');
 
-      it('disables aria-hidden if tab is currently selected', () => {
-        const items = findTabPanels(wrapper);
+        fireEvent.click(tab);
 
-        expect(items.at(0)).toHaveProp('hidden', true);
-        expect(items.at(2)).toHaveProp('hidden', true);
+        expect(tabPanel).not.toHaveAttribute('hidden');
       });
     });
   });
 
   describe('getTabProps', () => {
-    console.error = jest.fn(); // eslint-disable-line no-console
-
     it('throws if no index prop is applied', () => {
+      const originalError = console.error;
+
+      console.error = jest.fn(); // eslint-disable-line no-console
+
       expect(() => {
-        mount(<TabsContainer>{({ getTabProps }) => <div {...getTabProps()} />}</TabsContainer>);
+        render(<TabsContainer>{({ getTabProps }) => <div {...getTabProps()} />}</TabsContainer>);
       }).toThrow('Accessibility Error: You must provide an "index" option to "getTabProps()"');
+
+      console.error = originalError;
     });
   });
 
   describe('getTabPanelProps', () => {
-    console.error = jest.fn(); // eslint-disable-line no-console
-
     it('throws if no index prop is applied', () => {
+      const originalError = console.error;
+
+      console.error = jest.fn(); // eslint-disable-line no-console
+
       expect(() => {
-        mount(
+        render(
           <TabsContainer>{({ getTabPanelProps }) => <div {...getTabPanelProps()} />}</TabsContainer>
         );
       }).toThrow('Accessibility Error: You must provide an "index" option to "getTabPanelProps()"');
+
+      console.error = originalError;
     });
 
     it('throws if no item prop is applied', () => {
+      const originalError = console.error;
+
+      console.error = jest.fn(); // eslint-disable-line no-console
+
       expect(() => {
-        mount(
+        render(
           <TabsContainer>
             {({ getTabPanelProps }) => <div {...getTabPanelProps({ index: 0 })} />}
           </TabsContainer>
         );
       }).toThrow('Accessibility Error: You must provide an "item" option to "getTabPanelProps()"');
+
+      console.error = originalError;
     });
   });
 });
