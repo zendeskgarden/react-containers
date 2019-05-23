@@ -37,5 +37,11 @@
     "jsx-a11y/label-has-associated-control": "off",
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn"
-  }
+  },
+  "overrides": [
+    {
+      "files": ["stories.js", "*.spec.js"],
+      "rules": { "react/prop-types": "off" }
+    }
+  ]
 }

@@ -14,6 +14,7 @@ to install.
 
 | Package                                                            | Version                                                             | Dependencies                                                                           |
 | ------------------------------------------------------------------ | ------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| [`@zendeskgarden/container-accordion`](packages/accordion)         | [![npm version][accordion npm version]][accordion npm link]         | [![Dependency Status][accordion dependency status]][accordion dependency link]         |
 | [`@zendeskgarden/container-breadcrumb`](packages/breadcrumb)       | [![npm version][breadcrumb npm version]][breadcrumb npm link]       | [![Dependency Status][breadcrumb dependency status]][breadcrumb dependency link]       |
 | [`@zendeskgarden/container-buttongroup`](packages/buttongroup)     | [![npm version][buttongroup npm version]][buttongroup npm link]     | [![Dependency Status][buttongroup dependency status]][buttongroup dependency link]     |
 | [`@zendeskgarden/container-field`](packages/field)                 | [![npm version][field npm version]][field npm link]                 | [![Dependency Status][field dependency status]][field dependency link]                 |
@@ -27,6 +28,10 @@ to install.
 | [`@zendeskgarden/container-tooltip`](packages/tooltip)             | [![npm version][tooltip npm version]][tooltip npm link]             | [![Dependency Status][tooltip dependency status]][tooltip dependency link]             |
 | [`@zendeskgarden/container-utilities`](packages/utilities)         | [![npm version][utilities npm version]][utilities npm link]         | [![Dependency Status][utilities dependency status]][utilities dependency link]         |
 
+[accordion npm version]: https://img.shields.io/npm/v/@zendeskgarden/container-accordion.svg?style=flat-square
+[accordion npm link]: https://www.npmjs.com/package/@zendeskgarden/container-accordion
+[accordion dependency status]: https://img.shields.io/david/zendeskgarden/react-containers.svg?path=packages/accordion&style=flat-square
+[accordion dependency link]: https://david-dm.org/zendeskgarden/react-containers?path=packages/accordion
 [breadcrumb npm version]: https://img.shields.io/npm/v/@zendeskgarden/container-breadcrumb.svg?style=flat-square
 [breadcrumb npm link]: https://www.npmjs.com/package/@zendeskgarden/container-breadcrumb
 [breadcrumb dependency status]: https://img.shields.io/david/zendeskgarden/react-containers.svg?path=packages/breadcrumb&style=flat-square
