@@ -16,8 +16,10 @@ module.exports = {
     PACKAGE_VERSION: 'version'
   },
   moduleFileExtensions: ['js', 'ts', 'tsx'],
-  snapshotSerializers: ['enzyme-to-json/serializer'],
-  setupFilesAfterEnv: ['<rootDir>/utils/test/jest.setup.js'],
+  setupFilesAfterEnv: [
+    '<rootDir>/utils/test/jest.setup.js',
+    'react-testing-library/cleanup-after-each'
+  ],
   collectCoverageFrom: [
     '<rootDir>/packages/*/src/**/*.{js,jsx}',
     '!<rootDir>/packages/*/src/index.js',

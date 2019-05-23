@@ -6,13 +6,11 @@
  */
 
 import React, { useRef } from 'react';
-import { mount } from 'enzyme';
-import { act } from 'react-dom/test-utils';
+import { render, fireEvent } from 'react-testing-library';
 
 import { PaginationContainer } from './PaginationContainer';
 
 describe('PaginationContainer', () => {
-  let wrapper;
   const pages = [1, 2, 3, 4, 5];
 
   const BasicExample = () => {
@@ -74,7 +72,7 @@ describe('PaginationContainer', () => {
   };
 
   const containerProps = props => {
-    return mount(
+    return render(
       <PaginationContainer>
         {({ getContainerProps }) => (
           <div {...getContainerProps({ 'data-test-id': 'container', ...props })} />
@@ -84,53 +82,47 @@ describe('PaginationContainer', () => {
   };
 
   const pageProps = props => {
-    return mount(
+    return render(
       <PaginationContainer>
-        {({ getPageProps }) => <div {...getPageProps(props)} />}
+        {({ getPageProps }) => <div {...getPageProps({ 'data-test-id': 'page', ...props })} />}
       </PaginationContainer>
     );
   };
 
   const nextPageProps = props => {
-    return mount(
+    return render(
       <PaginationContainer>
-        {({ getNextPageProps }) => <div {...getNextPageProps(props)} />}
+        {({ getNextPageProps }) => (
+          <div {...getNextPageProps({ 'data-test-id': 'next', ...props })} />
+        )}
       </PaginationContainer>
     );
   };
 
   const previousPageProps = props => {
-    return mount(
+    return render(
       <PaginationContainer>
-        {({ getPreviousPageProps }) => <div {...getPreviousPageProps(props)} />}
+        {({ getPreviousPageProps }) => {
+          return <div {...getPreviousPageProps({ 'data-test-id': 'previous', ...props })} />;
+        }}
       </PaginationContainer>
     );
   };
 
-  beforeEach(() => {
-    act(() => {
-      wrapper = mount(<BasicExample />);
-    });
-  });
-
-  const findContainer = enzymeWrapper => enzymeWrapper.find('[data-test-id="container"]');
-  const findPage = enzymeWrapper => enzymeWrapper.find('[data-test-id="page"]');
-  const findPrevious = enzymeWrapper => enzymeWrapper.find('[data-test-id="previous"]');
-  const findNext = enzymeWrapper => enzymeWrapper.find('[data-test-id="next"]');
-
   describe('getContainerProps()', () => {
     it('applies correct accessibility attributes', () => {
-      const container = findContainer(wrapper);
+      const { getByTestId } = render(<BasicExample />);
+      const container = getByTestId('container');
 
-      expect(container).toHaveProp('role', 'navigation');
-      expect(container).toHaveProp('aria-label', 'Pagination navigation');
+      expect(container).toHaveAttribute('role', 'navigation');
+      expect(container).toHaveAttribute('aria-label', 'Pagination navigation');
     });
 
     it('applies custom aria-label attribute', () => {
       const ariaLabel = 'Test aria label';
-      const component = containerProps({ ariaLabel });
+      const { getByTestId } = containerProps({ ariaLabel });
 
-      expect(findContainer(component)).toHaveProp('aria-label', ariaLabel);
+      expect(getByTestId('container')).toHaveAttribute('aria-label', ariaLabel);
     });
   });
 
@@ -139,7 +131,9 @@ describe('PaginationContainer', () => {
       let ref;
       const component = props => {
         return () => {
-          previousPageProps(props);
+          const { container } = previousPageProps(props);
+
+          return container;
         };
       };
 
@@ -163,19 +157,23 @@ describe('PaginationContainer', () => {
     });
 
     it('applies correct accessibility attributes', () => {
-      expect(findPrevious(wrapper)).toHaveProp('aria-label', 'Previous Page');
+      const { getByTestId } = previousPageProps({
+        item: 1,
+        focusRef: React.createRef()
+      });
+
+      expect(getByTestId('previous')).toHaveAttribute('aria-label', 'Previous Page');
     });
 
     it('applies custom aria-label attribute', () => {
       const ariaLabel = 'Test aria label';
-      const component = previousPageProps({
+      const { getByTestId } = previousPageProps({
         ariaLabel,
         focusRef: React.createRef(),
-        item: 1,
-        'data-test-id': 'previous'
+        item: 1
       });
 
-      expect(findPrevious(component)).toHaveProp('aria-label', ariaLabel);
+      expect(getByTestId('previous')).toHaveAttribute('aria-label', ariaLabel);
     });
   });
 
@@ -184,7 +182,9 @@ describe('PaginationContainer', () => {
       let ref;
       const component = props => {
         return () => {
-          nextPageProps(props);
+          const { container } = nextPageProps(props);
+
+          return container;
         };
       };
 
@@ -208,19 +208,20 @@ describe('PaginationContainer', () => {
     });
 
     it('applies correct accessibility attributes', () => {
-      expect(findNext(wrapper)).toHaveProp('aria-label', 'Next Page');
+      const { getByTestId } = nextPageProps({ item: 1, focusRef: React.createRef() });
+
+      expect(getByTestId('next')).toHaveAttribute('aria-label', 'Next Page');
     });
 
     it('applies custom aria-label attribute', () => {
       const ariaLabel = 'Test aria label';
-      const component = nextPageProps({
+      const { getByTestId } = nextPageProps({
         ariaLabel,
         focusRef: React.createRef(),
-        item: 1,
-        'data-test-id': 'next'
+        item: 1
       });
 
-      expect(findNext(component)).toHaveProp('aria-label', ariaLabel);
+      expect(getByTestId('next')).toHaveAttribute('aria-label', ariaLabel);
     });
   });
 
@@ -229,7 +230,9 @@ describe('PaginationContainer', () => {
       let ref;
       const component = props => {
         return () => {
-          pageProps(props);
+          const { container } = pageProps(props);
+
+          return container;
         };
       };
 
@@ -253,27 +256,33 @@ describe('PaginationContainer', () => {
     });
 
     it('applies correct accessibility attributes if not current page', () => {
-      expect(findPage(wrapper).at(0)).toHaveProp('aria-label', 'Page 1');
+      const { getByTestId } = pageProps({ item: 1, focusRef: React.createRef(), page: 1 });
+
+      expect(getByTestId('page')).toHaveAttribute('aria-label', 'Page 1');
     });
 
     it('applies correct accessibility attributes if current page', () => {
-      findPage(wrapper)
-        .at(0)
-        .simulate('click');
+      const { getByTestId } = pageProps({
+        item: 1,
+        focusRef: React.createRef(),
+        page: 1,
+        current: true
+      });
+      const page = getByTestId('page');
 
-      expect(findPage(wrapper).at(0)).toHaveProp('aria-label', 'Current page, Page 1');
+      fireEvent.click(page);
+      expect(page).toHaveAttribute('aria-label', 'Current page, Page 1');
     });
 
     it('applies custom aria-label attribute', () => {
       const ariaLabel = 'Test aria label';
-      const component = pageProps({
+      const { getByTestId } = pageProps({
         ariaLabel,
         focusRef: React.createRef(),
-        item: 1,
-        'data-test-id': 'page'
+        item: 1
       });
 
-      expect(findPage(component)).toHaveProp('aria-label', ariaLabel);
+      expect(getByTestId('page')).toHaveAttribute('aria-label', ariaLabel);
     });
   });
 });
