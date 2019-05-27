@@ -22,10 +22,8 @@ const tabs = ['Tab 1', 'Tab 2', 'Tab 3'];
 const tabRefs = tabs.map(() => createRef(null));
 
 const Tabs = () => {
-  const [selectedItem, setSelectedItem] = useState(tabs[0]);
-  const { getTabProps, getTabListProps, getTabPanelProps } = useTabs({
-    selectedItem,
-    onSelect: setSelectedItem
+  const { selectedItem, getTabProps, getTabListProps, getTabPanelProps } = useTabs({
+    defaultSelectedTab: tabs[0]
   });
   const tabComponents = [];
   const tabPanels = [];
@@ -87,13 +85,12 @@ const Tabs = () => {
 import { TabsContainer } from '@zendeskgarden/container-tabs';
 
 const Tabs = () => {
-  const [selectedItem, setSelectedItem] = useState(tabs[0]);
   const tabComponents = [];
   const tabPanels = [];
 
   return (
-    <TabsContainer selectedItem={selectedItem} onSelect={setSelectedItem}>
-      {({ getTabProps, getTabListProps, getTabPanelProps }) => {
+    <TabsContainer defaultSelectedTab={tabs[0]}>
+      {({ selectedItem, getTabProps, getTabListProps, getTabPanelProps }) => {
         tabs.forEach((tab, index) => {
           tabComponents.push(
             <li

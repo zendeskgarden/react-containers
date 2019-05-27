@@ -17,9 +17,10 @@ function requiredArguments(arg, argStr, methodName) {
   }
 }
 
-export function useTabs({ vertical, idPrefix, ...options } = {}) {
+export function useTabs({ vertical, idPrefix, defaultSelectedTab, ...options } = {}) {
   const { selectedItem, focusedItem, getContainerProps, getItemProps } = useSelection({
     direction: vertical ? 'vertical' : 'horizontal',
+    defaultSelectedItem: defaultSelectedTab,
     ...options
   });
   const [_id] = useState(idPrefix || generateId('garden-tabs-container'));
