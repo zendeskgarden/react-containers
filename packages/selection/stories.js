@@ -24,15 +24,7 @@ storiesOf('Selection Containers', module)
     const Selection = ({ direction }) => {
       const { focusedItem, selectedItem, getContainerProps, getItemProps } = useSelection({
         direction,
-        defaultSelectedItem: select(
-          'defaultSelectedItem',
-          items.reduce((acc, item) => {
-            acc[item] = item;
-
-            return acc;
-          }, {}),
-          items[0]
-        ),
+        defaultSelectedIndex: number('defaultSelectedIndex', 0),
         rtl: isRtl
       });
 

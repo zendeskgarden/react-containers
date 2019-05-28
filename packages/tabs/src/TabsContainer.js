@@ -17,6 +17,5 @@ TabsContainer.propTypes = {
   children: PropTypes.func,
   render: PropTypes.func,
   vertical: PropTypes.bool,
-  idPrefix: PropTypes.string,
-  defaultSelectedTab: PropTypes.any.isRequired
+  idPrefix: PropTypes.string
 };

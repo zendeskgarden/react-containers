@@ -21,7 +21,6 @@ storiesOf('Tabs Container', module)
     const Tabs = () => {
       const vertical = boolean('vertical', false);
       const { selectedItem, getTabProps, getTabListProps, getTabPanelProps } = useTabs({
-        defaultSelectedTab: tabs[0],
         vertical,
         idPrefix: text('idPrefix')
       });
@@ -92,7 +91,7 @@ storiesOf('Tabs Container', module)
       const idPrefix = text('idPrefix');
 
       return (
-        <TabsContainer defaultSelectedTab={tabs[0]} vertical={vertical} idPrefix={idPrefix}>
+        <TabsContainer vertical={vertical} idPrefix={idPrefix}>
           {({ selectedItem, getTabProps, getTabListProps, getTabPanelProps }) => {
             const tabComponents = [];
             const tabPanels = [];

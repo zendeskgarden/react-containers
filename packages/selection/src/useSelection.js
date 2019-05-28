@@ -135,7 +135,7 @@ function stateReducer(state, action, { focusedItem, selectedItem, onFocus, onSel
 export function useSelection({
   direction = DIRECTIONS.HORIZONTAL,
   defaultFocusedIndex = 0,
-  defaultSelectedItem,
+  defaultSelectedIndex,
   rtl,
   selectedItem,
   focusedItem,
@@ -148,7 +148,7 @@ export function useSelection({
   const [state, dispatch] = useReducer(
     (reducerState, action) =>
       stateReducer(reducerState, action, { onSelect, onFocus, selectedItem, focusedItem }),
-    { selectedItem: selectedItem === undefined && defaultSelectedItem, focusedItem }
+    { selectedItem, focusedItem }
   );
 
   const controlledFocusedItem = getControlledValue(focusedItem, state.focusedItem);
@@ -161,6 +161,16 @@ export function useSelection({
       refs[focusedIndex] && refs[focusedIndex].current.focus();
     }
   }, [controlledFocusedItem, items, refs]);
+
+  useEffect(() => {
+    if (selectedItem === undefined && defaultSelectedIndex !== undefined) {
+      dispatch({
+        type: ACTIONS.KEYBOARD_SELECT,
+        payload: items[defaultSelectedIndex],
+        items
+      });
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const getContainerProps = ({ role = 'listbox', ...other } = {}) => ({
     role,

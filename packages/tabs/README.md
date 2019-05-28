@@ -22,9 +22,7 @@ const tabs = ['Tab 1', 'Tab 2', 'Tab 3'];
 const tabRefs = tabs.map(() => createRef(null));
 
 const Tabs = () => {
-  const { selectedItem, getTabProps, getTabListProps, getTabPanelProps } = useTabs({
-    defaultSelectedTab: tabs[0]
-  });
+  const { selectedItem, getTabProps, getTabListProps, getTabPanelProps } = useTabs();
   const tabComponents = [];
   const tabPanels = [];
 
@@ -89,7 +87,7 @@ const Tabs = () => {
   const tabPanels = [];
 
   return (
-    <TabsContainer defaultSelectedTab={tabs[0]}>
+    <TabsContainer>
       {({ selectedItem, getTabProps, getTabListProps, getTabPanelProps }) => {
         tabs.forEach((tab, index) => {
           tabComponents.push(

@@ -21,7 +21,7 @@ describe('SelectionContainer', () => {
   const BasicExample = ({
     direction,
     defaultFocusedIndex,
-    defaultSelectedItem,
+    defaultSelectedIndex,
     selectedAriaKey,
     rtl
   } = {}) => (
@@ -29,7 +29,7 @@ describe('SelectionContainer', () => {
     <SelectionContainer
       direction={direction}
       defaultFocusedIndex={defaultFocusedIndex}
-      defaultSelectedItem={defaultSelectedItem}
+      defaultSelectedIndex={defaultSelectedIndex}
       rtl={rtl}
     >
       {({ getContainerProps, getItemProps, focusedItem, selectedItem }) => (
@@ -433,8 +433,8 @@ describe('SelectionContainer', () => {
       expect(item).toHaveAttribute('aria-selected', 'false');
     });
 
-    it('applies selected aria value if defaultSelectedItem is passed', () => {
-      const { getAllByTestId } = render(<BasicExample defaultSelectedItem={itemValues[1]} />);
+    it('applies selected aria value if defaultSelectedIndex is passed', () => {
+      const { getAllByTestId } = render(<BasicExample defaultSelectedIndex={1} />);
       const [, item] = getAllByTestId('item');
 
       expect(item).toHaveAttribute('aria-selected', 'true');

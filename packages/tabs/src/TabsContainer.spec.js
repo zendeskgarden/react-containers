@@ -19,12 +19,12 @@ describe('TabsContainer', () => {
   const getTabId = index => `${idPrefix}--tab:${index}`;
 
   // eslint-disable-next-line react/prop-types
-  const BasicExample = ({ vertical, onSelect, defaultSelectedTab = tabs[0] } = {}) => (
+  const BasicExample = ({ vertical, onSelect, defaultSelectedIndex = 0 } = {}) => (
     <TabsContainer
       vertical={vertical}
       onSelect={onSelect}
-      defaultSelectedTab={defaultSelectedTab}
       idPrefix={idPrefix}
+      defaultSelectedIndex={defaultSelectedIndex}
     >
       {({ getTabListProps, getTabProps, getTabPanelProps, selectedItem, focusedItem }) => (
         <div>
@@ -85,8 +85,8 @@ describe('TabsContainer', () => {
         });
       });
 
-      it('defaultSelectedTab applies correct accessibility attributes', () => {
-        const { getAllByTestId } = render(<BasicExample defaultSelectedTab={tabs[1]} />);
+      it('defaultSelectedIndex applies correct accessibility attributes', () => {
+        const { getAllByTestId } = render(<BasicExample defaultSelectedIndex={1} />);
         const [, tab] = getAllByTestId('tab');
 
         expect(tab).toHaveAttribute('aria-selected', 'true');
@@ -107,8 +107,8 @@ describe('TabsContainer', () => {
       });
     });
 
-    it('defaultSelectedTab applies correct accessibility attributes', () => {
-      const { getAllByTestId } = render(<BasicExample defaultSelectedTab={tabs[1]} />);
+    it('defaultSelectedIndex applies correct accessibility attributes', () => {
+      const { getAllByTestId } = render(<BasicExample defaultSelectedIndex={1} />);
       const [, tabPanel] = getAllByTestId('tab-panel');
 
       expect(tabPanel).not.toHaveAttribute('hidden');
@@ -145,11 +145,7 @@ describe('TabsContainer', () => {
       console.error = jest.fn(); // eslint-disable-line no-console
 
       expect(() => {
-        render(
-          <TabsContainer defaultSelectedTab={tabs[0]}>
-            {({ getTabProps }) => <div {...getTabProps()} />}
-          </TabsContainer>
-        );
+        render(<TabsContainer>{({ getTabProps }) => <div {...getTabProps()} />}</TabsContainer>);
       }).toThrow('Accessibility Error: You must provide an "index" option to "getTabProps()"');
 
       console.error = originalError;
@@ -164,9 +160,7 @@ describe('TabsContainer', () => {
 
       expect(() => {
         render(
-          <TabsContainer defaultSelectedTab={tabs[0]}>
-            {({ getTabPanelProps }) => <div {...getTabPanelProps()} />}
-          </TabsContainer>
+          <TabsContainer>{({ getTabPanelProps }) => <div {...getTabPanelProps()} />}</TabsContainer>
         );
       }).toThrow('Accessibility Error: You must provide an "index" option to "getTabPanelProps()"');
 
@@ -180,7 +174,7 @@ describe('TabsContainer', () => {
 
       expect(() => {
         render(
-          <TabsContainer defaultSelectedTab={tabs[0]}>
+          <TabsContainer>
             {({ getTabPanelProps }) => <div {...getTabPanelProps({ index: 0 })} />}
           </TabsContainer>
         );
