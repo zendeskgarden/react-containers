@@ -63,7 +63,7 @@ import { SelectionContainer } from '@zendeskgarden/container-selection';
 
 const items = ['Item 1', 'Item 2', 'Item 3'];
 
-<SelectionContainer direction="vertical" defaultSelectedItem={items[0]}>
+<SelectionContainer direction="vertical">
   {({ selectedItem, focusedItem, getContainerProps, getItemProps }) => (
     <ul {...getContainerProps()}>
       {items.map(item => {
