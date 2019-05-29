@@ -19,8 +19,13 @@ describe('TabsContainer', () => {
   const getTabId = index => `${idPrefix}--tab:${index}`;
 
   // eslint-disable-next-line react/prop-types
-  const BasicExample = ({ vertical, onSelect } = {}) => (
-    <TabsContainer vertical={vertical} onSelect={onSelect} idPrefix={idPrefix}>
+  const BasicExample = ({ vertical, onSelect, defaultSelectedIndex = 0 } = {}) => (
+    <TabsContainer
+      vertical={vertical}
+      onSelect={onSelect}
+      idPrefix={idPrefix}
+      defaultSelectedIndex={defaultSelectedIndex}
+    >
       {({ getTabListProps, getTabProps, getTabPanelProps, selectedItem, focusedItem }) => (
         <div>
           <div {...getTabListProps({ 'data-test-id': 'tab-list' })}>
@@ -76,7 +81,15 @@ describe('TabsContainer', () => {
           expect(tab).toHaveAttribute('role', 'tab');
           expect(tab).toHaveAttribute('id', getTabId(index));
           expect(tab).toHaveAttribute('aria-controls', getPanelId(index));
+          expect(tab).toHaveAttribute('aria-selected', index === 0 ? 'true' : 'false');
         });
+      });
+
+      it('defaultSelectedIndex applies correct accessibility attributes', () => {
+        const { getAllByTestId } = render(<BasicExample defaultSelectedIndex={1} />);
+        const [, tab] = getAllByTestId('tab');
+
+        expect(tab).toHaveAttribute('aria-selected', 'true');
       });
     });
   });
@@ -92,6 +105,13 @@ describe('TabsContainer', () => {
         expect(tabPanel).toHaveAttribute('tabIndex', '0');
         expect(tabPanel).toHaveAttribute('aria-labelledby', getTabId(index));
       });
+    });
+
+    it('defaultSelectedIndex applies correct accessibility attributes', () => {
+      const { getAllByTestId } = render(<BasicExample defaultSelectedIndex={1} />);
+      const [, tabPanel] = getAllByTestId('tab-panel');
+
+      expect(tabPanel).not.toHaveAttribute('hidden');
     });
 
     describe('when tab selected', () => {

@@ -17,9 +17,21 @@ jest.useFakeTimers();
 describe('SelectionContainer', () => {
   const itemValues = ['Item-1', 'Item-2', 'Item-3'];
 
-  // eslint-disable-next-line react/prop-types
-  const BasicExample = ({ direction, defaultFocusedIndex, selectedAriaKey, rtl } = {}) => (
-    <SelectionContainer direction={direction} defaultFocusedIndex={defaultFocusedIndex} rtl={rtl}>
+  /* eslint-disable react/prop-types */
+  const BasicExample = ({
+    direction,
+    defaultFocusedIndex,
+    defaultSelectedIndex,
+    selectedAriaKey,
+    rtl
+  } = {}) => (
+    /* eslint-enable react/prop-types */
+    <SelectionContainer
+      direction={direction}
+      defaultFocusedIndex={defaultFocusedIndex}
+      defaultSelectedIndex={defaultSelectedIndex}
+      rtl={rtl}
+    >
       {({ getContainerProps, getItemProps, focusedItem, selectedItem }) => (
         <div {...getContainerProps({ 'data-test-id': 'container' })}>
           {itemValues.map(item => {
@@ -418,14 +430,21 @@ describe('SelectionContainer', () => {
       const { getAllByTestId } = render(<BasicExample />);
       const [item] = getAllByTestId('item');
 
-      expect(item).toHaveAttribute('aria-selected');
+      expect(item).toHaveAttribute('aria-selected', 'false');
+    });
+
+    it('applies selected aria value if defaultSelectedIndex is passed', () => {
+      const { getAllByTestId } = render(<BasicExample defaultSelectedIndex={1} />);
+      const [, item] = getAllByTestId('item');
+
+      expect(item).toHaveAttribute('aria-selected', 'true');
     });
 
     it('applies custom selected aria value if provided', () => {
       const { getAllByTestId } = render(<BasicExample selectedAriaKey="aria-pressed" />);
       const [item] = getAllByTestId('item');
 
-      expect(item).toHaveAttribute('aria-pressed');
+      expect(item).toHaveAttribute('aria-pressed', 'false');
     });
 
     describe('onClick', () => {

@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React, { useState, createRef } from 'react';
+import React, { createRef } from 'react';
 
 import { storiesOf } from '@storybook/react';
 import { withKnobs, boolean, text } from '@storybook/addon-knobs';
@@ -19,11 +19,8 @@ storiesOf('Tabs Container', module)
   .addDecorator(withKnobs)
   .add('useTabs', () => {
     const Tabs = () => {
-      const [selectedItem, setSelectedItem] = useState(tabs[0]);
       const vertical = boolean('vertical', false);
-      const { getTabProps, getTabListProps, getTabPanelProps } = useTabs({
-        selectedItem,
-        onSelect: setSelectedItem,
+      const { selectedItem, getTabProps, getTabListProps, getTabPanelProps } = useTabs({
         vertical,
         idPrefix: text('idPrefix')
       });
@@ -90,18 +87,12 @@ storiesOf('Tabs Container', module)
   })
   .add('TabsContainer', () => {
     const Tabs = () => {
-      const [selectedItem, setSelectedItem] = useState(tabs[0]);
       const vertical = boolean('vertical', false);
       const idPrefix = text('idPrefix');
 
       return (
-        <TabsContainer
-          vertical={vertical}
-          selectedItem={selectedItem}
-          onSelect={setSelectedItem}
-          idPrefix={idPrefix}
-        >
-          {({ getTabProps, getTabListProps, getTabPanelProps }) => {
+        <TabsContainer vertical={vertical} idPrefix={idPrefix}>
+          {({ selectedItem, getTabProps, getTabListProps, getTabPanelProps }) => {
             const tabComponents = [];
             const tabPanels = [];
 

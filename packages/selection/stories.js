@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React, { useState } from 'react';
+import React from 'react';
 
 import { storiesOf } from '@storybook/react';
 import { withKnobs, select, boolean, number } from '@storybook/addon-knobs';
@@ -21,14 +21,10 @@ storiesOf('Selection Containers', module)
     const isRtl = boolean('Enable RTL', false);
 
     // eslint-disable-next-line react/prop-types
-    const Selection = ({ direction, defaultFocusedIndex }) => {
-      const [controlledSelectedItem, setControlledSelectedItem] = useState(items[0]);
-
+    const Selection = ({ direction }) => {
       const { focusedItem, selectedItem, getContainerProps, getItemProps } = useSelection({
         direction,
-        selectedItem: controlledSelectedItem,
-        onSelect: setControlledSelectedItem,
-        defaultFocusedIndex,
+        defaultSelectedIndex: number('defaultSelectedIndex', 0),
         rtl: isRtl
       });
 
