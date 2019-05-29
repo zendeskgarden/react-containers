@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.1.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-selection@1.0.2...@zendeskgarden/container-selection@1.1.0) (2019-05-29)
+
+
+### Features
+
+* **selection|tabs:** Add defaultSelectedIndex prop ([#37](https://github.com/zendeskgarden/react-containers/issues/37)) ([93f17d8](https://github.com/zendeskgarden/react-containers/commit/93f17d8))
+
+
+
+
+
 ## [1.0.2](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-selection@1.0.1...@zendeskgarden/container-selection@1.0.2) (2019-05-14)
 
 
