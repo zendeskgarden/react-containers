@@ -17,7 +17,7 @@ describe('FocusJailContainer', () => {
   let containerReference;
 
   // eslint-disable-next-line react/prop-types
-  const BasicExample = ({ focusOnMount, focusElem = focusSpy, ...props } = {}) => {
+  const BasicExample = ({ focusOnMount, focusElem = focusSpy, environment, ...props } = {}) => {
     const containerRef = useRef(null);
     // eslint-disable-next-line react/prop-types
     const focusableChildren = props.focusableChildren || (
@@ -32,6 +32,7 @@ describe('FocusJailContainer', () => {
         containerRef={containerRef}
         focusOnMount={focusOnMount}
         focusElem={focusElem}
+        environment={environment}
       >
         {({ getContainerProps }) => {
           containerReference = containerRef;
@@ -105,21 +106,22 @@ describe('FocusJailContainer', () => {
 
     describe('onKeyDown()', () => {
       it('performs no action if non-tab key is pressed', () => {
-        const { container } = render(<BasicExample focusElem={focusSpy} />);
+        const { getByTestId } = render(<BasicExample focusElem={focusSpy} />);
 
-        fireEvent.keyDown(container, { keyCode: KEY_CODES.END });
+        fireEvent.keyDown(getByTestId('container'), { keyCode: KEY_CODES.END });
 
         // Container is still focused during initial mount
         expect(focusSpy).toHaveBeenCalledTimes(2);
       });
 
       it('focuses container if no tabbable elements found', () => {
-        const { container, getByTestId } = render(<BasicExample focusableChildren={[]} />);
+        const { getByTestId } = render(<BasicExample focusableChildren={[]} />);
+        const container = getByTestId('container');
 
         fireEvent.keyDown(container, { keyCode: KEY_CODES.TAB });
 
-        expect(focusSpy).toHaveBeenCalledTimes(2);
-        expect(focusSpy).toHaveBeenLastCalledWith(getByTestId('container'));
+        expect(focusSpy).toHaveBeenCalledTimes(3);
+        expect(focusSpy).toHaveBeenLastCalledWith(container);
       });
 
       it('focuses first element if tab key is pressed', () => {
@@ -130,12 +132,13 @@ describe('FocusJailContainer', () => {
       });
 
       it('focuses last element if tab and shift key is pressed', () => {
-        const { container, getByTestId } = render(<BasicExample focusableChildren={[]} />);
+        const { getByTestId } = render(<BasicExample focusableChildren={[]} />);
+        const container = getByTestId('container');
 
         fireEvent.keyDown(container, { keyCode: KEY_CODES.TAB, shiftKey: true });
 
-        expect(focusSpy).toHaveBeenCalledTimes(2);
-        expect(focusSpy).toHaveBeenLastCalledWith(getByTestId('container'));
+        expect(focusSpy).toHaveBeenCalledTimes(3);
+        expect(focusSpy).toHaveBeenLastCalledWith(container);
       });
 
       it("doesn't intercept tab key if not the first or last tabbable item", () => {
@@ -146,13 +149,42 @@ describe('FocusJailContainer', () => {
             <button>Another button</button>
           </>
         );
-        const { container } = render(
+        const { getByTestId } = render(
           <BasicExample focusElem={focusSpy} focusableChildren={focusableChildren} />
         );
 
-        fireEvent.keyDown(container, { keyCode: KEY_CODES.TAB });
+        fireEvent.keyDown(getByTestId('container'), { keyCode: KEY_CODES.TAB });
 
-        expect(focusSpy).toHaveBeenCalledTimes(2);
+        expect(focusSpy).toHaveBeenCalledTimes(3);
+      });
+
+      it('throws error if containerRef is null', () => {
+        const originalError = console.error;
+        let err = null;
+
+        // Jest won't see the error due to it being thrown in an event.
+        // Capture the message here and validate that.
+        window.addEventListener('error', e => {
+          err = e.message;
+        });
+
+        console.error = jest.fn();
+
+        const { getByTestId } = render(
+          <FocusJailContainer containerRef={React.createRef(null)}>
+            {({ getContainerProps }) => (
+              <div {...getContainerProps({ 'data-test-id': 'container-no-ref' })}>Test</div>
+            )}
+          </FocusJailContainer>
+        );
+
+        fireEvent.keyDown(getByTestId('container-no-ref'), { keyCode: KEY_CODES.TAB });
+
+        expect(err).toBe(
+          'Accessibility Error: You must apply the ref prop to your containing element.'
+        );
+
+        console.error = originalError;
       });
     });
   });
