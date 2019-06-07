@@ -28,7 +28,7 @@ function stateReducer(state, action, { focusedItem, selectedItem, onFocus, onSel
       if (onFocus) {
         onFocus(action.payload);
 
-        return state;
+        return { ...state };
       }
 
       return { ...state, focusedItem: action.payload };
@@ -39,7 +39,7 @@ function stateReducer(state, action, { focusedItem, selectedItem, onFocus, onSel
       if (onFocus) {
         onFocus(newFocusedItem);
 
-        return state;
+        return { ...state };
       }
 
       return { ...state, focusedItem: newFocusedItem };
@@ -51,7 +51,7 @@ function stateReducer(state, action, { focusedItem, selectedItem, onFocus, onSel
       if (onFocus) {
         onFocus(newFocusedItem);
 
-        return state;
+        return { ...state };
       }
 
       return { ...state, focusedItem: newFocusedItem };
@@ -60,7 +60,7 @@ function stateReducer(state, action, { focusedItem, selectedItem, onFocus, onSel
       if (onFocus) {
         onFocus(action.items[0]);
 
-        return state;
+        return { ...state };
       }
 
       return { ...state, focusedItem: action.items[0] };
@@ -69,7 +69,7 @@ function stateReducer(state, action, { focusedItem, selectedItem, onFocus, onSel
       if (onFocus) {
         onFocus(action.items[action.items.length - 1]);
 
-        return state;
+        return { ...state };
       }
 
       return { ...state, focusedItem: action.items[action.items.length - 1] };
@@ -89,7 +89,7 @@ function stateReducer(state, action, { focusedItem, selectedItem, onFocus, onSel
       }
 
       if (isFocusControlled && isSelectControlled) {
-        return state;
+        return { ...state };
       }
 
       const updatedState = { ...state };
