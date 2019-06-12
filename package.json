@@ -36,7 +36,7 @@
     "@storybook/theming": "5.0.11",
     "@zendeskgarden/css-variables": "6.3.2",
     "@zendeskgarden/eslint-config": "7.2.1",
-    "@zendeskgarden/react-testing": "2.0.2",
+    "@zendeskgarden/react-testing": "2.0.4",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "10.0.1",
     "babel-jest": "24.8.0",
