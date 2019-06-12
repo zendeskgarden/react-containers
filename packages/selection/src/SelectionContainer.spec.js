@@ -23,7 +23,9 @@ describe('SelectionContainer', () => {
     defaultFocusedIndex,
     defaultSelectedIndex,
     selectedAriaKey,
-    rtl
+    rtl,
+    onFocus,
+    onSelect
   } = {}) => (
     /* eslint-enable react/prop-types */
     <SelectionContainer
@@ -31,6 +33,8 @@ describe('SelectionContainer', () => {
       defaultFocusedIndex={defaultFocusedIndex}
       defaultSelectedIndex={defaultSelectedIndex}
       rtl={rtl}
+      onFocus={onFocus ? onFocus : undefined}
+      onSelect={onSelect ? onSelect : undefined}
     >
       {({ getContainerProps, getItemProps, focusedItem, selectedItem }) => (
         <div {...getContainerProps({ 'data-test-id': 'container' })}>
@@ -72,6 +76,32 @@ describe('SelectionContainer', () => {
       </SelectionContainer>
     );
   };
+
+  describe('controlled state', () => {
+    describe('onFocus', () => {
+      it('should call onFocus callback', () => {
+        const onFocusSpy = jest.fn();
+        const { getAllByTestId } = render(<BasicExample onFocus={onFocusSpy} />);
+        const [item] = getAllByTestId('item');
+
+        fireEvent.focus(item);
+
+        expect(onFocusSpy).toHaveBeenCalledWith(itemValues[0]);
+      });
+    });
+
+    describe('onSelect', () => {
+      it('should call onSelect callback', () => {
+        const onSelectSpy = jest.fn();
+        const { getAllByTestId } = render(<BasicExample onSelect={onSelectSpy} />);
+        const [item] = getAllByTestId('item');
+
+        fireEvent.click(item);
+
+        expect(onSelectSpy).toHaveBeenCalledWith(itemValues[0]);
+      });
+    });
+  });
 
   describe('getContainerProps', () => {
     it('applies accessibility role', () => {
