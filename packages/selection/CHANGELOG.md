@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.1](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-selection@1.1.0...@zendeskgarden/container-selection@1.1.1) (2019-06-13)
+
+
+### Bug Fixes
+
+* **selection:** correctly update state if focus is in controlled mode ([#39](https://github.com/zendeskgarden/react-containers/issues/39)) ([acc4383](https://github.com/zendeskgarden/react-containers/commit/acc4383))
+
+
+
+
+
 # [1.1.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-selection@1.0.2...@zendeskgarden/container-selection@1.1.0) (2019-05-29)
 
 
