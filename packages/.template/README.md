@@ -38,5 +38,6 @@ import { ExampleContainer } from '@zendeskgarden/container-{{component}}';
 
   * [ ] Add {{component}} to root README table.
   * [ ] Add {{component}} stories.js.
+  * [ ] Add {{component}} to demo `index.html`.
   * [ ] Delete this comment block.
 -->
