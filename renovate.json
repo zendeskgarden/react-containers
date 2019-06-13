@@ -27,6 +27,5 @@
       }
     }
   ],
-  "labels": ["PR: Internal :seedling:"],
-  "reviewers": ["zendeskgarden/maintainers"]
+  "reviewers": ["ryanseddon", "jzempel", "austin94"]
 }
