@@ -2,7 +2,7 @@
   "name": "@zendeskgarden/react-containers",
   "scripts": {
     "build": "lerna run build --stream",
-    "build:demo": "build-storybook -s ./demo -o demo/storybook",
+    "build:demo": "build-storybook -o demo/storybook",
     "format": "yarn format:package_json && yarn format:js && yarn format:markdown",
     "format:js": "prettier --loglevel warn --write '{packages/**/!(dist),utils/**}/*.js'",
     "format:markdown": "prettier --loglevel warn --write '{packages/**/!(dist)/!(CHANGELOG)*.md,README.md}'",
