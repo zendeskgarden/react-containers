@@ -8,7 +8,7 @@
 
 import React, { useRef } from 'react';
 import { KEY_CODES } from '@zendeskgarden/container-utilities';
-import { render, fireEvent } from 'react-testing-library';
+import { render, fireEvent } from '@testing-library/react';
 
 import { FocusJailContainer } from './FocusJailContainer';
 

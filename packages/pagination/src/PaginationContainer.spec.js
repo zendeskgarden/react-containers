@@ -6,7 +6,7 @@
  */
 
 import React, { useRef } from 'react';
-import { render, fireEvent } from 'react-testing-library';
+import { render, fireEvent } from '@testing-library/react';
 
 import { PaginationContainer } from './PaginationContainer';
 

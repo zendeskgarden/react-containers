@@ -7,7 +7,7 @@
 
 import 'jest-dom/extend-expect';
 
-import { configure } from 'react-testing-library';
+import { configure } from '@testing-library/dom';
 
 configure({ testIdAttribute: 'data-test-id' });
 

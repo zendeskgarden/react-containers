@@ -6,7 +6,7 @@
  */
 
 import React, { createRef } from 'react';
-import { render, fireEvent } from 'react-testing-library';
+import { render, fireEvent } from '@testing-library/react';
 import { KEY_CODES } from '@zendeskgarden/container-utilities';
 import { ModalContainer } from './ModalContainer';
 
