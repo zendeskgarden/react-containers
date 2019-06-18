@@ -21,11 +21,16 @@ describe('ScheduleContainer', () => {
     </ScheduleContainer>
   );
 
+  let rAFCallbacks = [];
+
+  function runRAFCallbacks() {
+    rAFCallbacks.forEach(cb => cb());
+    rAFCallbacks = [];
+  }
+
   beforeEach(() => {
     jest.spyOn(window, 'requestAnimationFrame').mockImplementation(cb => {
-      setTimeout(() => {
-        cb();
-      }, 1000 / 60);
+      return rAFCallbacks.push(cb);
     });
     jest.spyOn(window, 'cancelAnimationFrame');
     clearTimeout.mockClear();
@@ -47,9 +52,10 @@ describe('ScheduleContainer', () => {
   it('updates elapsed render prop on each raf call', () => {
     const { getByTestId } = render(<BasicExample />);
 
+    jest.runOnlyPendingTimers();
+
     act(() => {
-      jest.runOnlyPendingTimers();
-      jest.advanceTimersByTime(1000);
+      runRAFCallbacks();
     });
 
     expect(getByTestId('schedule').textContent).not.toBe('0');
@@ -58,10 +64,8 @@ describe('ScheduleContainer', () => {
   it('cancels requestAnimationFrame on duration end', () => {
     render(<BasicExample />);
 
-    act(() => {
-      jest.runOnlyPendingTimers(); // delayTimer
-      jest.runOnlyPendingTimers(); // loopTimeout
-    });
+    jest.runOnlyPendingTimers(); // delayTimer
+    jest.runOnlyPendingTimers(); // loopTimeout
 
     expect(cancelAnimationFrame).toHaveBeenCalled();
   });
@@ -95,18 +99,15 @@ describe('ScheduleContainer', () => {
     jest.runOnlyPendingTimers(); // delayTimer
     jest.runOnlyPendingTimers(); // loopTimeout
 
-    expect(setTimeout).toHaveBeenCalledTimes(4);
+    expect(setTimeout).toHaveBeenCalledTimes(2);
   });
 
   it('animation loops once initial duration has completed', () => {
     render(<BasicExample />); // loop = true is the default
 
-    // Is wrapped in act as rAF triggers state update in hook
-    act(() => {
-      jest.runOnlyPendingTimers(); // delayTimer
-      jest.runOnlyPendingTimers(); // loopTimeout
-    });
+    jest.runOnlyPendingTimers(); // delayTimer
+    jest.runOnlyPendingTimers(); // loopTimeout
 
-    expect(setTimeout).toHaveBeenCalledTimes(6);
+    expect(setTimeout).toHaveBeenCalledTimes(3);
   });
 });
