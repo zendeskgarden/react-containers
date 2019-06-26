@@ -7,8 +7,7 @@
  */
 
 import React from 'react';
-import { render } from '@testing-library/react';
-import { act } from 'react-dom/test-utils';
+import { render, act } from '@testing-library/react';
 
 import ScheduleContainer from './ScheduleContainer';
 
@@ -17,7 +16,13 @@ jest.useFakeTimers();
 describe('ScheduleContainer', () => {
   const BasicExample = props => (
     <ScheduleContainer {...props}>
-      {elapsed => <p data-test-id="schedule">{elapsed}</p>}
+      {({ elapsed, delayMS, delayComplete }) => {
+        if (!delayComplete && delayMS !== 0) {
+          return <div data-test-id="delay">delay</div>;
+        }
+
+        return <p data-test-id="schedule">{elapsed}</p>;
+      }}
     </ScheduleContainer>
   );
 
@@ -39,20 +44,26 @@ describe('ScheduleContainer', () => {
   it('sets up requestAnimationFrame', () => {
     render(<BasicExample />);
 
-    jest.runOnlyPendingTimers();
+    act(() => {
+      jest.runOnlyPendingTimers();
+    });
 
     expect(requestAnimationFrame).toHaveBeenCalled();
   });
 
   it('updates elapsed render prop on each raf call', () => {
+    const now = Date.now();
+    const spy = jest.spyOn(Date, 'now').mockImplementationOnce(() => now - 1000);
     const { getByTestId } = render(<BasicExample />);
 
     act(() => {
       jest.runOnlyPendingTimers();
-      jest.advanceTimersByTime(1000);
+      jest.advanceTimersByTime(100);
     });
 
     expect(getByTestId('schedule').textContent).not.toBe('0');
+
+    spy.mockRestore();
   });
 
   it('cancels requestAnimationFrame on duration end', () => {
@@ -81,10 +92,18 @@ describe('ScheduleContainer', () => {
     expect(setTimeout).toHaveBeenCalledWith(expect.any(Function), 1000);
   });
 
+  it("renders differently if delay hasn't completed yet", () => {
+    const { getByTestId } = render(<BasicExample />);
+
+    expect(getByTestId('delay').textContent).toBe('delay');
+  });
+
   it('passes correct ms duration to setTimeout', () => {
     render(<BasicExample duration={500} />);
 
-    jest.runOnlyPendingTimers(); // trigger delayMS timeout
+    act(() => {
+      jest.runOnlyPendingTimers(); // trigger delayMS timeout
+    });
 
     expect(setTimeout).toHaveBeenCalledWith(expect.any(Function), 500);
   });
@@ -92,8 +111,10 @@ describe('ScheduleContainer', () => {
   it('stops animation after single iteration if loop false is passed', () => {
     render(<BasicExample loop={false} />);
 
-    jest.runOnlyPendingTimers(); // delayTimer
-    jest.runOnlyPendingTimers(); // loopTimeout
+    act(() => {
+      jest.runOnlyPendingTimers(); // delayTimer
+      jest.runOnlyPendingTimers(); // loopTimeout
+    });
 
     expect(setTimeout).toHaveBeenCalledTimes(4);
   });

@@ -19,7 +19,11 @@ storiesOf('Schedule Container', module)
       const duration = number('duration', 1250);
       const loop = boolean('loop', true);
       const delayMS = number('delayMS', 750);
-      const elapsed = useSchedule({ duration, loop, delayMS });
+      const { elapsed, delayComplete } = useSchedule({ duration, loop, delayMS });
+
+      if (!delayComplete && delayMS !== 0) {
+        return <div>Delay...</div>;
+      }
 
       return (
         <div>
@@ -37,11 +41,17 @@ storiesOf('Schedule Container', module)
       loop={boolean('loop', true)}
       delayMS={number('delayMS', 750)}
     >
-      {elapsed => (
-        <div>
-          Percentage: {(elapsed * 100).toFixed(0)}%<br />
-          Elapsed: {elapsed}
-        </div>
-      )}
+      {({ elapsed, delayMS, delayComplete }) => {
+        if (!delayComplete && delayMS !== 0) {
+          return <div>Delay...</div>;
+        }
+
+        return (
+          <div>
+            Percentage: {(elapsed * 100).toFixed(0)}%<br />
+            Elapsed: {elapsed}
+          </div>
+        );
+      }}
     </ScheduleContainer>
   ));
