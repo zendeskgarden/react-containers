@@ -9,6 +9,7 @@ import { useState, useLayoutEffect } from 'react';
 
 export default function useSchedule({ duration = 1250, delayMS = 750, loop = true } = {}) {
   const [elapsed, setTime] = useState(0);
+  const [delayComplete, setDelayComplete] = useState(false);
 
   useLayoutEffect(() => {
     let raf;
@@ -34,6 +35,7 @@ export default function useSchedule({ duration = 1250, delayMS = 750, loop = tru
 
       // Start the loop
       start = Date.now();
+      setDelayComplete(true);
       tick();
     };
 
@@ -46,5 +48,9 @@ export default function useSchedule({ duration = 1250, delayMS = 750, loop = tru
     };
   }, [duration, delayMS, loop]);
 
-  return Math.min(1, elapsed / duration);
+  return {
+    elapsed: Math.min(1, elapsed / duration),
+    delayMS,
+    delayComplete
+  };
 }
