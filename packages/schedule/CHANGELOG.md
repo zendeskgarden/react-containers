@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-schedule@0.3.0...@zendeskgarden/container-schedule@1.0.0) (2019-06-27)
+
+
+### Features
+
+* **schedule:** Add state to determine when delay timeout is comp… ([#70](https://github.com/zendeskgarden/react-containers/issues/70)) ([b5f2ec5](https://github.com/zendeskgarden/react-containers/commit/b5f2ec5))
+
+
+
+
+
 # [0.3.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-schedule@0.2.3...@zendeskgarden/container-schedule@0.3.0) (2019-05-06)
 
 
