@@ -48,7 +48,7 @@
     "core-js": "3.1.4",
     "coveralls": "3.0.4",
     "eslint": "6.0.1",
-    "eslint-config-prettier": "5.1.0",
+    "eslint-config-prettier": "6.0.0",
     "eslint-plugin-jest": "22.7.2",
     "eslint-plugin-jsx-a11y": "6.2.3",
     "eslint-plugin-notice": "0.8.8",
