@@ -15,6 +15,19 @@ import {
 import { DIRECTIONS } from './utils/DIRECTIONS';
 import { ACTIONS } from './utils/ACTIONS';
 
+const HOOK_ID = 'selection';
+let PKG_VERSION;
+
+if (process.env.NODE_ENV === 'development') {
+  // In the prod build this is handled in the webpack build
+  // storybook doesn't run each packages build so we need to get the
+  // version here
+  // eslint-disable-next-line global-require
+  const packageManifest = require('../package.json');
+
+  PKG_VERSION = packageManifest.version;
+}
+
 function stateReducer(state, action, { focusedItem, selectedItem, onFocus, onSelect }) {
   const controlledFocusedItem = getControlledValue(focusedItem, state.focusedItem);
   const controlledSelectedItem = getControlledValue(selectedItem, state.selectedItem);
@@ -175,6 +188,8 @@ export function useSelection({
   const getContainerProps = ({ role = 'listbox', ...other } = {}) => ({
     role,
     'aria-orientation': direction === DIRECTIONS.BOTH ? undefined : direction,
+    'data-garden-container-id': HOOK_ID,
+    'data-garden-container-version': PKG_VERSION || PACKAGE_VERSION,
     ...other
   });
 

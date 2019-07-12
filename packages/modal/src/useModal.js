@@ -9,6 +9,19 @@ import { useState } from 'react';
 import { composeEventHandlers, generateId, KEY_CODES } from '@zendeskgarden/container-utilities';
 import { useFocusJail } from '@zendeskgarden/container-focusjail';
 
+const HOOK_ID = 'modal';
+let PKG_VERSION;
+
+if (process.env.NODE_ENV === 'development') {
+  // In the prod build this is handled in the webpack build
+  // storybook doesn't run each packages build so we need to get the
+  // version here
+  // eslint-disable-next-line global-require
+  const packageManifest = require('../package.json');
+
+  PKG_VERSION = packageManifest.version;
+}
+
 export function useModal({ onClose, modalRef, id: _id } = {}) {
   const [idPrefix] = useState(_id || generateId('garden-modal-container'));
   const titleId = `${idPrefix}--title`;
@@ -23,6 +36,8 @@ export function useModal({ onClose, modalRef, id: _id } = {}) {
       onClick: composeEventHandlers(onClick, event => {
         closeModal(event);
       }),
+      'data-garden-container-id': HOOK_ID,
+      'data-garden-container-version': PKG_VERSION || PACKAGE_VERSION,
       ...other
     };
   };

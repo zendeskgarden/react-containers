@@ -23,7 +23,7 @@ const options = {
   devtool: 'source-map',
   plugins: [
     /**
-     * Allows the `data-garden-version` attribute to be applied to all
+     * Allows the `data-garden-container-version` attribute to be applied to all
      * views without importing entire package.json into the bundle
      */
     new webpack.DefinePlugin({
