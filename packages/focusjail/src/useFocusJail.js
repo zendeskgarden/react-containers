@@ -10,19 +10,6 @@ import { composeEventHandlers, KEY_CODES } from '@zendeskgarden/container-utilit
 import tabbable from 'tabbable';
 import activeElement from 'dom-helpers/activeElement';
 
-const HOOK_ID = 'focusjail';
-let PKG_VERSION;
-
-if (process.env.NODE_ENV === 'development') {
-  // In the prod build this is handled in the webpack build
-  // storybook doesn't run each packages build so we need to get the
-  // version here
-  // eslint-disable-next-line global-require
-  const packageManifest = require('../package.json');
-
-  PKG_VERSION = packageManifest.version;
-}
-
 export function useFocusJail({ focusOnMount = true, environment, focusElem, containerRef } = {}) {
   // To support conditional rendering we need to store the ref in state and
   // trigger a re-render if the ref updates once rendered since react will
@@ -97,8 +84,8 @@ export function useFocusJail({ focusOnMount = true, environment, focusElem, cont
           event.preventDefault();
         }
       }),
-      'data-garden-container-id': HOOK_ID,
-      'data-garden-container-version': PKG_VERSION || PACKAGE_VERSION,
+      'data-garden-container-id': 'focusjail',
+      'data-garden-container-version': PACKAGE_VERSION,
       ...other
     };
   };

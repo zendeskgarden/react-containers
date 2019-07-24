@@ -8,19 +8,6 @@
 import { useState, useEffect } from 'react';
 import { composeEventHandlers, generateId, KEY_CODES } from '@zendeskgarden/container-utilities';
 
-const HOOK_ID = 'tooltip';
-let PKG_VERSION;
-
-if (process.env.NODE_ENV === 'development') {
-  // In the prod build this is handled in the webpack build
-  // storybook doesn't run each packages build so we need to get the
-  // version here
-  // eslint-disable-next-line global-require
-  const packageManifest = require('../package.json');
-
-  PKG_VERSION = packageManifest.version;
-}
-
 export function useTooltip({ tooltipRef, delayMilliseconds = 500, id, isVisible } = {}) {
   const [visibility, setVisibility] = useState(isVisible);
   const [_id] = useState(id || generateId('garden-tooltip-container'));
@@ -78,8 +65,8 @@ export function useTooltip({ tooltipRef, delayMilliseconds = 500, id, isVisible 
         }
       }),
       'aria-describedby': _id,
-      'data-garden-container-id': HOOK_ID,
-      'data-garden-container-version': PKG_VERSION || PACKAGE_VERSION,
+      'data-garden-container-id': 'tooltip',
+      'data-garden-container-version': PACKAGE_VERSION,
       ...other
     };
   };

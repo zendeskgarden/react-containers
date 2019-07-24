@@ -8,19 +8,6 @@
 import { useState } from 'react';
 import { generateId } from '@zendeskgarden/container-utilities';
 
-const HOOK_ID = 'field';
-let PKG_VERSION;
-
-if (process.env.NODE_ENV === 'development') {
-  // In the prod build this is handled in the webpack build
-  // storybook doesn't run each packages build so we need to get the
-  // version here
-  // eslint-disable-next-line global-require
-  const packageManifest = require('../package.json');
-
-  PKG_VERSION = packageManifest.version;
-}
-
 export function useField(idPrefix) {
   const [prefix] = useState(idPrefix || generateId('garden-field-container'));
   const inputId = `${prefix}--input`;
@@ -31,8 +18,8 @@ export function useField(idPrefix) {
     return {
       id,
       htmlFor,
-      'data-garden-container-id': HOOK_ID,
-      'data-garden-container-version': PKG_VERSION || PACKAGE_VERSION,
+      'data-garden-container-id': 'field',
+      'data-garden-container-version': PACKAGE_VERSION,
       ...other
     };
   };

@@ -17,19 +17,6 @@ function requiredArguments(arg, argStr, methodName) {
   }
 }
 
-const HOOK_ID = 'tabs';
-let PKG_VERSION;
-
-if (process.env.NODE_ENV === 'development') {
-  // In the prod build this is handled in the webpack build
-  // storybook doesn't run each packages build so we need to get the
-  // version here
-  // eslint-disable-next-line global-require
-  const packageManifest = require('../package.json');
-
-  PKG_VERSION = packageManifest.version;
-}
-
 export function useTabs({ vertical, idPrefix, ...options } = {}) {
   const { selectedItem, focusedItem, getContainerProps, getItemProps } = useSelection({
     direction: vertical ? 'vertical' : 'horizontal',
@@ -43,8 +30,8 @@ export function useTabs({ vertical, idPrefix, ...options } = {}) {
   const getTabListProps = ({ role = 'tablist', ...other } = {}) => {
     return {
       role,
-      'data-garden-container-id': HOOK_ID,
-      'data-garden-container-version': PKG_VERSION || PACKAGE_VERSION,
+      'data-garden-container-id': 'tabs',
+      'data-garden-container-version': PACKAGE_VERSION,
       ...other
     };
   };

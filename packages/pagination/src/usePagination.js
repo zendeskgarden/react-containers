@@ -7,19 +7,6 @@
 
 import { useSelection } from '@zendeskgarden/container-selection';
 
-const HOOK_ID = 'pagination';
-let PKG_VERSION;
-
-if (process.env.NODE_ENV === 'development') {
-  // In the prod build this is handled in the webpack build
-  // storybook doesn't run each packages build so we need to get the
-  // version here
-  // eslint-disable-next-line global-require
-  const packageManifest = require('../package.json');
-
-  PKG_VERSION = packageManifest.version;
-}
-
 export function usePagination(options) {
   const {
     selectedItem,
@@ -32,8 +19,8 @@ export function usePagination(options) {
     return {
       role,
       'aria-label': ariaLabel || 'Pagination navigation',
-      'data-garden-container-id': HOOK_ID,
-      'data-garden-container-version': PKG_VERSION || PACKAGE_VERSION,
+      'data-garden-container-id': 'pagination',
+      'data-garden-container-version': PACKAGE_VERSION,
       ...props
     };
   };

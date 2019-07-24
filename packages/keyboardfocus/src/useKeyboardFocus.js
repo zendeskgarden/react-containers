@@ -9,19 +9,6 @@ import { useState, useRef, useEffect } from 'react';
 
 import { composeEventHandlers } from '@zendeskgarden/container-utilities';
 
-const HOOK_ID = 'keyboardfocus';
-let PKG_VERSION;
-
-if (process.env.NODE_ENV === 'development') {
-  // In the prod build this is handled in the webpack build
-  // storybook doesn't run each packages build so we need to get the
-  // version here
-  // eslint-disable-next-line global-require
-  const packageManifest = require('../package.json');
-
-  PKG_VERSION = packageManifest.version;
-}
-
 export function useKeyboardFocus() {
   const [keyboardFocused, setKeyboardFocused] = useState(false);
   const focusableTimeoutRef = useRef(undefined);
@@ -63,8 +50,8 @@ export function useKeyboardFocus() {
       onMouseDown: composeEventHandlers(props.onMouseDown, onPointerDown),
       onPointerDown: composeEventHandlers(props.onPointerDown, onPointerDown),
       onTouchStart: composeEventHandlers(props.onTouchStart, onPointerDown),
-      'data-garden-container-id': HOOK_ID,
-      'data-garden-container-version': PKG_VERSION || PACKAGE_VERSION,
+      'data-garden-container-id': 'keyboardfocus',
+      'data-garden-container-version': PACKAGE_VERSION,
       ...props
     };
   };
