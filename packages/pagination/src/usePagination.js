@@ -19,6 +19,8 @@ export function usePagination(options) {
     return {
       role,
       'aria-label': ariaLabel || 'Pagination navigation',
+      'data-garden-container-id': 'pagination',
+      'data-garden-container-version': PACKAGE_VERSION,
       ...props
     };
   };

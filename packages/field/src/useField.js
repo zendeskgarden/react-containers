@@ -18,6 +18,8 @@ export function useField(idPrefix) {
     return {
       id,
       htmlFor,
+      'data-garden-container-id': 'field',
+      'data-garden-container-version': PACKAGE_VERSION,
       ...other
     };
   };

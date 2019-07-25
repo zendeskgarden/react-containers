@@ -5,12 +5,20 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
+const webpack = require('webpack');
+
 module.exports = ({ config }) => {
   config.module.rules.push({
     test: /stories.js$/u,
     loaders: [require.resolve('@storybook/addon-storysource/loader')],
     enforce: 'pre'
   });
+
+  config.plugins.push(
+    new webpack.DefinePlugin({
+      PACKAGE_VERSION: JSON.stringify('storybook')
+    })
+  );
 
   return config;
 };

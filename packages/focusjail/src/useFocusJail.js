@@ -67,7 +67,6 @@ export function useFocusJail({ focusOnMount = true, environment, focusElem, cont
         if (event.keyCode !== KEY_CODES.TAB) {
           return;
         }
-
         validateContainerRef();
 
         const tabbableNodes = getTabbableNodes();
@@ -85,6 +84,8 @@ export function useFocusJail({ focusOnMount = true, environment, focusElem, cont
           event.preventDefault();
         }
       }),
+      'data-garden-container-id': 'focusjail',
+      'data-garden-container-version': PACKAGE_VERSION,
       ...other
     };
   };

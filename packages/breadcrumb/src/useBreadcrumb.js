@@ -10,6 +10,8 @@ export default function useBreadcrumb() {
     return {
       role,
       'aria-label': 'Breadcrumb navigation',
+      'data-garden-container-id': 'breadcrumb',
+      'data-garden-container-version': PACKAGE_VERSION,
       ...other
     };
   };

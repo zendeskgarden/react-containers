@@ -175,6 +175,8 @@ export function useSelection({
   const getContainerProps = ({ role = 'listbox', ...other } = {}) => ({
     role,
     'aria-orientation': direction === DIRECTIONS.BOTH ? undefined : direction,
+    'data-garden-container-id': 'selection',
+    'data-garden-container-version': PACKAGE_VERSION,
     ...other
   });
 

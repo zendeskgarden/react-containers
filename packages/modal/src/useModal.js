@@ -23,6 +23,8 @@ export function useModal({ onClose, modalRef, id: _id } = {}) {
       onClick: composeEventHandlers(onClick, event => {
         closeModal(event);
       }),
+      'data-garden-container-id': 'modal',
+      'data-garden-container-version': PACKAGE_VERSION,
       ...other
     };
   };

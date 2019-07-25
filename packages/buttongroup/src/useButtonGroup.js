@@ -13,6 +13,8 @@ export function useButtonGroup(options) {
   const getGroupProps = ({ role = 'group', ...other } = {}) => {
     return {
       role,
+      'data-garden-container-id': 'buttongroup',
+      'data-garden-container-version': PACKAGE_VERSION,
       ...other
     };
   };

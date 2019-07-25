@@ -30,6 +30,8 @@ export function useTabs({ vertical, idPrefix, ...options } = {}) {
   const getTabListProps = ({ role = 'tablist', ...other } = {}) => {
     return {
       role,
+      'data-garden-container-id': 'tabs',
+      'data-garden-container-version': PACKAGE_VERSION,
       ...other
     };
   };
