@@ -16,7 +16,6 @@ export function TooltipContainer({ children, render = children, ...options }) {
 TooltipContainer.propTypes = {
   children: PropTypes.func,
   render: PropTypes.func,
-  tooltipRef: PropTypes.shape({ current: PropTypes.instanceOf(Element) }).isRequired,
   delayMilliseconds: PropTypes.number,
   isVisible: PropTypes.bool
 };

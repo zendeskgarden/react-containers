@@ -16,14 +16,10 @@ For live examples check out our [storybook](https://zendeskgarden.github.io/reac
 ### useTooltip
 
 ```jsx static
-import { useRef } from 'react';
 import { useTooltip } from '@zendeskgarden/container-tooltip';
 
 const Tooltip = () => {
-  const tooltipRef = useRef(null);
-
   const { isVisible, getTooltipProps, getTriggerProps } = useTooltip({
-    tooltipRef,
     isVisible: false,
     delayMilliseconds: 500
   });
@@ -38,8 +34,8 @@ const Tooltip = () => {
 
   return (
     <>
-      <div {...getTooltipProps({ ref: tooltipRef, style: styles })}>Tooltip</div>
-      <button {...getTriggerProps({ ref: triggerRef })}>Trigger</button>
+      <div {...getTooltipProps({ style: styles })}>Tooltip</div>
+      <button {...getTriggerProps()}>Trigger</button>
     </>
   );
 };
@@ -48,14 +44,11 @@ const Tooltip = () => {
 ### TooltipContainer
 
 ```jsx static
-import { useRef } from 'react';
 import { TooltipContainer } from '@zendeskgarden/container-tooltip';
 
 const Tooltip = () => {
-  const tooltipRef = useRef(null);
-
   return (
-    <TooltipContainer tooltipRef={tooltipRef} isVisible={false} delayMilliseconds={500}>
+    <TooltipContainer isVisible={false} delayMilliseconds={500}>
       {({ isVisible, getTooltipProps, getTriggerProps }) => {
         const styles = {
           visibility: isVisible ? 'visible' : 'hidden',
@@ -69,7 +62,6 @@ const Tooltip = () => {
           <>
             <div
               {...getTooltipProps({
-                ref: tooltipRef,
                 style: styles
               })}
             >
