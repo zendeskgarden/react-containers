@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.2](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-tooltip@0.2.1...@zendeskgarden/container-tooltip@0.2.2) (2019-08-02)
+
+
+### Bug Fixes
+
+* **tooltip:** don't pass in a ref as it's not actually needed ([#82](https://github.com/zendeskgarden/react-containers/issues/82)) ([75c77bc](https://github.com/zendeskgarden/react-containers/commit/75c77bc))
+
+
+
+
+
 ## [0.2.1](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-tooltip@0.2.0...@zendeskgarden/container-tooltip@0.2.1) (2019-07-25)
 
 **Note:** Version bump only for package @zendeskgarden/container-tooltip
