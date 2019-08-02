@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React, { useRef } from 'react';
+import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 
@@ -17,17 +17,14 @@ describe('TooltipContainer', () => {
   const TOOLTIP_ID = 'test';
 
   const BasicExample = props => {
-    const tooltipRef = useRef(null);
-
     return (
-      <TooltipContainer tooltipRef={tooltipRef} id={TOOLTIP_ID} {...props}>
+      <TooltipContainer id={TOOLTIP_ID} {...props}>
         {({ getTooltipProps, getTriggerProps }) => (
           <>
             <div {...getTriggerProps({ 'data-test-id': 'trigger' })}>trigger</div>
             <div
               {...getTooltipProps({
-                'data-test-id': 'tooltip',
-                ref: tooltipRef
+                'data-test-id': 'tooltip'
               })}
             >
               tooltip

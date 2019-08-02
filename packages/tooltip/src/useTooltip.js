@@ -5,12 +5,13 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { composeEventHandlers, generateId, KEY_CODES } from '@zendeskgarden/container-utilities';
 
-export function useTooltip({ tooltipRef, delayMilliseconds = 500, id, isVisible } = {}) {
+export function useTooltip({ delayMilliseconds = 500, id, isVisible } = {}) {
   const [visibility, setVisibility] = useState(isVisible);
   const [_id] = useState(id || generateId('garden-tooltip-container'));
+  const isMounted = useRef(false);
 
   let openTooltipTimeout;
   let closeTooltipTimeout;
@@ -19,7 +20,7 @@ export function useTooltip({ tooltipRef, delayMilliseconds = 500, id, isVisible 
     clearTimeout(closeTooltipTimeout);
 
     openTooltipTimeout = setTimeout(() => {
-      if (tooltipRef.current) {
+      if (isMounted.current) {
         setVisibility(true);
       }
     }, delayMs);
@@ -29,11 +30,22 @@ export function useTooltip({ tooltipRef, delayMilliseconds = 500, id, isVisible 
     clearTimeout(openTooltipTimeout);
 
     closeTooltipTimeout = setTimeout(() => {
-      if (tooltipRef.current) {
+      if (isMounted.current) {
         setVisibility(false);
       }
     }, delayMs);
   };
+
+  // Sometimes the timeout will call setVisibility even after unmount and cleanup
+  // reproducable when running tests, happens when fast switching in storybook.
+  // May be related https://github.com/facebook/react/pull/15650
+  useEffect(() => {
+    isMounted.current = true;
+
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
 
   // Clean up stray timeouts if tooltip unmounts
   useEffect(() => {
