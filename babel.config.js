@@ -15,6 +15,10 @@ module.exports = {
     ],
     '@babel/preset-react'
   ],
-  plugins: ['@babel/plugin-transform-object-assign', '@babel/plugin-proposal-class-properties'],
+  plugins: [
+    '@babel/plugin-transform-object-assign',
+    '@babel/plugin-proposal-class-properties',
+    'babel-plugin-styled-components'
+  ],
   sourceType: 'unambiguous'
 };
