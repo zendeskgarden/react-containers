@@ -5,25 +5,22 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
+import { useRef } from 'react';
 import PropTypes from 'prop-types';
 
 import { useFocusVisible } from './useFocusVisible';
 
-export function FocusVisibleContainer({
-  scope,
-  relativeDocument,
-  className,
-  dataAttribute,
-  children
-}) {
-  useFocusVisible({ scope, relativeDocument, className, dataAttribute });
+export function FocusVisibleContainer({ children, render = children, ...options }) {
+  const scopeRef = useRef();
 
-  return children;
+  useFocusVisible({ scope: scopeRef, ...options });
+
+  return render({ ref: scopeRef });
 }
 
 FocusVisibleContainer.propTypes = {
-  children: PropTypes.node,
-  scope: PropTypes.object.isRequired,
+  children: PropTypes.func,
+  render: PropTypes.func,
   relativeDocument: PropTypes.object,
   className: PropTypes.string,
   dataAttribute: PropTypes.string

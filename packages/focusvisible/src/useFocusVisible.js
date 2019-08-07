@@ -6,7 +6,7 @@
  */
 
 /**
- * Inspired by the [WICG/focus-visible](https://github.com/WICG/focus-visible)
+ * A React "hookification" of the [WICG/focus-visible](https://github.com/WICG/focus-visible)
  * `:focus-visible` polyfill.
  */
 
@@ -34,6 +34,7 @@ export function useFocusVisible({
   className = 'garden-focus-visible',
   dataAttribute = 'data-garden-focus-visible'
 } = {}) {
+  // console.log(scope.current)
   if (!scope) {
     throw new Error('Error: the useFocusVisible() hook requires a "scope" property');
   }
@@ -42,6 +43,10 @@ export function useFocusVisible({
   const hadFocusVisibleRecently = useRef(false);
   const hadFocusVisibleRecentlyTimeout = useRef(null);
 
+  /**
+   * Helper function for legacy browsers and iframes which sometimes focus
+   * elements like document, body, and non-interactive SVG.
+   */
   const isValidFocusTarget = useCallback(
     el => {
       if (
@@ -60,6 +65,11 @@ export function useFocusVisible({
     [scope]
   );
 
+  /**
+   * Computes whether the given element should automatically trigger the
+   * `garden-focus-visible` class being added, i.e. whether it should always match
+   * `:focus-visible` when focused.
+   */
   const focusTriggersKeyboardModality = useCallback(el => {
     const type = el.type;
     const tagName = el.tagName;
@@ -81,6 +91,9 @@ export function useFocusVisible({
     return false;
   }, []);
 
+  /**
+   * Whether the given element is currently :focus-visible
+   */
   const isFocused = useCallback(
     el => {
       if (el && (el.classList.contains(className) || el.hasAttribute(dataAttribute))) {
@@ -92,6 +105,10 @@ export function useFocusVisible({
     [className, dataAttribute]
   );
 
+  /**
+   * Add the `:focus-visible` class to the given element if it was not added by
+   * the consumer.
+   */
   const addFocusVisibleClass = useCallback(
     el => {
       if (isFocused(el)) {
@@ -104,6 +121,9 @@ export function useFocusVisible({
     [className, dataAttribute, isFocused]
   );
 
+  /**
+   * Remove the `:focus-visible` class from the given element.
+   */
   const removeFocusVisibleClass = useCallback(
     el => {
       el.classList.remove(className);
@@ -112,6 +132,13 @@ export function useFocusVisible({
     [className, dataAttribute]
   );
 
+  /**
+   * If the most recent user interaction was via the keyboard;
+   * and the key press did not include a meta, alt/option, or control key;
+   * then the modality is keyboard. Otherwise, the modality is not keyboard.
+   * Apply `:focus-visible` to any current active element and keep track
+   * of our keyboard modality state with `hadKeyboardEvent`.
+   */
   const onKeyDown = useCallback(
     e => {
       if (e.metaKey || e.altKey || e.ctrlKey) {
@@ -127,12 +154,27 @@ export function useFocusVisible({
     [isValidFocusTarget, relativeDocument.activeElement, addFocusVisibleClass]
   );
 
+  /**
+   * If at any point a user clicks with a pointing device, ensure that we change
+   * the modality away from keyboard.
+   * This avoids the situation where a user presses a key on an already focused
+   * element, and then clicks on a different element, focusing it with a
+   * pointing device, while we still think we're in keyboard modality.
+   */
   const onPointerDown = useCallback(() => {
     hadKeyboardEvent.current = false;
   }, []);
 
+  /**
+   * On `focus`, add the `:focus-visible` styling to the target if:
+   * - the target received focus as a result of keyboard navigation, or
+   * - the event target is an element that will likely require interaction
+   *   via the keyboard (e.g. a text box)
+   * @param {Event} e
+   */
   const onFocus = useCallback(
     e => {
+      // Prevent IE from focusing the document or HTML element.
       if (!isValidFocusTarget(e.target)) {
         return;
       }
@@ -144,6 +186,9 @@ export function useFocusVisible({
     [addFocusVisibleClass, focusTriggersKeyboardModality, isValidFocusTarget]
   );
 
+  /**
+   * On `blur`, remove the `:focus-visible` styling from the target.
+   */
   const onBlur = useCallback(
     e => {
       if (!isValidFocusTarget(e.target)) {
@@ -151,6 +196,11 @@ export function useFocusVisible({
       }
 
       if (isFocused(e.target)) {
+        /**
+         * To detect a tab/window switch, we look for a blur event
+         * followed rapidly by a visibility change. If we don't see
+         * a visibility change within 100ms, it's probably a regular focus change.
+         */
         hadFocusVisibleRecently.current = true;
 
         clearTimeout(hadFocusVisibleRecentlyTimeout.current);
@@ -165,6 +215,13 @@ export function useFocusVisible({
     [isFocused, isValidFocusTarget, removeFocusVisibleClass]
   );
 
+  /**
+   * When the polfyill first loads, assume the user is in keyboard modality.
+   * If any event is received from a pointing device (e.g. mouse, pointer,
+   * touch), turn off keyboard modality.
+   *
+   * This accounts for situations where focus enters the page from the URL bar.
+   */
   const onInitialPointerMove = useCallback(
     e => {
       if (e.target.nodeName && e.target.nodeName.toLowerCase() === 'html') {
@@ -179,6 +236,12 @@ export function useFocusVisible({
     [removeInitialPointerMoveListeners]
   );
 
+  /**
+   * Add a group of listeners to detect usage of any pointing devices.
+   * These listeners will be added when the polyfill first loads, and anytime
+   * the window is blurred, so that they are active when the window regains
+   * focus.
+   */
   const addInitialPointerMoveListeners = useCallback(() => {
     relativeDocument.addEventListener('mousemove', onInitialPointerMove);
     relativeDocument.addEventListener('mousedown', onInitialPointerMove);
@@ -203,9 +266,13 @@ export function useFocusVisible({
     relativeDocument.removeEventListener('touchend', onInitialPointerMove);
   }, [onInitialPointerMove, relativeDocument]);
 
-  /* Unable to mock visibilityState in JSDom environment */
+  /**
+   * If the user changes tabs, keep track of whether or not the previously
+   * focused element had :focus-visible.
+   */
   /* istanbul ignore next */
   const onVisibilityChange = useCallback(() => {
+    /* Unable to mock visibilityState in JSDom environment */
     if (relativeDocument.visibilityState === 'hidden') {
       if (hadFocusVisibleRecently.current) {
         hadKeyboardEvent.current = true;
@@ -214,8 +281,18 @@ export function useFocusVisible({
   }, [relativeDocument]);
 
   useEffect(() => {
-    const currentScope = scope && scope.current;
+    const currentScope = scope.current;
 
+    if (!relativeDocument || !currentScope) {
+      return;
+    }
+
+    /**
+     * For some kinds of state, we are interested in changes at the
+     * global scope only. For example, global pointer input,
+     * global key presses and global visibility change should
+     * affect the state at every scope:
+     */
     relativeDocument.addEventListener('keydown', onKeyDown, true);
     relativeDocument.addEventListener('mousedown', onPointerDown, true);
     relativeDocument.addEventListener('pointerdown', onPointerDown, true);
@@ -224,9 +301,16 @@ export function useFocusVisible({
 
     addInitialPointerMoveListeners();
 
+    /**
+     * For focus and blur, we specifically care about state changes in the
+     * local scope. This is because focus / blur events that originate
+     * from within a shadow root are not re-dispatched from the host
+     * element if it was already the active element in its own scope:
+     */
     currentScope && currentScope.addEventListener('focus', onFocus, true);
     currentScope && currentScope.addEventListener('blur', onBlur, true);
 
+    // eslint-disable-next-line consistent-return
     return () => {
       relativeDocument.removeEventListener('keydown', onKeyDown);
       relativeDocument.removeEventListener('mousedown', onPointerDown);

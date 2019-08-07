@@ -125,11 +125,9 @@ storiesOf('FocusVisible Container', module)
     return <Selection />;
   })
   .add('FocusVisibleContainer', () => {
-    const Example = () => {
-      const ref = useRef();
-
-      return (
-        <FocusVisibleContainer scope={ref}>
+    return (
+      <FocusVisibleContainer>
+        {({ ref }) => (
           <StyledWrapper ref={ref}>
             <div>
               <StyledCustomFocus as="button">Hello world</StyledCustomFocus>
@@ -138,9 +136,7 @@ storiesOf('FocusVisible Container', module)
               <StyledCustomFocus as="input" />
             </div>
           </StyledWrapper>
-        </FocusVisibleContainer>
-      );
-    };
-
-    return <Example />;
+        )}
+      </FocusVisibleContainer>
+    );
   });

@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React, { useRef } from 'react';
+import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 
 import { FocusVisibleContainer, useFocusVisible } from './';
@@ -14,15 +14,15 @@ jest.useFakeTimers();
 
 describe('FocusVisibleContainer', () => {
   const Example = () => {
-    const ref = useRef();
-
     return (
-      <FocusVisibleContainer scope={ref}>
-        <div ref={ref} data-test-id="wrapper">
-          <button data-test-id="button" tabIndex="0"></button>
-          <input data-test-id="input" />
-          <textarea data-test-id="textarea"></textarea>
-        </div>
+      <FocusVisibleContainer>
+        {({ ref }) => (
+          <div ref={ref} data-test-id="wrapper">
+            <button data-test-id="button" tabIndex="0"></button>
+            <input data-test-id="input" />
+            <textarea data-test-id="textarea"></textarea>
+          </div>
+        )}
       </FocusVisibleContainer>
     );
   };
@@ -152,15 +152,11 @@ describe('FocusVisibleContainer', () => {
   });
 
   describe('Elements with keyboard modality', () => {
-    const KeyboardModalityExample = props => {
-      const ref = useRef();
-
-      return (
-        <FocusVisibleContainer scope={ref}>
-          <div ref={ref} data-test-id="wrapper" {...props} />
-        </FocusVisibleContainer>
-      );
-    };
+    const KeyboardModalityExample = props => (
+      <FocusVisibleContainer>
+        {({ ref }) => <div ref={ref} data-test-id="wrapper" {...props} />}
+      </FocusVisibleContainer>
+    );
 
     it('applies focus-visible to input with valid type', () => {
       const { getByTestId } = render(
