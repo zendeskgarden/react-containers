@@ -19,6 +19,7 @@ to install.
 | [`@zendeskgarden/container-buttongroup`](packages/buttongroup)     | [![npm version][buttongroup npm version]][buttongroup npm link]     | [![Dependency Status][buttongroup dependency status]][buttongroup dependency link]     |
 | [`@zendeskgarden/container-field`](packages/field)                 | [![npm version][field npm version]][field npm link]                 | [![Dependency Status][field dependency status]][field dependency link]                 |
 | [`@zendeskgarden/container-focusjail`](packages/focusjail)         | [![npm version][focusjail npm version]][focusjail npm link]         | [![Dependency Status][focusjail dependency status]][focusjail dependency link]         |
+| [`@zendeskgarden/container-focusvisible`](packages/focusvisible)   | [![npm version][focusvisible npm version]][focusvisible npm link]   | [![Dependency Status][focusvisible dependency status]][focusvisible dependency link]   |
 | [`@zendeskgarden/container-keyboardfocus`](packages/keyboardfocus) | [![npm version][keyboardfocus npm version]][keyboardfocus npm link] | [![Dependency Status][keyboardfocus dependency status]][keyboardfocus dependency link] |
 | [`@zendeskgarden/container-modal`](packages/modal)                 | [![npm version][modal npm version]][modal npm link]                 | [![Dependency Status][modal dependency status]][modal dependency link]                 |
 | [`@zendeskgarden/container-pagination`](packages/pagination)       | [![npm version][pagination npm version]][pagination npm link]       | [![Dependency Status][pagination dependency status]][pagination dependency link]       |
@@ -48,6 +49,10 @@ to install.
 [focusjail npm link]: https://www.npmjs.com/package/@zendeskgarden/container-focusjail
 [focusjail dependency status]: https://img.shields.io/david/zendeskgarden/react-containers.svg?path=packages/focusjail&style=flat-square
 [focusjail dependency link]: https://david-dm.org/zendeskgarden/react-containers?path=packages/focusjail
+[focusvisible npm version]: https://img.shields.io/npm/v/@zendeskgarden/container-focusvisible.svg?style=flat-square
+[focusvisible npm link]: https://www.npmjs.com/package/@zendeskgarden/container-focusvisible
+[focusvisible dependency status]: https://img.shields.io/david/zendeskgarden/react-containers.svg?path=packages/focusvisible&style=flat-square
+[focusvisible dependency link]: https://david-dm.org/zendeskgarden/react-containers?path=packages/focusvisible
 [keyboardfocus npm version]: https://img.shields.io/npm/v/@zendeskgarden/container-keyboardfocus.svg?style=flat-square
 [keyboardfocus npm link]: https://www.npmjs.com/package/@zendeskgarden/container-keyboardfocus
 [keyboardfocus dependency status]: https://img.shields.io/david/zendeskgarden/react-containers.svg?path=packages/keyboardfocus&style=flat-square
