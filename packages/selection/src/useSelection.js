@@ -158,9 +158,10 @@ export function useSelection({
     if (controlledFocusedItem !== undefined) {
       const focusedIndex = items.indexOf(controlledFocusedItem);
 
+      console.log('focus effect being called');
       refs[focusedIndex] && refs[focusedIndex].current.focus();
     }
-  }, [controlledFocusedItem, items, refs]);
+  }, [controlledFocusedItem]);
 
   useEffect(() => {
     if (selectedItem === undefined && defaultSelectedIndex !== undefined) {
