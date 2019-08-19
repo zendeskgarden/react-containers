@@ -158,10 +158,9 @@ export function useSelection({
     if (controlledFocusedItem !== undefined) {
       const focusedIndex = items.indexOf(controlledFocusedItem);
 
-      console.log('focus effect being called');
       refs[focusedIndex] && refs[focusedIndex].current.focus();
     }
-  }, [controlledFocusedItem]);
+  }, [controlledFocusedItem]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (selectedItem === undefined && defaultSelectedIndex !== undefined) {
