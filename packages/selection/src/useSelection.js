@@ -160,7 +160,7 @@ export function useSelection({
 
       refs[focusedIndex] && refs[focusedIndex].current.focus();
     }
-  }, [controlledFocusedItem, items, refs]);
+  }, [controlledFocusedItem]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (selectedItem === undefined && defaultSelectedIndex !== undefined) {
