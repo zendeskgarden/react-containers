@@ -16,10 +16,7 @@ module.exports = {
     PACKAGE_VERSION: 'version'
   },
   moduleFileExtensions: ['js', 'ts', 'tsx'],
-  setupFilesAfterEnv: [
-    '<rootDir>/utils/test/jest.setup.js',
-    '@testing-library/react/cleanup-after-each'
-  ],
+  setupFilesAfterEnv: ['<rootDir>/utils/test/jest.setup.js'],
   collectCoverageFrom: [
     '<rootDir>/packages/*/src/**/*.{js,jsx}',
     '!<rootDir>/packages/*/src/index.js',
