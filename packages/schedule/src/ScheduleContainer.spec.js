@@ -53,12 +53,13 @@ describe('ScheduleContainer', () => {
 
   it('updates elapsed render prop on each raf call', () => {
     const now = Date.now();
-    const spy = jest.spyOn(Date, 'now').mockImplementationOnce(() => now - 1000);
     const { getByTestId } = render(<BasicExample />);
+    let spy;
 
     act(() => {
+      spy = jest.spyOn(Date, 'now').mockImplementationOnce(() => now - 1000);
       jest.runOnlyPendingTimers();
-      jest.advanceTimersByTime(100);
+      jest.advanceTimersByTime(1000);
     });
 
     expect(getByTestId('schedule').textContent).not.toBe('0');
