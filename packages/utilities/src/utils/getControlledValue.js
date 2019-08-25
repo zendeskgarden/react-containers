@@ -9,6 +9,7 @@
  * Utility to determine controlled vs uncontrolled values
  */
 export function getControlledValue(...values) {
+  // eslint-disable-next-line no-unused-vars
   for (const value of values) {
     if (value !== undefined) {
       return value;
