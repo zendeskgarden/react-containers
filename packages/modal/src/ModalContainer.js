@@ -18,5 +18,7 @@ ModalContainer.propTypes = {
   render: PropTypes.func,
   onClose: PropTypes.func,
   modalRef: PropTypes.object.isRequired,
-  id: PropTypes.string
+  id: PropTypes.string,
+  focusOnMount: PropTypes.bool,
+  environment: PropTypes.object
 };
