@@ -9,7 +9,7 @@ import { useState } from 'react';
 import { composeEventHandlers, generateId, KEY_CODES } from '@zendeskgarden/container-utilities';
 import { useFocusJail } from '@zendeskgarden/container-focusjail';
 
-export function useModal({ onClose, modalRef, id: _id } = {}) {
+export function useModal({ onClose, modalRef, id: _id, focusOnMount, environment } = {}) {
   const [idPrefix] = useState(_id || generateId('garden-modal-container'));
   const titleId = `${idPrefix}--title`;
   const contentId = `${idPrefix}--content`;
@@ -76,7 +76,7 @@ export function useModal({ onClose, modalRef, id: _id } = {}) {
     };
   };
 
-  const { getContainerProps } = useFocusJail({ containerRef: modalRef });
+  const { getContainerProps } = useFocusJail({ containerRef: modalRef, focusOnMount, environment });
 
   return {
     getBackdropProps,
