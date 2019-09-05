@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-modal@0.2.1...@zendeskgarden/container-modal@0.3.0) (2019-09-05)
+
+
+### Features
+
+* **modal:** Support passing in focusOnMount and environment for the useModal hook ([#97](https://github.com/zendeskgarden/react-containers/issues/97)) ([b53d265](https://github.com/zendeskgarden/react-containers/commit/b53d265))
+
+
+
+
+
 ## [0.2.1](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-modal@0.2.0...@zendeskgarden/container-modal@0.2.1) (2019-07-25)
 
 **Note:** Version bump only for package @zendeskgarden/container-modal
