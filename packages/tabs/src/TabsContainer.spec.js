@@ -18,7 +18,6 @@ describe('TabsContainer', () => {
   const getPanelId = index => `${idPrefix}--panel:${index}`;
   const getTabId = index => `${idPrefix}--tab:${index}`;
 
-  // eslint-disable-next-line react/prop-types
   const BasicExample = ({ vertical, onSelect, defaultSelectedIndex = 0 } = {}) => (
     <TabsContainer
       vertical={vertical}
@@ -142,7 +141,7 @@ describe('TabsContainer', () => {
     it('throws if no index prop is applied', () => {
       const originalError = console.error;
 
-      console.error = jest.fn(); // eslint-disable-line no-console
+      console.error = jest.fn();
 
       expect(() => {
         render(<TabsContainer>{({ getTabProps }) => <div {...getTabProps()} />}</TabsContainer>);
@@ -156,7 +155,7 @@ describe('TabsContainer', () => {
     it('throws if no index prop is applied', () => {
       const originalError = console.error;
 
-      console.error = jest.fn(); // eslint-disable-line no-console
+      console.error = jest.fn();
 
       expect(() => {
         render(
@@ -170,7 +169,7 @@ describe('TabsContainer', () => {
     it('throws if no item prop is applied', () => {
       const originalError = console.error;
 
-      console.error = jest.fn(); // eslint-disable-line no-console
+      console.error = jest.fn();
 
       expect(() => {
         render(

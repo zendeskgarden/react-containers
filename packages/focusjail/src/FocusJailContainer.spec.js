@@ -16,10 +16,8 @@ describe('FocusJailContainer', () => {
   let focusSpy;
   let containerReference;
 
-  // eslint-disable-next-line react/prop-types
   const BasicExample = ({ focusOnMount, focusElem = focusSpy, environment, ...props } = {}) => {
     const containerRef = useRef(null);
-    // eslint-disable-next-line react/prop-types
     const focusableChildren = props.focusableChildren || (
       <>
         <button data-test-id="button">focusable button</button>

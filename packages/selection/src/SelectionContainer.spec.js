@@ -17,7 +17,6 @@ jest.useFakeTimers();
 describe('SelectionContainer', () => {
   const itemValues = ['Item-1', 'Item-2', 'Item-3'];
 
-  /* eslint-disable react/prop-types */
   const BasicExample = ({
     direction,
     defaultFocusedIndex,
@@ -27,7 +26,6 @@ describe('SelectionContainer', () => {
     onFocus,
     onSelect
   } = {}) => (
-    /* eslint-enable react/prop-types */
     <SelectionContainer
       direction={direction}
       defaultFocusedIndex={defaultFocusedIndex}
@@ -422,7 +420,7 @@ describe('SelectionContainer', () => {
     it('throws if no item is applied', () => {
       const originalError = console.error;
 
-      console.error = jest.fn(); // eslint-disable-line no-console
+      console.error = jest.fn();
 
       expect(() => {
         itemProps();
@@ -434,7 +432,7 @@ describe('SelectionContainer', () => {
     it('throws if no focusRef prop is applied', () => {
       const originalError = console.error;
 
-      console.error = jest.fn(); // eslint-disable-line no-console
+      console.error = jest.fn();
 
       expect(() => {
         itemProps({ item: 'example' });

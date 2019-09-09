@@ -15,7 +15,6 @@ describe('FocusJailContainer', () => {
   const MODAL_ID = 'TEST_ID';
   const modalRef = createRef(null);
 
-  // eslint-disable-next-line react/prop-types
   const BasicExample = ({ onClose }) => (
     <ModalContainer modalRef={modalRef} onClose={onClose} id={MODAL_ID}>
       {({
