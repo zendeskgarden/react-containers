@@ -20,7 +20,6 @@ storiesOf('Selection Containers', module)
     const items = ['One', 'Two', 'Three'];
     const isRtl = boolean('Enable RTL', false);
 
-    // eslint-disable-next-line react/prop-types
     const Selection = ({ direction }) => {
       const { focusedItem, selectedItem, getContainerProps, getItemProps } = useSelection({
         direction,

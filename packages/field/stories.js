@@ -15,7 +15,6 @@ import { FieldContainer, useField } from './src';
 storiesOf('Field Container', module)
   .addDecorator(withKnobs)
   .add('useField', () => {
-    // eslint-disable-next-line react/prop-types
     const Field = ({ id }) => {
       const { getLabelProps, getInputProps, getHintProps } = useField(id);
       const [value, setVal] = React.useState('');
