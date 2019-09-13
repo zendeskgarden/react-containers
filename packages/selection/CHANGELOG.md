@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.5](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-selection@1.1.4...@zendeskgarden/container-selection@1.1.5) (2019-09-13)
+
+
+### Bug Fixes
+
+* **selection:** reducer number of renders when controlled ([#100](https://github.com/zendeskgarden/react-containers/issues/100)) ([4e39d72](https://github.com/zendeskgarden/react-containers/commit/4e39d72))
+
+
+
+
+
 ## [1.1.4](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-selection@1.1.3...@zendeskgarden/container-selection@1.1.4) (2019-09-05)
 
 **Note:** Version bump only for package @zendeskgarden/container-selection
