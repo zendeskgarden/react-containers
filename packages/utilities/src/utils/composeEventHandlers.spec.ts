@@ -10,7 +10,7 @@ import { composeEventHandlers } from './composeEventHandlers';
 describe('composeEventHandlers', () => {
   it('should not call secondary event if primary is defaultPrevented', () => {
     const secondaryEvent = jest.fn();
-    const composedEvents = composeEventHandlers(event => {
+    const composedEvents = composeEventHandlers((event: any) => {
       event.defaultPrevented = true;
     }, secondaryEvent);
 
