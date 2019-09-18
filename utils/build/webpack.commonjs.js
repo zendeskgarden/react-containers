@@ -14,11 +14,14 @@ const babelOptions = require(path.resolve('../../babel.config.js'));
 
 const options = {
   mode: 'production',
-  entry: path.resolve('src', 'index.js'),
+  entry: path.resolve(packageManifest['zendeskgarden:src']),
   output: {
     path: path.resolve('dist'),
     filename: 'index.js',
     libraryTarget: 'commonjs'
+  },
+  resolve: {
+    extensions: ['.tsx', '.ts', '.js']
   },
   devtool: 'source-map',
   plugins: [
@@ -45,7 +48,23 @@ found at http://www.apache.org/licenses/LICENSE-2.0
         use: [
           {
             loader: 'babel-loader',
-            options: babelOptions
+            options: { ...babelOptions, envName: 'production' }
+          }
+        ]
+      },
+      {
+        test: /\.tsx?$/u,
+        exclude: /node_modules/u,
+        use: [
+          {
+            loader: 'babel-loader',
+            options: { ...babelOptions, envName: 'production' }
+          },
+          {
+            loader: 'ts-loader',
+            options: {
+              configFile: path.resolve('tsconfig.build.json')
+            }
           }
         ]
       }
