@@ -25,6 +25,5 @@
       "enabled": false
     }
   ],
-  "reviewers": ["team:maintainers"],
   "schedule": ["every 4 weeks on Wednesday"]
 }
