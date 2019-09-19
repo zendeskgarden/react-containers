@@ -6,12 +6,43 @@
  */
 
 const webpack = require('webpack');
+const path = require('path');
+const babelOptions = require(path.resolve(__dirname, '../babel.config.js'));
 
 module.exports = ({ config }) => {
+  config.resolve.extensions.push('.ts', '.tsx');
+
   config.module.rules.push({
     test: /stories.js$/u,
     loaders: [require.resolve('@storybook/addon-storysource/loader')],
     enforce: 'pre'
+  });
+
+  config.module.rules.push({
+    test: /\.tsx?$/u,
+    loaders: [
+      {
+        loader: 'eslint-loader'
+      }
+    ],
+    enforce: 'pre'
+  });
+
+  config.module.rules.push({
+    test: /\.tsx?$/u,
+    exclude: /node_modules/u,
+    use: [
+      {
+        loader: 'babel-loader',
+        options: { ...babelOptions, envName: 'production' }
+      },
+      {
+        loader: 'ts-loader',
+        options: {
+          configFile: path.resolve(__dirname, 'tsconfig.storybook.json')
+        }
+      }
+    ]
   });
 
   config.plugins.push(
