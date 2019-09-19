@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.1.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-schedule@1.0.0...@zendeskgarden/container-schedule@1.1.0) (2019-09-19)
+
+
+### Features
+
+* **utilities:** migrate container-utilities to TypeScript ([#103](https://github.com/zendeskgarden/react-containers/issues/103)) ([16583f4](https://github.com/zendeskgarden/react-containers/commit/16583f4))
+
+
+
+
+
 # [1.0.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-schedule@0.3.0...@zendeskgarden/container-schedule@1.0.0) (2019-06-27)
 
 
