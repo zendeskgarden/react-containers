@@ -3084,22 +3084,6 @@
   resolved "https://registry.yarnpkg.com/@types/stack-utils/-/stack-utils-1.0.1.tgz#0a851d3bd96498fa25c33ab7278ed3bd65f06c3e"
   integrity sha512-l42BggppR6zLmpfU6fq9HEa2oGPEI8yrSPL3GITjfRInppYFahObbIQOQK3UGxEnyQpltZLaPe75046NOZQikw==
 
-"@types/storybook__addon-knobs@^5.0.4":
-  version "5.0.4"
-  resolved "https://registry.yarnpkg.com/@types/storybook__addon-knobs/-/storybook__addon-knobs-5.0.4.tgz#8d29b295459279a7a8e91cf2fffc99a3727258ea"
-  integrity sha512-B43R3SWGjQe/dyGpzjjCLloMBcxhHUtLOYv1EwIEiCBaZrz8h4ItdHA3yMX3GO6L6MyH9BVhNUUc9QzdfnyyjQ==
-  dependencies:
-    "@types/react" "*"
-    "@types/storybook__react" "*"
-
-"@types/storybook__react@*", "@types/storybook__react@^4.0.2":
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/@types/storybook__react/-/storybook__react-4.0.2.tgz#f36fb399574c662e79c1a0cf6e429b6ff730da40"
-  integrity sha512-U/+J5qccRdKFryvHkk1a0IeZaSIZLCmTwAQhTSDGeC3SPNIYPus+EtunBqP49r870l8czbfxtjeC3IL9P66ngQ==
-  dependencies:
-    "@types/react" "*"
-    "@types/webpack-env" "*"
-
 "@types/tapable@*":
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/@types/tapable/-/tapable-1.0.4.tgz#b4ffc7dc97b498c969b360a41eee247f82616370"
@@ -3126,11 +3110,6 @@
   integrity sha512-SudIN9TRJ+v8g5pTG8RRCqfqTMNqgWCKKd3vtynhGzkIIjxaicNAMuY5TRadJ6tzDu3Dotf3ngaMILtmOdmWEQ==
   dependencies:
     source-map "^0.6.1"
-
-"@types/webpack-env@*":
-  version "1.14.0"
-  resolved "https://registry.yarnpkg.com/@types/webpack-env/-/webpack-env-1.14.0.tgz#8edfc5f8e6eae20eeed3ca0d02974ed4ee5e4efc"
-  integrity sha512-Fv+0gYJzE/czLoRKq+gnXWr4yBpPM3tO3C8pDLFwqVKlMICQUq5OsxwwFZYDaVr7+L6mgNDp16iOcJHEz3J5RQ==
 
 "@types/webpack-sources@*":
   version "0.1.5"
