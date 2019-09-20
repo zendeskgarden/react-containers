@@ -32,12 +32,18 @@ describe('AccordionContainer', () => {
   const sections = Array(3).fill();
   const CONTAINER_ID_PREFIX = 'test';
 
-  const BasicExample = ({ expandedSections = [], expandable = true, collapsible = true } = {}) => (
+  const BasicExample = ({
+    expandedSections = [],
+    expandable = true,
+    collapsible = true,
+    onChange
+  } = {}) => (
     <AccordionContainer
       idPrefix={CONTAINER_ID_PREFIX}
       expandedSections={expandedSections}
       expandable={expandable}
       collapsible={collapsible}
+      onChange={onChange}
     >
       {({ getHeaderProps, getTriggerProps, getPanelProps }) => (
         <>
@@ -85,6 +91,17 @@ describe('AccordionContainer', () => {
       )}
     </AccordionContainer>
   );
+
+  it('calls onChange with correct sections on section selection', () => {
+    const onChangeSpy = jest.fn();
+
+    const { getAllByTestId } = render(<BasicExample onChange={onChangeSpy} />);
+    const triggers = getAllByTestId('trigger');
+
+    fireEvent.click(triggers[2]);
+
+    expect(onChangeSpy).toHaveBeenCalledWith([2]);
+  });
 
   describe('getHeaderProps', () => {
     it('applies the correct accessibility role', () => {
