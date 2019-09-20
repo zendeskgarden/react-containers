@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-accordion@0.1.4...@zendeskgarden/container-accordion@0.2.0) (2019-09-20)
+
+
+### Features
+
+* **accordion:** allow useAccordion hook to become controlled ([#104](https://github.com/zendeskgarden/react-containers/issues/104)) ([841a2bd](https://github.com/zendeskgarden/react-containers/commit/841a2bd))
+
+
+
+
+
 ## [0.1.4](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-accordion@0.1.3...@zendeskgarden/container-accordion@0.1.4) (2019-09-19)
 
 **Note:** Version bump only for package @zendeskgarden/container-accordion
