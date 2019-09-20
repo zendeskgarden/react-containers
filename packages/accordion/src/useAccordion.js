@@ -6,19 +6,29 @@
  */
 
 import { useState } from 'react';
-import { composeEventHandlers, generateId, KEY_CODES } from '@zendeskgarden/container-utilities';
+import {
+  composeEventHandlers,
+  generateId,
+  KEY_CODES,
+  getControlledValue
+} from '@zendeskgarden/container-utilities';
 
 export function useAccordion({
   idPrefix,
-  expandedSections = [],
+  expandedSections,
+  onChange,
   expandable = true,
   collapsible = true
 } = {}) {
-  const [prefix] = useState(idPrefix || generateId('garden-field-container'));
+  const [prefix] = useState(idPrefix || generateId('garden-accordion-container'));
   const TRIGGER_ID = `${prefix}--trigger`;
   const PANEL_ID = `${prefix}--panel`;
-  const [expandedState, setExpandedState] = useState(expandedSections);
-  const [disabledState, setDisabledState] = useState(collapsible ? [] : expandedSections);
+  const [expandedState, setExpandedState] = useState(expandedSections || []);
+
+  const controlledExpandedState = getControlledValue(onChange && expandedSections, expandedState);
+
+  const [disabledState, setDisabledState] = useState(collapsible ? [] : controlledExpandedState);
+
   const sections = [];
   const toggle = index => {
     const expanded = [];
@@ -28,9 +38,9 @@ export function useAccordion({
       let isExpanded = false;
 
       if (section === index) {
-        isExpanded = collapsible ? expandedState.indexOf(section) === -1 : true;
+        isExpanded = collapsible ? controlledExpandedState.indexOf(section) === -1 : true;
       } else if (expandable) {
-        isExpanded = expandedState.indexOf(section) !== -1;
+        isExpanded = controlledExpandedState.indexOf(section) !== -1;
       }
 
       if (isExpanded) {
@@ -42,7 +52,12 @@ export function useAccordion({
       }
     });
 
-    setExpandedState(expanded);
+    if (onChange) {
+      onChange(expanded);
+    } else {
+      setExpandedState(expanded);
+    }
+
     setDisabledState(disabled);
   };
 
@@ -77,7 +92,7 @@ export function useAccordion({
       tabIndex,
       'aria-controls': `${PANEL_ID}:${index}`,
       'aria-disabled': disabledState.indexOf(index) !== -1,
-      'aria-expanded': expandedState.indexOf(index) !== -1,
+      'aria-expanded': controlledExpandedState.indexOf(index) !== -1,
       onClick: composeEventHandlers(props.onClick, () => toggle(index)),
       onKeyDown: composeEventHandlers(props.onKeyDown, event => {
         if (event.keyCode === KEY_CODES.SPACE || event.keyCode === KEY_CODES.ENTER) {
@@ -99,7 +114,7 @@ export function useAccordion({
     return {
       id: `${PANEL_ID}:${index}`,
       role,
-      'aria-hidden': expandedState.indexOf(index) === -1,
+      'aria-hidden': controlledExpandedState.indexOf(index) === -1,
       'aria-labelledby': `${TRIGGER_ID}:${index}`,
       ...props
     };
@@ -109,7 +124,7 @@ export function useAccordion({
     getHeaderProps,
     getTriggerProps,
     getPanelProps,
-    expandedSections: expandedState,
+    expandedSections: controlledExpandedState,
     disabledSections: disabledState
   };
 }

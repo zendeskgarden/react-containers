@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React, { createRef } from 'react';
+import React, { createRef, useState } from 'react';
 
 import { storiesOf } from '@storybook/react';
 import { boolean, number, withKnobs } from '@storybook/addon-knobs';
@@ -21,6 +21,7 @@ storiesOf('Accordion Container', module)
       .map(() => createRef());
 
     const Accordion = ({ expandable = true, collapsible = true } = {}) => {
+      const [controlledExpandedSections, setControlledExpandedSections] = useState([0]);
       const {
         getHeaderProps,
         getTriggerProps,
@@ -28,9 +29,10 @@ storiesOf('Accordion Container', module)
         expandedSections,
         disabledSections
       } = useAccordion({
-        expandedSections: [0],
+        expandedSections: controlledExpandedSections,
         expandable,
-        collapsible
+        collapsible,
+        onChange: setControlledExpandedSections
       });
 
       return (
