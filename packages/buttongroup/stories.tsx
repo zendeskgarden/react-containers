@@ -13,14 +13,14 @@ import { withKnobs } from '@storybook/addon-knobs';
 import { ButtonGroupContainer, useButtonGroup } from './src';
 
 const buttons = ['Button 1', 'Button 2', 'Button 3'];
-const buttonRefs = buttons.map(() => createRef(null));
+const buttonRefs = buttons.map(() => createRef());
 
 storiesOf('ButtonGroup Container', module)
   .addDecorator(withKnobs)
   .add('useButtonGroup', () => {
     const ButtonGroup = () => {
-      const [controlledSelectedItem, setSelectedItem] = useState();
-      const { selectedItem, focusedItem, getButtonProps, getGroupProps } = useButtonGroup({
+      const [controlledSelectedItem, setSelectedItem] = useState<string>();
+      const { selectedItem, focusedItem, getButtonProps, getGroupProps } = useButtonGroup<string>({
         selectedItem: controlledSelectedItem,
         onSelect: newSelectedItem => setSelectedItem(newSelectedItem)
       });

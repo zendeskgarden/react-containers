@@ -12,11 +12,11 @@ import { ButtonGroupContainer } from './ButtonGroupContainer';
 
 describe('ButtonGroupContainer', () => {
   const buttons = ['button-1', 'button-2', 'button-3'];
-  const buttonRefs = buttons.map(() => createRef(null));
+  const buttonRefs = buttons.map(() => createRef());
 
   const BasicExample = () => (
     <ButtonGroupContainer>
-      {({ getGroupProps, getButtonProps, selectedKey, focusedKey }) => (
+      {({ getGroupProps, getButtonProps, selectedItem, focusedItem }) => (
         <div {...getGroupProps({ 'data-test-id': 'group' })}>
           {buttons.map((button, index) => (
             <div
@@ -25,9 +25,9 @@ describe('ButtonGroupContainer', () => {
                 item: button,
                 focusRef: buttonRefs[index],
                 'data-test-id': 'button',
-                'data-selected': button === selectedKey,
-                'data-focused': button === focusedKey
-              })}
+                'data-selected': button === selectedItem,
+                'data-focused': button === focusedItem
+              } as any)}
             >
               {button}
             </div>
