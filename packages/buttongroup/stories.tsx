@@ -34,10 +34,11 @@ storiesOf('ButtonGroup Container', module)
                 item: button,
                 focusRef: buttonRefs[index],
                 style: {
-                  boxShadow: button === focusedItem && 'inset 0 0 0 3px rgba(31,115,183, 0.35)',
+                  boxShadow:
+                    button === focusedItem ? 'inset 0 0 0 3px rgba(31,115,183, 0.35)' : 'inherit',
                   outline: 'none',
                   color: button === selectedItem ? '#fff' : '#1f73b7',
-                  background: button === selectedItem && '#144a75',
+                  background: button === selectedItem ? '#144a75' : 'inherit',
                   padding: '10px'
                 }
               })}
@@ -62,10 +63,11 @@ storiesOf('ButtonGroup Container', module)
                 item: button,
                 focusRef: buttonRefs[index],
                 style: {
-                  boxShadow: button === focusedItem && 'inset 0 0 0 3px rgba(31,115,183, 0.35)',
+                  boxShadow:
+                    button === focusedItem ? 'inset 0 0 0 3px rgba(31,115,183, 0.35)' : 'inherit',
                   outline: 'none',
                   color: button === selectedItem ? '#fff' : '#1f73b7',
-                  background: button === selectedItem && '#144a75',
+                  background: button === selectedItem ? '#144a75' : 'inherit',
                   padding: '10px'
                 }
               })}
