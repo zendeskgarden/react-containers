@@ -12,8 +12,6 @@ import { render, fireEvent } from '@testing-library/react';
 
 import { SelectionContainer, ISelectionContainerProps } from './SelectionContainer';
 
-jest.useFakeTimers();
-
 describe('SelectionContainer', () => {
   const itemValues = ['Item-1', 'Item-2', 'Item-3'];
 
