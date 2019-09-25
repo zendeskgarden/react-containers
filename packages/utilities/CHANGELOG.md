@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-utilities@0.2.0...@zendeskgarden/container-utilities@0.3.0) (2019-09-25)
+
+
+### Features
+
+* **selection|buttongroup:** migrate useSelection and useButtonGroup to TypeScript ([#105](https://github.com/zendeskgarden/react-containers/issues/105)) ([ae86a2d](https://github.com/zendeskgarden/react-containers/commit/ae86a2d))
+
+
+
+
+
 # [0.2.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-utilities@0.1.2...@zendeskgarden/container-utilities@0.2.0) (2019-09-19)
 
 
