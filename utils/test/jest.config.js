@@ -24,6 +24,9 @@ module.exports = {
   },
   moduleFileExtensions: [...defaults.moduleFileExtensions],
   setupFilesAfterEnv: ['<rootDir>/utils/test/jest.setup.js'],
+  moduleNameMapper: {
+    'garden-test-utils': '<rootDir>/utils/test/utilities.ts'
+  },
   collectCoverageFrom: [
     '<rootDir>/packages/*/src/**/*.{js,jsx,ts,tsx}',
     '!<rootDir>/packages/*/src/index.js',
