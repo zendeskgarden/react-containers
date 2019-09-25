@@ -6,18 +6,76 @@
  */
 
 import { useEffect, useReducer } from 'react';
-
 import {
   composeEventHandlers,
   getControlledValue,
   KEY_CODES
 } from '@zendeskgarden/container-utilities';
-import { DIRECTIONS } from './utils/DIRECTIONS';
-import { ACTIONS } from './utils/ACTIONS';
 
-function stateReducer(state, action) {
+interface IUseSelectionPropGetters<Item> {
+  getContainerProps: <T>(options?: T) => T & React.HTMLProps<any>;
+  getItemProps: <T extends IGetItemPropsOptions<Item>>(options: T, propGetterName?: string) => any;
+}
+
+export interface IUseSelectionState<Item> {
+  focusedItem?: Item;
+  selectedItem?: Item;
+}
+
+export interface IGetItemPropsOptions<Item> extends React.HTMLProps<any> {
+  selectedAriaKey?: string;
+  item: Item;
+  focusRef: React.RefObject<any>;
+  refKey?: string;
+}
+
+export type UseSelectionReturnValue<Item> = IUseSelectionState<Item> &
+  IUseSelectionPropGetters<Item>;
+
+export interface IUseSelectionProps<Item> {
+  direction?: 'horizontal' | 'vertical' | 'both';
+  defaultFocusedIndex?: number;
+  defaultSelectedIndex?: number;
+  rtl?: boolean;
+  selectedItem?: Item;
+  focusedItem?: Item;
+  onSelect?: (selectedItem: Item) => void;
+  onFocus?: (focusedItem?: Item) => void;
+}
+
+type onFocusCallback<Item> = (item?: Item) => void;
+type onSelectCallback<Item> = (item?: Item) => void;
+
+export type SELECTION_ACTION<Item> =
+  | { type: 'FOCUS'; onFocus?: onFocusCallback<Item>; payload?: any; focusedItem?: any }
+  | {
+      type: 'INCREMENT';
+      focusedItem?: any;
+      selectedItem?: any;
+      items: any[];
+      onFocus?: onFocusCallback<Item>;
+    }
+  | {
+      type: 'DECREMENT';
+      focusedItem?: any;
+      selectedItem?: any;
+      items: any[];
+      onFocus?: onFocusCallback<Item>;
+    }
+  | { type: 'HOME'; onFocus?: onFocusCallback<Item>; items: any[] }
+  | { type: 'END'; onFocus?: onFocusCallback<Item>; items: any[] }
+  | {
+      type: 'MOUSE_SELECT';
+      onSelect?: onSelectCallback<Item>;
+      onFocus?: onFocusCallback<Item>;
+      payload: any;
+    }
+  | { type: 'KEYBOARD_SELECT'; onSelect?: onSelectCallback<Item>; payload: any }
+  | { type: 'EXIT_WIDGET'; onFocus?: onFocusCallback<Item> };
+
+function stateReducer(state: IUseSelectionState<any>, action: SELECTION_ACTION<any>) {
   switch (action.type) {
-    case ACTIONS.FOCUS: {
+    case 'FOCUS': {
       if (action.onFocus) {
         if (action.payload !== action.focusedItem) {
           action.onFocus(action.payload);
@@ -28,7 +86,7 @@ function stateReducer(state, action) {
 
       return { ...state, focusedItem: action.payload };
     }
-    case ACTIONS.INCREMENT: {
+    case 'INCREMENT': {
       const controlledFocusedItem = getControlledValue(action.focusedItem, state.focusedItem);
       const controlledSelectedItem = getControlledValue(action.selectedItem, state.selectedItem);
       const currentItemIndex =
@@ -45,7 +103,7 @@ function stateReducer(state, action) {
 
       return { ...state, focusedItem: newFocusedItem };
     }
-    case ACTIONS.DECREMENT: {
+    case 'DECREMENT': {
       const controlledFocusedItem = getControlledValue(action.focusedItem, state.focusedItem);
       const controlledSelectedItem = getControlledValue(action.selectedItem, state.selectedItem);
       const currentItemIndex =
@@ -63,7 +121,7 @@ function stateReducer(state, action) {
 
       return { ...state, focusedItem: newFocusedItem };
     }
-    case ACTIONS.HOME: {
+    case 'HOME': {
       if (action.onFocus) {
         action.onFocus(action.items[0]);
 
@@ -72,7 +130,7 @@ function stateReducer(state, action) {
 
       return { ...state, focusedItem: action.items[0] };
     }
-    case ACTIONS.END: {
+    case 'END': {
       if (action.onFocus) {
         action.onFocus(action.items[action.items.length - 1]);
 
@@ -81,7 +139,7 @@ function stateReducer(state, action) {
 
       return { ...state, focusedItem: action.items[action.items.length - 1] };
     }
-    case ACTIONS.MOUSE_SELECT: {
+    case 'MOUSE_SELECT': {
       let isSelectControlled = false;
       let isFocusControlled = false;
 
@@ -111,7 +169,7 @@ function stateReducer(state, action) {
 
       return updatedState;
     }
-    case ACTIONS.KEYBOARD_SELECT: {
+    case 'KEYBOARD_SELECT': {
       if (action.onSelect) {
         action.onSelect(action.payload);
 
@@ -120,7 +178,7 @@ function stateReducer(state, action) {
 
       return { ...state, selectedItem: action.payload };
     }
-    case ACTIONS.EXIT_WIDGET: {
+    case 'EXIT_WIDGET': {
       if (action.onFocus) {
         action.onFocus(undefined);
 
@@ -139,8 +197,8 @@ function stateReducer(state, action) {
  *
  * https://www.w3.org/TR/wai-aria-practices/#kbd_roving_tabindex
  */
-export function useSelection({
-  direction = DIRECTIONS.HORIZONTAL,
+export function useSelection<Item = any>({
+  direction = 'horizontal',
   defaultFocusedIndex = 0,
   defaultSelectedIndex,
   rtl,
@@ -148,9 +206,9 @@ export function useSelection({
   focusedItem,
   onSelect,
   onFocus
-} = {}) {
-  const refs = [];
-  const items = [];
+}: IUseSelectionProps<Item> = {}): UseSelectionReturnValue<Item> {
+  const refs: React.MutableRefObject<any | null>[] = [];
+  const items: Item[] = [];
 
   const [state, dispatch] = useReducer(stateReducer, {
     selectedItem,
@@ -164,28 +222,28 @@ export function useSelection({
     if (controlledFocusedItem !== undefined) {
       const focusedIndex = items.indexOf(controlledFocusedItem);
 
-      refs[focusedIndex] && refs[focusedIndex].current.focus();
+      refs[focusedIndex] && refs[focusedIndex].current!.focus();
     }
   }, [controlledFocusedItem]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (selectedItem === undefined && defaultSelectedIndex !== undefined) {
       dispatch({
-        type: ACTIONS.KEYBOARD_SELECT,
+        type: 'KEYBOARD_SELECT',
         payload: items[defaultSelectedIndex],
-        items,
         onSelect
       });
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const getContainerProps = ({ role = 'listbox', ...other } = {}) => ({
-    role,
-    'aria-orientation': direction === DIRECTIONS.BOTH ? undefined : direction,
-    'data-garden-container-id': 'selection',
-    'data-garden-container-version': PACKAGE_VERSION,
-    ...other
-  });
+  const getContainerProps = ({ role = 'listbox', ...other }: React.HTMLProps<any> = {}) =>
+    ({
+      role,
+      'aria-orientation': direction === 'both' ? undefined : direction,
+      'data-garden-container-id': 'selection',
+      'data-garden-container-version': PACKAGE_VERSION,
+      ...other
+    } as any);
 
   const getItemProps = (
     {
@@ -198,7 +256,7 @@ export function useSelection({
       focusRef,
       refKey = 'ref',
       ...other
-    } = {},
+    }: IGetItemPropsOptions<Item> = {} as any,
     propGetterName = 'getItemProps'
   ) => {
     if (item === undefined) {
@@ -226,9 +284,8 @@ export function useSelection({
         items.indexOf(item) === defaultFocusedIndex)
         ? 0
         : -1;
-    const verticalDirection = direction === DIRECTIONS.VERTICAL || direction === DIRECTIONS.BOTH;
-    const horizontalDirection =
-      direction === DIRECTIONS.HORIZONTAL || direction === DIRECTIONS.BOTH;
+    const verticalDirection = direction === 'vertical' || direction === 'both';
+    const horizontalDirection = direction === 'horizontal' || direction === 'both';
 
     return {
       role,
@@ -236,25 +293,25 @@ export function useSelection({
       [selectedAriaKey]: isSelected,
       [refKey]: focusRef,
       onFocus: composeEventHandlers(onFocusCallback, () => {
-        dispatch({ type: ACTIONS.FOCUS, payload: item, items, focusedItem, onFocus });
+        dispatch({ type: 'FOCUS', payload: item, focusedItem, onFocus });
       }),
-      onBlur: e => {
+      onBlur: (e: React.FocusEvent<HTMLElement>) => {
         if (e.target.tabIndex === 0) {
-          dispatch({ type: ACTIONS.EXIT_WIDGET, items, onFocus });
+          dispatch({ type: 'EXIT_WIDGET', onFocus });
         }
       },
       onClick: composeEventHandlers(onClick, () => {
-        dispatch({ type: ACTIONS.MOUSE_SELECT, payload: item, items, onSelect, onFocus });
+        dispatch({ type: 'MOUSE_SELECT', payload: item, onSelect, onFocus });
       }),
-      onKeyDown: composeEventHandlers(onKeyDown, e => {
+      onKeyDown: composeEventHandlers(onKeyDown, (e: React.KeyboardEvent) => {
         if (
           (e.keyCode === KEY_CODES.UP && verticalDirection) ||
           (e.keyCode === KEY_CODES.LEFT && horizontalDirection)
         ) {
           if (rtl) {
-            dispatch({ type: ACTIONS.INCREMENT, items, focusedItem, selectedItem, onFocus });
+            dispatch({ type: 'INCREMENT', items, focusedItem, selectedItem, onFocus });
           } else {
-            dispatch({ type: ACTIONS.DECREMENT, items, focusedItem, selectedItem, onFocus });
+            dispatch({ type: 'DECREMENT', items, focusedItem, selectedItem, onFocus });
           }
 
           e.preventDefault();
@@ -263,30 +320,29 @@ export function useSelection({
           (e.keyCode === KEY_CODES.RIGHT && horizontalDirection)
         ) {
           if (rtl) {
-            dispatch({ type: ACTIONS.DECREMENT, items, focusedItem, selectedItem, onFocus });
+            dispatch({ type: 'DECREMENT', items, focusedItem, selectedItem, onFocus });
           } else {
-            dispatch({ type: ACTIONS.INCREMENT, items, focusedItem, selectedItem, onFocus });
+            dispatch({ type: 'INCREMENT', items, focusedItem, selectedItem, onFocus });
           }
 
           e.preventDefault();
         } else if (e.keyCode === KEY_CODES.HOME) {
-          dispatch({ type: ACTIONS.HOME, items, onFocus });
+          dispatch({ type: 'HOME', items, onFocus });
           e.preventDefault();
         } else if (e.keyCode === KEY_CODES.END) {
-          dispatch({ type: ACTIONS.END, items, onFocus });
+          dispatch({ type: 'END', items, onFocus });
           e.preventDefault();
         } else if (e.keyCode === KEY_CODES.SPACE || e.keyCode === KEY_CODES.ENTER) {
           dispatch({
-            type: ACTIONS.KEYBOARD_SELECT,
+            type: 'KEYBOARD_SELECT',
             payload: item,
-            items,
             onSelect
           });
           e.preventDefault();
         }
       }),
       ...other
-    };
+    } as any;
   };
 
   return {

@@ -6,13 +6,10 @@
  */
 
 import React from 'react';
-
 import { storiesOf } from '@storybook/react';
 import { withKnobs, select, boolean, number } from '@storybook/addon-knobs';
 
 import { SelectionContainer, useSelection } from './src';
-
-import { DIRECTIONS } from './src/utils/DIRECTIONS';
 
 storiesOf('Selection Containers', module)
   .addDecorator(withKnobs)
@@ -20,17 +17,17 @@ storiesOf('Selection Containers', module)
     const items = ['One', 'Two', 'Three'];
     const isRtl = boolean('Enable RTL', false);
 
-    const Selection = ({ direction }) => {
-      const { focusedItem, selectedItem, getContainerProps, getItemProps } = useSelection({
+    const Selection = ({ direction }: { direction?: 'both' | 'horizontal' | 'vertical' }) => {
+      const { focusedItem, selectedItem, getContainerProps, getItemProps } = useSelection<string>({
         direction,
         defaultSelectedIndex: number('defaultSelectedIndex', 0),
         rtl: isRtl
       });
 
       return (
-        <ul {...getContainerProps()} style={{ display: 'flex' }}>
+        <ul {...getContainerProps({ style: { display: 'flex' } })}>
           {items.map(item => {
-            const itemRef = React.createRef();
+            const itemRef = React.createRef<HTMLLIElement>();
             const isSelected = selectedItem === item;
             const isFocused = focusedItem === item;
 
@@ -39,14 +36,14 @@ storiesOf('Selection Containers', module)
                 {...getItemProps({
                   key: item,
                   item,
-                  focusRef: itemRef
+                  focusRef: itemRef,
+                  style: {
+                    listStyle: 'none',
+                    margin: 16,
+                    padding: 8,
+                    textAlign: 'center'
+                  }
                 })}
-                style={{
-                  listStyle: 'none',
-                  margin: 16,
-                  padding: 8,
-                  textAlign: 'center'
-                }}
               >
                 {item}
                 {isSelected && <div>[Selected]</div>}
@@ -63,11 +60,11 @@ storiesOf('Selection Containers', module)
         direction={select(
           'Direction',
           {
-            vertical: DIRECTIONS.VERTICAL,
-            horizontal: DIRECTIONS.HORIZONTAL,
-            both: DIRECTIONS.BOTH
+            vertical: 'vertical',
+            horizontal: 'horizontal',
+            both: 'both'
           },
-          DIRECTIONS.HORIZONTAL
+          'horizontal'
         )}
       />
     );

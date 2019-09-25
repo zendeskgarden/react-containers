@@ -10,14 +10,14 @@ import React from 'react';
 import { KEY_CODES } from '@zendeskgarden/container-utilities';
 import { render, fireEvent } from '@testing-library/react';
 
-import { SelectionContainer } from './SelectionContainer';
-
-jest.useFakeTimers();
+import { SelectionContainer, ISelectionContainerProps } from './SelectionContainer';
 
 describe('SelectionContainer', () => {
   const itemValues = ['Item-1', 'Item-2', 'Item-3'];
 
-  const BasicExample = ({
+  const BasicExample: React.FunctionComponent<
+    Omit<ISelectionContainerProps<string>, 'children'> & { selectedAriaKey?: string }
+  > = ({
     direction,
     defaultFocusedIndex,
     defaultSelectedIndex,
@@ -25,7 +25,7 @@ describe('SelectionContainer', () => {
     rtl,
     onFocus,
     onSelect
-  } = {}) => (
+  }) => (
     <SelectionContainer
       direction={direction}
       defaultFocusedIndex={defaultFocusedIndex}
@@ -43,20 +43,15 @@ describe('SelectionContainer', () => {
 
             return (
               <div
-                {...getItemProps(
-                  {
-                    key: item,
-                    item,
-                    focusRef: ref,
-                    selectedAriaKey,
-                    'data-test-id': 'item',
-                    'data-focused': isFocused,
-                    'data-selected': isSelected
-                  },
-                  {
-                    selectedAriaKey
-                  }
-                )}
+                {...getItemProps({
+                  selectedAriaKey,
+                  key: item,
+                  item,
+                  focusRef: ref,
+                  'data-test-id': 'item',
+                  'data-focused': isFocused,
+                  'data-selected': isSelected
+                } as any)}
               >
                 {item}
               </div>
@@ -67,7 +62,7 @@ describe('SelectionContainer', () => {
     </SelectionContainer>
   );
 
-  const itemProps = props => {
+  const itemProps = (props: any) => {
     return render(
       <SelectionContainer>
         {({ getItemProps }) => <div {...getItemProps(props)}>Example</div>}
@@ -423,7 +418,7 @@ describe('SelectionContainer', () => {
       console.error = jest.fn();
 
       expect(() => {
-        itemProps();
+        (itemProps as any)();
       }).toThrow('Accessibility Error: You must provide an "item" option to "getItemProps()"');
 
       console.error = originalError;
