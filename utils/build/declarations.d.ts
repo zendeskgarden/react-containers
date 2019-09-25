@@ -7,6 +7,3 @@
 
 /* Globals */
 declare const PACKAGE_VERSION: string;
-
-/* Testing mocks */
-declare module '@zendeskgarden/react-testing';
