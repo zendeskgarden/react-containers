@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-breadcrumb@0.2.2...@zendeskgarden/container-breadcrumb@0.3.0) (2019-09-27)
+
+
+### Features
+
+* **breadcrumb:** migrate useBreadcrumb to TypeScript ([81420a3](https://github.com/zendeskgarden/react-containers/commit/81420a3))
+
+
+
+
+
 ## [0.2.2](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-breadcrumb@0.2.1...@zendeskgarden/container-breadcrumb@0.2.2) (2019-07-25)
 
 **Note:** Version bump only for package @zendeskgarden/container-breadcrumb
