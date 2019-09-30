@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import { useState } from 'react';
+import { useState, HTMLProps } from 'react';
 import {
   composeEventHandlers,
   generateId,
@@ -13,41 +13,76 @@ import {
   getControlledValue
 } from '@zendeskgarden/container-utilities';
 
+export interface IUseAccordionProps {
+  idPrefix?: string;
+  expandedSections?: number[];
+  onChange?: (expanded: number[]) => any;
+  expandable?: boolean;
+  collapsible?: boolean;
+}
+
+interface IHeaderProps extends HTMLProps<any> {
+  ariaLevel?: number | null;
+  role?: any;
+}
+
+interface ITriggerProps extends HTMLProps<any> {
+  index?: number;
+  role?: any;
+  tabIndex?: any;
+}
+
+interface IPanelProps extends HTMLProps<any> {
+  index?: number;
+  role?: any;
+}
+
+export interface IUseAccordionPropGetters {
+  getHeaderProps: <T>(options?: T & IHeaderProps) => any;
+  getTriggerProps: <T>(options?: T & ITriggerProps) => any;
+  getPanelProps: <T>(options?: T & IPanelProps) => any;
+}
+
+export interface IUseAccordionReturnValue extends IUseAccordionPropGetters {
+  expandedSections: number[];
+  disabledSections: number[];
+}
+
 export function useAccordion({
   idPrefix,
   expandedSections,
   onChange,
   expandable = true,
   collapsible = true
-} = {}) {
-  const [prefix] = useState(idPrefix || generateId('garden-accordion-container'));
+}: IUseAccordionProps = {}): IUseAccordionReturnValue {
+  const [prefix] = useState<string>(idPrefix || generateId('garden-accordion-container'));
   const TRIGGER_ID = `${prefix}--trigger`;
   const PANEL_ID = `${prefix}--panel`;
-  const [expandedState, setExpandedState] = useState(expandedSections || []);
+  const [expandedState, setExpandedState] = useState<number[]>(expandedSections || []);
 
   const controlledExpandedState = getControlledValue(onChange && expandedSections, expandedState);
 
   const [disabledState, setDisabledState] = useState(collapsible ? [] : controlledExpandedState);
 
-  const sections = [];
-  const toggle = index => {
-    const expanded = [];
-    const disabled = [];
+  const sectionIndices: number[] = [];
+  const toggle = (index: number) => {
+    const expanded: number[] = [];
+    const disabled: number[] = [];
 
-    sections.forEach(section => {
+    sectionIndices.forEach(sectionIndex => {
       let isExpanded = false;
 
-      if (section === index) {
-        isExpanded = collapsible ? controlledExpandedState.indexOf(section) === -1 : true;
+      if (sectionIndex === index) {
+        isExpanded = collapsible ? controlledExpandedState.indexOf(sectionIndex) === -1 : true;
       } else if (expandable) {
-        isExpanded = controlledExpandedState.indexOf(section) !== -1;
+        isExpanded = controlledExpandedState.indexOf(sectionIndex) !== -1;
       }
 
       if (isExpanded) {
-        expanded.push(section);
+        expanded.push(sectionIndex);
 
         if (!collapsible) {
-          disabled.push(section);
+          disabled.push(sectionIndex);
         }
       }
     });
@@ -61,7 +96,7 @@ export function useAccordion({
     setDisabledState(disabled);
   };
 
-  const getHeaderProps = ({ role = 'heading', ariaLevel, ...props } = {}) => {
+  const getHeaderProps = ({ role = 'heading', ariaLevel, ...props }: IHeaderProps = {}) => {
     if (ariaLevel === undefined) {
       throw new Error(
         'Accessibility Error: You must apply the `ariaLevel` prop to the element that contains your heading.'
@@ -77,14 +112,19 @@ export function useAccordion({
     };
   };
 
-  const getTriggerProps = ({ index, role = 'button', tabIndex = 0, ...props } = {}) => {
+  const getTriggerProps = ({
+    index,
+    role = 'button',
+    tabIndex = 0,
+    ...props
+  }: ITriggerProps = {}) => {
     if (index === undefined) {
       throw new Error(
         'Accessibility Error: You must provide an `index` option to `getTriggerProps()`'
       );
     }
 
-    sections.push(index);
+    sectionIndices.push(index);
 
     return {
       id: `${TRIGGER_ID}:${index}`,
@@ -94,7 +134,7 @@ export function useAccordion({
       'aria-disabled': disabledState.indexOf(index) !== -1,
       'aria-expanded': controlledExpandedState.indexOf(index) !== -1,
       onClick: composeEventHandlers(props.onClick, () => toggle(index)),
-      onKeyDown: composeEventHandlers(props.onKeyDown, event => {
+      onKeyDown: composeEventHandlers(props.onKeyDown, (event: KeyboardEvent) => {
         if (event.keyCode === KEY_CODES.SPACE || event.keyCode === KEY_CODES.ENTER) {
           toggle(index);
           event.preventDefault();
@@ -104,7 +144,7 @@ export function useAccordion({
     };
   };
 
-  const getPanelProps = ({ index, role = 'region', ...props } = {}) => {
+  const getPanelProps = ({ index, role = 'region', ...props }: IPanelProps = {}) => {
     if (index === undefined) {
       throw new Error(
         'Accessibility Error: You must provide an `index` option to `getSectionProps()`'
