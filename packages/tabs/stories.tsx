@@ -13,19 +13,19 @@ import { withKnobs, boolean, text } from '@storybook/addon-knobs';
 import { TabsContainer, useTabs } from './src';
 
 const tabs = ['Tab 1', 'Tab 2', 'Tab 3'];
-const tabRefs = tabs.map(() => createRef(null));
+const tabRefs = tabs.map(() => createRef());
 
 storiesOf('Tabs Container', module)
   .addDecorator(withKnobs)
   .add('useTabs', () => {
     const Tabs = () => {
       const vertical = boolean('vertical', false);
-      const { selectedItem, getTabProps, getTabListProps, getTabPanelProps } = useTabs({
+      const { selectedItem, getTabProps, getTabListProps, getTabPanelProps } = useTabs<string>({
         vertical,
-        idPrefix: text('idPrefix')
+        idPrefix: text('idPrefix', '')
       });
-      const tabComponents = [];
-      const tabPanels = [];
+      const tabComponents: React.ReactElement[] = [];
+      const tabPanels: React.ReactElement[] = [];
 
       tabs.forEach((tab, index) => {
         tabComponents.push(
@@ -38,10 +38,13 @@ storiesOf('Tabs Container', module)
               style: {
                 padding: '5px 5px 0',
                 borderBottom:
-                  !vertical && `3px solid ${tab === selectedItem ? '#1f73b7' : 'transparent'}`,
-                borderLeft:
-                  vertical && `3px solid ${tab === selectedItem ? '#1f73b7' : 'transparent'}`,
-                color: tab === selectedItem && '#1f73b7'
+                  vertical === false
+                    ? `3px solid ${tab === selectedItem ? '#1f73b7' : 'transparent'}`
+                    : undefined,
+                borderLeft: vertical
+                  ? `3px solid ${tab === selectedItem ? '#1f73b7' : 'transparent'}`
+                  : undefined,
+                color: tab === selectedItem ? '#1f73b7' : undefined
               }
             })}
           >
@@ -56,8 +59,8 @@ storiesOf('Tabs Container', module)
               item: tab,
               key: tab,
               style: {
-                padding: !vertical && '10px 0',
-                borderTop: !vertical && '1px solid'
+                padding: vertical === false ? '10px 0' : undefined,
+                borderTop: vertical === false ? '1px solid' : undefined
               }
             })}
           >
@@ -67,7 +70,7 @@ storiesOf('Tabs Container', module)
       });
 
       return (
-        <div style={{ display: vertical && 'flex' }}>
+        <div style={{ display: vertical ? 'flex' : undefined }}>
           <ul
             {...getTabListProps({
               style: {
@@ -88,13 +91,13 @@ storiesOf('Tabs Container', module)
   .add('TabsContainer', () => {
     const Tabs = () => {
       const vertical = boolean('vertical', false);
-      const idPrefix = text('idPrefix');
+      const idPrefix = text('idPrefix', '');
 
       return (
         <TabsContainer vertical={vertical} idPrefix={idPrefix}>
           {({ selectedItem, getTabProps, getTabListProps, getTabPanelProps }) => {
-            const tabComponents = [];
-            const tabPanels = [];
+            const tabComponents: React.ReactElement[] = [];
+            const tabPanels: React.ReactElement[] = [];
 
             tabs.forEach((tab, index) => {
               tabComponents.push(
@@ -107,11 +110,13 @@ storiesOf('Tabs Container', module)
                     style: {
                       padding: '5px 5px 0',
                       borderBottom:
-                        !vertical &&
-                        `3px solid ${tab === selectedItem ? '#1f73b7' : 'transparent'}`,
-                      borderLeft:
-                        vertical && `3px solid ${tab === selectedItem ? '#1f73b7' : 'transparent'}`,
-                      color: tab === selectedItem && '#1f73b7'
+                        vertical === false
+                          ? `3px solid ${tab === selectedItem ? '#1f73b7' : 'transparent'}`
+                          : undefined,
+                      borderLeft: vertical
+                        ? `3px solid ${tab === selectedItem ? '#1f73b7' : 'transparent'}`
+                        : undefined,
+                      color: tab === selectedItem ? '#1f73b7' : undefined
                     }
                   })}
                 >
@@ -126,8 +131,8 @@ storiesOf('Tabs Container', module)
                     item: tab,
                     key: tab,
                     style: {
-                      padding: !vertical && '10px 0',
-                      borderTop: !vertical && '1px solid'
+                      padding: vertical === false ? '10px 0' : undefined,
+                      borderTop: vertical === false ? '1px solid' : undefined
                     }
                   })}
                 >
@@ -137,7 +142,7 @@ storiesOf('Tabs Container', module)
             });
 
             return (
-              <div style={{ display: vertical && 'flex' }}>
+              <div style={{ display: vertical ? 'flex' : undefined }}>
                 <ul
                   {...getTabListProps({
                     style: {

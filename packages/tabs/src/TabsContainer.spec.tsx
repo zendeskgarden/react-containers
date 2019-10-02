@@ -9,16 +9,20 @@
 import React, { createRef } from 'react';
 import { render, fireEvent } from '@testing-library/react';
 
-import { TabsContainer } from './TabsContainer';
+import { TabsContainer, ITabsContainerProps } from './TabsContainer';
 
 describe('TabsContainer', () => {
   const idPrefix = 'test_id';
   const tabs = ['tab-1', 'tab-2', 'tab-3'];
-  const tabRefs = tabs.map(() => createRef(null));
-  const getPanelId = index => `${idPrefix}--panel:${index}`;
-  const getTabId = index => `${idPrefix}--tab:${index}`;
+  const tabRefs = tabs.map(() => createRef());
+  const getPanelId = (index: number) => `${idPrefix}--panel:${index}`;
+  const getTabId = (index: number) => `${idPrefix}--tab:${index}`;
 
-  const BasicExample = ({ vertical, onSelect, defaultSelectedIndex = 0 } = {}) => (
+  const BasicExample: React.FunctionComponent<ITabsContainerProps> = ({
+    vertical,
+    onSelect,
+    defaultSelectedIndex = 0
+  } = {}) => (
     <TabsContainer
       vertical={vertical}
       onSelect={onSelect}
@@ -174,7 +178,7 @@ describe('TabsContainer', () => {
       expect(() => {
         render(
           <TabsContainer>
-            {({ getTabPanelProps }) => <div {...getTabPanelProps({ index: 0 })} />}
+            {({ getTabPanelProps }) => <div {...getTabPanelProps({ index: 0 } as any)} />}
           </TabsContainer>
         );
       }).toThrow('Accessibility Error: You must provide an "item" option to "getTabPanelProps()"');
