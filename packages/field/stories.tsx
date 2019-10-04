@@ -11,32 +11,29 @@ import { storiesOf } from '@storybook/react';
 import { withKnobs, text } from '@storybook/addon-knobs';
 
 import { FieldContainer, useField } from './src';
+import { generateId } from '@zendeskgarden/container-utilities/src';
 
 storiesOf('Field Container', module)
   .addDecorator(withKnobs)
   .add('useField', () => {
-    const Field = ({ id }) => {
+    const Field = ({ id }: { id: string }) => {
       const { getLabelProps, getInputProps, getHintProps } = useField(id);
       const [value, setVal] = React.useState('');
+      const onChange = (event: React.ChangeEvent<HTMLInputElement>) => setVal(event.target.value);
 
       return (
         <>
           <label {...getLabelProps()}>Accessible Native Input</label>
           <div {...getHintProps()}>Optional Hint</div>
-          <input
-            {...getInputProps(
-              { value, onChange: ({ target }) => setVal(target.value) },
-              { isDescribed: true }
-            )}
-          />
+          <input {...getInputProps({ value, onChange }, { isDescribed: true })} />
         </>
       );
     };
 
-    return <Field id={text('id')} />;
+    return <Field id={text('id', generateId())} />;
   })
   .add('FieldContainer', () => (
-    <FieldContainer id={text('id')}>
+    <FieldContainer id={text('id', generateId())}>
       {({ getLabelProps, getInputProps, getHintProps }) => (
         <>
           <label {...getLabelProps()}>Accessible Native Input</label>

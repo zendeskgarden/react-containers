@@ -16,6 +16,7 @@
   "scripts": {
     "build": "../../utils/scripts/build.sh"
   },
+  "types": "dist/typings/index.d.ts",
   "dependencies": {
     "@zendeskgarden/container-utilities": "^0.3.0"
   },
@@ -36,5 +37,5 @@
   "publishConfig": {
     "access": "public"
   },
-  "zendeskgarden:src": "src/index.js"
+  "zendeskgarden:src": "src/index.ts"
 }

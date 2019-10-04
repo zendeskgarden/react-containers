@@ -8,7 +8,16 @@
 import { useState } from 'react';
 import { generateId } from '@zendeskgarden/container-utilities';
 
-export function useField(idPrefix) {
+export interface IUseFieldPropGetters {
+  getHintProps: <T>(options?: T & React.HTMLProps<any>) => React.HTMLProps<any>;
+  getLabelProps: <T>(options?: T & React.HTMLProps<any>) => React.HTMLProps<any>;
+  getInputProps: <T>(
+    options?: T & React.HTMLProps<any>,
+    isDescribedOptions?: { isDescribed: boolean }
+  ) => any;
+}
+
+export function useField(idPrefix?: string): IUseFieldPropGetters {
   const [prefix] = useState(idPrefix || generateId('garden-field-container'));
   const inputId = `${prefix}--input`;
   const labelId = `${prefix}--label`;
