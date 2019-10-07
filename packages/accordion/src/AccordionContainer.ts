@@ -1,0 +1,30 @@
+/**
+ * Copyright Zendesk, Inc.
+ *
+ * Use of this source code is governed under the Apache License, Version 2.0
+ * found at http://www.apache.org/licenses/LICENSE-2.0.
+ */
+
+import PropTypes from 'prop-types';
+
+import { useAccordion, IUseAccordionProps, IUseAccordionReturnValue } from './useAccordion';
+
+export interface IAccordionContainerProps extends IUseAccordionProps {
+  render?: (options: IUseAccordionReturnValue) => React.ReactElement;
+  children: (options: IUseAccordionReturnValue) => React.ReactElement;
+}
+
+export const AccordionContainer: React.FunctionComponent<IAccordionContainerProps> = props => {
+  const { children, render = children, ...options } = props;
+
+  return render(useAccordion(options));
+};
+
+AccordionContainer.propTypes = {
+  children: PropTypes.func,
+  render: PropTypes.func,
+  expandedSections: PropTypes.array,
+  expandable: PropTypes.bool,
+  collapsible: PropTypes.bool,
+  idPrefix: PropTypes.string
+};

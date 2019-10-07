@@ -9,27 +9,27 @@ import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 import { KEY_CODES } from '@zendeskgarden/container-utilities';
 import { AccordionContainer } from './AccordionContainer';
+import { IUseAccordionReturnValue, IUseAccordionProps } from './useAccordion';
 
 describe('AccordionContainer', () => {
   it('renders with expected return values', () => {
-    const { getByTestId } = render(
+    const { getByTestId, getByText } = render(
       <AccordionContainer>
-        {({ expandedSections, disabledSections }) => (
-          <div
-            data-test-id="test"
-            hidden={expandedSections.length === 0}
-            disabled={disabledSections.length !== 0}
-          />
+        {({ expandedSections, disabledSections }: IUseAccordionReturnValue) => (
+          <div data-test-id="test" hidden={expandedSections.length === 0}>
+            <button disabled={disabledSections.length !== 0}>Trigger</button>
+          </div>
         )}
       </AccordionContainer>
     );
     const test = getByTestId('test');
+    const triggerButton = getByText('Trigger');
 
     expect(test).toHaveAttribute('hidden');
-    expect(test).not.toHaveAttribute('disabled');
+    expect(triggerButton).not.toHaveAttribute('disabled');
   });
 
-  const sections = Array(3).fill();
+  const sections = Array(3).fill(undefined);
   const CONTAINER_ID_PREFIX = 'test';
 
   const BasicExample = ({
@@ -37,7 +37,7 @@ describe('AccordionContainer', () => {
     expandable = true,
     collapsible = true,
     onChange
-  } = {}) => (
+  }: IUseAccordionProps = {}) => (
     <AccordionContainer
       idPrefix={CONTAINER_ID_PREFIX}
       expandedSections={expandedSections}
@@ -376,8 +376,8 @@ describe('AccordionContainer', () => {
   });
 
   describe('is not expandable (but is collapsible)', () => {
-    let triggers;
-    let panels;
+    let triggers: HTMLElement[];
+    let panels: HTMLElement[];
 
     beforeEach(() => {
       const { getAllByTestId } = render(<BasicExample expandedSections={[0]} expandable={false} />);
@@ -417,8 +417,8 @@ describe('AccordionContainer', () => {
   });
 
   describe('is not collapsible (but is expandable)', () => {
-    let triggers;
-    let panels;
+    let triggers: HTMLElement[];
+    let panels: HTMLElement[];
 
     beforeEach(() => {
       const { getAllByTestId } = render(<BasicExample collapsible={false} />);
@@ -463,8 +463,8 @@ describe('AccordionContainer', () => {
   });
 
   describe('is not expandable OR collapsible', () => {
-    let triggers;
-    let panels;
+    let triggers: HTMLElement[];
+    let panels: HTMLElement[];
 
     beforeEach(() => {
       const { getAllByTestId } = render(

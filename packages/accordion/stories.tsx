@@ -10,14 +10,14 @@ import React, { createRef, useState } from 'react';
 import { storiesOf } from '@storybook/react';
 import { boolean, number, withKnobs } from '@storybook/addon-knobs';
 
-import { AccordionContainer, useAccordion } from './src';
+import { AccordionContainer, useAccordion, IUseAccordionReturnValue } from './src';
 
 storiesOf('Accordion Container', module)
   .addDecorator(withKnobs)
   .add('useAccordion', () => {
     const size = number('Sections', 5, { range: true, min: 1, max: 9 });
     const sections = Array(size)
-      .fill()
+      .fill(undefined)
       .map(() => createRef());
 
     const Accordion = ({ expandable = true, collapsible = true } = {}) => {
@@ -84,7 +84,7 @@ storiesOf('Accordion Container', module)
   .add('AccordionContainer', () => {
     const size = number('Sections', 5, { range: true, min: 1, max: 9 });
     const sections = Array(size)
-      .fill()
+      .fill(undefined)
       .map(() => createRef());
 
     const Accordion = ({ expandable = true, collapsible = true } = {}) => (
@@ -95,7 +95,7 @@ storiesOf('Accordion Container', module)
           getPanelProps,
           expandedSections,
           disabledSections
-        }) => (
+        }: IUseAccordionReturnValue) => (
           <div style={{ width: 300 }}>
             {sections.map((section, index) => {
               const disabled = disabledSections.indexOf(index) !== -1;
