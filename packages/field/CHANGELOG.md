@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.1.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-field@1.0.5...@zendeskgarden/container-field@1.1.0) (2019-10-08)
+
+
+### Features
+
+* **field:** migrate useField to TypeScript ([#110](https://github.com/zendeskgarden/react-containers/issues/110)) ([04acb49](https://github.com/zendeskgarden/react-containers/commit/04acb49))
+
+
+
+
+
 ## [1.0.5](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-field@1.0.4...@zendeskgarden/container-field@1.0.5) (2019-09-25)
 
 **Note:** Version bump only for package @zendeskgarden/container-field

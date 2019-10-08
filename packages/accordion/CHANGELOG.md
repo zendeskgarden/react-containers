@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-accordion@0.2.1...@zendeskgarden/container-accordion@0.3.0) (2019-10-08)
+
+
+### Features
+
+* **accordion:** migrate useAccordion to TypeScript ([#109](https://github.com/zendeskgarden/react-containers/issues/109)) ([b17cb34](https://github.com/zendeskgarden/react-containers/commit/b17cb34))
+
+
+
+
+
 ## [0.2.1](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-accordion@0.2.0...@zendeskgarden/container-accordion@0.2.1) (2019-09-25)
 
 **Note:** Version bump only for package @zendeskgarden/container-accordion
