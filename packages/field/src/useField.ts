@@ -9,12 +9,12 @@ import { useState } from 'react';
 import { generateId } from '@zendeskgarden/container-utilities';
 
 export interface IUseFieldPropGetters {
-  getHintProps: <T>(options?: T & React.HTMLProps<any>) => React.HTMLProps<any>;
-  getLabelProps: <T>(options?: T & React.HTMLProps<any>) => React.HTMLProps<any>;
+  getHintProps: <T>(options?: T) => T & React.HTMLProps<any>;
+  getLabelProps: <T>(options?: T) => T & React.HTMLProps<any>;
   getInputProps: <T>(
-    options?: T & React.HTMLProps<any>,
+    options?: T,
     isDescribedOptions?: { isDescribed: boolean }
-  ) => any;
+  ) => T & React.HTMLProps<any>;
 }
 
 export function useField(idPrefix?: string): IUseFieldPropGetters {
@@ -30,7 +30,7 @@ export function useField(idPrefix?: string): IUseFieldPropGetters {
       'data-garden-container-id': 'field',
       'data-garden-container-version': PACKAGE_VERSION,
       ...other
-    };
+    } as any;
   };
 
   const getInputProps = ({ id = inputId, ...other } = {}, { isDescribed = false } = {}) => {
@@ -39,14 +39,14 @@ export function useField(idPrefix?: string): IUseFieldPropGetters {
       'aria-labelledby': labelId,
       'aria-describedby': isDescribed ? hintId : null,
       ...other
-    };
+    } as any;
   };
 
   const getHintProps = ({ id = hintId, ...other } = {}) => {
     return {
       id,
       ...other
-    };
+    } as any;
   };
 
   return {

@@ -11,7 +11,7 @@ import { storiesOf } from '@storybook/react';
 import { withKnobs, text } from '@storybook/addon-knobs';
 
 import { FieldContainer, useField } from './src';
-import { generateId } from '@zendeskgarden/container-utilities/src';
+import { generateId } from '@zendeskgarden/container-utilities';
 
 storiesOf('Field Container', module)
   .addDecorator(withKnobs)
