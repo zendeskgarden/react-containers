@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.1](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-field@1.1.0...@zendeskgarden/container-field@1.1.1) (2019-10-08)
+
+
+### Bug Fixes
+
+* **field:** update field interface ([#112](https://github.com/zendeskgarden/react-containers/issues/112)) ([4309b19](https://github.com/zendeskgarden/react-containers/commit/4309b19))
+
+
+
+
+
 # [1.1.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-field@1.0.5...@zendeskgarden/container-field@1.1.0) (2019-10-08)
 
 
