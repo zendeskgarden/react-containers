@@ -16,15 +16,19 @@
   "scripts": {
     "build": "../../utils/scripts/build.sh"
   },
+  "types": "dist/typings/index.d.ts",
   "dependencies": {
     "@zendeskgarden/container-utilities": "^0.3.0",
-    "dom-helpers": "^3.4.0",
+    "dom-helpers": "^5.1.0",
     "tabbable": "^4.0.0"
   },
   "peerDependencies": {
     "prop-types": "^15.6.1",
     "react": "^16.8.0",
     "react-dom": "^16.8.0"
+  },
+  "devDependencies": {
+    "@types/tabbable": "3.1.0"
   },
   "keywords": [
     "a11y",
@@ -38,5 +42,5 @@
   "publishConfig": {
     "access": "public"
   },
-  "zendeskgarden:src": "src/index.js"
+  "zendeskgarden:src": "src/index.ts"
 }

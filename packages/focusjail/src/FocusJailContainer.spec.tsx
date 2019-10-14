@@ -11,12 +11,22 @@ import { KEY_CODES } from '@zendeskgarden/container-utilities';
 import { render, fireEvent } from '@testing-library/react';
 
 import { FocusJailContainer } from './FocusJailContainer';
+import { IUseFocusJailProps } from './useFocusJail';
+
+interface IBasicExampleProps extends Omit<IUseFocusJailProps, 'containerRef'> {
+  focusableChildren?: React.ReactElement | React.ReactElement[];
+}
 
 describe('FocusJailContainer', () => {
-  let focusSpy;
-  let containerReference;
+  let focusSpy: jest.Mock;
+  let containerReference: React.RefObject<HTMLElement> | null;
 
-  const BasicExample = ({ focusOnMount, focusElem = focusSpy, environment, ...props } = {}) => {
+  const BasicExample = ({
+    focusOnMount,
+    focusElem = focusSpy,
+    environment,
+    ...props
+  }: IBasicExampleProps = {}) => {
     const containerRef = useRef(null);
     const focusableChildren = props.focusableChildren || (
       <>
@@ -83,11 +93,14 @@ describe('FocusJailContainer', () => {
 
       expect(() => {
         render(
+          /* eslint-disable @typescript-eslint/ban-ts-ignore */
+          // @ts-ignore
           <FocusJailContainer>
             {({ getContainerProps }) => (
               <div {...getContainerProps({ 'data-test-id': 'container-no-ref' })}>Test</div>
             )}
           </FocusJailContainer>
+          /* eslint-enable @typescript-eslint/ban-ts-ignore */
         );
       }).toThrow();
 
@@ -99,7 +112,9 @@ describe('FocusJailContainer', () => {
     it('retrieves references by refKey', () => {
       const { getByTestId } = render(<BasicExample />);
 
-      expect(containerReference.current).toBe(getByTestId('container'));
+      if (containerReference) {
+        expect(containerReference.current).toBe(getByTestId('container'));
+      }
     });
 
     describe('onKeyDown()', () => {
@@ -169,7 +184,7 @@ describe('FocusJailContainer', () => {
         console.error = jest.fn();
 
         const { getByTestId } = render(
-          <FocusJailContainer containerRef={React.createRef(null)}>
+          <FocusJailContainer containerRef={React.createRef()}>
             {({ getContainerProps }) => (
               <div {...getContainerProps({ 'data-test-id': 'container-no-ref' })}>Test</div>
             )}

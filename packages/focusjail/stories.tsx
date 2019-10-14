@@ -37,7 +37,7 @@ storiesOf('FocusJail Container', module)
     return <FocusJail />;
   })
   .add('FocusJailContainer', () => {
-    const containerRef = createRef(null);
+    const containerRef = createRef<HTMLElement>();
 
     return (
       <FocusJailContainer containerRef={containerRef} focusOnMount={boolean('focusOnMount', true)}>
