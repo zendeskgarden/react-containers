@@ -20,7 +20,7 @@ export function useKeyboardFocus() {
     };
   }, []);
 
-  const onPointerDown = () => {
+  const onKeyboardFocusPointerDown = () => {
     isKeyboardFocusableRef.current = false;
 
     /**
@@ -32,24 +32,32 @@ export function useKeyboardFocus() {
     }, 0);
   };
 
-  const onFocus = () => {
+  const onKeyboardFocus = () => {
     if (isKeyboardFocusableRef.current) {
       setKeyboardFocused(true);
     }
   };
 
-  const onBlur = () => {
+  const onKeyboardFocusBlur = () => {
     setKeyboardFocused(false);
   };
 
-  const getFocusProps = ({ tabIndex = 0, ...props } = {}) => {
+  const getFocusProps = ({
+    tabIndex = 0,
+    onBlur,
+    onFocus,
+    onMouseDown,
+    onPointerDown,
+    onTouchStart,
+    ...props
+  } = {}) => {
     return {
       tabIndex,
-      onBlur: composeEventHandlers(props.onBlur, onBlur),
-      onFocus: composeEventHandlers(props.onFocus, onFocus),
-      onMouseDown: composeEventHandlers(props.onMouseDown, onPointerDown),
-      onPointerDown: composeEventHandlers(props.onPointerDown, onPointerDown),
-      onTouchStart: composeEventHandlers(props.onTouchStart, onPointerDown),
+      onBlur: composeEventHandlers(onBlur, onKeyboardFocusBlur),
+      onFocus: composeEventHandlers(onFocus, onKeyboardFocus),
+      onMouseDown: composeEventHandlers(onMouseDown, onKeyboardFocusPointerDown),
+      onPointerDown: composeEventHandlers(onPointerDown, onKeyboardFocusPointerDown),
+      onTouchStart: composeEventHandlers(onTouchStart, onKeyboardFocusPointerDown),
       'data-garden-container-id': 'keyboardfocus',
       'data-garden-container-version': PACKAGE_VERSION,
       ...props
