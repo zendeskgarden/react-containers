@@ -3040,10 +3040,10 @@
   resolved "https://registry.yarnpkg.com/@zendeskgarden/css-variables/-/css-variables-6.4.0.tgz#124081f21229f87f2a5d23d5d30e9e31133ec14a"
   integrity sha512-kP7U1sfwTtUDeIJnXLQ1lGdlnktdFFO1RcNe8QKVzK4modHKbA1BEvOdHOpXnOD2uXZYKRwGicqawjTSaCwypw==
 
-"@zendeskgarden/eslint-config@9.0.0":
-  version "9.0.0"
-  resolved "https://registry.yarnpkg.com/@zendeskgarden/eslint-config/-/eslint-config-9.0.0.tgz#f506b86d2b53dc860a58a7f0d8b6303b2858cfbb"
-  integrity sha512-8u3ZD/cvnkWKXHTTOuNI8RFSJMolAlfORJ5fxzCLXRWQc0pNKzEEUENnScNSsufXysOWQiiY6DY7d9jH/vgmRg==
+"@zendeskgarden/eslint-config@10.0.0":
+  version "10.0.0"
+  resolved "https://registry.yarnpkg.com/@zendeskgarden/eslint-config/-/eslint-config-10.0.0.tgz#b80f7b470709e0ac3b0e03e63f01d95f0f8a1061"
+  integrity sha512-DNmQGTkR2uBwCUxslmMzgmTRPXZPcytaX1iZvNHjRkk/UZGq+aenm1lyX+3bYNsWt/X9wAZwfqRUt3AXrJDmNw==
 
 "@zkochan/cmd-shim@^3.1.0":
   version "3.1.0"
