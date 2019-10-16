@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.6](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-keyboardfocus@0.2.5...@zendeskgarden/container-keyboardfocus@0.2.6) (2019-10-16)
+
+
+### Bug Fixes
+
+* **keyboardfocus:** allow events to be composed within useKeyboardFocus() hook ([#117](https://github.com/zendeskgarden/react-containers/issues/117)) ([7b98af4](https://github.com/zendeskgarden/react-containers/commit/7b98af4))
+
+
+
+
+
 ## [0.2.5](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-keyboardfocus@0.2.4...@zendeskgarden/container-keyboardfocus@0.2.5) (2019-09-25)
 
 **Note:** Version bump only for package @zendeskgarden/container-keyboardfocus
