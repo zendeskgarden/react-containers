@@ -11,13 +11,13 @@ import { useAccordion, IUseAccordionProps, IUseAccordionReturnValue } from './us
 
 export interface IAccordionContainerProps extends IUseAccordionProps {
   render?: (options: IUseAccordionReturnValue) => React.ReactElement;
-  children: (options: IUseAccordionReturnValue) => React.ReactElement;
+  children?: (options: IUseAccordionReturnValue) => React.ReactElement;
 }
 
 export const AccordionContainer: React.FunctionComponent<IAccordionContainerProps> = props => {
   const { children, render = children, ...options } = props;
 
-  return render(useAccordion(options));
+  return render!(useAccordion(options));
 };
 
 AccordionContainer.propTypes = {
