@@ -11,7 +11,7 @@ import { useButtonGroup, IUseButtonGroupProps, UseButtonGroupReturnValue } from 
 
 export interface IButtonGroupContainerProps<Item> extends IUseButtonGroupProps<Item> {
   render?: (options: UseButtonGroupReturnValue<Item>) => React.ReactElement;
-  children: (options: UseButtonGroupReturnValue<Item>) => React.ReactElement;
+  children?: (options: UseButtonGroupReturnValue<Item>) => React.ReactElement;
 }
 
 export const ButtonGroupContainer: React.FunctionComponent<IButtonGroupContainerProps<any>> = ({
@@ -19,7 +19,7 @@ export const ButtonGroupContainer: React.FunctionComponent<IButtonGroupContainer
   render = children,
   ...options
 }) => {
-  return render(useButtonGroup(options));
+  return render!(useButtonGroup(options));
 };
 
 ButtonGroupContainer.propTypes = {

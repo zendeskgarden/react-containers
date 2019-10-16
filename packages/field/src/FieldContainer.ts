@@ -11,7 +11,7 @@ import { useField, IUseFieldPropGetters } from './useField';
 
 export interface IFieldContainerProps {
   render?: (options: IUseFieldPropGetters) => React.ReactElement;
-  children: (options: IUseFieldPropGetters) => React.ReactElement;
+  children?: (options: IUseFieldPropGetters) => React.ReactElement;
   id?: string;
 }
 
@@ -20,7 +20,7 @@ export const FieldContainer: React.FunctionComponent<IFieldContainerProps> = ({
   render = children,
   id
 }) => {
-  return render(useField(id));
+  return render!(useField(id));
 };
 
 FieldContainer.propTypes = {

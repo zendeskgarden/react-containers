@@ -12,7 +12,7 @@ import { useSelection, IUseSelectionProps, UseSelectionReturnValue } from './use
 
 export interface ISelectionContainerProps<Item> extends IUseSelectionProps<Item> {
   render?: (options: UseSelectionReturnValue<Item>) => any;
-  children: (options: UseSelectionReturnValue<Item>) => any;
+  children?: (options: UseSelectionReturnValue<Item>) => any;
 }
 
 export const SelectionContainer: React.FunctionComponent<ISelectionContainerProps<any>> = ({
@@ -20,7 +20,7 @@ export const SelectionContainer: React.FunctionComponent<ISelectionContainerProp
   render = children,
   ...options
 }) => {
-  return render(useSelection(options));
+  return render!(useSelection(options));
 };
 
 SelectionContainer.propTypes = {
