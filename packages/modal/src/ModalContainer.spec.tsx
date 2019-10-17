@@ -9,13 +9,14 @@ import React, { createRef } from 'react';
 import { render, fireEvent } from '@testing-library/react';
 import { KEY_CODES } from '@zendeskgarden/container-utilities';
 import { ModalContainer } from './ModalContainer';
+import { IUseModalReturnValue } from './useModal';
 
 describe('FocusJailContainer', () => {
-  let onCloseSpy;
+  let onCloseSpy: jest.Mock;
   const MODAL_ID = 'TEST_ID';
-  const modalRef = createRef(null);
+  const modalRef: React.RefObject<HTMLDivElement> = createRef();
 
-  const BasicExample = ({ onClose }) => (
+  const BasicExample = ({ onClose }: { onClose: jest.Mock }) => (
     <ModalContainer modalRef={modalRef} onClose={onClose} id={MODAL_ID}>
       {({
         getBackdropProps,
@@ -24,7 +25,7 @@ describe('FocusJailContainer', () => {
         getContentProps,
         getCloseProps,
         closeModal
-      }) => (
+      }: IUseModalReturnValue) => (
         <div {...getBackdropProps({ 'data-test-id': 'backdrop' })}>
           <div {...getModalProps({ 'data-test-id': 'modal' })} ref={modalRef}>
             <div {...getTitleProps({ 'data-test-id': 'title' })}>Title</div>
