@@ -56,8 +56,6 @@ storiesOf('Pagination Container', module)
           <ul style={{ display: 'flex' }}>
             <li
               {...getPreviousPageProps({
-                current: selectedItem === 'prev',
-                focused: focusedItem === 'prev',
                 item: 'prev',
                 focusRef: previousPageRef,
                 key: 'previous-page'
@@ -69,8 +67,6 @@ storiesOf('Pagination Container', module)
               return (
                 <li
                   {...getPageProps({
-                    focused: index === focusedItem,
-                    current: index === selectedItem,
                     page: index,
                     item: index,
                     focusRef: pageRefs[index],
@@ -88,8 +84,6 @@ storiesOf('Pagination Container', module)
             })}
             <li
               {...getNextPageProps({
-                current: selectedItem === 'next',
-                focused: focusedItem === 'next',
                 item: 'next',
                 focusRef: nextPageRef,
                 key: 'next-page'
@@ -144,8 +138,6 @@ storiesOf('Pagination Container', module)
                 <ul style={{ display: 'flex' }}>
                   <li
                     {...getPreviousPageProps({
-                      current: selectedItem === 'prev',
-                      focused: focusedItem === 'prev',
                       item: 'prev',
                       focusRef: previousPageRef,
                       ref: previousPageRef,
@@ -158,8 +150,6 @@ storiesOf('Pagination Container', module)
                     return (
                       <li
                         {...getPageProps({
-                          focused: index === focusedItem,
-                          current: index === selectedItem,
                           page: index,
                           item: index,
                           focusRef: pageRefs[index],
@@ -178,8 +168,6 @@ storiesOf('Pagination Container', module)
                   })}
                   <li
                     {...getNextPageProps({
-                      current: selectedItem === 'next',
-                      focused: focusedItem === 'next',
                       item: 'next',
                       focusRef: nextPageRef,
                       ref: nextPageRef,
