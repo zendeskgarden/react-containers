@@ -8,7 +8,7 @@
   "bugs": {
     "url": "https://github.com/zendeskgarden/react-containers/issues"
   },
-  "version": "0.1.13",
+  "version": "0.1.14",
   "main": "./dist/index.js",
   "files": [
     "dist"

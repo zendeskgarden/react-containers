@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.14](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-pagination@0.1.13...@zendeskgarden/container-pagination@0.1.14) (2019-10-20)
+
+
+### Bug Fixes
+
+* **pagination:** remove unnecessary attributes ([#119](https://github.com/zendeskgarden/react-containers/issues/119)) ([c04dd77](https://github.com/zendeskgarden/react-containers/commit/c04dd770ad95963889e1ec0808d5002485dc07b7))
+
+
+
+
+
 ## [0.1.13](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-pagination@0.1.12...@zendeskgarden/container-pagination@0.1.13) (2019-10-16)
 
 **Note:** Version bump only for package @zendeskgarden/container-pagination
