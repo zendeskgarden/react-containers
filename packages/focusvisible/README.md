@@ -18,7 +18,7 @@ For live examples check out our [storybook](https://zendeskgarden.github.io/reac
 ```jsx static
 import { useRef } from 'react';
 import styled from 'styled-components';
-import { useExample } from '@zendeskgarden/container-focusvisible';
+import { useFocusVisible } from '@zendeskgarden/container-focusvisible';
 
 const FocusVisibleButton = styled.button`
   :focus {
@@ -67,6 +67,4 @@ const Example = () => {
     </FocusVisibleContainer>
   );
 };
-
-<Example />;
 ```
