@@ -10,8 +10,8 @@ import PropTypes from 'prop-types';
 import { useButtonGroup, IUseButtonGroupProps, UseButtonGroupReturnValue } from './useButtonGroup';
 
 export interface IButtonGroupContainerProps<Item> extends IUseButtonGroupProps<Item> {
-  render?: (options: UseButtonGroupReturnValue<Item>) => React.ReactElement;
-  children?: (options: UseButtonGroupReturnValue<Item>) => React.ReactElement;
+  render?: (options: UseButtonGroupReturnValue<Item>) => React.ReactNode;
+  children?: (options: UseButtonGroupReturnValue<Item>) => React.ReactNode;
 }
 
 export const ButtonGroupContainer: React.FunctionComponent<IButtonGroupContainerProps<any>> = ({
@@ -19,7 +19,7 @@ export const ButtonGroupContainer: React.FunctionComponent<IButtonGroupContainer
   render = children,
   ...options
 }) => {
-  return render!(useButtonGroup(options));
+  return render!(useButtonGroup(options)) as React.ReactElement;
 };
 
 ButtonGroupContainer.propTypes = {
