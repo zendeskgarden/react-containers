@@ -10,8 +10,8 @@ import PropTypes from 'prop-types';
 import { useTabs, IUseTabsProps, IUseTabsReturnValue } from './useTabs';
 
 export interface ITabsContainerProps extends IUseTabsProps<any> {
-  render?: (options: IUseTabsReturnValue<any>) => React.ReactElement;
-  children?: (options: IUseTabsReturnValue<any>) => React.ReactElement;
+  render?: (options: IUseTabsReturnValue<any>) => React.ReactNode;
+  children?: (options: IUseTabsReturnValue<any>) => React.ReactNode;
 }
 
 export const TabsContainer: React.FunctionComponent<ITabsContainerProps> = ({
@@ -19,7 +19,7 @@ export const TabsContainer: React.FunctionComponent<ITabsContainerProps> = ({
   render = children,
   ...options
 }) => {
-  return render!(useTabs(options));
+  return render!(useTabs(options)) as React.ReactElement;
 };
 
 TabsContainer.propTypes = {

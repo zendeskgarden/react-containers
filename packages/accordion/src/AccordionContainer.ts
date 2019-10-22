@@ -10,14 +10,14 @@ import PropTypes from 'prop-types';
 import { useAccordion, IUseAccordionProps, IUseAccordionReturnValue } from './useAccordion';
 
 export interface IAccordionContainerProps extends IUseAccordionProps {
-  render?: (options: IUseAccordionReturnValue) => React.ReactElement;
-  children?: (options: IUseAccordionReturnValue) => React.ReactElement;
+  render?: (options: IUseAccordionReturnValue) => React.ReactNode;
+  children?: (options: IUseAccordionReturnValue) => React.ReactNode;
 }
 
 export const AccordionContainer: React.FunctionComponent<IAccordionContainerProps> = props => {
   const { children, render = children, ...options } = props;
 
-  return render!(useAccordion(options));
+  return render!(useAccordion(options)) as React.ReactElement;
 };
 
 AccordionContainer.propTypes = {

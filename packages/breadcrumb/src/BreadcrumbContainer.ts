@@ -10,15 +10,15 @@ import PropTypes from 'prop-types';
 import useBreadcrumb, { IUseBreadcrumbReturnValue } from './useBreadcrumb';
 
 export interface IBreadcrumbContainerProps {
-  render?: (options: IUseBreadcrumbReturnValue) => React.ReactElement;
-  children?: (options: IUseBreadcrumbReturnValue) => React.ReactElement;
+  render?: (options: IUseBreadcrumbReturnValue) => React.ReactNode;
+  children?: (options: IUseBreadcrumbReturnValue) => React.ReactNode;
 }
 
 const BreadcrumbContainer: React.FunctionComponent<IBreadcrumbContainerProps> = ({
   children,
   render = children
 }) => {
-  return render!(useBreadcrumb());
+  return render!(useBreadcrumb()) as React.ReactElement;
 };
 
 BreadcrumbContainer.propTypes = {

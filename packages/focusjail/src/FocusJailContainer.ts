@@ -10,8 +10,8 @@ import PropTypes from 'prop-types';
 import { useFocusJail, IUseFocusJailProps, IUseFocusJailReturnValue } from './useFocusJail';
 
 export interface IFocusJailContainerProps extends IUseFocusJailProps {
-  render?: (options: IUseFocusJailReturnValue) => React.ReactElement;
-  children?: (options: IUseFocusJailReturnValue) => React.ReactElement;
+  render?: (options: IUseFocusJailReturnValue) => React.ReactNode;
+  children?: (options: IUseFocusJailReturnValue) => React.ReactNode;
 }
 
 export const FocusJailContainer: React.FunctionComponent<IFocusJailContainerProps> = ({
@@ -19,7 +19,7 @@ export const FocusJailContainer: React.FunctionComponent<IFocusJailContainerProp
   render = children,
   ...options
 }) => {
-  return render!(useFocusJail(options));
+  return render!(useFocusJail(options)) as React.ReactElement;
 };
 
 FocusJailContainer.propTypes = {
