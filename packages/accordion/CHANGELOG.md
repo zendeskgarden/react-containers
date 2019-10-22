@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.2](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-accordion@0.3.1...@zendeskgarden/container-accordion@0.3.2) (2019-10-22)
+
+
+### Bug Fixes
+
+* update render prop function return types ([#121](https://github.com/zendeskgarden/react-containers/issues/121)) ([eaea3fd](https://github.com/zendeskgarden/react-containers/commit/eaea3fd61a16085ef480ddbd2d67aa377738db36))
+
+
+
+
+
 ## [0.3.1](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-accordion@0.3.0...@zendeskgarden/container-accordion@0.3.1) (2019-10-16)
 
 **Note:** Version bump only for package @zendeskgarden/container-accordion

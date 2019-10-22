@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.15](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-pagination@0.1.14...@zendeskgarden/container-pagination@0.1.15) (2019-10-22)
+
+**Note:** Version bump only for package @zendeskgarden/container-pagination
+
+
+
+
+
 ## [0.1.14](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-pagination@0.1.13...@zendeskgarden/container-pagination@0.1.14) (2019-10-20)
 
 

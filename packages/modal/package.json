@@ -8,7 +8,7 @@
   "bugs": {
     "url": "https://github.com/zendeskgarden/react-containers/issues"
   },
-  "version": "0.3.5",
+  "version": "0.3.6",
   "main": "./dist/index.js",
   "files": [
     "dist"
@@ -17,7 +17,7 @@
     "build": "../../utils/scripts/build.sh"
   },
   "dependencies": {
-    "@zendeskgarden/container-focusjail": "^1.2.1",
+    "@zendeskgarden/container-focusjail": "^1.2.2",
     "@zendeskgarden/container-utilities": "^0.3.0"
   },
   "peerDependencies": {
