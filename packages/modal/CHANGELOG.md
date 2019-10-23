@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-modal@0.3.6...@zendeskgarden/container-modal@0.4.0) (2019-10-23)
+
+
+### Features
+
+* **modal:** migrate useModal to TypeScript ([#118](https://github.com/zendeskgarden/react-containers/issues/118)) ([f98fb6b](https://github.com/zendeskgarden/react-containers/commit/f98fb6bc29add72af208a7c92c12a2832a94fc58))
+
+
+
+
+
 ## [0.3.6](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-modal@0.3.5...@zendeskgarden/container-modal@0.3.6) (2019-10-22)
 
 **Note:** Version bump only for package @zendeskgarden/container-modal
