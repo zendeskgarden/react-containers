@@ -6,7 +6,7 @@
  */
 
 /* Hooks */
-export { useModal } from './useModal';
+export { useModal, IUseModalProps, IUseModalReturnValue } from './useModal';
 
 /* Render-props */
-export { ModalContainer } from './ModalContainer';
+export { ModalContainer, IModalContainerProps } from './ModalContainer';

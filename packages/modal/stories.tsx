@@ -78,7 +78,7 @@ storiesOf('Modal Container', module)
       );
     };
 
-    return <Modal coolProp />;
+    return <Modal />;
   })
   .add('ModalContainer', () => {
     const Modal = () => {
