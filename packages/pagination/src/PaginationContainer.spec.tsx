@@ -7,7 +7,7 @@
 
 import React, { useRef } from 'react';
 import { render, fireEvent } from '@testing-library/react';
-
+import { IGetContainerProps, IGetPageProps } from './usePagination';
 import { PaginationContainer } from './PaginationContainer';
 
 describe('PaginationContainer', () => {
@@ -16,7 +16,7 @@ describe('PaginationContainer', () => {
   const BasicExample = () => {
     const previousPageRef = useRef(null);
     const nextPageRef = useRef(null);
-    const pageRefs = pages.map(() => React.createRef(null));
+    const pageRefs = pages.map(() => React.createRef());
 
     return (
       <PaginationContainer>
@@ -71,7 +71,7 @@ describe('PaginationContainer', () => {
     );
   };
 
-  const containerProps = props => {
+  const containerProps = (props: IGetContainerProps) => {
     return render(
       <PaginationContainer>
         {({ getContainerProps }) => (
@@ -81,7 +81,7 @@ describe('PaginationContainer', () => {
     );
   };
 
-  const pageProps = props => {
+  const pageProps = (props: IGetPageProps<any>) => {
     return render(
       <PaginationContainer>
         {({ getPageProps }) => <div {...getPageProps({ 'data-test-id': 'page', ...props })} />}
@@ -89,7 +89,7 @@ describe('PaginationContainer', () => {
     );
   };
 
-  const nextPageProps = props => {
+  const nextPageProps = (props: IGetPageProps<any>) => {
     return render(
       <PaginationContainer>
         {({ getNextPageProps }) => (
@@ -99,7 +99,7 @@ describe('PaginationContainer', () => {
     );
   };
 
-  const previousPageProps = props => {
+  const previousPageProps = (props: IGetPageProps<any>) => {
     return render(
       <PaginationContainer>
         {({ getPreviousPageProps }) => {
@@ -128,8 +128,8 @@ describe('PaginationContainer', () => {
 
   describe('getPreviousPageProps()', () => {
     describe('throws', () => {
-      let ref;
-      const component = props => {
+      let ref: React.RefObject<HTMLElement>;
+      const component = (props: IGetPageProps<any>) => {
         return () => {
           const { container } = previousPageProps(props);
 
@@ -144,13 +144,13 @@ describe('PaginationContainer', () => {
       });
 
       it('if item prop is not provided', () => {
-        expect(component({ focusRef: ref })).toThrow(
+        expect(component({ focusRef: ref } as any)).toThrow(
           'Accessibility Error: You must provide an "item" option to "getPreviousPageProps()"'
         );
       });
 
       it('if focusRef prop is not provided', () => {
-        expect(component({ item: 1 })).toThrow(
+        expect(component({ item: 1 } as any)).toThrow(
           'Accessibility Error: You must provide a "focusRef" option to "getPreviousPageProps()"'
         );
       });
@@ -179,8 +179,8 @@ describe('PaginationContainer', () => {
 
   describe('getNextPageProps()', () => {
     describe('throws', () => {
-      let ref;
-      const component = props => {
+      let ref: React.RefObject<HTMLElement>;
+      const component = (props: IGetPageProps<any>) => {
         return () => {
           const { container } = nextPageProps(props);
 
@@ -195,13 +195,13 @@ describe('PaginationContainer', () => {
       });
 
       it('if item prop is not provided', () => {
-        expect(component({ focusRef: ref })).toThrow(
+        expect(component({ focusRef: ref } as any)).toThrow(
           'Accessibility Error: You must provide an "item" option to "getNextPageProps()"'
         );
       });
 
       it('if focusRef prop is not provided', () => {
-        expect(component({ item: 1 })).toThrow(
+        expect(component({ item: 1 } as any)).toThrow(
           'Accessibility Error: You must provide a "focusRef" option to "getNextPageProps()"'
         );
       });
@@ -227,8 +227,8 @@ describe('PaginationContainer', () => {
 
   describe('getPageProps()', () => {
     describe('throws', () => {
-      let ref;
-      const component = props => {
+      let ref: React.RefObject<HTMLElement>;
+      const component = (props: IGetPageProps<any>) => {
         return () => {
           const { container } = pageProps(props);
 
@@ -243,13 +243,13 @@ describe('PaginationContainer', () => {
       });
 
       it('if item prop is not provided', () => {
-        expect(component({ focusRef: ref })).toThrow(
+        expect(component({ focusRef: ref } as any)).toThrow(
           'Accessibility Error: You must provide an "item" option to "getPageProps()"'
         );
       });
 
       it('if focusRef prop is not provided', () => {
-        expect(component({ item: 1 })).toThrow(
+        expect(component({ item: 1 } as any)).toThrow(
           'Accessibility Error: You must provide a "focusRef" option to "getPageProps()"'
         );
       });
