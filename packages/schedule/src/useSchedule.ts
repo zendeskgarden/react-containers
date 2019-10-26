@@ -7,14 +7,30 @@
 
 import { useState, useLayoutEffect } from 'react';
 
-export default function useSchedule({ duration = 1250, delayMS = 750, loop = true } = {}) {
+export interface IUseScheduleProps {
+  duration?: number;
+  delayMS?: number;
+  loop?: boolean;
+}
+
+export interface IUseScheduleReturnValue {
+  elapsed: number;
+  delayMS: number;
+  delayComplete: boolean;
+}
+
+export const useSchedule = ({
+  duration = 1250,
+  delayMS = 750,
+  loop = true
+}: IUseScheduleProps = {}): IUseScheduleReturnValue => {
   const [elapsed, setTime] = useState(0);
   const [delayComplete, setDelayComplete] = useState(false);
 
   useLayoutEffect(() => {
-    let raf;
-    let start;
-    let loopTimeout;
+    let raf: number;
+    let start: number;
+    let loopTimeout: NodeJS.Timeout;
 
     const tick = () => {
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
@@ -53,4 +69,4 @@ export default function useSchedule({ duration = 1250, delayMS = 750, loop = tru
     delayMS,
     delayComplete
   };
-}
+};

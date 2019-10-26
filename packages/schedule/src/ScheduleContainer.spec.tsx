@@ -8,12 +8,12 @@
 import React from 'react';
 import { render, act } from '@testing-library/react';
 
-import ScheduleContainer from './ScheduleContainer';
+import { ScheduleContainer, IScheduleContainerProps } from './ScheduleContainer';
 
 jest.useFakeTimers();
 
 describe('ScheduleContainer', () => {
-  const BasicExample = props => (
+  const BasicExample = (props: IScheduleContainerProps) => (
     <ScheduleContainer {...props}>
       {({ elapsed, delayMS, delayComplete }) => {
         if (!delayComplete && delayMS !== 0) {
@@ -26,13 +26,15 @@ describe('ScheduleContainer', () => {
   );
 
   beforeEach(() => {
-    jest.spyOn(window, 'requestAnimationFrame').mockImplementation(cb => {
-      setTimeout(() => {
-        cb();
+    jest.spyOn(window, 'requestAnimationFrame').mockImplementation((cb: FrameRequestCallback) => {
+      const timerId = setTimeout(() => {
+        cb(Date.now());
       }, 1000 / 60);
+
+      return Number(timerId);
     });
     jest.spyOn(window, 'cancelAnimationFrame');
-    clearTimeout.mockClear();
+    (clearTimeout as jest.Mock).mockClear();
   });
 
   afterEach(() => {
@@ -53,17 +55,16 @@ describe('ScheduleContainer', () => {
   it('updates elapsed render prop on each raf call', () => {
     const now = Date.now();
     const { getByTestId } = render(<BasicExample />);
-    let spy;
 
     act(() => {
-      spy = jest.spyOn(Date, 'now').mockImplementationOnce(() => now - 1000);
+      const spy = jest.spyOn(Date, 'now').mockImplementationOnce(() => now - 1000);
+
       jest.runOnlyPendingTimers();
       jest.advanceTimersByTime(1000);
+      spy.mockRestore();
     });
 
     expect(getByTestId('schedule').textContent).not.toBe('0');
-
-    spy.mockRestore();
   });
 
   it('cancels requestAnimationFrame on duration end', () => {
@@ -86,7 +87,7 @@ describe('ScheduleContainer', () => {
     expect(cancelAnimationFrame).toHaveBeenCalled();
   });
 
-  it('passes correct ms delay to intitial setTimeout', () => {
+  it('passes correct ms delay to initial setTimeout', () => {
     render(<BasicExample delayMS={1000} />);
 
     expect(setTimeout).toHaveBeenCalledWith(expect.any(Function), 1000);

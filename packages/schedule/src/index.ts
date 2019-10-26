@@ -5,5 +5,5 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-export { default as useSchedule } from './useSchedule';
-export { default as ScheduleContainer } from './ScheduleContainer';
+export { useSchedule, IUseScheduleProps, IUseScheduleReturnValue } from './useSchedule';
+export { ScheduleContainer, IScheduleContainerProps } from './ScheduleContainer';
