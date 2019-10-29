@@ -8,36 +8,58 @@
 import { useState, useEffect, useRef } from 'react';
 import { composeEventHandlers, generateId, KEY_CODES } from '@zendeskgarden/container-utilities';
 
-export function useTooltip({ delayMilliseconds = 500, id, isVisible } = {}) {
+export interface IUseTooltipProps {
+  delayMilliseconds?: number;
+  id?: string;
+  isVisible?: boolean;
+}
+
+export interface IUseTooltipReturnValue {
+  isVisible?: boolean;
+  getTooltipProps: <T>(options?: T) => T & React.HTMLProps<any>;
+  getTriggerProps: <T>(options?: T) => T & React.HTMLProps<any>;
+  openTooltip: (delayMs?: number) => void;
+  closeTooltip: (delayMs?: number) => void;
+}
+
+export const useTooltip = ({
+  delayMilliseconds = 500,
+  id,
+  isVisible
+}: IUseTooltipProps = {}): IUseTooltipReturnValue => {
   const [visibility, setVisibility] = useState(isVisible);
   const [_id] = useState(id || generateId('garden-tooltip-container'));
   const isMounted = useRef(false);
 
-  let openTooltipTimeout;
-  let closeTooltipTimeout;
+  let openTooltipTimeoutId: number | undefined;
+  let closeTooltipTimeoutId: number | undefined;
 
   const openTooltip = (delayMs = delayMilliseconds) => {
-    clearTimeout(closeTooltipTimeout);
+    clearTimeout(closeTooltipTimeoutId);
 
-    openTooltipTimeout = setTimeout(() => {
+    const timerId = setTimeout(() => {
       if (isMounted.current) {
         setVisibility(true);
       }
     }, delayMs);
+
+    openTooltipTimeoutId = Number(timerId);
   };
 
   const closeTooltip = (delayMs = delayMilliseconds) => {
-    clearTimeout(openTooltipTimeout);
+    clearTimeout(openTooltipTimeoutId);
 
-    closeTooltipTimeout = setTimeout(() => {
+    const timerId = setTimeout(() => {
       if (isMounted.current) {
         setVisibility(false);
       }
     }, delayMs);
+
+    closeTooltipTimeoutId = Number(timerId);
   };
 
-  // Sometimes the timeout will call setVisibility even after unmount and cleanup
-  // reproducable when running tests, happens when fast switching in storybook.
+  // Sometimes the timeout will call setVisibility even after un-mount and cleanup.
+  // Reproducible when running tests and happens when fast switching in Storybook.
   // May be related https://github.com/facebook/react/pull/15650
   useEffect(() => {
     isMounted.current = true;
@@ -47,23 +69,17 @@ export function useTooltip({ delayMilliseconds = 500, id, isVisible } = {}) {
     };
   }, []);
 
-  // Clean up stray timeouts if tooltip unmounts
+  // Clean up stray timeouts if tooltip un-mounts
   useEffect(() => {
     return () => {
-      clearTimeout(openTooltipTimeout);
-      clearTimeout(closeTooltipTimeout);
+      clearTimeout(openTooltipTimeoutId);
+      clearTimeout(closeTooltipTimeoutId);
     };
-  }, [closeTooltipTimeout, openTooltipTimeout]);
+  }, [closeTooltipTimeoutId, openTooltipTimeoutId]);
 
-  const getTriggerProps = ({
-    tabIndex = 0,
-    onMouseEnter,
-    onMouseLeave,
-    onFocus,
-    onBlur,
-    onKeyDown,
-    ...other
-  } = {}) => {
+  const getTriggerProps = (
+    { tabIndex = 0, onMouseEnter, onMouseLeave, onFocus, onBlur, onKeyDown, ...other } = {} as any
+  ) => {
     return {
       tabIndex,
       onMouseEnter: composeEventHandlers(onMouseEnter, () => openTooltip()),
@@ -71,7 +87,7 @@ export function useTooltip({ delayMilliseconds = 500, id, isVisible } = {}) {
       onFocus: composeEventHandlers(onFocus, () => openTooltip()),
       // Close menu immediately when blurred
       onBlur: composeEventHandlers(onBlur, () => closeTooltip(0)),
-      onKeyDown: composeEventHandlers(onKeyDown, event => {
+      onKeyDown: composeEventHandlers(onKeyDown, (event: KeyboardEvent) => {
         if (event.keyCode === KEY_CODES.ESCAPE && visibility) {
           closeTooltip(0);
         }
@@ -83,7 +99,9 @@ export function useTooltip({ delayMilliseconds = 500, id, isVisible } = {}) {
     };
   };
 
-  const getTooltipProps = ({ role = 'tooltip', onMouseEnter, onMouseLeave, ...other } = {}) => {
+  const getTooltipProps = (
+    { role = 'tooltip', onMouseEnter, onMouseLeave, ...other } = {} as any
+  ) => {
     return {
       role,
       onMouseEnter: composeEventHandlers(onMouseEnter, () => openTooltip()),
@@ -101,4 +119,4 @@ export function useTooltip({ delayMilliseconds = 500, id, isVisible } = {}) {
     openTooltip,
     closeTooltip
   };
-}
+};

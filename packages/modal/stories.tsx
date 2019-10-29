@@ -64,10 +64,10 @@ storiesOf('Modal Container', module)
                   <button>Submit</button>
                 </section>
                 <button
-                  {...getCloseProps({
+                  {...(getCloseProps({
                     'aria-label': 'Schließen Sie Modal',
                     style: { position: 'absolute', top: '20px', right: '20px', cursor: 'pointer' }
-                  })}
+                  }) as any)}
                 >
                   X
                 </button>
@@ -132,7 +132,7 @@ storiesOf('Modal Container', module)
                         <button>Submit</button>
                       </section>
                       <button
-                        {...getCloseProps({
+                        {...(getCloseProps({
                           'aria-label': 'Schließen Sie Modal',
                           style: {
                             position: 'absolute',
@@ -140,7 +140,7 @@ storiesOf('Modal Container', module)
                             right: '20px',
                             cursor: 'pointer'
                           }
-                        })}
+                        }) as any)}
                       >
                         X
                       </button>
