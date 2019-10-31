@@ -5,9 +5,37 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import { useSelection } from '@zendeskgarden/container-selection';
+import {
+  useSelection,
+  IUseSelectionProps,
+  IUseSelectionState,
+  IGetItemPropsOptions
+} from '@zendeskgarden/container-selection';
 
-export function usePagination(options) {
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface IUsePaginationProps<Item> extends IUseSelectionProps<Item> {}
+
+export interface IGetPageProps<Item> extends IGetItemPropsOptions<Item> {
+  page?: number;
+  current?: any;
+  ariaLabel?: any;
+}
+
+export interface IGetContainerProps extends Omit<React.HTMLProps<any>, 'role'> {
+  role?: string | null;
+  ariaLabel?: string;
+}
+
+export interface IUsePaginationReturnValue<Item> extends IUseSelectionState<Item> {
+  getContainerProps: (options?: IGetContainerProps & any) => any;
+  getPageProps: <T extends IGetPageProps<Item>>(options?: T) => any;
+  getPreviousPageProps: <T extends IGetPageProps<Item>>(options?: T) => any;
+  getNextPageProps: <T extends IGetPageProps<Item>>(options?: T) => any;
+}
+
+export function usePagination<Item = any>(
+  options: IUsePaginationProps<Item>
+): IUsePaginationReturnValue<Item> {
   const {
     selectedItem,
     focusedItem,
@@ -15,7 +43,7 @@ export function usePagination(options) {
     getItemProps
   } = useSelection(options);
 
-  const getContainerProps = ({ role = 'navigation', ariaLabel, ...props } = {}) => {
+  const getContainerProps = ({ role = 'navigation', ariaLabel, ...props } = {} as any) => {
     return {
       role,
       'aria-label': ariaLabel || 'Pagination navigation',
@@ -25,21 +53,21 @@ export function usePagination(options) {
     };
   };
 
-  const getPreviousPageProps = ({ ariaLabel, ...props } = {}) => {
+  const getPreviousPageProps = ({ ariaLabel, ...props } = {} as any) => {
     return {
       'aria-label': ariaLabel || 'Previous Page',
       ...props
     };
   };
 
-  const getNextPageProps = ({ ariaLabel, ...props } = {}) => {
+  const getNextPageProps = ({ ariaLabel, ...props } = {} as any) => {
     return {
       'aria-label': ariaLabel || 'Next Page',
       ...props
     };
   };
 
-  const getPageProps = ({ ariaLabel, page, current, ...other } = {}) => {
+  const getPageProps = ({ ariaLabel, page, current, ...other } = {} as any) => {
     let ariaLabelText = `Page ${page}`;
 
     if (current && !ariaLabel) {

@@ -20,7 +20,7 @@ storiesOf('Pagination Container', module)
     const Pagination = () => {
       const previousPageRef = useRef(null);
       const nextPageRef = useRef(null);
-      const pageRefs = pages.map(() => React.createRef(null));
+      const pageRefs = pages.map(() => React.createRef());
       const [controlledSelectedItem, setSelectedItem] = useState();
 
       const {
@@ -30,7 +30,7 @@ storiesOf('Pagination Container', module)
         getNextPageProps,
         getPreviousPageProps,
         getPageProps
-      } = usePagination({
+      } = usePagination<number | string>({
         selectedItem: controlledSelectedItem,
         onSelect: newSelectedItem => {
           let modifiedNewSelectedItem = newSelectedItem;
@@ -72,8 +72,8 @@ storiesOf('Pagination Container', module)
                     focusRef: pageRefs[index],
                     key: `page-${index}`,
                     style: {
-                      outline: index === focusedItem && '3px solid red',
-                      background: index === selectedItem && 'gray',
+                      outline: index === focusedItem ? '3px solid red' : undefined,
+                      background: index === selectedItem ? 'gray' : undefined,
                       padding: '0 6px'
                     }
                   })}
@@ -103,7 +103,7 @@ storiesOf('Pagination Container', module)
       const [controlledSelectedItem, setSelectedItem] = useState();
       const previousPageRef = useRef(null);
       const nextPageRef = useRef(null);
-      const pageRefs = pages.map(() => React.createRef(null));
+      const pageRefs = pages.map(() => React.createRef());
 
       return (
         <PaginationContainer
@@ -156,8 +156,8 @@ storiesOf('Pagination Container', module)
                           ref: pageRefs[index],
                           key: `page-${index}`,
                           style: {
-                            outline: index === focusedItem && '3px solid red',
-                            background: index === selectedItem && 'gray',
+                            outline: index === focusedItem ? '3px solid red' : undefined,
+                            background: index === selectedItem ? 'gray' : undefined,
                             padding: '0 6px'
                           }
                         })}
