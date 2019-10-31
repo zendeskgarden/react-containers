@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-pagination@0.1.15...@zendeskgarden/container-pagination@0.2.0) (2019-10-31)
+
+
+### Features
+
+* **pagination:** upgrade pagination package to TypeScript ([#122](https://github.com/zendeskgarden/react-containers/issues/122)) ([091a82e](https://github.com/zendeskgarden/react-containers/commit/091a82e022064e213ed068b831eb8b2efc27bf55))
+
+
+
+
+
 ## [0.1.15](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-pagination@0.1.14...@zendeskgarden/container-pagination@0.1.15) (2019-10-22)
 
 **Note:** Version bump only for package @zendeskgarden/container-pagination
