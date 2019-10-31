@@ -347,6 +347,16 @@ describe('SelectionContainer', () => {
             expect(item).toHaveAttribute('data-focused', 'true');
           });
 
+          it('decrements focusedIndex in RTL mode', () => {
+            const { getAllByTestId } = render(<BasicExample direction="vertical" rtl />);
+            const [item, secondItem] = getAllByTestId('item');
+
+            fireEvent.click(secondItem);
+            fireEvent.keyDown(secondItem, { keyCode: KEY_CODES.UP });
+
+            expect(item).toHaveAttribute('data-focused', 'true');
+          });
+
           it('decrements and wraps focusedIndex if currently less than or equal to 0', () => {
             const { getAllByTestId } = render(<BasicExample direction="vertical" />);
             const [item, , lastItem] = getAllByTestId('item');
@@ -361,6 +371,16 @@ describe('SelectionContainer', () => {
         describe('DOWN keyCode', () => {
           it('increments focusedIndex if currently less than items length', () => {
             const { getAllByTestId } = render(<BasicExample direction="vertical" />);
+            const [item, secondItem] = getAllByTestId('item');
+
+            fireEvent.click(item);
+            fireEvent.keyDown(item, { keyCode: KEY_CODES.DOWN });
+
+            expect(secondItem).toHaveAttribute('data-focused', 'true');
+          });
+
+          it('increments focusedIndex in RTL mode', () => {
+            const { getAllByTestId } = render(<BasicExample direction="vertical" rtl />);
             const [item, secondItem] = getAllByTestId('item');
 
             fireEvent.click(item);
