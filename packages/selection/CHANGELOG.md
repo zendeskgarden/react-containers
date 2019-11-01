@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.3](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-selection@1.2.2...@zendeskgarden/container-selection@1.2.3) (2019-11-01)
+
+
+### Bug Fixes
+
+* **selection:** correct vertical ordering in RTL mode ([#125](https://github.com/zendeskgarden/react-containers/issues/125)) ([953ff41](https://github.com/zendeskgarden/react-containers/commit/953ff411ff6bc99a3f6a0678f1cded04e5d2eb80))
+
+
+
+
+
 ## [1.2.2](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-selection@1.2.1...@zendeskgarden/container-selection@1.2.2) (2019-10-22)
 
 

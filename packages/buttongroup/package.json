@@ -8,7 +8,7 @@
   "bugs": {
     "url": "https://github.com/zendeskgarden/react-containers/issues"
   },
-  "version": "0.2.2",
+  "version": "0.2.3",
   "main": "./dist/index.js",
   "files": [
     "dist"
@@ -18,7 +18,7 @@
   },
   "types": "dist/typings/index.d.ts",
   "dependencies": {
-    "@zendeskgarden/container-selection": "^1.2.2"
+    "@zendeskgarden/container-selection": "^1.2.3"
   },
   "peerDependencies": {
     "prop-types": "^15.6.1",
