@@ -47,7 +47,7 @@ export function usePagination<Item = any>(
     return {
       role,
       'aria-label': ariaLabel || 'Pagination navigation',
-      'data-garden-container-id': 'pagination',
+      'data-garden-container-id': 'containers.pagination',
       'data-garden-container-version': PACKAGE_VERSION,
       ...props
     };

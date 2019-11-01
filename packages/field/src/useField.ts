@@ -27,7 +27,7 @@ export function useField(idPrefix?: string): IUseFieldPropGetters {
     return {
       id,
       htmlFor,
-      'data-garden-container-id': 'field',
+      'data-garden-container-id': 'containers.field',
       'data-garden-container-version': PACKAGE_VERSION,
       ...other
     } as any;

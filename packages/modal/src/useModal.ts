@@ -42,7 +42,7 @@ export function useModal(
       onClick: composeEventHandlers(onClick, (event: MouseEvent) => {
         closeModal(event);
       }),
-      'data-garden-container-id': 'modal',
+      'data-garden-container-id': 'containers.modal',
       'data-garden-container-version': PACKAGE_VERSION,
       ...other
     };

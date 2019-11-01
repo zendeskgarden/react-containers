@@ -77,7 +77,7 @@ export function useTooltip({ delayMilliseconds = 500, id, isVisible } = {}) {
         }
       }),
       'aria-describedby': _id,
-      'data-garden-container-id': 'tooltip',
+      'data-garden-container-id': 'containers.tooltip',
       'data-garden-container-version': PACKAGE_VERSION,
       ...other
     };

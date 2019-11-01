@@ -36,7 +36,7 @@ export function useButtonGroup<Item = any>(
   const getGroupProps = ({ role = 'group', ...other } = {}) => {
     return {
       role,
-      'data-garden-container-id': 'buttongroup',
+      'data-garden-container-id': 'containers.buttongroup',
       'data-garden-container-version': PACKAGE_VERSION,
       ...other
     };
