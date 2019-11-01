@@ -308,7 +308,7 @@ export function useSelection<Item = any>({
           (e.keyCode === KEY_CODES.UP && verticalDirection) ||
           (e.keyCode === KEY_CODES.LEFT && horizontalDirection)
         ) {
-          if (rtl) {
+          if (rtl && !verticalDirection) {
             dispatch({ type: 'INCREMENT', items, focusedItem, selectedItem, onFocus });
           } else {
             dispatch({ type: 'DECREMENT', items, focusedItem, selectedItem, onFocus });
@@ -319,7 +319,7 @@ export function useSelection<Item = any>({
           (e.keyCode === KEY_CODES.DOWN && verticalDirection) ||
           (e.keyCode === KEY_CODES.RIGHT && horizontalDirection)
         ) {
-          if (rtl) {
+          if (rtl && !verticalDirection) {
             dispatch({ type: 'DECREMENT', items, focusedItem, selectedItem, onFocus });
           } else {
             dispatch({ type: 'INCREMENT', items, focusedItem, selectedItem, onFocus });
