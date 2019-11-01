@@ -9,14 +9,19 @@ import { useState, useRef, useEffect } from 'react';
 
 import { composeEventHandlers } from '@zendeskgarden/container-utilities';
 
-export function useKeyboardFocus() {
+export interface IUseKeyboardFocusReturnValue {
+  getFocusProps: <T>(options?: T) => T & React.HTMLProps<any>;
+  keyboardFocused: boolean;
+}
+
+export function useKeyboardFocus(): IUseKeyboardFocusReturnValue {
   const [keyboardFocused, setKeyboardFocused] = useState(false);
-  const focusableTimeoutRef = useRef(undefined);
+  const focusableTimeoutIdRef = useRef<number>();
   const isKeyboardFocusableRef = useRef(true);
 
   useEffect(() => {
     return () => {
-      clearTimeout(focusableTimeoutRef.current);
+      clearTimeout(focusableTimeoutIdRef.current);
     };
   }, []);
 
@@ -27,9 +32,11 @@ export function useKeyboardFocus() {
      * This is necessary to recognize focus events caused by keyboard vs mouseDown.
      * Due to event ordering this is always called before onFocus.
      */
-    focusableTimeoutRef.current = setTimeout(() => {
+    const timeoutId = setTimeout(() => {
       isKeyboardFocusableRef.current = true;
     }, 0);
+
+    focusableTimeoutIdRef.current = Number(timeoutId);
   };
 
   const onKeyboardFocus = () => {
@@ -42,15 +49,17 @@ export function useKeyboardFocus() {
     setKeyboardFocused(false);
   };
 
-  const getFocusProps = ({
-    tabIndex = 0,
-    onBlur,
-    onFocus,
-    onMouseDown,
-    onPointerDown,
-    onTouchStart,
-    ...props
-  } = {}) => {
+  const getFocusProps = (
+    {
+      tabIndex = 0,
+      onBlur,
+      onFocus,
+      onMouseDown,
+      onPointerDown,
+      onTouchStart,
+      ...props
+    } = {} as any
+  ) => {
     return {
       tabIndex,
       onBlur: composeEventHandlers(onBlur, onKeyboardFocusBlur),
