@@ -106,7 +106,7 @@ export function useAccordion({
     return {
       role,
       'aria-level': ariaLevel,
-      'data-garden-container-id': 'accordion',
+      'data-garden-container-id': 'containers.accordion',
       'data-garden-container-version': PACKAGE_VERSION,
       ...props
     };

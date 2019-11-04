@@ -100,7 +100,7 @@ export const useFocusJail = (
           event.preventDefault();
         }
       }),
-      'data-garden-container-id': 'focusjail',
+      'data-garden-container-id': 'containers.focusjail',
       'data-garden-container-version': PACKAGE_VERSION,
       ...other
     };

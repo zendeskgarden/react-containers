@@ -58,7 +58,7 @@ export function useKeyboardFocus() {
       onMouseDown: composeEventHandlers(onMouseDown, onKeyboardFocusPointerDown),
       onPointerDown: composeEventHandlers(onPointerDown, onKeyboardFocusPointerDown),
       onTouchStart: composeEventHandlers(onTouchStart, onKeyboardFocusPointerDown),
-      'data-garden-container-id': 'keyboardfocus',
+      'data-garden-container-id': 'containers.keyboardfocus',
       'data-garden-container-version': PACKAGE_VERSION,
       ...props
     };

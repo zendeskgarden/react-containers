@@ -17,7 +17,7 @@ export default function useBreadcrumb(): IUseBreadcrumbReturnValue {
     return {
       role,
       'aria-label': 'Breadcrumb navigation',
-      'data-garden-container-id': 'breadcrumb',
+      'data-garden-container-id': 'containers.breadcrumb',
       'data-garden-container-version': PACKAGE_VERSION,
       ...other
     };

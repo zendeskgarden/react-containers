@@ -240,7 +240,7 @@ export function useSelection<Item = any>({
     ({
       role,
       'aria-orientation': direction === 'both' ? undefined : direction,
-      'data-garden-container-id': 'selection',
+      'data-garden-container-id': 'containers.selection',
       'data-garden-container-version': PACKAGE_VERSION,
       ...other
     } as any);

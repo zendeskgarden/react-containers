@@ -13,6 +13,8 @@ export function useExample({ coolProp }) {
   const getCoolProps = ({ role = 'region', ariaLabel = label, ...props } = {}) => ({
     role,
     'aria-label': ariaLabel,
+    'data-garden-container-id': 'containers.example',
+    'data-garden-container-version': PACKAGE_VERSION,
     ...props
   });
 
