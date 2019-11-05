@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-tooltip@0.2.7...@zendeskgarden/container-tooltip@0.3.0) (2019-11-05)
+
+
+### Features
+
+* **tooltip:** migrate tooltip package to TypeScript ([#124](https://github.com/zendeskgarden/react-containers/issues/124)) ([c1892b4](https://github.com/zendeskgarden/react-containers/commit/c1892b4a87008e07f5d2728ecada12e8de22f272))
+
+
+
+
+
 ## [0.2.7](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-tooltip@0.2.6...@zendeskgarden/container-tooltip@0.2.7) (2019-11-04)
 
 **Note:** Version bump only for package @zendeskgarden/container-tooltip

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-modal@0.4.1...@zendeskgarden/container-modal@0.5.0) (2019-11-05)
+
+
+### Features
+
+* **tooltip:** migrate tooltip package to TypeScript ([#124](https://github.com/zendeskgarden/react-containers/issues/124)) ([c1892b4](https://github.com/zendeskgarden/react-containers/commit/c1892b4a87008e07f5d2728ecada12e8de22f272))
+
+
+
+
+
 ## [0.4.1](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-modal@0.4.0...@zendeskgarden/container-modal@0.4.1) (2019-11-04)
 
 **Note:** Version bump only for package @zendeskgarden/container-modal
