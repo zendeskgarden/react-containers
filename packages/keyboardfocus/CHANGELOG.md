@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-keyboardfocus@0.2.7...@zendeskgarden/container-keyboardfocus@0.3.0) (2019-11-05)
+
+
+### Features
+
+* **keyboardfocus:** migrate keyboardfocus package to TypeScript ([#126](https://github.com/zendeskgarden/react-containers/issues/126)) ([73ef19e](https://github.com/zendeskgarden/react-containers/commit/73ef19eeb9e715c2f718f1c8ec8e33eed9fcc0c4))
+
+
+
+
+
 ## [0.2.7](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-keyboardfocus@0.2.6...@zendeskgarden/container-keyboardfocus@0.2.7) (2019-11-04)
 
 **Note:** Version bump only for package @zendeskgarden/container-keyboardfocus
