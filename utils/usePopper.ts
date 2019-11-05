@@ -7,12 +7,24 @@
 
 // This is for the storybook example only not exported or published in the package
 import { useState, useEffect, useRef } from 'react';
-import PopperJS from 'popper.js';
+import PopperJS, { Placement, Modifiers, Data } from 'popper.js';
 
-export function usePopper(options) {
+export interface IUsePopperOptions {
+  referenceRef: React.RefObject<HTMLElement>;
+  popperRef: React.RefObject<HTMLElement>;
+  modifiers?: Modifiers;
+  placement?: Placement;
+}
+
+export interface IUsePopperState {
+  data?: Data;
+  placement?: Placement;
+}
+
+export function usePopper(options: IUsePopperOptions) {
   const props = {
     ...{
-      placement: 'top',
+      placement: 'top' as Placement,
       eventsEnabled: true,
       positionFixed: false
     },
@@ -26,15 +38,16 @@ export function usePopper(options) {
     eventsEnabled,
     positionFixed
   } = props;
-  const [state, setState] = useState(() => ({
+
+  const [state, setState] = useState<IUsePopperState>(() => ({
     data: undefined,
     placement: undefined
   }));
-  const popperInstance = useRef();
+  const popperInstanceRef = useRef<PopperJS | null>();
 
   useEffect(() => {
     if (referenceRef.current && popperRef.current) {
-      popperInstance.current = new PopperJS(referenceRef.current, popperRef.current, {
+      popperInstanceRef.current = new PopperJS(referenceRef.current, popperRef.current, {
         placement: popperPlacement,
         eventsEnabled,
         positionFixed,
@@ -48,6 +61,8 @@ export function usePopper(options) {
               const { placement } = data;
 
               setState({ data, placement });
+
+              return data;
             }
           }
         }
@@ -55,14 +70,14 @@ export function usePopper(options) {
     }
 
     return () => {
-      if (popperInstance.current) {
-        popperInstance.current.destroy();
-        popperInstance.current = null;
+      if (popperInstanceRef.current) {
+        popperInstanceRef.current.destroy();
+        popperInstanceRef.current = null;
       }
     };
   }, [popperRef, referenceRef, modifiers, popperPlacement, positionFixed, eventsEnabled]);
 
-  const style =
+  const style: React.CSSProperties | CSSStyleDeclaration =
     !popperRef.current || !state.data
       ? {
           position: 'absolute',
@@ -72,7 +87,6 @@ export function usePopper(options) {
           pointerEvents: 'none'
         }
       : {
-          position: state.data.offsets.popper.position,
           ...state.data.styles
         };
 
@@ -80,6 +94,6 @@ export function usePopper(options) {
     style,
     placement: state.placement,
     outOfBoundaries: state.data && state.data.hide,
-    scheduleUpdate: popperInstance && popperInstance.scheduleUpdate
+    scheduleUpdate: popperInstanceRef.current && popperInstanceRef.current.scheduleUpdate
   };
 }

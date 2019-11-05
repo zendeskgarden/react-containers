@@ -19,12 +19,11 @@ storiesOf('Tooltip Container/useTooltip', module)
       const tooltipRef = useRef(null);
 
       const { isVisible, getTooltipProps, getTriggerProps } = useTooltip({
-        tooltipRef,
         isVisible: boolean('isVisible', false),
         delayMilliseconds: number('Tooltip delay', 500)
       });
 
-      const styles = {
+      const styles: React.CSSProperties = {
         visibility: isVisible ? 'visible' : 'hidden',
         background: '#1f73b7',
         padding: '10px',
@@ -55,13 +54,12 @@ storiesOf('Tooltip Container/useTooltip', module)
       const triggerRef = useRef(null);
 
       const { isVisible, getTooltipProps, getTriggerProps } = useTooltip({
-        tooltipRef,
         isVisible: boolean('isVisible', false),
         delayMilliseconds: number('Tooltip delay', 500)
       });
       const { style } = usePopper({ referenceRef: triggerRef, popperRef: tooltipRef });
 
-      const styles = {
+      const styles: CSSStyleDeclaration | React.CSSProperties = {
         ...style,
         visibility: isVisible ? 'visible' : 'hidden',
         background: '#1f73b7',
@@ -73,7 +71,7 @@ storiesOf('Tooltip Container/useTooltip', module)
       return (
         <>
           <div {...getTooltipProps({ ref: tooltipRef, style: styles })}>Tooltip</div>
-          <button {...getTriggerProps({ ref: triggerRef })}>Trigger</button>
+          <button {...(getTriggerProps({ ref: triggerRef }) as any)}>Trigger</button>
         </>
       );
     };
@@ -86,13 +84,12 @@ storiesOf('Tooltip Container/useTooltip', module)
 
       const { isVisible, getTooltipProps, getTriggerProps, openTooltip, closeTooltip } = useTooltip(
         {
-          tooltipRef,
           isVisible: boolean('isVisible', false),
           delayMilliseconds: number('Tooltip delay', 500)
         }
       );
 
-      const styles = {
+      const styles: React.CSSProperties = {
         visibility: isVisible ? 'visible' : 'hidden',
         background: '#000',
         padding: '10px',
@@ -128,12 +125,11 @@ storiesOf('Tooltip Container', module)
 
       return (
         <TooltipContainer
-          tooltipRef={tooltipRef}
           isVisible={boolean('isVisible', false)}
           delayMilliseconds={number('Tooltip delay', 500)}
         >
           {({ isVisible, getTooltipProps, getTriggerProps }) => {
-            const styles = {
+            const styles: React.CSSProperties = {
               visibility: isVisible ? 'visible' : 'hidden',
               background: '#1f73b7',
               padding: '10px',

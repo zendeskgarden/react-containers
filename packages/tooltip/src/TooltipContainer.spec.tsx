@@ -9,14 +9,14 @@ import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 
-import { TooltipContainer } from './TooltipContainer';
+import { TooltipContainer, ITooltipContainerProps } from './TooltipContainer';
 
 jest.useFakeTimers();
 
 describe('TooltipContainer', () => {
   const TOOLTIP_ID = 'test';
 
-  const BasicExample = props => {
+  const BasicExample = (props: ITooltipContainerProps) => {
     return (
       <TooltipContainer id={TOOLTIP_ID} {...props}>
         {({ getTooltipProps, getTriggerProps }) => (
@@ -36,7 +36,7 @@ describe('TooltipContainer', () => {
   };
 
   beforeEach(() => {
-    clearTimeout.mockClear();
+    (clearTimeout as jest.Mock).mockClear();
   });
 
   it('defaults visibility state with isVisible prop', () => {

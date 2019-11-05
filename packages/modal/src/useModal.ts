@@ -22,7 +22,7 @@ export interface IUseModalReturnValue {
   getModalProps: <T>(options?: T) => T & React.HTMLProps<any>;
   getTitleProps: <T>(options?: T) => T & React.HTMLProps<any>;
   getContentProps: <T>(options?: T) => T & React.HTMLProps<any>;
-  getCloseProps: <T>(options?: T) => T & React.ButtonHTMLAttributes<any>;
+  getCloseProps: <T>(options?: T) => T & React.HTMLProps<any>;
   closeModal?: (event: any) => void;
 }
 
