@@ -59,6 +59,7 @@ export function useTabs<Item = any>({
   const getTabListProps = ({ role = 'tablist', ...other }: React.HTMLProps<any> = {}) => {
     return {
       role,
+      'aria-orientation': vertical ? 'vertical' : 'horizontal',
       'data-garden-container-id': 'containers.tabs',
       'data-garden-container-version': PACKAGE_VERSION,
       ...other

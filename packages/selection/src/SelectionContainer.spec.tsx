@@ -102,15 +102,6 @@ describe('SelectionContainer', () => {
       const container = getByTestId('container');
 
       expect(container).toHaveAttribute('role', 'listbox');
-      expect(container).toHaveAttribute('aria-orientation', 'horizontal');
-    });
-
-    describe('while using vertical direction', () => {
-      it('applies accessibility role', () => {
-        const { getByTestId } = render(<BasicExample direction="vertical" />);
-
-        expect(getByTestId('container')).toHaveAttribute('aria-orientation', 'vertical');
-      });
     });
 
     it('first item in container defaults as the only initial focusable item', () => {
