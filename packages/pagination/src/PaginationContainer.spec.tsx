@@ -7,7 +7,7 @@
 
 import React, { useRef } from 'react';
 import { render, fireEvent } from '@testing-library/react';
-import { IGetContainerProps, IGetPageProps } from './usePagination';
+import { IGetPageProps } from './usePagination';
 import { PaginationContainer } from './PaginationContainer';
 
 describe('PaginationContainer', () => {
@@ -71,16 +71,6 @@ describe('PaginationContainer', () => {
     );
   };
 
-  const containerProps = (props: IGetContainerProps) => {
-    return render(
-      <PaginationContainer>
-        {({ getContainerProps }) => (
-          <div {...getContainerProps({ 'data-test-id': 'container', ...props })} />
-        )}
-      </PaginationContainer>
-    );
-  };
-
   const pageProps = (props: IGetPageProps<any>) => {
     return render(
       <PaginationContainer>
@@ -114,15 +104,7 @@ describe('PaginationContainer', () => {
       const { getByTestId } = render(<BasicExample />);
       const container = getByTestId('container');
 
-      expect(container).toHaveAttribute('role', 'navigation');
-      expect(container).toHaveAttribute('aria-label', 'Pagination navigation');
-    });
-
-    it('applies custom aria-label attribute', () => {
-      const ariaLabel = 'Test aria label';
-      const { getByTestId } = containerProps({ ariaLabel });
-
-      expect(getByTestId('container')).toHaveAttribute('aria-label', ariaLabel);
+      expect(container).toHaveAttribute('role', 'listbox');
     });
   });
 

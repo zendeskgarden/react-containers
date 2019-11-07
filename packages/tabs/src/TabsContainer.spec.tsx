@@ -73,6 +73,7 @@ describe('TabsContainer', () => {
       const { getByTestId } = render(<BasicExample />);
 
       expect(getByTestId('tab-list')).toHaveAttribute('role', 'tablist');
+      expect(getByTestId('tab-list')).toHaveAttribute('aria-orientation', 'horizontal');
     });
 
     describe('Tab', () => {

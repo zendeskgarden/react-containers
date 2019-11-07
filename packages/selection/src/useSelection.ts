@@ -239,7 +239,6 @@ export function useSelection<Item = any>({
   const getContainerProps = ({ role = 'listbox', ...other }: React.HTMLProps<any> = {}) =>
     ({
       role,
-      'aria-orientation': direction === 'both' ? undefined : direction,
       'data-garden-container-id': 'containers.selection',
       'data-garden-container-version': PACKAGE_VERSION,
       ...other
