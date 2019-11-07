@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.5](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-selection@1.2.4...@zendeskgarden/container-selection@1.2.5) (2019-11-07)
+
+
+### Bug Fixes
+
+* **selection:** remove aria orientation ([#129](https://github.com/zendeskgarden/react-containers/issues/129)) ([0126d84](https://github.com/zendeskgarden/react-containers/commit/0126d84324382e1493b7339cf83cbe93f10233c0))
+
+
+
+
+
 ## [1.2.4](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-selection@1.2.3...@zendeskgarden/container-selection@1.2.4) (2019-11-04)
 
 **Note:** Version bump only for package @zendeskgarden/container-selection

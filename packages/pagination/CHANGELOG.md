@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.3](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-pagination@0.2.2...@zendeskgarden/container-pagination@0.2.3) (2019-11-07)
+
+
+### Bug Fixes
+
+* **selection:** remove aria orientation ([#129](https://github.com/zendeskgarden/react-containers/issues/129)) ([0126d84](https://github.com/zendeskgarden/react-containers/commit/0126d84324382e1493b7339cf83cbe93f10233c0))
+
+
+
+
+
 ## [0.2.2](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-pagination@0.2.1...@zendeskgarden/container-pagination@0.2.2) (2019-11-04)
 
 **Note:** Version bump only for package @zendeskgarden/container-pagination
