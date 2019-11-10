@@ -30,7 +30,7 @@ export const useSchedule = ({
   useLayoutEffect(() => {
     let raf: number;
     let start: number;
-    let loopTimeout: NodeJS.Timeout;
+    let loopTimeout: ReturnType<typeof setTimeout>;
 
     const tick = () => {
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
