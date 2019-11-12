@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.1](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-schedule@1.2.0...@zendeskgarden/container-schedule@1.2.1) (2019-11-12)
+
+
+### Bug Fixes
+
+* **schedule:** update timeout type ([#130](https://github.com/zendeskgarden/react-containers/issues/130)) ([05761a9](https://github.com/zendeskgarden/react-containers/commit/05761a97291453c54c4836e28176d8565117da51))
+
+
+
+
+
 # [1.2.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-schedule@1.1.0...@zendeskgarden/container-schedule@1.2.0) (2019-10-29)
 
 
