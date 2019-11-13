@@ -18,7 +18,7 @@ describe('FocusVisibleContainer', () => {
       <FocusVisibleContainer>
         {({ ref }) => (
           <div ref={ref} data-test-id="wrapper">
-            <button data-test-id="button" tabIndex="0"></button>
+            <button data-test-id="button" tabIndex={0}></button>
             <input data-test-id="input" />
             <textarea data-test-id="textarea"></textarea>
           </div>
@@ -35,7 +35,12 @@ describe('FocusVisibleContainer', () => {
 
     expect(() => {
       const ErrorExample = () => {
+        /* eslint-disable @typescript-eslint/ban-ts-ignore */
+        // @ts-ignore
+        // Ignoring to test JS runtime usage - should throw error
+        // when consumers do not pass a scope value into `useFocusVisible`.
         useFocusVisible();
+        /* eslint-enable @typescript-eslint/ban-ts-ignore */
 
         return <div>test</div>;
       };
@@ -152,7 +157,7 @@ describe('FocusVisibleContainer', () => {
   });
 
   describe('Elements with keyboard modality', () => {
-    const KeyboardModalityExample = props => (
+    const KeyboardModalityExample = (props: React.HTMLProps<HTMLDivElement>) => (
       <FocusVisibleContainer>
         {({ ref }) => <div ref={ref} data-test-id="wrapper" {...props} />}
       </FocusVisibleContainer>

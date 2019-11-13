@@ -12,7 +12,7 @@
 
 import { useRef, useEffect } from 'react';
 
-const INPUT_TYPES_WHITE_LIST = {
+const INPUT_TYPES_WHITE_LIST: Record<string, boolean> = {
   text: true,
   search: true,
   url: true,
@@ -28,27 +28,35 @@ const INPUT_TYPES_WHITE_LIST = {
   'datetime-local': true
 };
 
-export function useFocusVisible({
-  scope,
-  relativeDocument = document,
-  className = 'garden-focus-visible',
-  dataAttribute = 'data-garden-focus-visible'
-} = {}) {
-  // console.log(scope.current)
+export interface IUseFocusVisibleProps {
+  scope: React.RefObject<HTMLElement | null>;
+  relativeDocument?: any;
+  className?: string;
+  dataAttribute?: string;
+}
+
+export function useFocusVisible(
+  {
+    scope,
+    relativeDocument = document,
+    className = 'garden-focus-visible',
+    dataAttribute = 'data-garden-focus-visible'
+  }: IUseFocusVisibleProps = {} as any
+): void {
   if (!scope) {
     throw new Error('Error: the useFocusVisible() hook requires a "scope" property');
   }
 
   const hadKeyboardEvent = useRef(false);
   const hadFocusVisibleRecently = useRef(false);
-  const hadFocusVisibleRecentlyTimeout = useRef(null);
+  const hadFocusVisibleRecentlyTimeout = useRef<number | undefined>();
 
   useEffect(() => {
     /**
      * Helper function for legacy browsers and iframes which sometimes focus
      * elements like document, body, and non-interactive SVG.
      */
-    const isValidFocusTarget = el => {
+    const isValidFocusTarget = (el: Element) => {
       if (
         el &&
         el !== scope.current &&
@@ -68,15 +76,19 @@ export function useFocusVisible({
      * `garden-focus-visible` class being added, i.e. whether it should always match
      * `:focus-visible` when focused.
      */
-    const focusTriggersKeyboardModality = el => {
-      const type = el.type;
+    const focusTriggersKeyboardModality = (el: HTMLElement) => {
+      const type = (el as HTMLInputElement).type;
       const tagName = el.tagName;
 
-      if (tagName === 'INPUT' && INPUT_TYPES_WHITE_LIST[type] && !el.readOnly) {
+      if (
+        tagName === 'INPUT' &&
+        INPUT_TYPES_WHITE_LIST[type] &&
+        !(el as HTMLInputElement).readOnly
+      ) {
         return true;
       }
 
-      if (tagName === 'TEXTAREA' && !el.readOnly) {
+      if (tagName === 'TEXTAREA' && !(el as HTMLTextAreaElement).readOnly) {
         return true;
       }
 
@@ -92,7 +104,7 @@ export function useFocusVisible({
     /**
      * Whether the given element is currently :focus-visible
      */
-    const isFocused = el => {
+    const isFocused = (el: HTMLElement) => {
       if (el && (el.classList.contains(className) || el.hasAttribute(dataAttribute))) {
         return true;
       }
@@ -104,19 +116,19 @@ export function useFocusVisible({
      * Add the `:focus-visible` class to the given element if it was not added by
      * the consumer.
      */
-    const addFocusVisibleClass = el => {
+    const addFocusVisibleClass = (el: HTMLElement) => {
       if (isFocused(el)) {
         return;
       }
 
       el.classList.add(className);
-      el.setAttribute(dataAttribute, true);
+      el.setAttribute(dataAttribute, 'true');
     };
 
     /**
      * Remove the `:focus-visible` class from the given element.
      */
-    const removeFocusVisibleClass = el => {
+    const removeFocusVisibleClass = (el: HTMLElement) => {
       el.classList.remove(className);
       el.removeAttribute(dataAttribute);
     };
@@ -128,7 +140,7 @@ export function useFocusVisible({
      * Apply `:focus-visible` to any current active element and keep track
      * of our keyboard modality state with `hadKeyboardEvent`.
      */
-    const onKeyDown = e => {
+    const onKeyDown = (e: KeyboardEvent) => {
       if (e.metaKey || e.altKey || e.ctrlKey) {
         return;
       }
@@ -158,26 +170,26 @@ export function useFocusVisible({
      *   via the keyboard (e.g. a text box)
      * @param {Event} e
      */
-    const onFocus = e => {
+    const onFocus = (e: FocusEvent) => {
       // Prevent IE from focusing the document or HTML element.
-      if (!isValidFocusTarget(e.target)) {
+      if (!isValidFocusTarget(e.target as HTMLElement)) {
         return;
       }
 
-      if (hadKeyboardEvent.current || focusTriggersKeyboardModality(e.target)) {
-        addFocusVisibleClass(e.target);
+      if (hadKeyboardEvent.current || focusTriggersKeyboardModality(e.target as HTMLElement)) {
+        addFocusVisibleClass(e.target as HTMLElement);
       }
     };
 
     /**
      * On `blur`, remove the `:focus-visible` styling from the target.
      */
-    const onBlur = e => {
-      if (!isValidFocusTarget(e.target)) {
+    const onBlur = (e: FocusEvent) => {
+      if (!isValidFocusTarget(e.target as HTMLElement)) {
         return;
       }
 
-      if (isFocused(e.target)) {
+      if (isFocused(e.target as HTMLElement)) {
         /**
          * To detect a tab/window switch, we look for a blur event
          * followed rapidly by a visibility change. If we don't see
@@ -186,12 +198,15 @@ export function useFocusVisible({
         hadFocusVisibleRecently.current = true;
 
         clearTimeout(hadFocusVisibleRecentlyTimeout.current);
-        hadFocusVisibleRecentlyTimeout.current = setTimeout(() => {
+
+        const timeoutId = setTimeout(() => {
           hadFocusVisibleRecently.current = false;
           clearTimeout(hadFocusVisibleRecentlyTimeout.current);
         }, 100);
 
-        removeFocusVisibleClass(e.target);
+        hadFocusVisibleRecentlyTimeout.current = Number(timeoutId);
+
+        removeFocusVisibleClass(e.target as HTMLElement);
       }
     };
 
@@ -202,8 +217,10 @@ export function useFocusVisible({
      *
      * This accounts for situations where focus enters the page from the URL bar.
      */
-    const onInitialPointerMove = e => {
-      if (e.target.nodeName && e.target.nodeName.toLowerCase() === 'html') {
+    const onInitialPointerMove = (e: MouseEvent | TouchEvent) => {
+      const nodeName = (e.target as HTMLDocument).nodeName;
+
+      if (nodeName && nodeName.toLowerCase() === 'html') {
         return;
       }
 
