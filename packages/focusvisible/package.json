@@ -16,6 +16,7 @@
   "scripts": {
     "build": "../../utils/scripts/build.sh"
   },
+  "types": "dist/typings/index.d.ts",
   "peerDependencies": {
     "prop-types": "^15.6.1",
     "react": "^16.8.0",
@@ -33,5 +34,5 @@
   "publishConfig": {
     "access": "public"
   },
-  "zendeskgarden:src": "src/index.js"
+  "zendeskgarden:src": "src/index.ts"
 }

@@ -14,7 +14,11 @@ import { withKnobs } from '@storybook/addon-knobs';
 import { useFocusVisible, FocusVisibleContainer } from './src';
 import { useSelection } from '../selection/src';
 
-const StyledCustomFocus = styled.div`
+interface IStyledCustomFocus extends React.HTMLProps<HTMLDivElement> {
+  isSelected?: boolean;
+}
+
+const StyledCustomFocus = styled.div<IStyledCustomFocus>`
   :focus {
     outline: none;
   }
@@ -34,7 +38,7 @@ storiesOf('FocusVisible Container', module)
   .addDecorator(withKnobs)
   .add('useFocusVisible', () => {
     const Example = () => {
-      const ref = useRef();
+      const ref = useRef<HTMLDivElement>(null);
 
       useFocusVisible({ scope: ref });
 
@@ -51,7 +55,7 @@ storiesOf('FocusVisible Container', module)
             />
           </div>
           <div>
-            <StyledCustomFocus tabIndex="0">
+            <StyledCustomFocus tabIndex={0}>
               <p>Focusable div content only shows focus with keyboard interaction</p>
             </StyledCustomFocus>
           </div>
@@ -95,12 +99,12 @@ storiesOf('FocusVisible Container', module)
       const { selectedItem, getContainerProps, getItemProps } = useSelection({
         defaultSelectedIndex: 0
       });
-      const ref = useRef();
+      const ref = useRef<HTMLUListElement>(null);
 
       useFocusVisible({ scope: ref });
 
       return (
-        <StyledExampleContainer {...getContainerProps({ ref })}>
+        <StyledExampleContainer {...(getContainerProps({ ref }) as any)}>
           {items.map(item => {
             const itemRef = React.createRef();
             const isSelected = selectedItem === item;
