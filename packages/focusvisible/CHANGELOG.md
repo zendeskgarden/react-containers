@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-focusvisible@0.2.1...@zendeskgarden/container-focusvisible@0.3.0) (2019-11-14)
+
+
+### Features
+
+* **focusvisible:** migrate focusvisible to TypeScript ([#137](https://github.com/zendeskgarden/react-containers/issues/137)) ([335357a](https://github.com/zendeskgarden/react-containers/commit/335357aebca08c43841f82d8d87a7a329fcb13ad))
+
+
+
+
+
 ## [0.2.1](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-focusvisible@0.2.0...@zendeskgarden/container-focusvisible@0.2.1) (2019-11-12)
 
 
