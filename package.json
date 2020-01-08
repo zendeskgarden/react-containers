@@ -70,7 +70,7 @@
     "eslint-plugin-react": "7.17.0",
     "eslint-plugin-react-hooks": "2.3.0",
     "gh-pages": "2.2.0",
-    "handlebars": "4.5.3",
+    "handlebars": "4.6.0",
     "handlebars-helpers": "0.10.0",
     "husky": "4.0.1",
     "inquirer": "7.0.3",
