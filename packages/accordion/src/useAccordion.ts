@@ -6,9 +6,9 @@
  */
 
 import { useState, HTMLProps } from 'react';
+import { useUIDSeed } from 'react-uid';
 import {
   composeEventHandlers,
-  generateId,
   KEY_CODES,
   getControlledValue
 } from '@zendeskgarden/container-utilities';
@@ -55,7 +55,8 @@ export function useAccordion({
   expandable = true,
   collapsible = true
 }: IUseAccordionProps = {}): IUseAccordionReturnValue {
-  const [prefix] = useState<string>(idPrefix || generateId('garden-accordion-container'));
+  const seed = useUIDSeed();
+  const [prefix] = useState<string>(idPrefix || seed(`accordion_${PACKAGE_VERSION}`));
   const TRIGGER_ID = `${prefix}--trigger`;
   const PANEL_ID = `${prefix}--panel`;
   const [expandedState, setExpandedState] = useState<number[]>(expandedSections || []);

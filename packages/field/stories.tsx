@@ -6,12 +6,11 @@
  */
 
 import React from 'react';
-
+import { uid } from 'react-uid';
 import { storiesOf } from '@storybook/react';
 import { withKnobs, text } from '@storybook/addon-knobs';
 
 import { FieldContainer, useField } from './src';
-import { generateId } from '@zendeskgarden/container-utilities';
 
 storiesOf('Field Container', module)
   .addDecorator(withKnobs)
@@ -30,10 +29,10 @@ storiesOf('Field Container', module)
       );
     };
 
-    return <Field id={text('id', generateId())} />;
+    return <Field id={text('id', uid({ name: 'useField' }))} />;
   })
   .add('FieldContainer', () => (
-    <FieldContainer id={text('id', generateId())}>
+    <FieldContainer id={text('id', uid({ name: 'FieldContainer' }))}>
       {({ getLabelProps, getInputProps, getHintProps }) => (
         <>
           <label {...getLabelProps()}>Accessible Native Input</label>

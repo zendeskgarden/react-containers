@@ -6,7 +6,8 @@
  */
 
 import { useState, useEffect, useRef } from 'react';
-import { composeEventHandlers, generateId, KEY_CODES } from '@zendeskgarden/container-utilities';
+import { useUIDSeed } from 'react-uid';
+import { composeEventHandlers, KEY_CODES } from '@zendeskgarden/container-utilities';
 
 export interface IUseTooltipProps {
   delayMilliseconds?: number;
@@ -28,7 +29,8 @@ export const useTooltip = ({
   isVisible
 }: IUseTooltipProps = {}): IUseTooltipReturnValue => {
   const [visibility, setVisibility] = useState(isVisible);
-  const [_id] = useState(id || generateId('garden-tooltip-container'));
+  const seed = useUIDSeed();
+  const [_id] = useState(id || seed(`tooltip_${PACKAGE_VERSION}`));
   const isMounted = useRef(false);
 
   let openTooltipTimeoutId: number | undefined;
