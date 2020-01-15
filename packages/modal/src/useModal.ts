@@ -6,7 +6,8 @@
  */
 
 import { useState } from 'react';
-import { composeEventHandlers, generateId, KEY_CODES } from '@zendeskgarden/container-utilities';
+import { useUIDSeed } from 'react-uid';
+import { composeEventHandlers, KEY_CODES } from '@zendeskgarden/container-utilities';
 import { useFocusJail } from '@zendeskgarden/container-focusjail';
 
 export interface IUseModalProps {
@@ -29,7 +30,8 @@ export interface IUseModalReturnValue {
 export function useModal(
   { onClose, modalRef, id: _id, focusOnMount, environment }: IUseModalProps = {} as any
 ): IUseModalReturnValue {
-  const [idPrefix] = useState(_id || generateId('garden-modal-container'));
+  const seed = useUIDSeed();
+  const [idPrefix] = useState(_id || seed(`modal_${PACKAGE_VERSION}`));
   const titleId = `${idPrefix}--title`;
   const contentId = `${idPrefix}--content`;
 

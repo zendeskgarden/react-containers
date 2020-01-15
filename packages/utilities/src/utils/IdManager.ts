@@ -18,7 +18,7 @@ export function generateId(prefix = 'garden') {
 
 /**
  * This is only used in tests... Could be useful in SSR?
- * @param {Number} num The number to set the idCountry to
+ * @param {Number} num The number to set the idCounter to
  */
 export function setIdCounter(num: number) {
   idCounter = num;

@@ -6,13 +6,13 @@
  */
 
 import { useState } from 'react';
+import { useUIDSeed } from 'react-uid';
 import {
   useSelection,
   IGetItemPropsOptions,
   IUseSelectionState,
   IUseSelectionProps
 } from '@zendeskgarden/container-selection';
-import { generateId } from '@zendeskgarden/container-utilities';
 
 interface IGetTabProps<Item> extends IGetItemPropsOptions<Item> {
   index: number;
@@ -52,7 +52,8 @@ export function useTabs<Item = any>({
     defaultSelectedIndex: 0,
     ...options
   });
-  const [_id] = useState(idPrefix || generateId('garden-tabs-container'));
+  const seed = useUIDSeed();
+  const [_id] = useState(idPrefix || seed(`tabs_${PACKAGE_VERSION}`));
   const PANEL_ID = `${_id}--panel`;
   const TAB_ID = `${_id}--tab`;
 

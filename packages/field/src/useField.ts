@@ -6,7 +6,7 @@
  */
 
 import { useState } from 'react';
-import { generateId } from '@zendeskgarden/container-utilities';
+import { useUIDSeed } from 'react-uid';
 
 export interface IUseFieldPropGetters {
   getHintProps: <T>(options?: T) => T & React.HTMLProps<any>;
@@ -18,7 +18,8 @@ export interface IUseFieldPropGetters {
 }
 
 export function useField(idPrefix?: string): IUseFieldPropGetters {
-  const [prefix] = useState(idPrefix || generateId('garden-field-container'));
+  const seed = useUIDSeed();
+  const [prefix] = useState(idPrefix || seed(`field_${PACKAGE_VERSION}`));
   const inputId = `${prefix}--input`;
   const labelId = `${prefix}--label`;
   const hintId = `${prefix}--hint`;
