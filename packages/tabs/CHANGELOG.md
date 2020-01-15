@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-tabs@0.3.6...@zendeskgarden/container-tabs@0.4.0) (2020-01-15)
+
+
+### Features
+
+* move ID utilities to react-uid ([#142](https://github.com/zendeskgarden/react-containers/issues/142)) ([9f30572](https://github.com/zendeskgarden/react-containers/commit/9f3057202c94ca497b11b6f05ef649c87d5a5716))
+
+
+
+
+
 ## [0.3.6](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-tabs@0.3.5...@zendeskgarden/container-tabs@0.3.6) (2019-11-13)
 
 **Note:** Version bump only for package @zendeskgarden/container-tabs

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.2.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-field@1.1.4...@zendeskgarden/container-field@1.2.0) (2020-01-15)
+
+
+### Features
+
+* move ID utilities to react-uid ([#142](https://github.com/zendeskgarden/react-containers/issues/142)) ([9f30572](https://github.com/zendeskgarden/react-containers/commit/9f3057202c94ca497b11b6f05ef649c87d5a5716))
+
+
+
+
+
 ## [1.1.4](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-field@1.1.3...@zendeskgarden/container-field@1.1.4) (2019-11-04)
 
 **Note:** Version bump only for package @zendeskgarden/container-field
