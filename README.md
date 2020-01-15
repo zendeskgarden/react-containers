@@ -147,14 +147,14 @@ import { render } from 'react-dom';
 import { useSchedule } from '@zendeskgarden/container-schedule';
 
 const App = () => {
-  const elapsed = useSchedule({duration: 1000});
+  const elapsed = useSchedule({ duration: 1000 });
   const x = 900;
   const styles = {
-transform: translateX(`${900*elapsed}px`)
+    transform: translateX(`${900 * elapsed}px`)
   };
 
   return <div style={styles} />;
-}
+};
 
 render(<App />, document.getElementById('root'));
 ```
