@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.8](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-selection@1.2.7...@zendeskgarden/container-selection@1.2.8) (2020-01-22)
+
+
+### Bug Fixes
+
+* **pagination:** accessibility semantics ([#150](https://github.com/zendeskgarden/react-containers/issues/150)) ([13d1bd3](https://github.com/zendeskgarden/react-containers/commit/13d1bd38960bae0ce18746ab9ec7c84c0ecb4aff))
+
+
+
+
+
 ## [1.2.7](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-selection@1.2.6...@zendeskgarden/container-selection@1.2.7) (2020-01-15)
 
 **Note:** Version bump only for package @zendeskgarden/container-selection

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.6](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-pagination@0.2.5...@zendeskgarden/container-pagination@0.2.6) (2020-01-22)
+
+
+### Bug Fixes
+
+* **pagination:** accessibility semantics ([#150](https://github.com/zendeskgarden/react-containers/issues/150)) ([13d1bd3](https://github.com/zendeskgarden/react-containers/commit/13d1bd38960bae0ce18746ab9ec7c84c0ecb4aff))
+
+
+
+
+
 ## [0.2.5](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-pagination@0.2.4...@zendeskgarden/container-pagination@0.2.5) (2020-01-15)
 
 **Note:** Version bump only for package @zendeskgarden/container-pagination
