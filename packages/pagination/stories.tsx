@@ -21,7 +21,7 @@ storiesOf('Pagination Container', module)
       const previousPageRef = useRef(null);
       const nextPageRef = useRef(null);
       const pageRefs = pages.map(() => React.createRef());
-      const [controlledSelectedItem, setSelectedItem] = useState();
+      const [controlledSelectedItem, setSelectedItem] = useState(3);
 
       const {
         selectedItem,
@@ -33,15 +33,18 @@ storiesOf('Pagination Container', module)
       } = usePagination<number | string>({
         selectedItem: controlledSelectedItem,
         onSelect: newSelectedItem => {
-          let modifiedNewSelectedItem = newSelectedItem;
+          let modifiedNewSelectedItem = controlledSelectedItem;
 
-          if (newSelectedItem === 'prev' && controlledSelectedItem > 0) {
-            modifiedNewSelectedItem = controlledSelectedItem - 1;
-          } else if (
-            modifiedNewSelectedItem === 'next' &&
-            controlledSelectedItem < pages.length - 1
-          ) {
-            modifiedNewSelectedItem = controlledSelectedItem + 1;
+          if (newSelectedItem === 'prev') {
+            if (controlledSelectedItem > 0) {
+              modifiedNewSelectedItem = controlledSelectedItem - 1;
+            }
+          } else if (newSelectedItem === 'next') {
+            if (controlledSelectedItem < pages.length - 1) {
+              modifiedNewSelectedItem = controlledSelectedItem + 1;
+            }
+          } else {
+            modifiedNewSelectedItem = newSelectedItem as number;
           }
 
           if (modifiedNewSelectedItem !== controlledSelectedItem) {
@@ -51,17 +54,25 @@ storiesOf('Pagination Container', module)
       });
 
       return (
-        <nav>
+        <nav aria-label="Pagination (Hook)">
           <ul
             {...getContainerProps({
+              role: null,
               style: { display: 'flex' }
             })}
           >
             <li
               {...getPreviousPageProps({
+                role: null,
                 item: 'prev',
+                'aria-disabled': selectedItem === 0,
                 focusRef: previousPageRef,
-                key: 'previous-page'
+                key: 'previous-page',
+                style: {
+                  color: selectedItem === 0 ? 'gray' : undefined,
+                  cursor: 'pointer',
+                  userSelect: 'none'
+                }
               })}
             >
               Prev
@@ -70,14 +81,18 @@ storiesOf('Pagination Container', module)
               return (
                 <li
                   {...getPageProps({
+                    role: null,
                     page: index,
+                    current: index === selectedItem,
                     item: index,
                     focusRef: pageRefs[index],
                     key: `page-${index}`,
                     style: {
                       outline: index === focusedItem ? '3px solid red' : undefined,
                       background: index === selectedItem ? 'gray' : undefined,
-                      padding: '0 6px'
+                      padding: '0 6px',
+                      cursor: 'pointer',
+                      userSelect: 'none'
                     }
                   })}
                 >
@@ -87,9 +102,16 @@ storiesOf('Pagination Container', module)
             })}
             <li
               {...getNextPageProps({
+                role: null,
                 item: 'next',
+                'aria-disabled': selectedItem === pages.length - 1,
                 focusRef: nextPageRef,
-                key: 'next-page'
+                key: 'next-page',
+                style: {
+                  color: selectedItem === pages.length - 1 ? 'gray' : undefined,
+                  cursor: 'pointer',
+                  userSelect: 'none'
+                }
               })}
             >
               Next
@@ -103,7 +125,7 @@ storiesOf('Pagination Container', module)
   })
   .add('PaginationContainer', () => {
     const Pagination = () => {
-      const [controlledSelectedItem, setSelectedItem] = useState();
+      const [controlledSelectedItem, setSelectedItem] = useState(3);
       const previousPageRef = useRef(null);
       const nextPageRef = useRef(null);
       const pageRefs = pages.map(() => React.createRef());
@@ -112,15 +134,18 @@ storiesOf('Pagination Container', module)
         <PaginationContainer
           selectedItem={controlledSelectedItem}
           onSelect={newSelectedItem => {
-            let modifiedNewSelectedItem = newSelectedItem;
+            let modifiedNewSelectedItem = controlledSelectedItem;
 
-            if (newSelectedItem === 'prev' && controlledSelectedItem > 0) {
-              modifiedNewSelectedItem = controlledSelectedItem - 1;
-            } else if (
-              modifiedNewSelectedItem === 'next' &&
-              controlledSelectedItem < pages.length - 1
-            ) {
-              modifiedNewSelectedItem = controlledSelectedItem + 1;
+            if (newSelectedItem === 'prev') {
+              if (controlledSelectedItem > 0) {
+                modifiedNewSelectedItem = controlledSelectedItem - 1;
+              }
+            } else if (newSelectedItem === 'next') {
+              if (controlledSelectedItem < pages.length - 1) {
+                modifiedNewSelectedItem = controlledSelectedItem + 1;
+              }
+            } else {
+              modifiedNewSelectedItem = newSelectedItem;
             }
 
             if (modifiedNewSelectedItem !== controlledSelectedItem) {
@@ -137,23 +162,34 @@ storiesOf('Pagination Container', module)
             getPageProps
           }) => {
             return (
-              <nav {...getContainerProps({ role: null })}>
-                <ul style={{ display: 'flex' }}>
-                  <li
+              <nav aria-label="Pagination (Container)">
+                <div
+                  {...getContainerProps({
+                    style: { display: 'flex' }
+                  })}
+                >
+                  <div
                     {...getPreviousPageProps({
                       item: 'prev',
+                      'aria-disabled': selectedItem === 0,
                       focusRef: previousPageRef,
                       ref: previousPageRef,
-                      key: 'previous-page'
+                      key: 'previous-page',
+                      style: {
+                        color: selectedItem === 0 ? 'gray' : undefined,
+                        cursor: 'pointer',
+                        userSelect: 'none'
+                      }
                     })}
                   >
                     Prev
-                  </li>
+                  </div>
                   {pages.map((page, index) => {
                     return (
-                      <li
+                      <div
                         {...getPageProps({
                           page: index,
+                          current: index === selectedItem,
                           item: index,
                           focusRef: pageRefs[index],
                           ref: pageRefs[index],
@@ -161,25 +197,33 @@ storiesOf('Pagination Container', module)
                           style: {
                             outline: index === focusedItem ? '3px solid red' : undefined,
                             background: index === selectedItem ? 'gray' : undefined,
-                            padding: '0 6px'
+                            padding: '0 6px',
+                            cursor: 'pointer',
+                            userSelect: 'none'
                           }
                         })}
                       >
                         {index + 1}
-                      </li>
+                      </div>
                     );
                   })}
-                  <li
+                  <div
                     {...getNextPageProps({
                       item: 'next',
+                      'aria-disabled': selectedItem === pages.length - 1,
                       focusRef: nextPageRef,
                       ref: nextPageRef,
-                      key: 'next-page'
+                      key: 'next-page',
+                      style: {
+                        color: selectedItem === pages.length - 1 ? 'gray' : undefined,
+                        cursor: 'pointer',
+                        userSelect: 'none'
+                      }
                     })}
                   >
                     Next
-                  </li>
-                </ul>
+                  </div>
+                </div>
               </nav>
             );
           }}

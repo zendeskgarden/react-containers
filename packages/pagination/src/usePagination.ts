@@ -15,7 +15,8 @@ import {
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface IUsePaginationProps<Item> extends IUseSelectionProps<Item> {}
 
-export interface IGetPageProps<Item> extends IGetItemPropsOptions<Item> {
+export interface IGetPageProps<Item> extends Omit<IGetItemPropsOptions<Item>, 'role'> {
+  role?: string | null;
   page?: number;
   current?: any;
   ariaLabel?: any;
@@ -43,29 +44,34 @@ export function usePagination<Item = any>(
     getItemProps
   } = useSelection(options);
 
-  const getContainerProps = ({ ...props } = {} as any) => {
+  const getContainerProps = ({ role = 'list', ...other } = {} as any) => {
     return {
+      role,
       'data-garden-container-id': 'containers.pagination',
       'data-garden-container-version': PACKAGE_VERSION,
-      ...props
+      ...other
     };
   };
 
-  const getPreviousPageProps = ({ ariaLabel, ...props } = {} as any) => {
+  const getPreviousPageProps = ({ ariaLabel, role = 'listitem', ...props } = {} as any) => {
     return {
+      selectedAriaKey: null,
+      role,
       'aria-label': ariaLabel || 'Previous Page',
       ...props
     };
   };
 
-  const getNextPageProps = ({ ariaLabel, ...props } = {} as any) => {
+  const getNextPageProps = ({ ariaLabel, role = 'listitem', ...props } = {} as any) => {
     return {
+      selectedAriaKey: null,
+      role,
       'aria-label': ariaLabel || 'Next Page',
       ...props
     };
   };
 
-  const getPageProps = ({ ariaLabel, page, current, ...other } = {} as any) => {
+  const getPageProps = ({ ariaLabel, page, current, role = 'listitem', ...other } = {} as any) => {
     let ariaLabelText = `Page ${page}`;
 
     if (current && !ariaLabel) {
@@ -73,8 +79,9 @@ export function usePagination<Item = any>(
     }
 
     return {
+      selectedAriaKey: 'aria-current',
+      role,
       'aria-label': ariaLabel || ariaLabelText,
-      current,
       ...other
     };
   };

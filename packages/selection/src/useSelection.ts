@@ -289,7 +289,7 @@ export function useSelection<Item = any>({
     return {
       role,
       tabIndex,
-      [selectedAriaKey]: isSelected,
+      [selectedAriaKey]: selectedAriaKey ? isSelected : undefined,
       [refKey]: focusRef,
       onFocus: composeEventHandlers(onFocusCallback, () => {
         dispatch({ type: 'FOCUS', payload: item, focusedItem, onFocus });

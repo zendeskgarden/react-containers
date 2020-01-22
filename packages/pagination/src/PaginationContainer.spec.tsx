@@ -104,7 +104,7 @@ describe('PaginationContainer', () => {
       const { getByTestId } = render(<BasicExample />);
       const container = getByTestId('container');
 
-      expect(container).toHaveAttribute('role', 'listbox');
+      expect(container).toHaveAttribute('role', 'list');
     });
   });
 
