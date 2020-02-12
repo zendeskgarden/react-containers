@@ -20,7 +20,8 @@
     "start:demo": "yarn build:demo && live-server demo",
     "tag": "lerna version --conventional-commits",
     "test": "yarn test:all --watch",
-    "test:all": "jest --config=utils/test/jest.config.js"
+    "test:all": "jest --config=utils/test/jest.config.js",
+    "version": "yarn run build && git add -A"
   },
   "devDependencies": {
     "@babel/cli": "7.8.4",
