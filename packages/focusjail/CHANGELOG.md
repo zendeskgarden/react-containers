@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.3.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-focusjail@1.2.4...@zendeskgarden/container-focusjail@1.3.0) (2020-02-12)
+
+
+### Features
+
+* **build:** introduce rollup for CJS and ES module bundles ([#158](https://github.com/zendeskgarden/react-containers/issues/158)) ([58313d4](https://github.com/zendeskgarden/react-containers/commit/58313d486e3bfa023e2c9d090149d7ec358d0cd0))
+
+
+
+
+
 ## [1.2.4](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-focusjail@1.2.3...@zendeskgarden/container-focusjail@1.2.4) (2020-01-15)
 
 **Note:** Version bump only for package @zendeskgarden/container-focusjail

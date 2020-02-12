@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-modal@0.6.0...@zendeskgarden/container-modal@0.7.0) (2020-02-12)
+
+
+### Features
+
+* **build:** introduce rollup for CJS and ES module bundles ([#158](https://github.com/zendeskgarden/react-containers/issues/158)) ([58313d4](https://github.com/zendeskgarden/react-containers/commit/58313d486e3bfa023e2c9d090149d7ec358d0cd0))
+
+
+
+
+
 # [0.6.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-modal@0.5.0...@zendeskgarden/container-modal@0.6.0) (2020-01-15)
 
 
