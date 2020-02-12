@@ -17,6 +17,7 @@
   "scripts": {
     "build": "../../utils/scripts/build.sh"
   },
+  "sideEffects": false,
   "types": "dist/typings/index.d.ts",
   "dependencies": {
     "@zendeskgarden/container-utilities": "^0.4.0",
