@@ -9,13 +9,15 @@
     "url": "https://github.com/zendeskgarden/react-containers/issues"
   },
   "version": "1.2.0",
-  "main": "./dist/index.js",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.js",
   "files": [
     "dist"
   ],
   "scripts": {
     "build": "../../utils/scripts/build.sh"
   },
+  "sideEffects": false,
   "types": "dist/typings/index.d.ts",
   "dependencies": {
     "react-uid": "^2.2.0"
