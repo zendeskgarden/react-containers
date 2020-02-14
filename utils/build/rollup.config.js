@@ -16,18 +16,30 @@ import analyze from 'rollup-plugin-analyzer';
 import license from 'rollup-plugin-license';
 import cleanup from 'rollup-plugin-cleanup';
 import del from 'rollup-plugin-delete';
+import jsx from 'acorn-jsx';
+import { DEFAULT_EXTENSIONS } from '@babel/core';
+import tsc from 'typescript';
 
 const pkg = require(path.resolve('./package.json'));
 const babelOptions = require(path.resolve('../../babel.config.js'));
+
+const externalPackages = [
+  'react',
+  'react-dom',
+  'prop-types',
+  'react-uid',
+  ...Object.keys(pkg.dependencies || {})
+];
 
 export default [
   {
     input: pkg['zendeskgarden:src'],
     /**
-     * Only mark common peerDependencies as externals.
+     * Only mark common dependencies as externals.
      * These are not included in the bundlesize.
      */
-    external: ['react', 'react-dom', 'prop-types', 'react-uid'],
+    external: id => externalPackages.includes(id),
+    acornInjectPlugins: [jsx()],
     plugins: [
       /**
        * Remove existing dist files and type definitions
@@ -39,12 +51,14 @@ export default [
       commonjs({ include: 'node_modules/**' }),
       typescript({
         tsconfig: 'tsconfig.build.json',
-        useTsconfigDeclarationDir: true
+        useTsconfigDeclarationDir: true,
+        typescript: tsc
       }),
       babel({
         babelrc: false,
         exclude: 'node_modules/**', // only transpile our source code
-        ...babelOptions
+        ...babelOptions,
+        extensions: [...DEFAULT_EXTENSIONS, '.ts', '.tsx']
       }),
       /**
        * Replace PACKAGE_VERSION constant with the current package version
