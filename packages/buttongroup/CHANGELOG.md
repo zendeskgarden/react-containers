@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.1](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-buttongroup@0.3.0...@zendeskgarden/container-buttongroup@0.3.1) (2020-02-14)
+
+
+### Bug Fixes
+
+* **build:** apply babel to all bundles ([#160](https://github.com/zendeskgarden/react-containers/issues/160)) ([826735b](https://github.com/zendeskgarden/react-containers/commit/826735bba881d5247b423ffb61cf9643c6599d16))
+
+
+
+
+
 # [0.3.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-buttongroup@0.2.8...@zendeskgarden/container-buttongroup@0.3.0) (2020-02-12)
 
 
