@@ -11,7 +11,6 @@ module.exports = {
       '@babel/preset-env',
       {
         targets: '> 0.5%, last 2 versions, Firefox ESR, not dead',
-        modules: false,
         loose: true
       }
     ],
