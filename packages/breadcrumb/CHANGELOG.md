@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.2](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-breadcrumb@0.4.1...@zendeskgarden/container-breadcrumb@0.4.2) (2020-02-20)
+
+
+### Bug Fixes
+
+* **build:** improve bundle size with @babel/runtime ([#162](https://github.com/zendeskgarden/react-containers/issues/162)) ([506504c](https://github.com/zendeskgarden/react-containers/commit/506504c840795f34e420b016b94cef10440a30cb))
+
+
+
+
+
 ## [0.4.1](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-breadcrumb@0.4.0...@zendeskgarden/container-breadcrumb@0.4.1) (2020-02-14)
 
 
