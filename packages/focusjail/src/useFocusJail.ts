@@ -5,13 +5,14 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import { createRef, useEffect, useState, useCallback } from 'react';
+import { createRef, useRef, useEffect, useState, useCallback } from 'react';
 import { composeEventHandlers, KEY_CODES } from '@zendeskgarden/container-utilities';
 import tabbable from 'tabbable';
 import activeElement from 'dom-helpers/activeElement';
 
 export interface IUseFocusJailProps {
   focusOnMount?: boolean;
+  restoreFocus?: boolean;
   environment?: Document;
   focusElem?: (element: HTMLElement) => any;
   containerRef: React.RefObject<HTMLElement>;
@@ -23,10 +24,18 @@ export interface IUseFocusJailReturnValue {
 }
 
 export const useFocusJail = (
-  { focusOnMount = true, environment, focusElem, containerRef }: IUseFocusJailProps = {
+  {
+    focusOnMount = true,
+    restoreFocus = true,
+    environment,
+    focusElem,
+    containerRef
+  }: IUseFocusJailProps = {
     containerRef: createRef()
   }
 ): IUseFocusJailReturnValue => {
+  const restoreFocusElement = useRef<Element | null>(null);
+
   // To support conditional rendering we need to store the ref in state and
   // trigger a re-render if the ref updates once rendered since react will
   // skip changes to a ref on first render
@@ -107,10 +116,21 @@ export const useFocusJail = (
   };
 
   useEffect(() => {
+    restoreFocusElement.current = activeElement(environment || document);
+
     if (focusOnMount) {
       focusElement(currentRef);
     }
-  }, [focusOnMount, focusElement, currentRef]);
+
+    return () => {
+      const isBodyInactive = restoreFocusElement.current !== document.body;
+      const hasActiveElement = restoreFocusElement.current !== null;
+
+      if (isBodyInactive && hasActiveElement && restoreFocus) {
+        focusElement(restoreFocusElement.current);
+      }
+    };
+  }, [focusOnMount, restoreFocus, environment, focusElement, currentRef]);
 
   return {
     getContainerProps,

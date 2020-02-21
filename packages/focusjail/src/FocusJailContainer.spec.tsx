@@ -23,6 +23,7 @@ describe('FocusJailContainer', () => {
 
   const BasicExample = ({
     focusOnMount,
+    restoreFocus,
     focusElem = focusSpy,
     environment,
     ...props
@@ -39,6 +40,7 @@ describe('FocusJailContainer', () => {
       <FocusJailContainer
         containerRef={containerRef}
         focusOnMount={focusOnMount}
+        restoreFocus={restoreFocus}
         focusElem={focusElem}
         environment={environment}
       >
@@ -79,7 +81,7 @@ describe('FocusJailContainer', () => {
     });
 
     it('does not focus container element if focusOnMount is false', () => {
-      render(<BasicExample focusElem={focusSpy} focusOnMount={false} />);
+      render(<BasicExample focusElem={focusSpy} focusOnMount={false} restoreFocus={false} />);
 
       expect(focusSpy).not.toHaveBeenCalled();
     });
@@ -119,7 +121,7 @@ describe('FocusJailContainer', () => {
 
     describe('onKeyDown()', () => {
       it('performs no action if non-tab key is pressed', () => {
-        const { getByTestId } = render(<BasicExample focusElem={focusSpy} />);
+        const { getByTestId } = render(<BasicExample focusElem={focusSpy} restoreFocus={false} />);
 
         fireEvent.keyDown(getByTestId('container'), { keyCode: KEY_CODES.END });
 
@@ -128,7 +130,9 @@ describe('FocusJailContainer', () => {
       });
 
       it('focuses container if no tabbable elements found', () => {
-        const { getByTestId } = render(<BasicExample focusableChildren={[]} />);
+        const { getByTestId } = render(
+          <BasicExample focusableChildren={[]} restoreFocus={false} />
+        );
         const container = getByTestId('container');
 
         fireEvent.keyDown(container, { keyCode: KEY_CODES.TAB });
@@ -138,14 +142,16 @@ describe('FocusJailContainer', () => {
       });
 
       it('focuses first element if tab key is pressed', () => {
-        const { getByTestId } = render(<BasicExample focusElem={focusSpy} />);
+        const { getByTestId } = render(<BasicExample focusElem={focusSpy} restoreFocus={false} />);
 
         expect(focusSpy).toHaveBeenCalledTimes(2);
         expect(focusSpy).toHaveBeenLastCalledWith(getByTestId('container'));
       });
 
       it('focuses last element if tab and shift key is pressed', () => {
-        const { getByTestId } = render(<BasicExample focusableChildren={[]} />);
+        const { getByTestId } = render(
+          <BasicExample focusableChildren={[]} restoreFocus={false} />
+        );
         const container = getByTestId('container');
 
         fireEvent.keyDown(container, { keyCode: KEY_CODES.TAB, shiftKey: true });
@@ -163,7 +169,11 @@ describe('FocusJailContainer', () => {
           </>
         );
         const { getByTestId } = render(
-          <BasicExample focusElem={focusSpy} focusableChildren={focusableChildren} />
+          <BasicExample
+            focusElem={focusSpy}
+            restoreFocus={false}
+            focusableChildren={focusableChildren}
+          />
         );
 
         fireEvent.keyDown(getByTestId('container'), { keyCode: KEY_CODES.TAB });
@@ -199,6 +209,53 @@ describe('FocusJailContainer', () => {
 
         console.error = originalError;
       });
+    });
+  });
+
+  describe('restoreFocus', () => {
+    const RestoreFocusExample = () => {
+      const containerRef = useRef(null);
+      const [showFocusJail, setShowFocusJail] = React.useState(false);
+
+      return (
+        <>
+          {showFocusJail && (
+            <FocusJailContainer containerRef={containerRef}>
+              {({ getContainerProps }) => (
+                <div
+                  {...getContainerProps({
+                    ref: containerRef,
+                    tabIndex: -1,
+                    'data-test-id': 'container'
+                  })}
+                >
+                  <button onClick={() => setShowFocusJail(false)}>close</button>
+                </div>
+              )}
+            </FocusJailContainer>
+          )}
+          <button onClick={() => setShowFocusJail(true)}>open</button>
+        </>
+      );
+    };
+
+    it('can restore focus after unmounting', () => {
+      const { getByTestId, getByText } = render(<RestoreFocusExample />);
+      const openButton = getByText('open');
+
+      expect(openButton).not.toHaveFocus();
+
+      openButton.focus();
+      fireEvent.click(openButton);
+
+      expect(getByTestId('container')).toHaveFocus();
+      expect(openButton).not.toHaveFocus();
+
+      const closeButton = getByText('close');
+
+      fireEvent.click(closeButton);
+
+      expect(openButton).toHaveFocus();
     });
   });
 });
