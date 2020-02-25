@@ -15,6 +15,7 @@ export interface IUseModalProps {
   modalRef: React.RefObject<HTMLElement>;
   id?: string;
   focusOnMount?: boolean;
+  restoreFocus?: boolean;
   environment?: Document;
 }
 
@@ -28,7 +29,14 @@ export interface IUseModalReturnValue {
 }
 
 export function useModal(
-  { onClose, modalRef, id: _id, focusOnMount, environment }: IUseModalProps = {} as any
+  {
+    onClose,
+    modalRef,
+    id: _id,
+    focusOnMount,
+    restoreFocus,
+    environment
+  }: IUseModalProps = {} as any
 ): IUseModalReturnValue {
   const seed = useUIDSeed();
   const [idPrefix] = useState(_id || seed(`modal_${PACKAGE_VERSION}`));
@@ -97,7 +105,12 @@ export function useModal(
     };
   };
 
-  const { getContainerProps } = useFocusJail({ containerRef: modalRef, focusOnMount, environment });
+  const { getContainerProps } = useFocusJail({
+    containerRef: modalRef,
+    focusOnMount,
+    restoreFocus,
+    environment
+  });
 
   return {
     getBackdropProps,

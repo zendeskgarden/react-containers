@@ -8,7 +8,7 @@
 import React, { useState, useRef } from 'react';
 
 import { storiesOf } from '@storybook/react';
-import { withKnobs } from '@storybook/addon-knobs';
+import { withKnobs, boolean } from '@storybook/addon-knobs';
 
 import { ModalContainer, useModal } from './src';
 
@@ -17,6 +17,7 @@ storiesOf('Modal Container', module)
   .add('useModal', () => {
     const Modal = () => {
       const [isModalVisible, setModalVisibility] = useState(false);
+      const restoreFocus = boolean('restoreFocus', true);
       const modalRef = useRef(null);
       const {
         getBackdropProps,
@@ -24,7 +25,7 @@ storiesOf('Modal Container', module)
         getTitleProps,
         getContentProps,
         getCloseProps
-      } = useModal({ onClose: () => setModalVisibility(false), modalRef });
+      } = useModal({ onClose: () => setModalVisibility(false), modalRef, restoreFocus });
 
       return (
         <>
