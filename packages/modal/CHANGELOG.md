@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.8.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-modal@0.7.3...@zendeskgarden/container-modal@0.8.0) (2020-02-27)
+
+
+### Features
+
+* **modal:** allow optional restore focus ([#164](https://github.com/zendeskgarden/react-containers/issues/164)) ([119e1ec](https://github.com/zendeskgarden/react-containers/commit/119e1ec5a2b65e8efcd4d21f399514895b382593))
+
+
+
+
+
 ## [0.7.3](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-modal@0.7.2...@zendeskgarden/container-modal@0.7.3) (2020-02-21)
 
 **Note:** Version bump only for package @zendeskgarden/container-modal
