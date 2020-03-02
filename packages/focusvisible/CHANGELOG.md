@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.3](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-focusvisible@0.4.2...@zendeskgarden/container-focusvisible@0.4.3) (2020-03-02)
+
+
+### Bug Fixes
+
+* **focusvisible:** allow server side rendering ([#163](https://github.com/zendeskgarden/react-containers/issues/163)) ([ae46f6f](https://github.com/zendeskgarden/react-containers/commit/ae46f6f3ddfbd601b209d7ec6d0e8a7a481fea46))
+
+
+
+
+
 ## [0.4.2](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-focusvisible@0.4.1...@zendeskgarden/container-focusvisible@0.4.2) (2020-02-20)
 
 
