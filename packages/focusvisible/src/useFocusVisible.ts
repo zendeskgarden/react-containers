@@ -38,7 +38,7 @@ export interface IUseFocusVisibleProps {
 export function useFocusVisible(
   {
     scope,
-    relativeDocument = document,
+    relativeDocument,
     className = 'garden-focus-visible',
     dataAttribute = 'data-garden-focus-visible'
   }: IUseFocusVisibleProps = {} as any
@@ -52,11 +52,17 @@ export function useFocusVisible(
   const hadFocusVisibleRecentlyTimeout = useRef<number | undefined>();
 
   useEffect(() => {
+    let environment = relativeDocument;
+
+    if (!environment) {
+      environment = document;
+    }
+
     /**
      * Helper function for legacy browsers and iframes which sometimes focus
      * elements like document, body, and non-interactive SVG.
      */
-    const isValidFocusTarget = (el: Element) => {
+    const isValidFocusTarget = (el: Element | null) => {
       if (
         el &&
         el !== scope.current &&
@@ -104,7 +110,7 @@ export function useFocusVisible(
     /**
      * Whether the given element is currently :focus-visible
      */
-    const isFocused = (el: HTMLElement) => {
+    const isFocused = (el: Element | null) => {
       if (el && (el.classList.contains(className) || el.hasAttribute(dataAttribute))) {
         return true;
       }
@@ -116,19 +122,19 @@ export function useFocusVisible(
      * Add the `:focus-visible` class to the given element if it was not added by
      * the consumer.
      */
-    const addFocusVisibleClass = (el: HTMLElement) => {
+    const addFocusVisibleClass = (el: Element | null) => {
       if (isFocused(el)) {
         return;
       }
 
-      el.classList.add(className);
-      el.setAttribute(dataAttribute, 'true');
+      el && el.classList.add(className);
+      el && el.setAttribute(dataAttribute, 'true');
     };
 
     /**
      * Remove the `:focus-visible` class from the given element.
      */
-    const removeFocusVisibleClass = (el: HTMLElement) => {
+    const removeFocusVisibleClass = (el: Element) => {
       el.classList.remove(className);
       el.removeAttribute(dataAttribute);
     };
@@ -145,8 +151,8 @@ export function useFocusVisible(
         return;
       }
 
-      if (isValidFocusTarget(relativeDocument.activeElement)) {
-        addFocusVisibleClass(relativeDocument.activeElement);
+      if (isValidFocusTarget(environment.activeElement)) {
+        addFocusVisibleClass(environment.activeElement);
       }
 
       hadKeyboardEvent.current = true;
@@ -236,27 +242,27 @@ export function useFocusVisible(
      * focus.
      */
     const addInitialPointerMoveListeners = () => {
-      relativeDocument.addEventListener('mousemove', onInitialPointerMove);
-      relativeDocument.addEventListener('mousedown', onInitialPointerMove);
-      relativeDocument.addEventListener('mouseup', onInitialPointerMove);
-      relativeDocument.addEventListener('pointermove', onInitialPointerMove);
-      relativeDocument.addEventListener('pointerdown', onInitialPointerMove);
-      relativeDocument.addEventListener('pointerup', onInitialPointerMove);
-      relativeDocument.addEventListener('touchmove', onInitialPointerMove);
-      relativeDocument.addEventListener('touchstart', onInitialPointerMove);
-      relativeDocument.addEventListener('touchend', onInitialPointerMove);
+      environment.addEventListener('mousemove', onInitialPointerMove);
+      environment.addEventListener('mousedown', onInitialPointerMove);
+      environment.addEventListener('mouseup', onInitialPointerMove);
+      environment.addEventListener('pointermove', onInitialPointerMove);
+      environment.addEventListener('pointerdown', onInitialPointerMove);
+      environment.addEventListener('pointerup', onInitialPointerMove);
+      environment.addEventListener('touchmove', onInitialPointerMove);
+      environment.addEventListener('touchstart', onInitialPointerMove);
+      environment.addEventListener('touchend', onInitialPointerMove);
     };
 
     const removeInitialPointerMoveListeners = () => {
-      relativeDocument.removeEventListener('mousemove', onInitialPointerMove);
-      relativeDocument.removeEventListener('mousedown', onInitialPointerMove);
-      relativeDocument.removeEventListener('mouseup', onInitialPointerMove);
-      relativeDocument.removeEventListener('pointermove', onInitialPointerMove);
-      relativeDocument.removeEventListener('pointerdown', onInitialPointerMove);
-      relativeDocument.removeEventListener('pointerup', onInitialPointerMove);
-      relativeDocument.removeEventListener('touchmove', onInitialPointerMove);
-      relativeDocument.removeEventListener('touchstart', onInitialPointerMove);
-      relativeDocument.removeEventListener('touchend', onInitialPointerMove);
+      environment.removeEventListener('mousemove', onInitialPointerMove);
+      environment.removeEventListener('mousedown', onInitialPointerMove);
+      environment.removeEventListener('mouseup', onInitialPointerMove);
+      environment.removeEventListener('pointermove', onInitialPointerMove);
+      environment.removeEventListener('pointerdown', onInitialPointerMove);
+      environment.removeEventListener('pointerup', onInitialPointerMove);
+      environment.removeEventListener('touchmove', onInitialPointerMove);
+      environment.removeEventListener('touchstart', onInitialPointerMove);
+      environment.removeEventListener('touchend', onInitialPointerMove);
     };
 
     /**
@@ -266,7 +272,7 @@ export function useFocusVisible(
     /* istanbul ignore next */
     const onVisibilityChange = () => {
       /* Unable to mock visibilityState in JSDom environment */
-      if (relativeDocument.visibilityState === 'hidden') {
+      if (environment.visibilityState === 'hidden') {
         if (hadFocusVisibleRecently.current) {
           hadKeyboardEvent.current = true;
         }
@@ -275,7 +281,7 @@ export function useFocusVisible(
 
     const currentScope = scope.current;
 
-    if (!relativeDocument || !currentScope) {
+    if (!environment || !currentScope) {
       return;
     }
 
@@ -285,11 +291,11 @@ export function useFocusVisible(
      * global key presses and global visibility change should
      * affect the state at every scope:
      */
-    relativeDocument.addEventListener('keydown', onKeyDown, true);
-    relativeDocument.addEventListener('mousedown', onPointerDown, true);
-    relativeDocument.addEventListener('pointerdown', onPointerDown, true);
-    relativeDocument.addEventListener('touchstart', onPointerDown, true);
-    relativeDocument.addEventListener('visibilitychange', onVisibilityChange, true);
+    environment.addEventListener('keydown', onKeyDown, true);
+    environment.addEventListener('mousedown', onPointerDown, true);
+    environment.addEventListener('pointerdown', onPointerDown, true);
+    environment.addEventListener('touchstart', onPointerDown, true);
+    environment.addEventListener('visibilitychange', onVisibilityChange, true);
 
     addInitialPointerMoveListeners();
 
@@ -304,11 +310,11 @@ export function useFocusVisible(
 
     // eslint-disable-next-line consistent-return
     return () => {
-      relativeDocument.removeEventListener('keydown', onKeyDown);
-      relativeDocument.removeEventListener('mousedown', onPointerDown);
-      relativeDocument.removeEventListener('pointerdown', onPointerDown);
-      relativeDocument.removeEventListener('touchstart', onPointerDown);
-      relativeDocument.removeEventListener('visibilityChange', onVisibilityChange);
+      environment.removeEventListener('keydown', onKeyDown);
+      environment.removeEventListener('mousedown', onPointerDown);
+      environment.removeEventListener('pointerdown', onPointerDown);
+      environment.removeEventListener('touchstart', onPointerDown);
+      environment.removeEventListener('visibilityChange', onVisibilityChange);
 
       removeInitialPointerMoveListeners();
 
