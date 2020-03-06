@@ -1,4 +1,7 @@
-# @zendeskgarden/container-breadcrumb [![npm version](https://img.shields.io/npm/v/@zendeskgarden/container-breadcrumb.svg?style=flat-square)](https://www.npmjs.com/package/@zendeskgarden/container-breadcrumb)
+# @zendeskgarden/container-breadcrumb [![npm version][npm version badge]][npm version link]
+
+[npm version badge]: https://flat.badgen.net/npm/v/@zendeskgarden/container-breadcrumb
+[npm version link]: https://www.npmjs.com/package/@zendeskgarden/container-breadcrumb
 
 This package includes containers relating to breadcrumb in the
 [Garden Design System](https://zendeskgarden.github.io/).

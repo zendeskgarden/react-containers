@@ -1,4 +1,7 @@
-# @zendeskgarden/container-buttongroup [![npm version](https://img.shields.io/npm/v/@zendeskgarden/container-buttongroup.svg?style=flat-square)](https://www.npmjs.com/package/@zendeskgarden/container-buttongroup)
+# @zendeskgarden/container-buttongroup [![npm version][npm version badge]][npm version link]
+
+[npm version badge]: https://flat.badgen.net/npm/v/@zendeskgarden/container-buttongroup
+[npm version link]: https://www.npmjs.com/package/@zendeskgarden/container-buttongroup
 
 This package includes containers relating to button groups in the
 [Garden Design System](https://zendeskgarden.github.io/).

@@ -1,4 +1,7 @@
-# @zendeskgarden/container-pagination [![npm version](https://img.shields.io/npm/v/@zendeskgarden/container-pagination.svg?style=flat-square)](https://www.npmjs.com/package/@zendeskgarden/container-pagination)
+# @zendeskgarden/container-pagination [![npm version][npm version badge]][npm version link]
+
+[npm version badge]: https://flat.badgen.net/npm/v/@zendeskgarden/container-pagination
+[npm version link]: https://www.npmjs.com/package/@zendeskgarden/container-pagination
 
 This package includes containers relating to pagination in the
 [Garden Design System](https://zendeskgarden.github.io/).

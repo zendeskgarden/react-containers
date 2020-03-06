@@ -1,4 +1,7 @@
-# @zendeskgarden/container-focusvisible [![npm version](https://img.shields.io/npm/v/@zendeskgarden/container-focusvisible.svg?style=flat-square)](https://www.npmjs.com/package/@zendeskgarden/container-focusvisible)
+# @zendeskgarden/container-focusvisible [![npm version][npm version badge]][npm version link]
+
+[npm version badge]: https://flat.badgen.net/npm/v/@zendeskgarden/container-focusvisible
+[npm version link]: https://www.npmjs.com/package/@zendeskgarden/container-focusvisible
 
 This package includes containers relating to the `:focus-visible`
 polyfill in the [Garden Design System](https://zendeskgarden.github.io/).

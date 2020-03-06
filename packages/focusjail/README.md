@@ -1,4 +1,7 @@
-# @zendeskgarden/container-focusjail [![npm version](https://img.shields.io/npm/v/@zendeskgarden/container-focusjail.svg?style=flat-square)](https://www.npmjs.com/package/@zendeskgarden/container-focusjail)
+# @zendeskgarden/container-focusjail [![npm version][npm version badge]][npm version link]
+
+[npm version badge]: https://flat.badgen.net/npm/v/@zendeskgarden/container-focusjail
+[npm version link]: https://www.npmjs.com/package/@zendeskgarden/container-focusjail
 
 This package includes containers relating to focusjail in the
 [Garden Design System](https://zendeskgarden.github.io/).

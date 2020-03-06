@@ -1,4 +1,7 @@
-# @zendeskgarden/container-tooltip [![npm version](https://img.shields.io/npm/v/@zendeskgarden/container-tooltip.svg?style=flat-square)](https://www.npmjs.com/package/@zendeskgarden/container-tooltip)
+# @zendeskgarden/container-tooltip [![npm version][npm version badge]][npm version link]
+
+[npm version badge]: https://flat.badgen.net/npm/v/@zendeskgarden/container-tooltip
+[npm version link]: https://www.npmjs.com/package/@zendeskgarden/container-tooltip
 
 This package includes containers relating to tooltip in the
 [Garden Design System](https://zendeskgarden.github.io/).
