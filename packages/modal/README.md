@@ -1,4 +1,7 @@
-# @zendeskgarden/container-modal [![npm version](https://img.shields.io/npm/v/@zendeskgarden/container-modal.svg?style=flat-square)](https://www.npmjs.com/package/@zendeskgarden/container-modal)
+# @zendeskgarden/container-modal [![npm version][npm version badge]][npm version link]
+
+[npm version badge]: https://flat.badgen.net/npm/v/@zendeskgarden/container-modal
+[npm version link]: https://www.npmjs.com/package/@zendeskgarden/container-modal
 
 This package includes containers relating to modals in the
 [Garden Design System](https://zendeskgarden.github.io/).

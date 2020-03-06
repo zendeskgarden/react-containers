@@ -1,4 +1,7 @@
-# @zendeskgarden/container-field [![npm version](https://img.shields.io/npm/v/@zendeskgarden/container-field.svg?style=flat-square)](https://www.npmjs.com/package/@zendeskgarden/container-field)
+# @zendeskgarden/container-field [![npm version][npm version badge]][npm version link]
+
+[npm version badge]: https://flat.badgen.net/npm/v/@zendeskgarden/container-field
+[npm version link]: https://www.npmjs.com/package/@zendeskgarden/container-field
 
 This package includes containers relating to field in the
 [Garden Design System](https://zendeskgarden.github.io/).

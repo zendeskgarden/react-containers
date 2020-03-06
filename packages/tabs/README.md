@@ -1,4 +1,7 @@
-# @zendeskgarden/container-tabs [![npm version](https://img.shields.io/npm/v/@zendeskgarden/container-tabs.svg?style=flat-square)](https://www.npmjs.com/package/@zendeskgarden/container-tabs)
+# @zendeskgarden/container-tabs [![npm version][npm version badge]][npm version link]
+
+[npm version badge]: https://flat.badgen.net/npm/v/@zendeskgarden/container-tabs
+[npm version link]: https://www.npmjs.com/package/@zendeskgarden/container-tabs
 
 This package includes containers relating to tabs in the
 [Garden Design System](https://zendeskgarden.github.io/).

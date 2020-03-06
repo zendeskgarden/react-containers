@@ -1,4 +1,7 @@
-# @zendeskgarden/container-selection [![npm version](https://img.shields.io/npm/v/@zendeskgarden/container-selection.svg?style=flat-square)](https://www.npmjs.com/package/@zendeskgarden/container-selection)
+# @zendeskgarden/container-selection [![npm version][npm version badge]][npm version link]
+
+[npm version badge]: https://flat.badgen.net/npm/v/@zendeskgarden/container-selection
+[npm version link]: https://www.npmjs.com/package/@zendeskgarden/container-selection
 
 This package includes containers relating to selection in the
 [Garden Design System](https://zendeskgarden.github.io/).
