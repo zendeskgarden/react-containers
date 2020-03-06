@@ -2,9 +2,9 @@
 
 <!-- markdownlint-enable -->
 
-[build status badge]: https://flat.badgen.net/travis/zendeskgarden/react-containers/master
+[build status badge]: https://flat.badgen.net/travis/zendeskgarden/react-containers/master?label=build
 [build status link]: https://travis-ci.org/zendeskgarden/react-containers
-[dependency status badge]: https://flat.badgen.net/david/dev/zendeskgarden/react-containers
+[dependency status badge]: https://flat.badgen.net/david/dev/zendeskgarden/react-containers?label=dependencies
 [dependency status link]: https://david-dm.org/zendeskgarden/react-containers?type=dev
 [coverage status badge]: https://flat.badgen.net/coveralls/c/github/zendeskgarden/react-containers/master
 [coverage status link]: https://coveralls.io/github/zendeskgarden/react-containers
