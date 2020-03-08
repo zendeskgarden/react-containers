@@ -38,6 +38,7 @@ jobs:
       - run: yarn format
       - run: yarn tsc
       - run: yarn test:all --coverage --runInBand
+      - run: yarn coveralls < demo/coverage/lcov.info
 
   deploy:
     executor: node/default
