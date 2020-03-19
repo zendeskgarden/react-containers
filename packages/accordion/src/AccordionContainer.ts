@@ -23,8 +23,9 @@ export const AccordionContainer: React.FunctionComponent<IAccordionContainerProp
 AccordionContainer.propTypes = {
   children: PropTypes.func,
   render: PropTypes.func,
-  expandedSections: PropTypes.array,
-  expandable: PropTypes.bool,
-  collapsible: PropTypes.bool,
+  expandedSections: PropTypes.oneOfType([PropTypes.array, PropTypes.number]),
+  defaultExpandedSections: PropTypes.oneOfType([PropTypes.array, PropTypes.number]),
+  isExpandable: PropTypes.bool,
+  isCollapsible: PropTypes.bool,
   idPrefix: PropTypes.string
 };

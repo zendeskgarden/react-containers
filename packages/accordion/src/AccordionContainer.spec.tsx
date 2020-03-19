@@ -12,38 +12,54 @@ import { AccordionContainer } from './AccordionContainer';
 import { IUseAccordionReturnValue, IUseAccordionProps } from './useAccordion';
 
 describe('AccordionContainer', () => {
-  it('renders with expected return values', () => {
-    const { getByTestId, getByText } = render(
+  it('renders with expected return value', () => {
+    const { getByText } = render(
       <AccordionContainer>
-        {({ expandedSections, disabledSections }: IUseAccordionReturnValue) => (
-          <div data-test-id="test" hidden={expandedSections.length === 0}>
-            <button disabled={disabledSections.length !== 0}>Trigger</button>
-          </div>
-        )}
+        {({ expandedSections, getPanelProps }: IUseAccordionReturnValue) => {
+          const index = 0;
+
+          return (
+            <>
+              <h1>
+                <button>Trigger</button>
+              </h1>
+              <section
+                data-test-id="test"
+                {...getPanelProps({
+                  index,
+                  role: null,
+                  hidden: (expandedSections as number[]).includes(index) === false
+                })}
+              >
+                Panel Content
+              </section>
+            </>
+          );
+        }}
       </AccordionContainer>
     );
-    const test = getByTestId('test');
-    const triggerButton = getByText('Trigger');
+    const test = getByText('Panel Content');
 
-    expect(test).toHaveAttribute('hidden');
-    expect(triggerButton).not.toHaveAttribute('disabled');
+    expect(test).not.toHaveAttribute('hidden');
   });
 
   const sections = Array(3).fill(undefined);
   const CONTAINER_ID_PREFIX = 'test';
 
   const BasicExample = ({
-    expandedSections = [],
-    expandable = true,
-    collapsible = true,
-    onChange
+    expandedSections,
+    onChange,
+    isExpandable,
+    isCollapsible,
+    defaultExpandedSections
   }: IUseAccordionProps = {}) => (
     <AccordionContainer
       idPrefix={CONTAINER_ID_PREFIX}
       expandedSections={expandedSections}
-      expandable={expandable}
-      collapsible={collapsible}
+      isExpandable={isExpandable}
+      isCollapsible={isCollapsible}
       onChange={onChange}
+      defaultExpandedSections={defaultExpandedSections}
     >
       {({ getHeaderProps, getTriggerProps, getPanelProps }) => (
         <>
@@ -51,7 +67,9 @@ describe('AccordionContainer', () => {
             return (
               <div key={index}>
                 <div {...getHeaderProps({ ariaLevel: 1, 'data-test-id': 'header' })}>
-                  <div {...getTriggerProps({ index, 'data-test-id': 'trigger' })}>Trigger</div>
+                  <button {...getTriggerProps({ index, 'data-test-id': 'trigger' })}>
+                    Trigger
+                  </button>
                 </div>
                 <div {...getPanelProps({ index, 'data-test-id': 'panel' })}>Panel</div>
               </div>
@@ -92,7 +110,7 @@ describe('AccordionContainer', () => {
     </AccordionContainer>
   );
 
-  it('calls onChange with correct sections on section selection', () => {
+  it('calls onChange with correct section index on section selection', () => {
     const onChangeSpy = jest.fn();
 
     const { getAllByTestId } = render(<BasicExample onChange={onChangeSpy} />);
@@ -100,7 +118,7 @@ describe('AccordionContainer', () => {
 
     fireEvent.click(triggers[2]);
 
-    expect(onChangeSpy).toHaveBeenCalledWith([2]);
+    expect(onChangeSpy).toHaveBeenCalledWith(2);
   });
 
   describe('getHeaderProps', () => {
@@ -207,7 +225,7 @@ describe('AccordionContainer', () => {
     });
 
     it('applies the correct accessibility expanded value when not toggled', () => {
-      const { getAllByTestId } = render(<BasicExample />);
+      const { getAllByTestId } = render(<BasicExample defaultExpandedSections={[]} />);
 
       getAllByTestId('trigger').forEach(trigger => {
         expect(trigger).toHaveAttribute('aria-expanded', 'false');
@@ -244,11 +262,11 @@ describe('AccordionContainer', () => {
 
       it('does not toggle on DOWN', () => {
         const { getAllByTestId } = render(<BasicExample />);
-        const firstTrigger = getAllByTestId('trigger')[0];
+        const secondTrigger = getAllByTestId('trigger')[1];
 
-        fireEvent.keyDown(firstTrigger, { keyCode: KEY_CODES.DOWN });
+        fireEvent.keyDown(secondTrigger, { keyCode: KEY_CODES.DOWN });
 
-        expect(firstTrigger).toHaveAttribute('aria-expanded', 'false');
+        expect(secondTrigger).toHaveAttribute('aria-expanded', 'false');
       });
     });
 
@@ -307,7 +325,7 @@ describe('AccordionContainer', () => {
     });
 
     it('applies the correct accessibility value when hidden', () => {
-      const { getAllByTestId } = render(<BasicExample />);
+      const { getAllByTestId } = render(<BasicExample defaultExpandedSections={[]} />);
 
       getAllByTestId('panel').forEach(panel => {
         expect(panel).toHaveAttribute('aria-hidden', 'true');
@@ -346,7 +364,7 @@ describe('AccordionContainer', () => {
       });
 
       it('does not show on DOWN', () => {
-        const { getAllByTestId } = render(<BasicExample />);
+        const { getAllByTestId } = render(<BasicExample defaultExpandedSections={[]} />);
         const firstTrigger = getAllByTestId('trigger')[0];
         const firstPanel = getAllByTestId('panel')[0];
 
@@ -376,17 +394,12 @@ describe('AccordionContainer', () => {
   });
 
   describe('is not expandable (but is collapsible)', () => {
-    let triggers: HTMLElement[];
-    let panels: HTMLElement[];
-
-    beforeEach(() => {
-      const { getAllByTestId } = render(<BasicExample expandedSections={[0]} expandable={false} />);
-
-      triggers = getAllByTestId('trigger');
-      panels = getAllByTestId('panel');
-    });
-
     it('renders with one section expanded', () => {
+      const { getAllByTestId } = render(<BasicExample isCollapsible />);
+
+      const triggers = getAllByTestId('trigger');
+      const panels = getAllByTestId('panel');
+
       panels.forEach((panel, index) => {
         const hidden = index === 0 ? 'false' : 'true';
         const expanded = index === 0 ? 'true' : 'false';
@@ -397,6 +410,11 @@ describe('AccordionContainer', () => {
     });
 
     it('only expands one section at a time', () => {
+      const { getAllByTestId } = render(<BasicExample isCollapsible />);
+
+      const triggers = getAllByTestId('trigger');
+      const panels = getAllByTestId('panel');
+
       fireEvent.click(triggers[1]);
       triggers.forEach((trigger, index) => {
         const expanded = index === 1 ? 'true' : 'false';
@@ -408,7 +426,15 @@ describe('AccordionContainer', () => {
     });
 
     it('can collapse the expanded section', () => {
+      const { getAllByTestId } = render(<BasicExample isCollapsible />);
+
+      const triggers = getAllByTestId('trigger');
+      const panels = getAllByTestId('panel');
+
+      expect(triggers[0]).toHaveAttribute('aria-disabled', 'false');
+
       fireEvent.click(triggers[0]);
+
       triggers.forEach((trigger, index) => {
         expect(trigger).toHaveAttribute('aria-expanded', 'false');
         expect(panels[index]).toHaveAttribute('aria-hidden', 'true');
@@ -417,17 +443,12 @@ describe('AccordionContainer', () => {
   });
 
   describe('is not collapsible (but is expandable)', () => {
-    let triggers: HTMLElement[];
-    let panels: HTMLElement[];
-
-    beforeEach(() => {
-      const { getAllByTestId } = render(<BasicExample collapsible={false} />);
-
-      triggers = getAllByTestId('trigger');
-      panels = getAllByTestId('panel');
-    });
-
     it('renders with no disabled sections', () => {
+      const { getAllByTestId } = render(<BasicExample defaultExpandedSections={[]} />);
+
+      const triggers = getAllByTestId('trigger');
+      const panels = getAllByTestId('panel');
+
       triggers.forEach((trigger, index) => {
         expect(trigger).toHaveAttribute('aria-disabled', 'false');
         expect(trigger).toHaveAttribute('aria-expanded', 'false');
@@ -436,6 +457,11 @@ describe('AccordionContainer', () => {
     });
 
     it('disables sections as it expands', () => {
+      const { getAllByTestId } = render(<BasicExample />);
+
+      const triggers = getAllByTestId('trigger');
+      const panels = getAllByTestId('panel');
+
       triggers.forEach((trigger, index) => {
         fireEvent.click(trigger);
         expect(trigger).toHaveAttribute('aria-disabled', 'true');
@@ -445,37 +471,51 @@ describe('AccordionContainer', () => {
     });
 
     it('prevents collapse on an expanded section', () => {
+      const { getAllByTestId } = render(<BasicExample />);
+      const triggers = getAllByTestId('trigger');
+      const panels = getAllByTestId('panel');
       const trigger = triggers[0];
       const panel = panels[0];
 
-      expect(trigger).toHaveAttribute('aria-disabled', 'false');
-      expect(trigger).toHaveAttribute('aria-expanded', 'false');
-      expect(panel).toHaveAttribute('aria-hidden', 'true');
+      expect(trigger).toHaveAttribute('aria-disabled', 'true');
+      expect(trigger).toHaveAttribute('aria-expanded', 'true');
+      expect(panel).toHaveAttribute('aria-hidden', 'false');
       fireEvent.click(trigger); // expand!
       expect(trigger).toHaveAttribute('aria-disabled', 'true');
       expect(trigger).toHaveAttribute('aria-expanded', 'true');
       expect(panel).toHaveAttribute('aria-hidden', 'false');
-      fireEvent.click(trigger); // collapse?
-      expect(trigger).toHaveAttribute('aria-disabled', 'true');
-      expect(trigger).toHaveAttribute('aria-expanded', 'true');
-      expect(panel).toHaveAttribute('aria-hidden', 'false');
+    });
+
+    it('expands panels, at least one panel must be expanded at all times', () => {
+      const { getAllByTestId } = render(<BasicExample isExpandable />);
+
+      const triggers = getAllByTestId('trigger');
+      const panels = getAllByTestId('panel');
+
+      expect(triggers[0]).toHaveAttribute('aria-disabled', 'true');
+      expect(triggers[0]).toHaveAttribute('aria-expanded', 'true');
+      expect(panels[0]).toHaveAttribute('aria-hidden', 'false');
+
+      fireEvent.click(triggers[0]);
+
+      expect(triggers[0]).toHaveAttribute('aria-disabled', 'true');
+      expect(triggers[0]).toHaveAttribute('aria-expanded', 'true');
+      expect(panels[0]).toHaveAttribute('aria-hidden', 'false');
+
+      fireEvent.click(triggers[1]);
+
+      expect(triggers[1]).toHaveAttribute('aria-disabled', 'true');
+      expect(triggers[1]).toHaveAttribute('aria-expanded', 'true');
+      expect(panels[1]).toHaveAttribute('aria-hidden', 'false');
     });
   });
 
   describe('is not expandable OR collapsible', () => {
-    let triggers: HTMLElement[];
-    let panels: HTMLElement[];
-
-    beforeEach(() => {
-      const { getAllByTestId } = render(
-        <BasicExample expandedSections={[0]} expandable={false} collapsible={false} />
-      );
-
-      triggers = getAllByTestId('trigger');
-      panels = getAllByTestId('panel');
-    });
-
     it('renders with one expanded, disabled section', () => {
+      const { getAllByTestId } = render(<BasicExample />);
+      const triggers = getAllByTestId('trigger');
+      const panels = getAllByTestId('panel');
+
       triggers.forEach((trigger, index) => {
         const expanded = index === 0 ? 'true' : 'false';
         const hidden = index === 0 ? 'false' : 'true';
@@ -487,6 +527,10 @@ describe('AccordionContainer', () => {
     });
 
     it('only expand-disables section at a time', () => {
+      const { getAllByTestId } = render(<BasicExample />);
+      const triggers = getAllByTestId('trigger');
+      const panels = getAllByTestId('panel');
+
       triggers.forEach((trigger, index) => {
         fireEvent.click(trigger);
         triggers.forEach((_trigger, _index) => {
@@ -501,8 +545,9 @@ describe('AccordionContainer', () => {
     });
 
     it('prevents collapse on the expanded section', () => {
-      const trigger = triggers[0];
-      const panel = panels[0];
+      const { getAllByTestId } = render(<BasicExample />);
+      const trigger = getAllByTestId('trigger')[0];
+      const panel = getAllByTestId('panel')[0];
 
       expect(trigger).toHaveAttribute('aria-disabled', 'true');
       expect(trigger).toHaveAttribute('aria-expanded', 'true');
@@ -511,6 +556,35 @@ describe('AccordionContainer', () => {
       expect(trigger).toHaveAttribute('aria-disabled', 'true');
       expect(trigger).toHaveAttribute('aria-expanded', 'true');
       expect(panel).toHaveAttribute('aria-hidden', 'false');
+    });
+  });
+
+  describe('is expandable and collapsible', () => {
+    it('can expand and collapse all panels', () => {
+      const { getAllByText } = render(
+        <BasicExample defaultExpandedSections={[]} isCollapsible isExpandable />
+      );
+
+      const triggers = getAllByText('Trigger');
+      const panels = getAllByText('Panel');
+
+      triggers.forEach((trigger, index) => {
+        expect(trigger).toHaveAttribute('aria-disabled', 'false');
+        expect(trigger).toHaveAttribute('aria-expanded', 'false');
+        expect(panels[index]).toHaveAttribute('aria-hidden', 'true');
+
+        fireEvent.click(trigger);
+
+        expect(trigger).toHaveAttribute('aria-disabled', 'false');
+        expect(trigger).toHaveAttribute('aria-expanded', 'true');
+        expect(panels[index]).toHaveAttribute('aria-hidden', 'false');
+
+        fireEvent.click(trigger);
+
+        expect(trigger).toHaveAttribute('aria-disabled', 'false');
+        expect(trigger).toHaveAttribute('aria-expanded', 'false');
+        expect(panels[index]).toHaveAttribute('aria-hidden', 'true');
+      });
     });
   });
 });
