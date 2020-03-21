@@ -23,7 +23,7 @@ storiesOf('Accordion Container', module)
   .add('useAccordion (uncontrolled)', () => {
     const size = number('Sections', 5, { range: true, min: 1, max: 9 });
     const defaultExpandedSections = number('defaultExpandedSections', 0, { min: 0, max: size - 1 });
-    const sections = Array(size)
+    const sectionRefs = Array(size)
       .fill(undefined)
       .map(() => createRef());
 
@@ -32,12 +32,12 @@ storiesOf('Accordion Container', module)
         defaultExpandedSections,
         isCollapsible,
         isExpandable,
-        onChange: action(`Selected panel`)
+        onChange: action('Selected panel')
       });
 
       return (
         <div style={{ width: 300 }}>
-          {sections.map((section, index) => {
+          {sectionRefs.map((sectionRef, index) => {
             const hidden = Array.isArray(expandedSections)
               ? expandedSections.indexOf(index) === -1
               : index !== expandedSections;
@@ -63,7 +63,7 @@ storiesOf('Accordion Container', module)
                     hidden
                   })}
                 >
-                  {`[Panel ${index + 1}] `}
+                  {`[Panel ${index + 1}]`}
                   Veggies es bonus vobis, proinde vos postulo essum magis kohlrabi welsh onion
                   daikon amaranth tatsoi tomatillo melon azuki bean garlic.
                 </section>
@@ -86,7 +86,8 @@ storiesOf('Accordion Container', module)
     const controlledIndex = number('index', 0, { range: false, min: 0, max: size - 1 });
     const sections = Array(size)
       .fill(undefined)
-      .map((value, index) => index);
+      .map((section, index) => index);
+    const sectionRefs = sections.map(() => createRef());
 
     const Accordion = () => {
       const [expandedSections, setExpandedSections] = useState<number | number[]>(controlledIndex);
@@ -99,43 +100,45 @@ storiesOf('Accordion Container', module)
         <>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             {sections.length >= 2 && (
-              <button onClick={() => setExpandedSections(1)}>Open Trigger 2</button>
+              <button onClick={() => setExpandedSections(1)}>Expand Trigger 2</button>
             )}
             <button onClick={() => setExpandedSections(sections)}>Expand All</button>
             <button onClick={() => setExpandedSections([])}>Collapse All</button>
           </div>
 
           <div style={{ width: 300, marginTop: '20px' }}>
-            {sections.map((section, index) => {
+            {sectionRefs.map((sectionRef, index) => {
               const hidden = Array.isArray(expandedSections)
                 ? !expandedSections.includes(index)
                 : index !== expandedSections;
 
               return (
                 <div key={index}>
-                  <h2 {...getHeaderProps({ role: null, ariaLevel: null })}>
-                    <button
+                  <div {...getHeaderProps({ ariaLevel: 2 })}>
+                    <div
                       {...getTriggerProps({
                         index,
-                        role: null,
-                        tabIndex: null,
-                        style: { width: '100%', textAlign: 'inherit' }
+                        style: {
+                          WebkitAppearance: 'button',
+                          border: '1px solid',
+                          padding: 1,
+                          cursor: 'pointer'
+                        }
                       })}
                     >
                       {`Trigger ${index + 1}`}
-                    </button>
-                  </h2>
-                  <section
+                    </div>
+                  </div>
+                  <p
                     {...getPanelProps({
                       index,
-                      role: null,
                       hidden
                     })}
                   >
-                    {`[Panel ${index + 1}] `}
+                    {`[Panel ${index + 1}]`}
                     Veggies es bonus vobis, proinde vos postulo essum magis kohlrabi welsh onion
                     daikon amaranth tatsoi tomatillo melon azuki bean garlic.
-                  </section>
+                  </p>
                 </div>
               );
             })}
@@ -146,12 +149,79 @@ storiesOf('Accordion Container', module)
 
     return <Accordion />;
   })
+  .add('AccordionContainer (uncontrolled)', () => {
+    const size = number('Sections', 5, { range: true, min: 1, max: 9 });
+    const sectionRefs = Array(size)
+      .fill(undefined)
+      .map(() => createRef());
+
+    const Accordion = ({ isExpandable, isCollapsible }: IUseAccordionProps) => (
+      <AccordionContainer
+        onChange={action('Selected panel')}
+        isExpandable={isExpandable}
+        isCollapsible={isCollapsible}
+      >
+        {({
+          getHeaderProps,
+          getTriggerProps,
+          getPanelProps,
+          expandedSections
+        }: IUseAccordionReturnValue) => {
+          return (
+            <div style={{ width: 300 }}>
+              {sectionRefs.map((sectionRef, index) => {
+                const hidden = Array.isArray(expandedSections)
+                  ? expandedSections.indexOf(index) === -1
+                  : index !== expandedSections;
+
+                return (
+                  <div key={index}>
+                    <h2 {...getHeaderProps({ role: null, ariaLevel: null })}>
+                      <button
+                        {...getTriggerProps({
+                          index,
+                          role: null,
+                          tabIndex: null,
+                          style: { width: '100%', textAlign: 'inherit' }
+                        })}
+                      >
+                        {`Trigger ${index + 1}`}
+                      </button>
+                    </h2>
+                    <section
+                      {...getPanelProps({
+                        index,
+                        role: null,
+                        hidden
+                      })}
+                    >
+                      {`[Panel ${index + 1}]`}
+                      Veggies es bonus vobis, proinde vos postulo essum magis kohlrabi welsh onion
+                      daikon amaranth tatsoi tomatillo melon azuki bean garlic.
+                    </section>
+                  </div>
+                );
+              })}
+            </div>
+          );
+        }}
+      </AccordionContainer>
+    );
+
+    return (
+      <Accordion
+        isExpandable={boolean('isExpandable', false)}
+        isCollapsible={boolean('isCollapsible', false)}
+      />
+    );
+  })
   .add('AccordionContainer (controlled)', () => {
     const size = number('Sections', 3, { range: true, min: 1, max: 9 });
     const controlledIndex = number('index', 0, { range: false, min: 0, max: size - 1 });
     const sections = Array(size)
       .fill(undefined)
-      .map((value, index) => index);
+      .map((section, index) => index);
+    const sectionRefs = sections.map(() => createRef());
 
     const Accordion = () => {
       const [expandedSections, setExpandedSections] = useState<number | number[]>(controlledIndex);
@@ -166,14 +236,14 @@ storiesOf('Accordion Container', module)
               <>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                   {sections.length >= 2 && (
-                    <button onClick={() => setExpandedSections(1)}>Open Trigger 2</button>
+                    <button onClick={() => setExpandedSections(1)}>Expand Trigger 2</button>
                   )}
-                  <button onClick={() => setExpandedSections([0, 1, 2])}>Expand All</button>
+                  <button onClick={() => setExpandedSections(sections)}>Expand All</button>
                   <button onClick={() => setExpandedSections([])}>Collapse All</button>
                 </div>
 
                 <div style={{ width: 300, marginTop: '20px' }}>
-                  {sections.map((section, index) => {
+                  {sectionRefs.map((sectionRef, index) => {
                     const hidden = Array.isArray(expandedSections)
                       ? !expandedSections.includes(index)
                       : index !== expandedSections;
@@ -201,7 +271,7 @@ storiesOf('Accordion Container', module)
                             hidden
                           })}
                         >
-                          {`[Panel ${index + 1}] `}
+                          {`[Panel ${index + 1}]`}
                           Veggies es bonus vobis, proinde vos postulo essum magis kohlrabi welsh
                           onion daikon amaranth tatsoi tomatillo melon azuki bean garlic.
                         </p>
@@ -217,72 +287,4 @@ storiesOf('Accordion Container', module)
     };
 
     return <Accordion />;
-  })
-  .add('AccordionContainer (uncontrolled)', () => {
-    const size = number('Sections', 5, { range: true, min: 1, max: 9 });
-    const sections = Array(size)
-      .fill(undefined)
-      .map(() => createRef());
-
-    const Accordion = ({ isExpandable, isCollapsible }: IUseAccordionProps) => (
-      <AccordionContainer
-        onChange={action(`Selected panel`)}
-        isExpandable={isExpandable}
-        isCollapsible={isCollapsible}
-      >
-        {({
-          getHeaderProps,
-          getTriggerProps,
-          getPanelProps,
-          expandedSections
-        }: IUseAccordionReturnValue) => {
-          return (
-            <div style={{ width: 300 }}>
-              {sections.map((section, index) => {
-                const hidden = Array.isArray(expandedSections)
-                  ? expandedSections.indexOf(index) === -1
-                  : index !== expandedSections;
-
-                return (
-                  <div key={index}>
-                    <div {...getHeaderProps({ ariaLevel: 2 })}>
-                      <div
-                        {...getTriggerProps({
-                          index,
-                          style: {
-                            WebkitAppearance: 'button',
-                            border: '1px solid',
-                            padding: 1,
-                            cursor: 'pointer'
-                          }
-                        })}
-                      >
-                        {`Trigger ${index + 1}`}
-                      </div>
-                    </div>
-                    <p
-                      {...getPanelProps({
-                        index,
-                        hidden
-                      })}
-                    >
-                      {`[Panel ${index + 1}] `}
-                      Veggies es bonus vobis, proinde vos postulo essum magis kohlrabi welsh onion
-                      daikon amaranth tatsoi tomatillo melon azuki bean garlic.
-                    </p>
-                  </div>
-                );
-              })}
-            </div>
-          );
-        }}
-      </AccordionContainer>
-    );
-
-    return (
-      <Accordion
-        isExpandable={boolean('isExpandable', false)}
-        isCollapsible={boolean('isCollapsible', false)}
-      />
-    );
   });

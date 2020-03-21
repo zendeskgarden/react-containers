@@ -55,8 +55,7 @@ export function useAccordion({
   isCollapsible,
   isExpandable
 }: IUseAccordionProps = {}): IUseAccordionReturnValue {
-  // eslint-disable-next-line
-  const isControlled = expandedSections != null;
+  const isControlled = expandedSections !== null && expandedSections !== undefined;
   const seed = useUIDSeed();
   const [prefix] = useState<string>(idPrefix || seed(`accordion_${PACKAGE_VERSION}`));
   const TRIGGER_ID = `${prefix}--trigger`;
@@ -67,7 +66,7 @@ export function useAccordion({
     Array.isArray(defaultExpandedSections) ? defaultExpandedSections : [defaultExpandedSections]
   );
 
-  const internalExpandedSections = getControlledValue(expandedSections, expandedState);
+  const controlledExpandedSections = getControlledValue(expandedSections, expandedState)!;
 
   const toggle = (index: number) => {
     if (onChange) {
@@ -79,19 +78,19 @@ export function useAccordion({
     }
 
     if (isExpandable && isCollapsible) {
-      if (internalExpandedSections.includes(index)) {
-        setExpandedState(internalExpandedSections.filter((n: number) => n !== index));
+      if (expandedState.includes(index)) {
+        setExpandedState(expandedState.filter((n: number) => n !== index));
       } else {
-        setExpandedState([...internalExpandedSections, index]);
+        setExpandedState([...expandedState, index]);
       }
     } else if (isExpandable) {
-      if (!internalExpandedSections.includes(index)) {
-        setExpandedState([...internalExpandedSections, index]);
-      } else if (internalExpandedSections.length > 1) {
-        setExpandedState(internalExpandedSections.filter((n: number) => n !== index));
+      if (!expandedState.includes(index)) {
+        setExpandedState([...expandedState, index]);
+      } else if (expandedState.length > 1) {
+        setExpandedState(expandedState.filter((n: number) => n !== index));
       }
     } else if (isCollapsible) {
-      if (internalExpandedSections[0] === index) {
+      if (expandedState[0] === index) {
         setExpandedState([]);
       } else {
         setExpandedState([index]);
@@ -122,6 +121,7 @@ export function useAccordion({
   const getTriggerProps = ({
     index,
     role = 'button',
+    disabled,
     tabIndex = 0,
     ...props
   }: ITriggerProps = {}) => {
@@ -131,18 +131,23 @@ export function useAccordion({
       );
     }
 
-    const isExpanded = Array.isArray(internalExpandedSections)
-      ? internalExpandedSections.includes(index)
-      : internalExpandedSections === index;
+    const isExpanded = Array.isArray(controlledExpandedSections)
+      ? controlledExpandedSections.includes(index)
+      : controlledExpandedSections === index;
 
     return {
       id: `${TRIGGER_ID}:${index}`,
       role,
       tabIndex,
+      disabled,
       'aria-controls': `${PANEL_ID}:${index}`,
       'aria-disabled': isCollapsible ? 'false' : isExpanded,
       'aria-expanded': isExpanded,
-      onClick: composeEventHandlers(props.onClick, () => toggle(index)),
+      onClick: composeEventHandlers(props.onClick, () => {
+        if (disabled !== false) {
+          toggle(index);
+        }
+      }),
       onKeyDown: composeEventHandlers(props.onKeyDown, (event: KeyboardEvent) => {
         if (event.keyCode === KEY_CODES.SPACE || event.keyCode === KEY_CODES.ENTER) {
           toggle(index);
@@ -160,9 +165,9 @@ export function useAccordion({
       );
     }
 
-    const ariaHidden = Array.isArray(internalExpandedSections)
-      ? !internalExpandedSections.includes(index)
-      : internalExpandedSections !== index;
+    const ariaHidden = Array.isArray(controlledExpandedSections)
+      ? !controlledExpandedSections.includes(index)
+      : controlledExpandedSections !== index;
 
     return {
       id: `${PANEL_ID}:${index}`,
@@ -177,6 +182,6 @@ export function useAccordion({
     getHeaderProps,
     getTriggerProps,
     getPanelProps,
-    expandedSections: internalExpandedSections
+    expandedSections: controlledExpandedSections
   };
 }

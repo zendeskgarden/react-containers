@@ -9,40 +9,9 @@ import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 import { KEY_CODES } from '@zendeskgarden/container-utilities';
 import { AccordionContainer } from './AccordionContainer';
-import { IUseAccordionReturnValue, IUseAccordionProps } from './useAccordion';
+import { IUseAccordionProps } from './useAccordion';
 
 describe('AccordionContainer', () => {
-  it('renders with expected return value', () => {
-    const { getByText } = render(
-      <AccordionContainer>
-        {({ expandedSections, getPanelProps }: IUseAccordionReturnValue) => {
-          const index = 0;
-
-          return (
-            <>
-              <h1>
-                <button>Trigger</button>
-              </h1>
-              <section
-                data-test-id="test"
-                {...getPanelProps({
-                  index,
-                  role: null,
-                  hidden: (expandedSections as number[]).includes(index) === false
-                })}
-              >
-                Panel Content
-              </section>
-            </>
-          );
-        }}
-      </AccordionContainer>
-    );
-    const test = getByText('Panel Content');
-
-    expect(test).not.toHaveAttribute('hidden');
-  });
-
   const sections = Array(3).fill(undefined);
   const CONTAINER_ID_PREFIX = 'test';
 
@@ -67,9 +36,9 @@ describe('AccordionContainer', () => {
             return (
               <div key={index}>
                 <div {...getHeaderProps({ ariaLevel: 1, 'data-test-id': 'header' })}>
-                  <button {...getTriggerProps({ index, 'data-test-id': 'trigger' })}>
+                  <div {...getTriggerProps({ index, role: 'button', 'data-test-id': 'trigger' })}>
                     Trigger
-                  </button>
+                  </div>
                 </div>
                 <div {...getPanelProps({ index, 'data-test-id': 'panel' })}>Panel</div>
               </div>
