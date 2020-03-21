@@ -61,7 +61,7 @@ export function useAccordion({
   const PANEL_ID = `${prefix}--panel`;
   const [expandedState, setExpandedState] = useState<number[]>(expandedSections || []);
 
-  const controlledExpandedState = getControlledValue(onChange && expandedSections, expandedState);
+  const controlledExpandedState = getControlledValue(onChange && expandedSections, expandedState)!;
 
   const [disabledState, setDisabledState] = useState(collapsible ? [] : controlledExpandedState);
 
