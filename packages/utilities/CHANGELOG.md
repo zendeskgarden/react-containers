@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.3](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-utilities@0.5.2...@zendeskgarden/container-utilities@0.5.3) (2020-03-23)
+
+
+### Bug Fixes
+
+* **utils:** add typing to getControlledValue ([#173](https://github.com/zendeskgarden/react-containers/issues/173)) ([886ba5b](https://github.com/zendeskgarden/react-containers/commit/886ba5b6bd595c8946ec1fc6e5c2f8ec7e8ac3eb))
+
+
+
+
+
 ## [0.5.2](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-utilities@0.5.1...@zendeskgarden/container-utilities@0.5.2) (2020-02-20)
 
 
