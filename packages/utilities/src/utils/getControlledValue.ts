@@ -8,7 +8,7 @@
 /**
  * Utility to determine controlled vs uncontrolled values
  */
-export function getControlledValue(...values: any[]) {
+export function getControlledValue<T>(...values: T[]): T | undefined {
   for (const value of values) {
     if (value !== undefined) {
       return value;
