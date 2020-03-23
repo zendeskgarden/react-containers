@@ -27,11 +27,11 @@ storiesOf('Accordion Container', module)
       .fill(undefined)
       .map(() => createRef());
 
-    const Accordion = ({ isCollapsible = false, isExpandable = false } = {}) => {
+    const Accordion = ({ collapsible = false, expandable = false } = {}) => {
       const { expandedSections, getHeaderProps, getTriggerProps, getPanelProps } = useAccordion({
         defaultExpandedSections,
-        isCollapsible,
-        isExpandable,
+        collapsible,
+        expandable,
         onChange: action('Selected panel')
       });
 
@@ -76,8 +76,8 @@ storiesOf('Accordion Container', module)
 
     return (
       <Accordion
-        isExpandable={boolean('isExpandable', false)}
-        isCollapsible={boolean('isCollapsible', false)}
+        expandable={boolean('expandable', true)}
+        collapsible={boolean('collapsible', true)}
       />
     );
   })
@@ -114,31 +114,29 @@ storiesOf('Accordion Container', module)
 
               return (
                 <div key={index}>
-                  <div {...getHeaderProps({ ariaLevel: 2 })}>
-                    <div
+                  <h2 {...getHeaderProps({ role: null, ariaLevel: null })}>
+                    <button
                       {...getTriggerProps({
                         index,
-                        style: {
-                          WebkitAppearance: 'button',
-                          border: '1px solid',
-                          padding: 1,
-                          cursor: 'pointer'
-                        }
+                        role: null,
+                        tabIndex: null,
+                        style: { width: '100%', textAlign: 'inherit' }
                       })}
                     >
                       {`Trigger ${index + 1}`}
-                    </div>
-                  </div>
-                  <p
+                    </button>
+                  </h2>
+                  <section
                     {...getPanelProps({
                       index,
+                      role: null,
                       hidden
                     })}
                   >
                     {`[Panel ${index + 1}]`}
                     Veggies es bonus vobis, proinde vos postulo essum magis kohlrabi welsh onion
                     daikon amaranth tatsoi tomatillo melon azuki bean garlic.
-                  </p>
+                  </section>
                 </div>
               );
             })}
@@ -155,11 +153,11 @@ storiesOf('Accordion Container', module)
       .fill(undefined)
       .map(() => createRef());
 
-    const Accordion = ({ isExpandable, isCollapsible }: IUseAccordionProps) => (
+    const Accordion = ({ expandable, collapsible }: IUseAccordionProps) => (
       <AccordionContainer
         onChange={action('Selected panel')}
-        isExpandable={isExpandable}
-        isCollapsible={isCollapsible}
+        expandable={expandable}
+        collapsible={collapsible}
       >
         {({
           getHeaderProps,
@@ -175,30 +173,32 @@ storiesOf('Accordion Container', module)
                   : index !== expandedSections;
 
                 return (
-                  <div key={index}>
-                    <h2 {...getHeaderProps({ role: null, ariaLevel: null })}>
-                      <button
+                  <div>
+                    <div {...getHeaderProps({ ariaLevel: 2 })}>
+                      <div
                         {...getTriggerProps({
                           index,
-                          role: null,
-                          tabIndex: null,
-                          style: { width: '100%', textAlign: 'inherit' }
+                          style: {
+                            WebkitAppearance: 'button',
+                            border: '1px solid',
+                            padding: 1,
+                            cursor: 'pointer'
+                          }
                         })}
                       >
                         {`Trigger ${index + 1}`}
-                      </button>
-                    </h2>
-                    <section
+                      </div>
+                    </div>
+                    <p
                       {...getPanelProps({
                         index,
-                        role: null,
                         hidden
                       })}
                     >
                       {`[Panel ${index + 1}]`}
                       Veggies es bonus vobis, proinde vos postulo essum magis kohlrabi welsh onion
                       daikon amaranth tatsoi tomatillo melon azuki bean garlic.
-                    </section>
+                    </p>
                   </div>
                 );
               })}
@@ -210,8 +210,8 @@ storiesOf('Accordion Container', module)
 
     return (
       <Accordion
-        isExpandable={boolean('isExpandable', false)}
-        isCollapsible={boolean('isCollapsible', false)}
+        expandable={boolean('expandable', true)}
+        collapsible={boolean('collapsible', true)}
       />
     );
   })

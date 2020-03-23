@@ -18,8 +18,8 @@ export interface IUseAccordionProps {
   expandedSections?: number | number[];
   defaultExpandedSections?: number | number[];
   onChange?: (index: number) => any;
-  isCollapsible?: boolean;
-  isExpandable?: boolean;
+  collapsible?: boolean;
+  expandable?: boolean;
 }
 
 interface IHeaderProps extends HTMLProps<any> {
@@ -52,8 +52,8 @@ export function useAccordion({
   expandedSections,
   defaultExpandedSections = 0,
   onChange,
-  isCollapsible,
-  isExpandable
+  collapsible,
+  expandable
 }: IUseAccordionProps = {}): IUseAccordionReturnValue {
   const isControlled = expandedSections !== null && expandedSections !== undefined;
   const seed = useUIDSeed();
@@ -77,19 +77,19 @@ export function useAccordion({
       return undefined;
     }
 
-    if (isExpandable && isCollapsible) {
+    if (expandable && collapsible) {
       if (expandedState.includes(index)) {
         setExpandedState(expandedState.filter((n: number) => n !== index));
       } else {
         setExpandedState([...expandedState, index]);
       }
-    } else if (isExpandable) {
+    } else if (expandable) {
       if (!expandedState.includes(index)) {
         setExpandedState([...expandedState, index]);
       } else if (expandedState.length > 1) {
         setExpandedState(expandedState.filter((n: number) => n !== index));
       }
-    } else if (isCollapsible) {
+    } else if (collapsible) {
       if (expandedState[0] === index) {
         setExpandedState([]);
       } else {
@@ -141,7 +141,7 @@ export function useAccordion({
       tabIndex,
       disabled,
       'aria-controls': `${PANEL_ID}:${index}`,
-      'aria-disabled': isCollapsible ? 'false' : isExpanded,
+      'aria-disabled': collapsible ? 'false' : isExpanded,
       'aria-expanded': isExpanded,
       onClick: composeEventHandlers(props.onClick, () => {
         if (disabled !== false) {

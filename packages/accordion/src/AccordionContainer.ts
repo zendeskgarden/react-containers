@@ -25,7 +25,7 @@ AccordionContainer.propTypes = {
   render: PropTypes.func,
   expandedSections: PropTypes.oneOfType([PropTypes.array, PropTypes.number]),
   defaultExpandedSections: PropTypes.oneOfType([PropTypes.array, PropTypes.number]),
-  isExpandable: PropTypes.bool,
-  isCollapsible: PropTypes.bool,
+  expandable: PropTypes.bool,
+  collapsible: PropTypes.bool,
   idPrefix: PropTypes.string
 };

@@ -18,15 +18,15 @@ describe('AccordionContainer', () => {
   const BasicExample = ({
     expandedSections,
     onChange,
-    isExpandable,
-    isCollapsible,
+    expandable,
+    collapsible,
     defaultExpandedSections
   }: IUseAccordionProps = {}) => (
     <AccordionContainer
       idPrefix={CONTAINER_ID_PREFIX}
       expandedSections={expandedSections}
-      isExpandable={isExpandable}
-      isCollapsible={isCollapsible}
+      expandable={expandable}
+      collapsible={collapsible}
       onChange={onChange}
       defaultExpandedSections={defaultExpandedSections}
     >
@@ -364,7 +364,7 @@ describe('AccordionContainer', () => {
 
   describe('is not expandable (but is collapsible)', () => {
     it('renders with one section expanded', () => {
-      const { getAllByTestId } = render(<BasicExample isCollapsible />);
+      const { getAllByTestId } = render(<BasicExample collapsible />);
 
       const triggers = getAllByTestId('trigger');
       const panels = getAllByTestId('panel');
@@ -379,7 +379,7 @@ describe('AccordionContainer', () => {
     });
 
     it('only expands one section at a time', () => {
-      const { getAllByTestId } = render(<BasicExample isCollapsible />);
+      const { getAllByTestId } = render(<BasicExample collapsible />);
 
       const triggers = getAllByTestId('trigger');
       const panels = getAllByTestId('panel');
@@ -395,7 +395,7 @@ describe('AccordionContainer', () => {
     });
 
     it('can collapse the expanded section', () => {
-      const { getAllByTestId } = render(<BasicExample isCollapsible />);
+      const { getAllByTestId } = render(<BasicExample collapsible />);
 
       const triggers = getAllByTestId('trigger');
       const panels = getAllByTestId('panel');
@@ -456,7 +456,7 @@ describe('AccordionContainer', () => {
     });
 
     it('expands panels, at least one panel must be expanded at all times', () => {
-      const { getAllByTestId } = render(<BasicExample isExpandable />);
+      const { getAllByTestId } = render(<BasicExample expandable />);
 
       const triggers = getAllByTestId('trigger');
       const panels = getAllByTestId('panel');
@@ -531,7 +531,7 @@ describe('AccordionContainer', () => {
   describe('is expandable and collapsible', () => {
     it('can expand and collapse all panels', () => {
       const { getAllByText } = render(
-        <BasicExample defaultExpandedSections={[]} isCollapsible isExpandable />
+        <BasicExample defaultExpandedSections={[]} collapsible expandable />
       );
 
       const triggers = getAllByText('Trigger');
