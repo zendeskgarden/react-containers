@@ -473,9 +473,15 @@ describe('AccordionContainer', () => {
 
       fireEvent.click(triggers[1]);
 
-      expect(triggers[1]).toHaveAttribute('aria-disabled', 'true');
+      expect(triggers[1]).toHaveAttribute('aria-disabled', 'false');
       expect(triggers[1]).toHaveAttribute('aria-expanded', 'true');
       expect(panels[1]).toHaveAttribute('aria-hidden', 'false');
+
+      fireEvent.click(triggers[2]);
+
+      expect(triggers[2]).toHaveAttribute('aria-disabled', 'false');
+      expect(triggers[2]).toHaveAttribute('aria-expanded', 'true');
+      expect(panels[2]).toHaveAttribute('aria-hidden', 'false');
     });
   });
 

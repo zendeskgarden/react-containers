@@ -135,13 +135,27 @@ export function useAccordion({
       ? controlledExpandedSections.includes(index)
       : controlledExpandedSections === index;
 
+    let ariaDisabled;
+
+    if (collapsible) {
+      ariaDisabled = 'false';
+    } else if (isExpanded) {
+      if (expandedState.length > 1) {
+        ariaDisabled = 'false';
+      } else {
+        ariaDisabled = 'true';
+      }
+    } else {
+      ariaDisabled = isExpanded;
+    }
+
     return {
       id: `${TRIGGER_ID}:${index}`,
       role,
       tabIndex,
       disabled,
       'aria-controls': `${PANEL_ID}:${index}`,
-      'aria-disabled': collapsible ? 'false' : isExpanded,
+      'aria-disabled': ariaDisabled,
       'aria-expanded': isExpanded,
       onClick: composeEventHandlers(props.onClick, () => {
         if (disabled !== false) {
