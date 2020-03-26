@@ -16,7 +16,7 @@ import {
 export interface IUseAccordionProps {
   idPrefix?: string;
   expandedSections?: number[];
-  onChange?: (expanded: number[]) => any;
+  onChange?: (expanded: number) => any;
   expandable?: boolean;
   collapsible?: boolean;
 }
@@ -55,15 +55,16 @@ export function useAccordion({
   expandable = true,
   collapsible = true
 }: IUseAccordionProps = {}): IUseAccordionReturnValue {
+  const isControlled = expandedSections !== null && expandedSections !== undefined;
   const seed = useUIDSeed();
   const [prefix] = useState<string>(idPrefix || seed(`accordion_${PACKAGE_VERSION}`));
   const TRIGGER_ID = `${prefix}--trigger`;
   const PANEL_ID = `${prefix}--panel`;
-  const [expandedState, setExpandedState] = useState<number[]>(expandedSections || []);
+  const [expandedState, setExpandedState] = useState<number[]>([0]);
 
-  const controlledExpandedState = getControlledValue(onChange && expandedSections, expandedState)!;
+  const controlledExpandedState = getControlledValue(expandedSections, expandedState)!;
 
-  const [disabledState, setDisabledState] = useState(collapsible ? [] : controlledExpandedState);
+  const [disabledState, setDisabledState] = useState(collapsible ? [] : expandedState);
 
   const sectionIndices: number[] = [];
   const toggle = (index: number) => {
@@ -74,9 +75,9 @@ export function useAccordion({
       let isExpanded = false;
 
       if (sectionIndex === index) {
-        isExpanded = collapsible ? controlledExpandedState.indexOf(sectionIndex) === -1 : true;
+        isExpanded = collapsible ? expandedState.indexOf(sectionIndex) === -1 : true;
       } else if (expandable) {
-        isExpanded = controlledExpandedState.indexOf(sectionIndex) !== -1;
+        isExpanded = expandedState.indexOf(sectionIndex) !== -1;
       }
 
       if (isExpanded) {
@@ -89,8 +90,10 @@ export function useAccordion({
     });
 
     if (onChange) {
-      onChange(expanded);
-    } else {
+      onChange(index);
+    }
+
+    if (isControlled === false) {
       setExpandedState(expanded);
     }
 
@@ -133,7 +136,9 @@ export function useAccordion({
       tabIndex,
       'aria-controls': `${PANEL_ID}:${index}`,
       'aria-disabled': disabledState.indexOf(index) !== -1,
-      'aria-expanded': controlledExpandedState.indexOf(index) !== -1,
+      'aria-expanded': isControlled
+        ? controlledExpandedState.includes(index)
+        : expandedState.includes(index),
       onClick: composeEventHandlers(props.onClick, () => toggle(index)),
       onKeyDown: composeEventHandlers(props.onKeyDown, (event: KeyboardEvent) => {
         if (event.keyCode === KEY_CODES.SPACE || event.keyCode === KEY_CODES.ENTER) {
@@ -155,7 +160,9 @@ export function useAccordion({
     return {
       id: `${PANEL_ID}:${index}`,
       role,
-      'aria-hidden': controlledExpandedState.indexOf(index) === -1,
+      'aria-hidden': isControlled
+        ? !controlledExpandedState.includes(index)
+        : !expandedState.includes(index),
       'aria-labelledby': `${TRIGGER_ID}:${index}`,
       ...props
     };
