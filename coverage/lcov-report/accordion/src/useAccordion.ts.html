@@ -25,14 +25,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>47/47</span>
+                <span class='fraction'>49/49</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">97.5% </span>
+                <span class="strong">95.45% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>39/40</span>
+                <span class='fraction'>42/44</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>47/47</span>
+                <span class='fraction'>49/49</span>
             </div>
         
             
@@ -228,7 +228,14 @@
 <a name='L169'></a><a href='#L169'>169</a>
 <a name='L170'></a><a href='#L170'>170</a>
 <a name='L171'></a><a href='#L171'>171</a>
-<a name='L172'></a><a href='#L172'>172</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L172'></a><a href='#L172'>172</a>
+<a name='L173'></a><a href='#L173'>173</a>
+<a name='L174'></a><a href='#L174'>174</a>
+<a name='L175'></a><a href='#L175'>175</a>
+<a name='L176'></a><a href='#L176'>176</a>
+<a name='L177'></a><a href='#L177'>177</a>
+<a name='L178'></a><a href='#L178'>178</a>
+<a name='L179'></a><a href='#L179'>179</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -285,6 +292,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">59x</span>
 <span class="cline-any cline-yes">59x</span>
 <span class="cline-any cline-yes">59x</span>
 <span class="cline-any cline-yes">59x</span>
@@ -310,10 +318,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">54x</span>
-<span class="cline-any cline-yes">20x</span>
+<span class="cline-any cline-yes">26x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">20x</span>
-<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-yes">26x</span>
+<span class="cline-any cline-yes">17x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -321,7 +329,9 @@
 <span class="cline-any cline-yes">18x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">17x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">18x</span>
+<span class="cline-any cline-yes">18x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">18x</span>
@@ -358,6 +368,8 @@
 <span class="cline-any cline-yes">156x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">156x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -383,6 +395,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">156x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -417,7 +431,7 @@ import {
 export interface IUseAccordionProps {
   idPrefix?: string;
   expandedSections?: number[];
-  onChange?: (expanded: number[]) =&gt; any;
+  onChange?: (expanded: number) =&gt; any;
   expandable?: boolean;
   collapsible?: boolean;
 }
@@ -456,15 +470,16 @@ export function useAccordion({
   expandable = true,
   collapsible = true
 }: IUseAccordionProps = <span class="branch-0 cbranch-no" title="branch not covered" >{})</span>: IUseAccordionReturnValue {
+  const isControlled = expandedSections !== null &amp;&amp; expandedSections !== undefined;
   const seed = useUIDSeed();
   const [prefix] = useState&lt;string&gt;(idPrefix || seed(`accordion_${PACKAGE_VERSION}`));
   const TRIGGER_ID = `${prefix}--trigger`;
   const PANEL_ID = `${prefix}--panel`;
-  const [expandedState, setExpandedState] = useState&lt;number[]&gt;(expandedSections || []);
+  const [expandedState, setExpandedState] = useState&lt;number[]&gt;([0]);
 &nbsp;
-  const controlledExpandedState = getControlledValue(onChange &amp;&amp; expandedSections, expandedState)!;
+  const controlledExpandedState = getControlledValue(expandedSections, expandedState)!;
 &nbsp;
-  const [disabledState, setDisabledState] = useState(collapsible ? [] : controlledExpandedState);
+  const [disabledState, setDisabledState] = useState(collapsible ? [] : expandedState);
 &nbsp;
   const sectionIndices: number[] = [];
   const toggle = (index: number) =&gt; {
@@ -475,9 +490,9 @@ export function useAccordion({
       let isExpanded = false;
 &nbsp;
       if (sectionIndex === index) {
-        isExpanded = collapsible ? controlledExpandedState.indexOf(sectionIndex) === -1 : true;
+        isExpanded = collapsible ? expandedState.indexOf(sectionIndex) === -1 : true;
       } else if (expandable) {
-        isExpanded = controlledExpandedState.indexOf(sectionIndex) !== -1;
+        isExpanded = expandedState.indexOf(sectionIndex) !== -1;
       }
 &nbsp;
       if (isExpanded) {
@@ -490,8 +505,10 @@ export function useAccordion({
     });
 &nbsp;
     if (onChange) {
-      onChange(expanded);
-    } else {
+      onChange(index);
+    }
+&nbsp;
+    <span class="missing-if-branch" title="else path not taken" >E</span>if (isControlled === false) {
       setExpandedState(expanded);
     }
 &nbsp;
@@ -534,7 +551,9 @@ export function useAccordion({
       tabIndex,
       'aria-controls': `${PANEL_ID}:${index}`,
       'aria-disabled': disabledState.indexOf(index) !== -1,
-      'aria-expanded': controlledExpandedState.indexOf(index) !== -1,
+      'aria-expanded': isControlled
+        ? controlledExpandedState.includes(index)
+        : expandedState.includes(index),
       onClick: composeEventHandlers(props.onClick, () =&gt; toggle(index)),
       onKeyDown: composeEventHandlers(props.onKeyDown, (event: KeyboardEvent) =&gt; {
         if (event.keyCode === KEY_CODES.SPACE || event.keyCode === KEY_CODES.ENTER) {
@@ -556,7 +575,9 @@ export function useAccordion({
     return {
       id: `${PANEL_ID}:${index}`,
       role,
-      'aria-hidden': controlledExpandedState.indexOf(index) === -1,
+      'aria-hidden': isControlled
+        ? !controlledExpandedState.includes(index)
+        : !expandedState.includes(index),
       'aria-labelledby': `${TRIGGER_ID}:${index}`,
       ...props
     };
@@ -577,7 +598,7 @@ export function useAccordion({
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Mon Mar 23 2020 17:58:05 GMT+0000 (Coordinated Universal Time)
+                at Thu Mar 26 2020 20:06:54 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>
