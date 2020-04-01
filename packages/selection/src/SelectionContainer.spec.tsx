@@ -15,9 +15,11 @@ import { SelectionContainer, ISelectionContainerProps } from './SelectionContain
 describe('SelectionContainer', () => {
   const itemValues = ['Item-1', 'Item-2', 'Item-3'];
 
-  const BasicExample: React.FunctionComponent<Omit<ISelectionContainerProps<string>, 'children'> & {
-    selectedAriaKey?: string;
-  }> = ({
+  const BasicExample: React.FunctionComponent<
+    Omit<ISelectionContainerProps<string>, 'children'> & {
+      selectedAriaKey?: string;
+    }
+  > = ({
     direction,
     defaultFocusedIndex,
     defaultSelectedIndex,
