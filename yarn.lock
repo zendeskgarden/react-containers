@@ -1768,7 +1768,7 @@
     core-js-pure "^3.0.0"
     regenerator-runtime "^0.13.4"
 
-"@babel/runtime@7.9.2":
+"@babel/runtime@7.9.2", "@babel/runtime@^7.9.2":
   version "7.9.2"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.9.2.tgz#d90df0583a3a252f09aaa619665367bae518db06"
   integrity sha512-NE2DtOdufG7R5vnfQUTehdTfNycfUANEtCa9PssN9O/xmTzP4E08UI797ixaei6hBEVL9BI/PsdJS5x7mWoB9Q==
@@ -3767,18 +3767,16 @@
     pretty-format "^25.1.0"
     wait-for-expect "^3.0.2"
 
-"@testing-library/dom@^6.15.0":
-  version "6.15.0"
-  resolved "https://registry.yarnpkg.com/@testing-library/dom/-/dom-6.15.0.tgz#042abea7b4685b70d9a919100da9024507dc20bb"
-  integrity sha512-8N24c4XwOigPicwc8n4ECgEoJW2/mMzRJBxu4Uo0zhLERZTbNzqpL5fyCigu7JGUXX+ITuiK4z9/lnHbYRHLwQ==
+"@testing-library/dom@^7.1.0":
+  version "7.2.0"
+  resolved "https://registry.yarnpkg.com/@testing-library/dom/-/dom-7.2.0.tgz#948894c2ef52017d299c35da02e085498363cd1e"
+  integrity sha512-K1Sao38VxsTrjTkFkzeW8m/oCtgCI5lANCE7u9ZaF+TTL3uKuiZ+vazeurxjvRHAsE6PvXjOIl6JFuZfgcWJSQ==
   dependencies:
-    "@babel/runtime" "^7.8.4"
-    "@sheerun/mutationobserver-shim" "^0.3.2"
-    "@types/testing-library__dom" "^6.12.1"
+    "@babel/runtime" "^7.9.2"
+    "@types/testing-library__dom" "^7.0.0"
     aria-query "^4.0.2"
-    dom-accessibility-api "^0.3.0"
+    dom-accessibility-api "^0.4.2"
     pretty-format "^25.1.0"
-    wait-for-expect "^3.0.2"
 
 "@testing-library/jest-dom@4.2.4":
   version "4.2.4"
@@ -3795,14 +3793,14 @@
     pretty-format "^24.0.0"
     redent "^3.0.0"
 
-"@testing-library/react@9.5.0":
-  version "9.5.0"
-  resolved "https://registry.yarnpkg.com/@testing-library/react/-/react-9.5.0.tgz#71531655a7890b61e77a1b39452fbedf0472ca5e"
-  integrity sha512-di1b+D0p+rfeboHO5W7gTVeZDIK5+maEgstrZbWZSSvxDyfDRkkyBE1AJR5Psd6doNldluXlCWqXriUfqu/9Qg==
+"@testing-library/react@10.0.2":
+  version "10.0.2"
+  resolved "https://registry.yarnpkg.com/@testing-library/react/-/react-10.0.2.tgz#8eca7aa52d810cf7150048a2829fdc487162006d"
+  integrity sha512-YT6Mw0oJz7R6vlEkmo1FlUD+K15FeXApOB5Ffm9zooFVnrwkt00w18dUJFMOh1yRp9wTdVRonbor7o4PIpFCmA==
   dependencies:
-    "@babel/runtime" "^7.8.4"
-    "@testing-library/dom" "^6.15.0"
-    "@types/testing-library__react" "^9.1.2"
+    "@babel/runtime" "^7.9.2"
+    "@testing-library/dom" "^7.1.0"
+    "@types/testing-library__react" "^10.0.0"
 
 "@types/anymatch@*":
   version "1.3.1"
@@ -4067,13 +4065,21 @@
   dependencies:
     pretty-format "^24.3.0"
 
-"@types/testing-library__react@^9.1.2":
-  version "9.1.2"
-  resolved "https://registry.yarnpkg.com/@types/testing-library__react/-/testing-library__react-9.1.2.tgz#e33af9124c60a010fc03a34eff8f8a34a75c4351"
-  integrity sha512-CYaMqrswQ+cJACy268jsLAw355DZtPZGt3Jwmmotlcu8O/tkoXBI6AeZ84oZBJsIsesozPKzWzmv/0TIU+1E9Q==
+"@types/testing-library__dom@^7.0.0":
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/@types/testing-library__dom/-/testing-library__dom-7.0.0.tgz#c0fb7d1c2495a3d26f19342102142d47500f0319"
+  integrity sha512-1TEPWyqQ6IQ7R1hCegZmFSA3KrBQjdzJW7yC9ybpRcFst5XuPOqBGNr0mTAKbxwI/TrTyc1skeyLJrpcvAf93w==
+  dependencies:
+    pretty-format "^25.1.0"
+
+"@types/testing-library__react@^10.0.0":
+  version "10.0.0"
+  resolved "https://registry.yarnpkg.com/@types/testing-library__react/-/testing-library__react-10.0.0.tgz#8413a47f435bf7ce50bbc1b6d119300d39aed5bd"
+  integrity sha512-aByqRiRn9psCWbgW7a+gfW/LUQY/ChznnuPyWwLipcJm+rXaLNeYM4qL21jWPGn9W1H//oXgLE9aDlpkZSY3CQ==
   dependencies:
     "@types/react-dom" "*"
     "@types/testing-library__dom" "*"
+    pretty-format "^25.1.0"
 
 "@types/uglify-js@*":
   version "3.0.4"
@@ -7360,6 +7366,11 @@ dom-accessibility-api@^0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/dom-accessibility-api/-/dom-accessibility-api-0.3.0.tgz#511e5993dd673b97c87ea47dba0e3892f7e0c983"
   integrity sha512-PzwHEmsRP3IGY4gv/Ug+rMeaTIyTJvadCb+ujYXYeIylbHJezIyNToe8KfEgHTCEYyC+/bUghYOGg8yMGlZ6vA==
+
+dom-accessibility-api@^0.4.2:
+  version "0.4.3"
+  resolved "https://registry.yarnpkg.com/dom-accessibility-api/-/dom-accessibility-api-0.4.3.tgz#93ca9002eb222fd5a343b6e5e6b9cf5929411c4c"
+  integrity sha512-JZ8iPuEHDQzq6q0k7PKMGbrIdsgBB7TRrtVOUm4nSMCExlg5qQG4KXWTH2k90yggjM4tTumRGwTKJSldMzKyLA==
 
 dom-converter@^0.2:
   version "0.2.0"
