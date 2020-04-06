@@ -14,7 +14,9 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 ## [0.5.3](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-accordion@0.5.2...@zendeskgarden/container-accordion@0.5.3) (2020-03-23)
 
 
-### Bug Fixes
+### BREAKING CHANGES
+
+The `useAccordion` hook's `onChange` handler has been updated to be called with the index of the expanded accordion section. To migrate please update `onChange` usages to handle the newly returned index value.
 
 * **utils:** add typing to getControlledValue ([#173](https://github.com/zendeskgarden/react-containers/issues/173)) ([886ba5b](https://github.com/zendeskgarden/react-containers/commit/886ba5b6bd595c8946ec1fc6e5c2f8ec7e8ac3eb))
 
