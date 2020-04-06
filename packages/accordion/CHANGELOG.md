@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-accordion@0.5.4...@zendeskgarden/container-accordion@1.0.0) (2020-04-06)
+
+
+### chore
+
+* **accordion:** update changelog ([#184](https://github.com/zendeskgarden/react-containers/issues/184)) ([b971386](https://github.com/zendeskgarden/react-containers/commit/b971386daca9115bc0bebbd97ef62977e8d3547c)), closes [#176](https://github.com/zendeskgarden/react-containers/issues/176)
+
+
+### BREAKING CHANGES
+
+* **accordion:** Update container-accordion changelog.
+
+
+
+
+
 ## [0.5.4](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-accordion@0.5.3...@zendeskgarden/container-accordion@0.5.4) (2020-03-26)
 
 **Note:** Version bump only for package @zendeskgarden/container-accordion
