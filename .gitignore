@@ -1,4 +1,5 @@
 # General ignores
+.env
 node_modules
 *.log
 
