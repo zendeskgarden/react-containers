@@ -45,7 +45,7 @@ jobs:
     steps:
       - *attach_workspace
       - run: yarn build:demo
-      - run: utils/scripts/gh-pages.js
+      - run: utils/scripts/deploy.js
 
   publish:
     executor: node/default
@@ -65,9 +65,6 @@ workflows:
           requires:
             - test
           context: maintainer
-          filters:
-            branches:
-              only: master
       - publish:
           requires:
             - test
