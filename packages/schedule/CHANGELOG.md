@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.3](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-schedule@1.3.2...@zendeskgarden/container-schedule@1.3.3) (2020-05-14)
+
+
+### Bug Fixes
+
+* **schedule:** cleanup all animation frames on removal ([#196](https://github.com/zendeskgarden/react-containers/issues/196)) ([c269825](https://github.com/zendeskgarden/react-containers/commit/c2698251f3e1fd0c7d83734d359cf11e5ecb75b4))
+
+
+
+
+
 ## [1.3.2](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-schedule@1.3.1...@zendeskgarden/container-schedule@1.3.2) (2020-02-20)
 
 
