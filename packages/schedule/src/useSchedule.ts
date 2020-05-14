@@ -31,8 +31,13 @@ export const useSchedule = ({
     let raf: number;
     let start: number;
     let loopTimeout: ReturnType<typeof setTimeout>;
+    let destroyed = false;
 
     const tick = () => {
+      if (destroyed) {
+        return;
+      }
+
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
       raf = requestAnimationFrame(performAnimationFrame);
     };
@@ -58,6 +63,7 @@ export const useSchedule = ({
     const renderingDelayTimeout = setTimeout(onStart, delayMS);
 
     return () => {
+      destroyed = true;
       clearTimeout(renderingDelayTimeout);
       clearTimeout(loopTimeout);
       cancelAnimationFrame(raf);
