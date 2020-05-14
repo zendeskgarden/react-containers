@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1588870526474" clover="3.2.0">
-  <project timestamp="1588870526475" name="All files">
-    <metrics statements="634" coveredstatements="594" conditionals="383" coveredconditionals="330" methods="139" coveredmethods="137" elements="1156" coveredelements="1061" complexity="0" loc="634" ncloc="634" packages="15" files="45" classes="45"/>
+<coverage generated="1589481642883" clover="3.2.0">
+  <project timestamp="1589481642883" name="All files">
+    <metrics statements="638" coveredstatements="597" conditionals="385" coveredconditionals="331" methods="139" coveredmethods="137" elements="1162" coveredelements="1065" complexity="0" loc="638" ncloc="638" packages="15" files="45" classes="45"/>
     <package name="accordion.src">
       <metrics statements="58" coveredstatements="55" conditionals="45" coveredconditionals="43" methods="9" coveredmethods="9"/>
       <file name="AccordionContainer.ts" path="/home/circleci/project/packages/accordion/src/AccordionContainer.ts">
@@ -487,7 +487,7 @@
       </file>
     </package>
     <package name="schedule.src">
-      <metrics statements="31" coveredstatements="29" conditionals="7" coveredconditionals="6" methods="8" coveredmethods="8"/>
+      <metrics statements="35" coveredstatements="32" conditionals="9" coveredconditionals="7" methods="8" coveredmethods="8"/>
       <file name="ScheduleContainer.ts" path="/home/circleci/project/packages/schedule/src/ScheduleContainer.ts">
         <metrics statements="5" coveredstatements="5" conditionals="1" coveredconditionals="1" methods="1" coveredmethods="1"/>
         <line num="8" count="1" type="stmt"/>
@@ -502,31 +502,35 @@
         <line num="9" count="0" type="stmt"/>
       </file>
       <file name="useSchedule.ts" path="/home/circleci/project/packages/schedule/src/useSchedule.ts">
-        <metrics statements="24" coveredstatements="24" conditionals="6" coveredconditionals="5" methods="7" coveredmethods="7"/>
+        <metrics statements="28" coveredstatements="27" conditionals="8" coveredconditionals="6" methods="7" coveredmethods="7"/>
         <line num="8" count="1" type="stmt"/>
         <line num="22" count="1" type="stmt"/>
         <line num="27" count="15" type="stmt"/>
         <line num="28" count="15" type="stmt"/>
         <line num="30" count="15" type="stmt"/>
-        <line num="35" count="9" type="stmt"/>
-        <line num="37" count="73" type="stmt"/>
-        <line num="40" count="9" type="stmt"/>
-        <line num="41" count="65" type="stmt"/>
-        <line num="42" count="65" type="stmt"/>
+        <line num="34" count="9" type="stmt"/>
+        <line num="36" count="9" type="stmt"/>
+        <line num="37" count="73" type="cond" truecount="1" falsecount="1"/>
+        <line num="38" count="0" type="stmt"/>
+        <line num="42" count="73" type="stmt"/>
         <line num="45" count="9" type="stmt"/>
-        <line num="46" count="8" type="stmt"/>
-        <line num="47" count="3" type="stmt"/>
-        <line num="48" count="3" type="stmt"/>
-        <line num="49" count="3" type="cond" truecount="2" falsecount="0"/>
-        <line num="53" count="8" type="stmt"/>
-        <line num="54" count="8" type="stmt"/>
-        <line num="55" count="8" type="stmt"/>
-        <line num="58" count="9" type="stmt"/>
-        <line num="60" count="9" type="stmt"/>
-        <line num="61" count="9" type="stmt"/>
-        <line num="62" count="9" type="stmt"/>
+        <line num="46" count="65" type="stmt"/>
+        <line num="47" count="65" type="stmt"/>
+        <line num="50" count="9" type="stmt"/>
+        <line num="51" count="8" type="stmt"/>
+        <line num="52" count="3" type="stmt"/>
+        <line num="53" count="3" type="stmt"/>
+        <line num="54" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="58" count="8" type="stmt"/>
+        <line num="59" count="8" type="stmt"/>
+        <line num="60" count="8" type="stmt"/>
         <line num="63" count="9" type="stmt"/>
-        <line num="67" count="15" type="stmt"/>
+        <line num="65" count="9" type="stmt"/>
+        <line num="66" count="9" type="stmt"/>
+        <line num="67" count="9" type="stmt"/>
+        <line num="68" count="9" type="stmt"/>
+        <line num="69" count="9" type="stmt"/>
+        <line num="73" count="15" type="stmt"/>
       </file>
     </package>
     <package name="selection.src">
