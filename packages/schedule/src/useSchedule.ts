@@ -48,6 +48,10 @@ export const useSchedule = ({
     };
 
     const onStart = () => {
+      if (destroyed) {
+        return;
+      }
+
       loopTimeout = setTimeout(() => {
         cancelAnimationFrame(raf);
         setTime(Date.now() - start);
