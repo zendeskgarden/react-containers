@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.4](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-schedule@1.3.3...@zendeskgarden/container-schedule@1.3.4) (2020-05-18)
+
+
+### Bug Fixes
+
+* **schedule:** add additional cleanup check for useSchedule ([#197](https://github.com/zendeskgarden/react-containers/issues/197)) ([baefafd](https://github.com/zendeskgarden/react-containers/commit/baefafde334825a0bd2309ed45dd386361ee1464))
+
+
+
+
+
 ## [1.3.3](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-schedule@1.3.2...@zendeskgarden/container-schedule@1.3.3) (2020-05-14)
 
 
