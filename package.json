@@ -94,7 +94,7 @@
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "regenerator-runtime": "0.13.5",
-    "rollup": "2.10.9",
+    "rollup": "2.11.0",
     "rollup-plugin-analyzer": "3.2.3",
     "rollup-plugin-babel": "4.4.0",
     "rollup-plugin-cleanup": "3.1.1",
