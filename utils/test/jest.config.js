@@ -12,7 +12,7 @@ module.exports = {
   rootDir: '../../',
   preset: 'ts-jest/presets/js-with-babel',
   modulePathIgnorePatterns: ['./node_modules'],
-  resolver: `${__dirname}/jest.resolver.js`,
+  resolver: path.resolve(__dirname, 'jest.resolver.js'),
   transform: {
     '^.+\\.js$': 'babel-jest'
   },
