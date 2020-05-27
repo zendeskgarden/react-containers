@@ -177,20 +177,6 @@ describe('FocusVisibleContainer', () => {
       expect(input).toHaveAttribute('data-garden-focus-visible');
     });
 
-    it('does not apply focus-visible to input with invalid type', () => {
-      const { getByTestId } = render(
-        <KeyboardModalityExample>
-          <input data-test-id="input" type="range" />
-        </KeyboardModalityExample>
-      );
-
-      const input = getByTestId('input');
-
-      fireEvent.focus(input);
-
-      expect(input).not.toHaveAttribute('data-garden-focus-visible');
-    });
-
     it('applies focus-visible to textarea', () => {
       const { getByTestId } = render(
         <KeyboardModalityExample>
