@@ -17,5 +17,24 @@
         "code": 1342
       }
     }
+  },
+  "index.cjs.js": {
+    "bundled": 5426,
+    "minified": 2852,
+    "gzipped": 1101
+  },
+  "index.esm.js": {
+    "bundled": 5065,
+    "minified": 2539,
+    "gzipped": 1007,
+    "treeshaked": {
+      "rollup": {
+        "code": 313,
+        "import_statements": 253
+      },
+      "webpack": {
+        "code": 1342
+      }
+    }
   }
 }
