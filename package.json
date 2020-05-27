@@ -57,7 +57,7 @@
     "@typescript-eslint/eslint-plugin": "2.30.0",
     "@typescript-eslint/parser": "2.30.0",
     "@zendeskgarden/css-variables": "6.4.5",
-    "@zendeskgarden/eslint-config": "11.0.4",
+    "@zendeskgarden/eslint-config": "13.0.0",
     "@zendeskgarden/scripts": "0.1.8",
     "acorn-jsx": "5.2.0",
     "babel-core": "7.0.0-bridge.0",
