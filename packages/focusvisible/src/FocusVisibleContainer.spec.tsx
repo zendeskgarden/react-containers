@@ -180,7 +180,7 @@ describe('FocusVisibleContainer', () => {
     it('does not apply focus-visible to input with invalid type', () => {
       const { getByTestId } = render(
         <KeyboardModalityExample>
-          <input data-test-id="input" type="invalid-type" />
+          <input data-test-id="input" type="range" />
         </KeyboardModalityExample>
       );
 
