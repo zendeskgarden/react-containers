@@ -95,14 +95,14 @@ describe('FocusJailContainer', () => {
 
       expect(() => {
         render(
-          /* eslint-disable @typescript-eslint/ban-ts-ignore */
+          /* eslint-disable @typescript-eslint/ban-ts-comment */
           // @ts-ignore
           <FocusJailContainer>
             {({ getContainerProps }) => (
               <div {...getContainerProps({ 'data-test-id': 'container-no-ref' })}>Test</div>
             )}
           </FocusJailContainer>
-          /* eslint-enable @typescript-eslint/ban-ts-ignore */
+          /* eslint-enable @typescript-eslint/ban-ts-comment */
         );
       }).toThrow();
 

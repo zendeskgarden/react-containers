@@ -21,6 +21,8 @@
  * @param {Function} fns the event hanlder functions
  * @return {Function} the event handler to add to an element
  */
+
+// eslint-disable-next-line @typescript-eslint/ban-types
 export function composeEventHandlers(...fns: (Function | undefined)[]) {
   return (event: any, ...args: any[]) =>
     fns.some(fn => {
