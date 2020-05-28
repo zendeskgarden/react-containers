@@ -35,12 +35,12 @@ describe('FocusVisibleContainer', () => {
 
     expect(() => {
       const ErrorExample = () => {
-        /* eslint-disable @typescript-eslint/ban-ts-ignore */
+        /* eslint-disable @typescript-eslint/ban-ts-comment */
         // @ts-ignore
         // Ignoring to test JS runtime usage - should throw error
         // when consumers do not pass a scope value into `useFocusVisible`.
         useFocusVisible();
-        /* eslint-enable @typescript-eslint/ban-ts-ignore */
+        /* eslint-enable @typescript-eslint/ban-ts-comment */
 
         return <div>test</div>;
       };
