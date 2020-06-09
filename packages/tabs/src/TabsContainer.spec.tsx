@@ -106,7 +106,6 @@ describe('TabsContainer', () => {
       tabPanels.forEach((tabPanel, index) => {
         expect(tabPanel).toHaveAttribute('role', 'tabpanel');
         expect(tabPanel).toHaveAttribute('id', getPanelId(index));
-        expect(tabPanel).toHaveAttribute('tabIndex', '0');
         expect(tabPanel).toHaveAttribute('aria-labelledby', getTabId(index));
       });
     });
