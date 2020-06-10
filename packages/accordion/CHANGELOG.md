@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.1](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-accordion@1.0.0...@zendeskgarden/container-accordion@1.0.1) (2020-06-10)
+
+**Note:** Version bump only for package @zendeskgarden/container-accordion
+
+
+
+
+
 # [1.0.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-accordion@0.5.4...@zendeskgarden/container-accordion@1.0.0) (2020-04-06)
 
 

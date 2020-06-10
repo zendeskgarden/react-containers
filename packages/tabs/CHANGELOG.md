@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.6](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-tabs@0.5.5...@zendeskgarden/container-tabs@0.5.6) (2020-06-10)
+
+
+### Bug Fixes
+
+* **tabs:** remove tabindex from panel ([#210](https://github.com/zendeskgarden/react-containers/issues/210)) ([01f8652](https://github.com/zendeskgarden/react-containers/commit/01f865212d62ab519ece8f253c76471203f195b2))
+
+
+
+
+
 ## [0.5.5](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-tabs@0.5.4...@zendeskgarden/container-tabs@0.5.5) (2020-05-14)
 
 **Note:** Version bump only for package @zendeskgarden/container-tabs
