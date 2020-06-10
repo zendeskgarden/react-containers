@@ -88,7 +88,6 @@ export function useTabs<Item = any>({
 
     return {
       role,
-      tabIndex: 0,
       id: `${PANEL_ID}:${index}`,
       hidden: isHidden,
       'aria-labelledby': `${TAB_ID}:${index}`,
