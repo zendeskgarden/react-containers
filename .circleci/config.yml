@@ -3,6 +3,11 @@ orbs:
   node: circleci/node@3.0.0
 
 references:
+  executor: &executor
+    executor:
+      name: node/default
+      tag: lts
+
   workspace_root: &workspace_root ~/project
 
   attach_workspace: &attach_workspace
@@ -16,7 +21,7 @@ references:
 
 jobs:
   build:
-    executor: node/default
+    <<: *executor
     steps:
       - checkout
       - node/install-packages:
@@ -27,7 +32,7 @@ jobs:
       - *persist_to_workspace
 
   test:
-    executor: node/default
+    <<: *executor
     steps:
       - *attach_workspace
       - run: yarn lint
@@ -38,7 +43,7 @@ jobs:
       - *persist_to_workspace
 
   deploy:
-    executor: node/default
+    <<: *executor
     environment:
       NODE_DEBUG: gh-pages
     steps:
@@ -47,7 +52,7 @@ jobs:
       - run: utils/scripts/deploy.js
 
   publish:
-    executor: node/default
+    <<: *executor
     steps:
       - *attach_workspace
       - run: npm set //registry.npmjs.org/:_authToken=$NPM_TOKEN
