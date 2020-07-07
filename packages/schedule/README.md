@@ -42,4 +42,4 @@ const Animation = () => {
 
 See [react-loaders][loaders link] component as a non-trivial use of this.
 
-[loaders link]: https://github.com/zendeskgarden/react-components/tree/master/packages/loaders
+[loaders link]: https://github.com/zendeskgarden/react-components/tree/main/packages/loaders
