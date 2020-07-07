@@ -52,4 +52,4 @@ const Breadcrumb = () => {
 
 See [react-breadcrumbs][breadcrumbs link] component.
 
-[breadcrumbs link]: https://github.com/zendeskgarden/react-components/tree/master/packages/breadcrumbs
+[breadcrumbs link]: https://github.com/zendeskgarden/react-components/tree/main/packages/breadcrumbs

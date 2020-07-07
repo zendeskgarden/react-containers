@@ -2,11 +2,11 @@
 
 <!-- markdownlint-enable -->
 
-[build status badge]: https://flat.badgen.net/circleci/github/zendeskgarden/react-containers/master?label=build
-[build status link]: https://circleci.com/gh/zendeskgarden/react-containers/tree/master
+[build status badge]: https://flat.badgen.net/circleci/github/zendeskgarden/react-containers/main?label=build
+[build status link]: https://circleci.com/gh/zendeskgarden/react-containers/tree/main
 [dependency status badge]: https://flat.badgen.net/david/dev/zendeskgarden/react-containers?label=dependencies
 [dependency status link]: https://david-dm.org/zendeskgarden/react-containers?type=dev
-[coverage status badge]: https://flat.badgen.net/coveralls/c/github/zendeskgarden/react-containers/master
+[coverage status badge]: https://flat.badgen.net/coveralls/c/github/zendeskgarden/react-containers/main
 [coverage status link]: https://coveralls.io/github/zendeskgarden/react-containers
 
 > :seedling: Garden is a design system for Zendesk
