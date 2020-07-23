@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import '@storybook/addons';
-import '@storybook/addon-knobs/register';
-import '@storybook/addon-storysource/register';
-import '@storybook/addon-a11y/register';
+module.exports = {
+  stories: ['../packages/**/*.stories.tsx'],
+  addons: ['@storybook/addon-knobs', '@storybook/addon-storysource', '@storybook/addon-a11y']
+};
