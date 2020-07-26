@@ -15,6 +15,7 @@ export interface IUseFocusJailProps {
   restoreFocus?: boolean;
   environment?: Document;
   focusElem?: (element: HTMLElement) => any;
+  containerSecRef: React.RefObject<HTMLElement>;
   containerRef: React.RefObject<HTMLElement>;
 }
 
@@ -29,9 +30,11 @@ export const useFocusJail = (
     restoreFocus = true,
     environment,
     focusElem,
-    containerRef
+    containerRef,
+    containerSecRef
   }: IUseFocusJailProps = {
-    containerRef: createRef()
+    containerRef: createRef(),
+    containerSecRef: createRef()
   }
 ): IUseFocusJailReturnValue => {
   const restoreFocusElement = useRef<Element | null>(null);
@@ -40,11 +43,24 @@ export const useFocusJail = (
   // trigger a re-render if the ref updates once rendered since react will
   // skip changes to a ref on first render
   const [currentRef, setCurrentRef] = useState(containerRef.current);
+  const [currentSecRef, setCurrentSecRef] = useState(containerSecRef.current);
+
+  const containers = [containerRef.current, containerSecRef.current].filter(el => el !== null);
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  const elementsByContainer = containers.map(container => tabbable(container));
+
+  const lastNodes = () => elementsByContainer.map(container => container[container.length - 1]);
+  const firstNodes = () => elementsByContainer.map(container => container[0]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (containerRef.current !== currentRef) {
       setCurrentRef(containerRef.current);
+    }
+
+    if (containerSecRef && containerSecRef.current !== currentSecRef) {
+      setCurrentSecRef(containerSecRef.current);
     }
   });
 
@@ -69,23 +85,6 @@ export const useFocusJail = (
     }
   };
 
-  const getInitialFocusNode = () => {
-    const doc = environment ? environment : document;
-    const activeElem = activeElement(doc);
-    const containerElem = currentRef;
-
-    return containerElem!.contains(activeElem) ? activeElem : containerElem;
-  };
-
-  const getTabbableNodes = () => {
-    const elements = tabbable(currentRef!);
-
-    return {
-      firstItem: elements[0] || getInitialFocusNode(),
-      lastItem: elements[elements.length - 1] || getInitialFocusNode()
-    };
-  };
-
   const getContainerProps = ({ onKeyDown, ...other } = {} as any) => {
     return {
       onKeyDown: composeEventHandlers(onKeyDown, (event: KeyboardEvent) => {
@@ -94,18 +93,29 @@ export const useFocusJail = (
         }
         validateContainerRef();
 
-        const tabbableNodes = getTabbableNodes();
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        const firstNodeIndex = firstNodes().indexOf(event.target);
 
-        if (
-          event.shiftKey &&
-          (event.target === tabbableNodes.firstItem || event.target === currentRef)
-        ) {
-          focusElement(tabbableNodes.lastItem);
+        if (event.shiftKey && (firstNodeIndex > -1 || event.target === currentRef)) {
+          const prevIndex =
+            firstNodeIndex === 0 ? elementsByContainer.length - 1 : firstNodeIndex - 1;
+
+          lastNodes()[prevIndex].focus();
+
           event.preventDefault();
         }
 
-        if (!event.shiftKey && event.target === tabbableNodes.lastItem) {
-          focusElement(tabbableNodes.firstItem);
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        const lastNodeIndex = lastNodes().indexOf(event.target);
+
+        if (!event.shiftKey && lastNodeIndex > -1) {
+          const nextIndex =
+            lastNodeIndex === elementsByContainer.length - 1 ? 0 : lastNodeIndex + 1;
+
+          firstNodes()[nextIndex].focus();
+
           event.preventDefault();
         }
       }),
