@@ -7,14 +7,14 @@
 
 import { addons } from '@storybook/addons';
 import { create } from '@storybook/theming';
-import { zdFontFamilySystem, zdFontFamilyMonospace } from '@zendeskgarden/css-variables';
+import { DEFAULT_THEME } from '@zendeskgarden/react-theming';
 
 addons.setConfig({
   theme: create({
     brandTitle: 'React Containers',
     brandUrl: 'https://zendeskgarden.github.io/',
     brandImage: '../garden.svg',
-    fontBase: zdFontFamilySystem,
-    fontCode: zdFontFamilyMonospace
+    fontBase: DEFAULT_THEME.fonts.system,
+    fontCode: DEFAULT_THEME.fonts.mono
   })
 });
