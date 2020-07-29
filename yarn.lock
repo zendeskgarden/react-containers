@@ -5009,7 +5009,7 @@
   resolved "https://registry.yarnpkg.com/@zendeskgarden/eslint-config/-/eslint-config-13.0.0.tgz#d10d7b9b3c8021ab9f25065701a01685ef99bc64"
   integrity sha512-mMtmlllUC1icDBlSBk84hEeJQRvprL+E0sZoq6iaL7cQe0sYZ+bkRo8NbIO0Ovm/L1IUrRaEyktQMW5quTs75w==
 
-"@zendeskgarden/react-theming@^8.17.0":
+"@zendeskgarden/react-theming@8.17.0":
   version "8.17.0"
   resolved "https://registry.yarnpkg.com/@zendeskgarden/react-theming/-/react-theming-8.17.0.tgz#4e236751d2e4a2f66d7f534f8b64f11806d11589"
   integrity sha512-qv9KasV01aFNEU+mde1hdKTtkffpsajiim2vBEA6dxNm+4nORXecsBGDQOFlsnmp1YU+obY+mH6ASN3zy52nUA==
