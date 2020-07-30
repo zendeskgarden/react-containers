@@ -11,6 +11,18 @@ import { withKnobs, text } from '@storybook/addon-knobs';
 
 import { FieldContainer, useField } from './src';
 
+export const Container = () => (
+  <FieldContainer id={text('id', uid({ name: 'FieldContainer' }))}>
+    {({ getLabelProps, getInputProps, getHintProps }) => (
+      <>
+        <label {...getLabelProps()}>Accessible Native Input</label>
+        <div {...getHintProps()}>Optional Hint</div>
+        <input {...getInputProps({}, { isDescribed: true })} />
+      </>
+    )}
+  </FieldContainer>
+);
+
 export const Hook = () => {
   const Field = ({ id }: { id: string }) => {
     const { getLabelProps, getInputProps, getHintProps } = useField(id);
@@ -29,27 +41,25 @@ export const Hook = () => {
   return <Field id={text('id', uid({ name: 'useField' }))} />;
 };
 
-export const Container = () => (
-  <FieldContainer id={text('id', uid({ name: 'FieldContainer' }))}>
-    {({ getLabelProps, getInputProps, getHintProps }) => (
-      <>
-        <label {...getLabelProps()}>Accessible Native Input</label>
-        <div {...getHintProps()}>Optional Hint</div>
-        <input {...getInputProps({}, { isDescribed: true })} />
-      </>
-    )}
-  </FieldContainer>
-);
-
-Hook.story = {
-  name: 'useField'
-};
-
 Container.story = {
   name: 'FieldContainer'
 };
 
+Hook.story = {
+  name: 'useField',
+  parameters: {
+    docs: {
+      storyDescription: `The \`useField\` hook will supply the prop getters to handle \`aria-labelledby\` along
+      with for/id mapping and \`aria-describedby\` mapping when a hint is applied.`
+    }
+  }
+};
+
 export default {
   title: 'Field Container',
-  decorators: [withKnobs]
+  decorators: [withKnobs],
+  component: FieldContainer,
+  parameters: {
+    componentSubtitle: `A container component which wraps the useField hook.`
+  }
 };

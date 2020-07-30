@@ -11,6 +11,27 @@ import { withKnobs, boolean, number } from '@storybook/addon-knobs';
 
 import { ScheduleContainer, useSchedule } from './src';
 
+export const Container = () => (
+  <ScheduleContainer
+    duration={number('duration', 1250)}
+    loop={boolean('loop', true)}
+    delayMS={number('delayMS', 750)}
+  >
+    {({ elapsed, delayMS, delayComplete }) => {
+      if (!delayComplete && delayMS !== 0) {
+        return <div>Delay...</div>;
+      }
+
+      return (
+        <div>
+          Percentage: {(elapsed * 100).toFixed(0)}%<br />
+          Elapsed: {elapsed}
+        </div>
+      );
+    }}
+  </ScheduleContainer>
+);
+
 export const Hook = () => {
   const Animation = () => {
     const duration = number('duration', 1250);
@@ -33,36 +54,24 @@ export const Hook = () => {
   return <Animation />;
 };
 
-export const Container = () => (
-  <ScheduleContainer
-    duration={number('duration', 1250)}
-    loop={boolean('loop', true)}
-    delayMS={number('delayMS', 750)}
-  >
-    {({ elapsed, delayMS, delayComplete }) => {
-      if (!delayComplete && delayMS !== 0) {
-        return <div>Delay...</div>;
-      }
-
-      return (
-        <div>
-          Percentage: {(elapsed * 100).toFixed(0)}%<br />
-          Elapsed: {elapsed}
-        </div>
-      );
-    }}
-  </ScheduleContainer>
-);
-
-Hook.story = {
-  name: 'useSchedule'
-};
-
 Container.story = {
   name: 'ScheduleContainer'
 };
 
+Hook.story = {
+  name: 'useSchedule',
+  parameters: {
+    docs: {
+      storyDescription: `The \`useSchedule\` hook implements a schedule (timer) and communicates when it has elapsed.`
+    }
+  }
+};
+
 export default {
   title: 'Schedule Container',
-  decorators: [withKnobs]
+  decorators: [withKnobs],
+  component: ScheduleContainer,
+  parameters: {
+    componentSubtitle: `A container component which wraps the useSchedule hook.`
+  }
 };

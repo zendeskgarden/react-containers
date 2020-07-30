@@ -5,6 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import { useFocusJail, IUseFocusJailProps, IUseFocusJailReturnValue } from './useFocusJail';
@@ -19,14 +20,20 @@ export const FocusJailContainer: React.FunctionComponent<IFocusJailContainerProp
   render = children,
   ...options
 }) => {
-  return render!(useFocusJail(options)) as React.ReactElement;
+  return <>{render!(useFocusJail(options)) as React.ReactElement}</>;
 };
 
 FocusJailContainer.propTypes = {
+  /** A children render prop function which receives a focus jail prop getter */
   children: PropTypes.func,
+  /** A render prop function which receives a focus jail prop getter */
   render: PropTypes.func,
+  /** Focuses on the `containerRef` element after mounting */
   focusOnMount: PropTypes.bool,
+  /** The global environment where the focus jail is rendered */
   environment: PropTypes.any,
+  /** A [ref](https://reactjs.org/docs/refs-and-the-dom.html) pointing to the focus jail's container element */
   containerRef: PropTypes.any.isRequired,
+  /** A callback function that receives the focused element */
   focusElem: PropTypes.func
 };

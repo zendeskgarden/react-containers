@@ -5,6 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import { useSchedule, IUseScheduleProps, IUseScheduleReturnValue } from './useSchedule';
@@ -19,13 +20,24 @@ export const ScheduleContainer: React.FunctionComponent<IScheduleContainerProps>
   render = children,
   ...props
 }) => {
-  return render!(useSchedule(props)) as React.ReactElement;
+  return <>{render!(useSchedule(props)) as React.ReactElement}</>;
+};
+
+ScheduleContainer.defaultProps = {
+  duration: 1250,
+  delayMS: 750,
+  loop: true
 };
 
 ScheduleContainer.propTypes = {
-  duration: PropTypes.number,
-  loop: PropTypes.bool,
-  delayMS: PropTypes.number,
+  /** A children render prop function which receives the schedule state */
   children: PropTypes.func,
-  render: PropTypes.func
+  /** A render prop function which receives the schedule state */
+  render: PropTypes.func,
+  /** The duration of a schedule in miliseconds */
+  duration: PropTypes.number,
+  /** Determines whether a schedule should loop */
+  loop: PropTypes.bool,
+  /** The delay in miliseconds prior to the beginning of the schedule */
+  delayMS: PropTypes.number
 };

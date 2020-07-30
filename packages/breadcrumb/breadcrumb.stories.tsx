@@ -11,18 +11,6 @@ import { withKnobs } from '@storybook/addon-knobs';
 
 import { BreadcrumbContainer, useBreadcrumb } from './src';
 
-export const Hook = () => {
-  const { getContainerProps, getCurrentPageProps } = useBreadcrumb();
-
-  return (
-    <div {...getContainerProps()}>
-      <a href="#foo">Home</a>
-      <span aria-hidden="true">&gt;</span>
-      <a {...getCurrentPageProps({ href: '#' })}>Items</a>
-    </div>
-  );
-};
-
 export const Container = () => (
   <BreadcrumbContainer>
     {({ getContainerProps, getCurrentPageProps }) => (
@@ -35,8 +23,25 @@ export const Container = () => (
   </BreadcrumbContainer>
 );
 
+export const Hook = () => {
+  const { getContainerProps, getCurrentPageProps } = useBreadcrumb();
+
+  return (
+    <div {...getContainerProps()}>
+      <a href="#foo">Home</a>
+      <span aria-hidden="true">&gt;</span>
+      <a {...getCurrentPageProps({ href: '#' })}>Items</a>
+    </div>
+  );
+};
+
 Hook.story = {
-  name: 'useBreadcrumb'
+  name: 'useBreadcrumb',
+  parameters: {
+    docs: {
+      storyDescription: `The \`useBreadcrumb\` hook implements the [breadcrumb](https://www.w3.org/TR/wai-aria-practices-1.1/#breadcrumb) design pattern and can be used to build a breadcrumb component.`
+    }
+  }
 };
 
 Container.story = {
@@ -45,5 +50,9 @@ Container.story = {
 
 export default {
   title: 'Breadcrumb Container',
-  decorators: [withKnobs]
+  component: BreadcrumbContainer,
+  decorators: [withKnobs],
+  parameters: {
+    componentSubtitle: `A container component which wraps the useBreadcrumb hook.`
+  }
 };

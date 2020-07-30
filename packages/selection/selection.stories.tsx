@@ -10,6 +10,38 @@ import { withKnobs, select, boolean, number } from '@storybook/addon-knobs';
 
 import { SelectionContainer, useSelection } from './src';
 
+export const Container = () => {
+  const items = ['Item 1', 'Item 2', 'Item 3'];
+
+  return (
+    <SelectionContainer direction="vertical" defaultFocusedIndex={number('defaultFocusedIndex', 0)}>
+      {({ selectedItem, focusedItem, getContainerProps, getItemProps }) => (
+        <ul {...getContainerProps()}>
+          {items.map(item => {
+            const ref = React.createRef();
+            const isSelected = item === selectedItem;
+            const isFocused = item === focusedItem;
+
+            return (
+              <li
+                {...getItemProps({
+                  key: item,
+                  item,
+                  focusRef: ref
+                })}
+              >
+                {item}
+                {isSelected && <span> - Selected</span>}
+                {isFocused && <span> - Focused</span>}
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </SelectionContainer>
+  );
+};
+
 export const Hook = () => {
   const items = ['One', 'Two', 'Three'];
   const isRtl = boolean('Enable RTL', false);
@@ -67,47 +99,26 @@ export const Hook = () => {
   );
 };
 
-export const Container = () => {
-  const items = ['Item 1', 'Item 2', 'Item 3'];
-
-  return (
-    <SelectionContainer direction="vertical" defaultFocusedIndex={number('defaultFocusedIndex', 0)}>
-      {({ selectedItem, focusedItem, getContainerProps, getItemProps }) => (
-        <ul {...getContainerProps()}>
-          {items.map(item => {
-            const ref = React.createRef();
-            const isSelected = item === selectedItem;
-            const isFocused = item === focusedItem;
-
-            return (
-              <li
-                {...getItemProps({
-                  key: item,
-                  item,
-                  focusRef: ref
-                })}
-              >
-                {item}
-                {isSelected && <span> - Selected</span>}
-                {isFocused && <span> - Focused</span>}
-              </li>
-            );
-          })}
-        </ul>
-      )}
-    </SelectionContainer>
-  );
-};
-
-Hook.story = {
-  name: 'useSelection'
-};
-
 Container.story = {
   name: 'SelectionContainer'
 };
 
+Hook.story = {
+  name: 'useSelection',
+  parameters: {
+    docs: {
+      storyDescription: `The \`useSelection\` hook manages an items focus state including keyboard controls,
+      aria attributes and RTL support. It uses the 
+      [roving tab index strategy](https://www.w3.org/TR/wai-aria-practices/#kbd_roving_tabindex).`
+    }
+  }
+};
+
 export default {
   title: 'Selection Container',
-  decorators: [withKnobs]
+  decorators: [withKnobs],
+  component: SelectionContainer,
+  parameters: {
+    componentSubtitle: `A container component which wraps the useSelection hook.`
+  }
 };
