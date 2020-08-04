@@ -5,6 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import { useKeyboardFocus, IUseKeyboardFocusReturnValue } from './useKeyboardFocus';
@@ -18,10 +19,12 @@ export const KeyboardFocusContainer: React.FunctionComponent<IKeyboardFocusProps
   children,
   render = children
 }) => {
-  return render!(useKeyboardFocus()) as React.ReactElement;
+  return <>{render!(useKeyboardFocus()) as React.ReactElement}</>;
 };
 
 KeyboardFocusContainer.propTypes = {
+  /** A children render prop function */
   children: PropTypes.func,
+  /** A render prop function */
   render: PropTypes.func
 };

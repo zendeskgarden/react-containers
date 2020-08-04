@@ -5,6 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import useBreadcrumb, { IUseBreadcrumbReturnValue } from './useBreadcrumb';
@@ -18,11 +19,13 @@ const BreadcrumbContainer: React.FunctionComponent<IBreadcrumbContainerProps> = 
   children,
   render = children
 }) => {
-  return render!(useBreadcrumb()) as React.ReactElement;
+  return <>{render!(useBreadcrumb()) as React.ReactElement}</>;
 };
 
 BreadcrumbContainer.propTypes = {
+  /** A render prop function */
   render: PropTypes.func,
+  /** A children render prop function */
   children: PropTypes.func
 };
 

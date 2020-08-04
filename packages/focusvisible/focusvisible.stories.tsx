@@ -33,6 +33,21 @@ const StyledWrapper = styled.div`
   }
 `;
 
+export const Container = () => (
+  <FocusVisibleContainer>
+    {({ ref }) => (
+      <StyledWrapper ref={ref}>
+        <div>
+          <StyledCustomFocus as="button">Hello world</StyledCustomFocus>
+        </div>
+        <div>
+          <StyledCustomFocus as="input" />
+        </div>
+      </StyledWrapper>
+    )}
+  </FocusVisibleContainer>
+);
+
 export const Hook = () => {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -119,34 +134,33 @@ export const WithSelection = () => {
   return <Selection />;
 };
 
-export const Container = () => (
-  <FocusVisibleContainer>
-    {({ ref }) => (
-      <StyledWrapper ref={ref}>
-        <div>
-          <StyledCustomFocus as="button">Hello world</StyledCustomFocus>
-        </div>
-        <div>
-          <StyledCustomFocus as="input" />
-        </div>
-      </StyledWrapper>
-    )}
-  </FocusVisibleContainer>
-);
-
-Hook.story = {
-  name: 'useFocusVisible'
-};
-
-WithSelection.story = {
-  name: 'Usage with useSelection'
-};
-
 Container.story = {
   name: 'FocusVisibleContainer'
 };
 
+Hook.story = {
+  name: 'useFocusVisible',
+  parameters: {
+    docs: {
+      storyDescription: `The \`useFocusVisible\` hook implements [\`:focus-visible\`](https://drafts.csswg.org/selectors-4/#the-focus-visible-pseudo) behavior for a DOM element.`
+    }
+  }
+};
+
+WithSelection.story = {
+  name: 'Usage with useSelection',
+  parameters: {
+    docs: {
+      storyDescription: `The following story demonstrates using the \`useFocusVisible\` hook with the \`useSelection\` hook.`
+    }
+  }
+};
+
 export default {
   title: 'FocusVisible Container',
-  decorators: [withKnobs]
+  decorators: [withKnobs],
+  component: FocusVisibleContainer,
+  parameters: {
+    componentSubtitle: `A container component which wraps the useFocusVisible hook.`
+  }
 };

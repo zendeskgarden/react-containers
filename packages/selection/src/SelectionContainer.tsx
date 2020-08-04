@@ -20,17 +20,31 @@ export const SelectionContainer: React.FunctionComponent<ISelectionContainerProp
   render = children,
   ...options
 }) => {
-  return render!(useSelection(options)) as React.ReactElement;
+  return <>{render!(useSelection(options)) as React.ReactElement}</>;
+};
+
+SelectionContainer.defaultProps = {
+  direction: 'horizontal',
+  defaultFocusedIndex: 0
 };
 
 SelectionContainer.propTypes = {
+  /** A children render prop function which receives selection state */
   children: PropTypes.func,
+  /** A render prop function which receives selection state */
   render: PropTypes.func,
+  /** Determines if selection uses right-to-left writing direction */
   rtl: PropTypes.bool,
+  /** Determines the orientation of the selection */
   direction: PropTypes.oneOf(['horizontal', 'vertical', 'both']),
+  /** Sets the  initial focused item */
   defaultFocusedIndex: PropTypes.number,
+  /** Sets the focused item in a controlled selection */
   focusedItem: PropTypes.any,
+  /** Sets the selected item in a controlled selection */
   selectedItem: PropTypes.any,
+  /** A callback function that receives the selected item */
   onSelect: PropTypes.func,
+  /** A callback function that receives the focused item */
   onFocus: PropTypes.func
 };
