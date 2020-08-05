@@ -39,10 +39,6 @@ module.exports = ({ config }) => {
       {
         loader: 'ts-loader',
         options: {
-          // Temporarily ignore implicit any warnings caused by source-loader.
-          // Ignoring 7005 can be removed when the GitHub issue is resolved.
-          // See: https://github.com/storybookjs/storybook/issues/7829
-          ignoreDiagnostics: [7005],
           configFile: path.resolve(__dirname, 'tsconfig.storybook.json')
         }
       }
