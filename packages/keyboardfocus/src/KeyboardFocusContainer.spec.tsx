@@ -6,6 +6,7 @@
  */
 
 import React from 'react';
+import userEvent from '@testing-library/user-event';
 import { render, fireEvent } from '@testing-library/react';
 
 import { KeyboardFocusContainer } from './KeyboardFocusContainer';
@@ -16,9 +17,7 @@ describe('KeyboardFocusContainer', () => {
   const BasicExample = () => (
     <KeyboardFocusContainer>
       {({ getFocusProps, keyboardFocused }) => (
-        <div {...getFocusProps({ 'data-test-id': 'trigger', 'data-focused': keyboardFocused })}>
-          trigger
-        </div>
+        <div {...getFocusProps({ 'data-focused': keyboardFocused })}>trigger</div>
       )}
     </KeyboardFocusContainer>
   );
@@ -26,63 +25,40 @@ describe('KeyboardFocusContainer', () => {
   describe('getFocusProps', () => {
     describe('onFocus', () => {
       it('should not apply focused prop if focused by mouse', () => {
-        const { container, getByTestId } = render(<BasicExample />);
+        const { container, getByText } = render(<BasicExample />);
 
-        fireEvent.mouseDown(container);
+        userEvent.click(container);
         jest.runOnlyPendingTimers();
-        expect(getByTestId('trigger')).toHaveAttribute('data-focused', 'false');
+        expect(getByText('trigger')).toHaveAttribute('data-focused', 'false');
       });
 
       it('should apply focused prop if focused by keyboard', () => {
-        const { getByTestId } = render(<BasicExample />);
-        const trigger = getByTestId('trigger');
+        const { getByText } = render(<BasicExample />);
+        const trigger = getByText('trigger');
 
-        fireEvent.focus(trigger);
+        userEvent.tab();
         expect(trigger).toHaveAttribute('data-focused', 'true');
       });
 
       it('should apply focused prop if focused by keyboard after mouse event', () => {
-        const { getByTestId } = render(<BasicExample />);
-        const trigger = getByTestId('trigger');
+        const { getByText } = render(<BasicExample />);
+        const trigger = getByText('trigger');
 
-        fireEvent.mouseDown(trigger);
+        userEvent.click(trigger);
         jest.runOnlyPendingTimers();
 
         expect(trigger).toHaveAttribute('data-focused', 'false');
 
-        fireEvent.focus(trigger);
+        userEvent.tab({ shift: true });
+        userEvent.tab();
         expect(trigger).toHaveAttribute('data-focused', 'true');
-      });
-    });
-
-    describe('onMouseDown', () => {
-      it('should not apply focused prop if mouseddown', () => {
-        const { getByTestId } = render(<BasicExample />);
-        const trigger = getByTestId('trigger');
-
-        fireEvent.mouseDown(trigger);
-        jest.runOnlyPendingTimers();
-
-        expect(trigger).toHaveAttribute('data-focused', 'false');
-      });
-    });
-
-    describe('onPointerDown', () => {
-      it('should not apply focused prop if pointerdown is triggered', () => {
-        const { getByTestId } = render(<BasicExample />);
-        const trigger = getByTestId('trigger');
-
-        fireEvent(trigger, new MouseEvent('pointerdown'));
-        jest.runOnlyPendingTimers();
-
-        expect(trigger).toHaveAttribute('data-focused', 'false');
       });
     });
 
     describe('onTouchStart', () => {
       it('should not apply focused prop if touchstart is triggered', () => {
-        const { getByTestId } = render(<BasicExample />);
-        const trigger = getByTestId('trigger');
+        const { getByText } = render(<BasicExample />);
+        const trigger = getByText('trigger');
 
         fireEvent.touchStart(trigger);
         jest.runOnlyPendingTimers();
@@ -93,12 +69,12 @@ describe('KeyboardFocusContainer', () => {
 
     describe('onBlur', () => {
       it('should remove focused prop if blurred', () => {
-        const { getByTestId } = render(<BasicExample />);
-        const trigger = getByTestId('trigger');
+        const { getByText } = render(<BasicExample />);
+        const trigger = getByText('trigger');
 
-        fireEvent.focus(trigger);
+        userEvent.tab();
         expect(trigger).toHaveAttribute('data-focused', 'true');
-        fireEvent.blur(trigger);
+        userEvent.tab();
         expect(trigger).toHaveAttribute('data-focused', 'false');
       });
     });

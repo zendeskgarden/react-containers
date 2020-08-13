@@ -23,6 +23,9 @@
     "test:all": "jest --config=utils/test/jest.config.js",
     "version": "yarn run build && git add -A"
   },
+  "dependencies": {
+    "@testing-library/user-event": "12.1.0"
+  },
   "devDependencies": {
     "@babel/cli": "7.10.3",
     "@babel/core": "7.10.3",
@@ -45,7 +48,7 @@
     "@storybook/preset-typescript": "^3.0.0",
     "@storybook/react": "5.3.19",
     "@storybook/theming": "5.3.19",
-    "@testing-library/dom": "6.16.0",
+    "@testing-library/dom": "7.22.0",
     "@testing-library/jest-dom": "4.2.4",
     "@testing-library/react": "10.4.3",
     "@types/jest": "26.0.3",
