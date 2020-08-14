@@ -18,7 +18,7 @@ describe('FocusVisibleContainer', () => {
     return (
       <FocusVisibleContainer>
         {({ ref }) => (
-          <div ref={ref} data-test-id="wrapper">
+          <div ref={ref} data-test-id="wrapper" tabIndex={-1}>
             <button data-test-id="button" tabIndex={0}></button>
             <input data-test-id="input" />
             <textarea data-test-id="textarea"></textarea>
@@ -188,7 +188,7 @@ describe('FocusVisibleContainer', () => {
 
       expect(input).not.toHaveAttribute('data-garden-focus-visible');
 
-      userEvent.tab();
+      input.focus();
 
       expect(input).toHaveAttribute('data-garden-focus-visible');
     });
@@ -204,7 +204,7 @@ describe('FocusVisibleContainer', () => {
 
       expect(textarea).not.toHaveAttribute('data-garden-focus-visible');
 
-      userEvent.tab();
+      textarea.focus();
 
       expect(textarea).toHaveAttribute('data-garden-focus-visible');
     });
