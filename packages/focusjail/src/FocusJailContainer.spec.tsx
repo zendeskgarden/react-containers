@@ -8,6 +8,7 @@
 
 import React, { useRef } from 'react';
 import { KEY_CODES } from '@zendeskgarden/container-utilities';
+import userEvent from '@testing-library/user-event';
 import { render, fireEvent } from '@testing-library/react';
 
 import { FocusJailContainer } from './FocusJailContainer';
@@ -245,15 +246,15 @@ describe('FocusJailContainer', () => {
 
       expect(openButton).not.toHaveFocus();
 
-      openButton.focus();
-      fireEvent.click(openButton);
+      userEvent.click(openButton);
+      userEvent.tab();
 
       expect(getByTestId('container')).toHaveFocus();
       expect(openButton).not.toHaveFocus();
 
       const closeButton = getByText('close');
 
-      fireEvent.click(closeButton);
+      userEvent.click(closeButton);
 
       expect(openButton).toHaveFocus();
     });

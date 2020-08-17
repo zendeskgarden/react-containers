@@ -6,7 +6,8 @@
  */
 
 import React, { createRef } from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { render } from '@testing-library/react';
 
 import { ButtonGroupContainer } from './ButtonGroupContainer';
 
@@ -74,7 +75,7 @@ describe('ButtonGroupContainer', () => {
       const { getAllByTestId } = render(<BasicExample />);
       const firstButton = getAllByTestId('button')[0];
 
-      fireEvent.click(firstButton);
+      userEvent.click(firstButton);
 
       expect(firstButton).toHaveAttribute('aria-pressed', 'true');
     });

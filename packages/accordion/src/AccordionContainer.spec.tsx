@@ -6,6 +6,7 @@
  */
 
 import React from 'react';
+import userEvent from '@testing-library/user-event';
 import { render, fireEvent } from '@testing-library/react';
 import { KEY_CODES } from '@zendeskgarden/container-utilities';
 import { AccordionContainer } from './AccordionContainer';
@@ -98,7 +99,7 @@ describe('AccordionContainer', () => {
     const { getAllByTestId } = render(<BasicExample onChange={onChangeSpy} />);
     const triggers = getAllByTestId('trigger');
 
-    fireEvent.click(triggers[2]);
+    userEvent.click(triggers[2]);
 
     expect(onChangeSpy).toHaveBeenCalledWith(2);
   });
@@ -220,7 +221,7 @@ describe('AccordionContainer', () => {
 
       expect(secondTrigger).toHaveAttribute('aria-expanded', 'false');
 
-      fireEvent.click(secondTrigger);
+      userEvent.click(secondTrigger);
 
       expect(secondTrigger).toHaveAttribute('aria-expanded', 'true');
     });
@@ -321,7 +322,7 @@ describe('AccordionContainer', () => {
       const firstTrigger = getAllByTestId('trigger')[0];
       const firstPanel = getAllByTestId('panel')[0];
 
-      fireEvent.click(firstTrigger);
+      userEvent.click(firstTrigger);
 
       expect(firstPanel).toHaveAttribute('aria-hidden', 'false');
     });
@@ -400,7 +401,7 @@ describe('AccordionContainer', () => {
 
     it('only expands one section at a time', () => {
       // good
-      fireEvent.click(triggers[1]);
+      userEvent.click(triggers[1]);
       triggers.forEach((trigger, index) => {
         const expanded = index === 1 ? 'true' : 'false';
         const hidden = index === 1 ? 'false' : 'true';
@@ -411,7 +412,7 @@ describe('AccordionContainer', () => {
     });
 
     it('can collapse the expanded section', () => {
-      fireEvent.click(triggers[0]);
+      userEvent.click(triggers[0]);
       triggers.forEach((trigger, index) => {
         expect(trigger).toHaveAttribute('aria-expanded', 'false');
         expect(panels[index]).toHaveAttribute('aria-hidden', 'true');
@@ -440,7 +441,7 @@ describe('AccordionContainer', () => {
       const panels = getAllByTestId('panel');
 
       triggers.forEach((trigger, index) => {
-        fireEvent.click(trigger);
+        userEvent.click(trigger);
         expect(trigger).toHaveAttribute('aria-disabled', 'true');
         expect(trigger).toHaveAttribute('aria-expanded', 'true');
         expect(panels[index]).toHaveAttribute('aria-hidden', 'false');
@@ -459,11 +460,11 @@ describe('AccordionContainer', () => {
       expect(trigger).toHaveAttribute('aria-disabled', 'false');
       expect(trigger).toHaveAttribute('aria-expanded', 'false');
       expect(panel).toHaveAttribute('aria-hidden', 'true');
-      fireEvent.click(trigger); // expand!
+      userEvent.click(trigger); // expand!
       expect(trigger).toHaveAttribute('aria-disabled', 'true');
       expect(trigger).toHaveAttribute('aria-expanded', 'true');
       expect(panel).toHaveAttribute('aria-hidden', 'false');
-      fireEvent.click(trigger); // collapse?
+      userEvent.click(trigger); // collapse?
       expect(trigger).toHaveAttribute('aria-disabled', 'true');
       expect(trigger).toHaveAttribute('aria-expanded', 'true');
       expect(panel).toHaveAttribute('aria-hidden', 'false');
@@ -494,7 +495,7 @@ describe('AccordionContainer', () => {
 
     it('only expand-disables section at a time', () => {
       triggers.forEach((trigger, index) => {
-        fireEvent.click(trigger);
+        userEvent.click(trigger);
         triggers.forEach((_trigger, _index) => {
           const expanded = _index === index ? 'true' : 'false';
           const hidden = _index === index ? 'false' : 'true';
@@ -513,7 +514,7 @@ describe('AccordionContainer', () => {
       expect(trigger).toHaveAttribute('aria-disabled', 'true');
       expect(trigger).toHaveAttribute('aria-expanded', 'true');
       expect(panel).toHaveAttribute('aria-hidden', 'false');
-      fireEvent.click(trigger); // collapse?
+      userEvent.click(trigger); // collapse?
       expect(trigger).toHaveAttribute('aria-disabled', 'true');
       expect(trigger).toHaveAttribute('aria-expanded', 'true');
       expect(panel).toHaveAttribute('aria-hidden', 'false');
