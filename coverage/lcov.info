@@ -173,12 +173,12 @@ BRH:1
 end_of_record
 TN:
 SF:packages/breadcrumb/src/index.ts
-FN:10,(anonymous_0)
-FN:13,(anonymous_1)
+FN:10,(anonymous_1)
+FN:13,(anonymous_2)
 FNF:2
 FNH:0
-FNDA:0,(anonymous_0)
 FNDA:0,(anonymous_1)
+FNDA:0,(anonymous_2)
 DA:10,0
 DA:13,0
 LF:2
