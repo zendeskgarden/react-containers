@@ -5,10 +5,21 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React, { createRef } from 'react';
+import React, { createRef, CSSProperties } from 'react';
 
 import { boolean, number, withKnobs } from '@storybook/addon-knobs';
 import { AccordionContainer, useAccordion, IUseAccordionReturnValue } from './src';
+
+const visuallyHidden: CSSProperties = {
+  position: 'absolute',
+  border: '0',
+  clip: 'rect(1px, 1px, 1px, 1px)',
+  padding: '0',
+  width: '1px',
+  height: '1px',
+  overflow: 'hidden',
+  whiteSpace: 'nowrap'
+};
 
 export const Container = () => {
   const size = number('Sections', 5, { range: true, min: 1, max: 9 });
@@ -52,7 +63,7 @@ export const Container = () => {
                 <p
                   {...getPanelProps({
                     index,
-                    hidden
+                    style: hidden ? visuallyHidden : null
                   })}
                 >
                   {`[Panel ${index + 1}] `}
@@ -115,7 +126,7 @@ export const Hook = () => {
                 {...getPanelProps({
                   index,
                   role: null,
-                  hidden
+                  style: hidden ? visuallyHidden : null
                 })}
               >
                 {`[Panel ${index + 1}] `}
