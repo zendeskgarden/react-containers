@@ -5356,10 +5356,10 @@
   dependencies:
     "@babel/runtime" "^7.8.4"
 
-"@zendeskgarden/eslint-config@13.0.0":
-  version "13.0.0"
-  resolved "https://registry.yarnpkg.com/@zendeskgarden/eslint-config/-/eslint-config-13.0.0.tgz#d10d7b9b3c8021ab9f25065701a01685ef99bc64"
-  integrity sha512-mMtmlllUC1icDBlSBk84hEeJQRvprL+E0sZoq6iaL7cQe0sYZ+bkRo8NbIO0Ovm/L1IUrRaEyktQMW5quTs75w==
+"@zendeskgarden/eslint-config@15.0.0":
+  version "15.0.0"
+  resolved "https://registry.yarnpkg.com/@zendeskgarden/eslint-config/-/eslint-config-15.0.0.tgz#b05982801029e1b1d5ec5a435d7e95dc8733dda3"
+  integrity sha512-NfHIJgd/7G4UtR0SSFThp8rOtr85DZDWnFbhSDPeUF3c8qVAhcAy46+Unl5LJteBgQwTNOgM/puw3VCUdl9EMQ==
 
 "@zendeskgarden/react-theming@8.20.0":
   version "8.20.0"
