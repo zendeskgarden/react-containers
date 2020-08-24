@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1598277767534" clover="3.2.0">
-  <project timestamp="1598277767534" name="All files">
-    <metrics statements="656" coveredstatements="614" conditionals="387" coveredconditionals="329" methods="171" coveredmethods="144" elements="1214" coveredelements="1087" complexity="0" loc="656" ncloc="656" packages="15" files="45" classes="45"/>
+<coverage generated="1598279042618" clover="3.2.0">
+  <project timestamp="1598279042618" name="All files">
+    <metrics statements="656" coveredstatements="614" conditionals="387" coveredconditionals="330" methods="171" coveredmethods="144" elements="1214" coveredelements="1088" complexity="0" loc="656" ncloc="656" packages="15" files="45" classes="45"/>
     <package name="accordion.src">
       <metrics statements="60" coveredstatements="57" conditionals="45" coveredconditionals="41" methods="11" coveredmethods="9"/>
       <file name="AccordionContainer.tsx" path="/home/circleci/project/packages/accordion/src/AccordionContainer.tsx">
@@ -168,7 +168,7 @@
       </file>
     </package>
     <package name="focusjail.src">
-      <metrics statements="55" coveredstatements="55" conditionals="41" coveredconditionals="36" methods="13" coveredmethods="12"/>
+      <metrics statements="55" coveredstatements="55" conditionals="41" coveredconditionals="37" methods="13" coveredmethods="12"/>
       <file name="FocusJailContainer.tsx" path="/home/circleci/project/packages/focusjail/src/FocusJailContainer.tsx">
         <metrics statements="6" coveredstatements="6" conditionals="1" coveredconditionals="1" methods="1" coveredmethods="1"/>
         <line num="8" count="2" type="stmt"/>
@@ -184,7 +184,7 @@
         <line num="12" count="1" type="stmt"/>
       </file>
       <file name="useFocusJail.ts" path="/home/circleci/project/packages/focusjail/src/useFocusJail.ts">
-        <metrics statements="47" coveredstatements="47" conditionals="40" coveredconditionals="35" methods="10" coveredmethods="10"/>
+        <metrics statements="47" coveredstatements="47" conditionals="40" coveredconditionals="36" methods="10" coveredmethods="10"/>
         <line num="8" count="2" type="stmt"/>
         <line num="9" count="2" type="stmt"/>
         <line num="10" count="2" type="stmt"/>
@@ -196,32 +196,32 @@
         <line num="46" count="39" type="cond" truecount="2" falsecount="0"/>
         <line num="47" count="19" type="stmt"/>
         <line num="51" count="39" type="stmt"/>
-        <line num="55" count="42" type="cond" truecount="2" falsecount="0"/>
+        <line num="55" count="43" type="cond" truecount="2" falsecount="0"/>
         <line num="56" count="17" type="stmt"/>
-        <line num="58" count="25" type="cond" truecount="2" falsecount="0"/>
+        <line num="58" count="26" type="cond" truecount="2" falsecount="0"/>
         <line num="64" count="39" type="stmt"/>
-        <line num="65" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="65" count="5" type="cond" truecount="2" falsecount="0"/>
         <line num="66" count="1" type="stmt"/>
         <line num="72" count="39" type="stmt"/>
-        <line num="73" count="6" type="cond" truecount="1" falsecount="1"/>
-        <line num="74" count="6" type="stmt"/>
-        <line num="75" count="6" type="stmt"/>
-        <line num="77" count="6" type="cond" truecount="1" falsecount="1"/>
+        <line num="73" count="8" type="cond" truecount="1" falsecount="1"/>
+        <line num="74" count="8" type="stmt"/>
+        <line num="75" count="8" type="stmt"/>
+        <line num="77" count="8" type="cond" truecount="2" falsecount="0"/>
         <line num="80" count="39" type="stmt"/>
-        <line num="81" count="3" type="stmt"/>
-        <line num="83" count="3" type="stmt"/>
+        <line num="81" count="4" type="stmt"/>
+        <line num="83" count="4" type="stmt"/>
         <line num="89" count="39" type="cond" truecount="0" falsecount="1"/>
         <line num="90" count="39" type="stmt"/>
-        <line num="92" count="7" type="cond" truecount="2" falsecount="0"/>
+        <line num="92" count="8" type="cond" truecount="2" falsecount="0"/>
         <line num="93" count="3" type="stmt"/>
-        <line num="95" count="4" type="stmt"/>
-        <line num="97" count="3" type="stmt"/>
-        <line num="99" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="95" count="5" type="stmt"/>
+        <line num="97" count="4" type="stmt"/>
+        <line num="99" count="4" type="cond" truecount="2" falsecount="0"/>
         <line num="103" count="1" type="stmt"/>
         <line num="104" count="1" type="stmt"/>
-        <line num="107" count="3" type="cond" truecount="4" falsecount="0"/>
-        <line num="108" count="2" type="stmt"/>
-        <line num="109" count="2" type="stmt"/>
+        <line num="107" count="4" type="cond" truecount="4" falsecount="0"/>
+        <line num="108" count="3" type="stmt"/>
+        <line num="109" count="3" type="stmt"/>
         <line num="118" count="39" type="stmt"/>
         <line num="119" count="39" type="cond" truecount="2" falsecount="0"/>
         <line num="121" count="39" type="cond" truecount="2" falsecount="0"/>
@@ -791,7 +791,7 @@
         <line num="9" count="9" type="stmt"/>
         <line num="10" count="446" type="stmt"/>
         <line num="11" count="9" type="stmt"/>
-        <line num="12" count="169" type="stmt"/>
+        <line num="12" count="170" type="stmt"/>
       </file>
     </package>
     <package name="utilities.src.utils">
@@ -812,9 +812,9 @@
         <metrics statements="5" coveredstatements="5" conditionals="4" coveredconditionals="4" methods="3" coveredmethods="3"/>
         <line num="26" count="10" type="stmt"/>
         <line num="27" count="2003" type="stmt"/>
-        <line num="28" count="159" type="stmt"/>
-        <line num="29" count="317" type="cond" truecount="2" falsecount="0"/>
-        <line num="31" count="316" type="cond" truecount="2" falsecount="0"/>
+        <line num="28" count="160" type="stmt"/>
+        <line num="29" count="319" type="cond" truecount="2" falsecount="0"/>
+        <line num="31" count="318" type="cond" truecount="2" falsecount="0"/>
       </file>
       <file name="getControlledValue.ts" path="/home/circleci/project/packages/utilities/src/utils/getControlledValue.ts">
         <metrics statements="5" coveredstatements="5" conditionals="2" coveredconditionals="2" methods="1" coveredmethods="1"/>
