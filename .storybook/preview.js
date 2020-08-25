@@ -8,7 +8,6 @@
 import React from 'react';
 import { addDecorator } from '@storybook/react';
 import centered from '@storybook/addon-centered/react';
-import { withA11y } from '@storybook/addon-a11y';
 
 /**
  * There are layout issues when using addon-centered with addon-docs.
@@ -36,4 +35,3 @@ addDecorator((...args) => {
 
   return centered(...args);
 });
-addDecorator(withA11y);
