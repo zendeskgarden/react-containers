@@ -134,24 +134,24 @@ export const WithSelection = () => {
   return <Selection />;
 };
 
-Container.story = {
-  name: 'FocusVisibleContainer'
-};
+Container.storyName = 'FocusVisibleContainer';
 
-Hook.story = {
-  name: 'useFocusVisible',
-  parameters: {
-    docs: {
-      storyDescription: `The \`useFocusVisible\` hook implements [\`:focus-visible\`](https://drafts.csswg.org/selectors-4/#the-focus-visible-pseudo) behavior for a DOM element.`
+Hook.storyName = 'useFocusVisible';
+
+Hook.parameters = {
+  docs: {
+    description: {
+      story: `The \`useFocusVisible\` hook implements [\`:focus-visible\`](https://drafts.csswg.org/selectors-4/#the-focus-visible-pseudo) behavior for a DOM element.`
     }
   }
 };
 
-WithSelection.story = {
-  name: 'Usage with useSelection',
-  parameters: {
-    docs: {
-      storyDescription: `The following story demonstrates using the \`useFocusVisible\` hook with the \`useSelection\` hook.`
+WithSelection.storyName = 'Usage with useSelection';
+
+WithSelection.parameters = {
+  docs: {
+    description: {
+      story: `The following story demonstrates using the \`useFocusVisible\` hook with the \`useSelection\` hook.`
     }
   }
 };

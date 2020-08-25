@@ -73,17 +73,16 @@ export const Hook = () => {
   );
 };
 
-Container.story = {
-  name: 'ButtongroupContainer'
-};
+Container.storyName = 'ButtongroupContainer';
 
-Hook.story = {
-  name: 'useButtongroup',
-  parameters: {
-    docs: {
-      storyDescription: `The \`useButtonGroup\` hook manages focus, selection and accessibility attributes
-      required for a group of buttons. Garden uses this in [react-components](https://github.com/zendeskgarden/react-components)
-      for the [buttons package](https://github.com/zendeskgarden/react-components/tree/main/packages/buttons).`
+Hook.storyName = 'useButtongroup';
+
+Hook.parameters = {
+  docs: {
+    description: {
+      story: `The \`useButtonGroup\` hook manages focus, selection and accessibility attributes
+        required for a group of buttons. Garden uses this in [react-components](https://github.com/zendeskgarden/react-components)
+        for the [buttons package](https://github.com/zendeskgarden/react-components/tree/main/packages/buttons).`
     }
   }
 };

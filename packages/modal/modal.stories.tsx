@@ -147,15 +147,14 @@ export const Hook = () => {
   );
 };
 
-Container.story = {
-  name: 'ModalContainer'
-};
+Container.storyName = 'ModalContainer';
 
-Hook.story = {
-  name: 'useModal',
-  parameters: {
-    docs: {
-      storyDescription: `The \`useModal\` hook implements the [modal pattern](https://www.w3.org/TR/wai-aria-practices-1.1/#dialog_modal) and can be used to build a modal component.`
+Hook.storyName = 'useModal';
+
+Hook.parameters = {
+  docs: {
+    description: {
+      story: `The \`useModal\` hook implements the [modal pattern](https://www.w3.org/TR/wai-aria-practices-1.1/#dialog_modal) and can be used to build a modal component.`
     }
   }
 };

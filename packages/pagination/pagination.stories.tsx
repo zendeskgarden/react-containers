@@ -224,15 +224,14 @@ export const Hook = () => {
   );
 };
 
-Container.story = {
-  name: 'PaginationContainer'
-};
+Container.storyName = 'PaginationContainer';
 
-Hook.story = {
-  name: 'usePagination',
-  parameters: {
-    docs: {
-      storyDescription: `The \`usePagination\` hook is wrapper on top of the [\`useSelection\`](/docs/selection-container--container#useselection) hook with
+Hook.storyName = 'usePagination';
+
+Hook.parameters = {
+  docs: {
+    description: {
+      story: `The \`usePagination\` hook is wrapper on top of the [\`useSelection\`](/docs/selection-container--container#useselection) hook with
       specific prop getters for pagination.`
     }
   }

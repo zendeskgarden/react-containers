@@ -49,15 +49,14 @@ export const Hook = () => {
   );
 };
 
-Container.story = {
-  name: 'FocusJailContainer'
-};
+Container.storyName = 'FocusJailContainer';
 
-Hook.story = {
-  name: 'useFocusJail',
-  parameters: {
-    docs: {
-      storyDescription: `The \`useFocusJail\` hook allows you to trap focus to a container element. Useful
+Hook.storyName = 'useFocusJail';
+
+Hook.parameters = {
+  docs: {
+    description: {
+      story: `The \`useFocusJail\` hook allows you to trap focus to a container element. Useful
       for modals and widgets. Garden uses this in react-components for the modals package.`
     }
   }

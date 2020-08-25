@@ -137,35 +137,32 @@ export const FocusableTooltip = () => {
   );
 };
 
-Container.story = {
-  name: 'TooltipContainer'
-};
+Container.storyName = 'TooltipContainer';
 
-Hook.story = {
-  name: 'useTooltip',
-  parameters: {
-    docs: {
-      storyDescription: `The \`useTooltip\` hook implements the [tooltip pattern](https://www.w3.org/TR/wai-aria-practices-1.1/#tooltip) and can be used to build a tooltip component.`
+Hook.storyName = 'useTooltip';
+
+Hook.parameters = {
+  docs: {
+    description: {
+      story: `The \`useTooltip\` hook implements the [tooltip pattern](https://www.w3.org/TR/wai-aria-practices-1.1/#tooltip) and can be used to build a tooltip component.`
     }
   }
 };
 
-WithPopper.story = {
-  name: 'positioning via Popper.js',
-  parameters: {
-    docs: {
-      storyDescription: `This story demonstrate the \`useTooltip\` hook in combination with Popper.js for positioning. And it's broken`
+WithPopper.storyName = 'positioning via Popper.js';
+
+WithPopper.parameters = {
+  docs: {
+    description: {
+      story: `This story demonstrate the \`useTooltip\` hook in combination with Popper.js for positioning. And it's broken`
     }
   }
 };
 
-FocusableTooltip.story = {
-  name: 'with focusable tooltip',
-  parameters: {
-    docs: {
-      storyDescription: `This story demonstrates focusable content within the tooltip.`
-    }
-  }
+FocusableTooltip.storyName = 'with focusable tooltip';
+
+FocusableTooltip.parameters = {
+  docs: { description: { story: `This story demonstrates focusable content within the tooltip.` } }
 };
 
 export default {

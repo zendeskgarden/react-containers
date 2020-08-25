@@ -43,15 +43,14 @@ export const Hook = () => {
   );
 };
 
-Container.story = {
-  name: 'KeyboardFocusContainer'
-};
+Container.storyName = 'KeyboardFocusContainer';
 
-Hook.story = {
-  name: 'useKeyboardFocus',
-  parameters: {
-    docs: {
-      storyDescription: `The \`useKeyboardFocus\` hook supplies state and props that help you to distinguish
+Hook.storyName = 'useKeyboardFocus';
+
+Hook.parameters = {
+  docs: {
+    description: {
+      story: `The \`useKeyboardFocus\` hook supplies state and props that help you to distinguish
       between mouse and keyboard focus. Garden uses this in react-components to know
       when to add the focus ring.`
     }
