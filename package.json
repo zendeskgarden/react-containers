@@ -111,6 +111,8 @@
     "webpack": "4.44.1"
   },
   "resolutions": {
-    "@types/react": "16.9.46"
+    "@types/react": "16.9.46",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
   }
 }
