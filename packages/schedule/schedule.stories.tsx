@@ -54,15 +54,14 @@ export const Hook = () => {
   return <Animation />;
 };
 
-Container.story = {
-  name: 'ScheduleContainer'
-};
+Container.storyName = 'ScheduleContainer';
 
-Hook.story = {
-  name: 'useSchedule',
-  parameters: {
-    docs: {
-      storyDescription: `The \`useSchedule\` hook implements a schedule (timer) and communicates when it has elapsed.`
+Hook.storyName = 'useSchedule';
+
+Hook.parameters = {
+  docs: {
+    description: {
+      story: `The \`useSchedule\` hook implements a schedule (timer) and communicates when it has elapsed.`
     }
   }
 };
@@ -72,6 +71,7 @@ export default {
   decorators: [withKnobs],
   component: ScheduleContainer,
   parameters: {
+    layout: 'centered',
     componentSubtitle: `A container component which wraps the useSchedule hook.`
   }
 };

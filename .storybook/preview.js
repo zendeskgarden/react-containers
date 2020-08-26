@@ -7,33 +7,21 @@
 
 import React from 'react';
 import { addDecorator } from '@storybook/react';
-import centered from '@storybook/addon-centered/react';
-import { withA11y } from '@storybook/addon-a11y';
 
 /**
- * There are layout issues when using addon-centered with addon-docs.
- * This is a temporary fix for the issue as it is fixed in Storybook v6.
- * See: https://github.com/storybookjs/storybook/issues/8128
+ * Temporarily used to center `addon-docs` previews
+ * See: https://github.com/storybookjs/storybook/issues/7227#issuecomment-680332161
  */
 addDecorator((...args) => {
-  // eslint-disable-next-line node/no-unsupported-features/node-builtins
-  const params = new URL(document.location).searchParams;
-  const isInDockView = params.get('viewMode') === 'docs';
-
-  if (isInDockView) {
-    return (
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          overflow: 'auto'
-        }}
-      >
-        <div style={{ margin: 'auto', maxHeight: '100%' }}>{args[0]()}</div>
-      </div>
-    );
-  }
-
-  return centered(...args);
+  return (
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        overflow: 'auto'
+      }}
+    >
+      <div style={{ margin: 'auto', maxHeight: '100%' }}>{args[0]()}</div>
+    </div>
+  );
 });
-addDecorator(withA11y);

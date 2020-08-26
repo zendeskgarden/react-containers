@@ -154,15 +154,14 @@ export const Hook = () => {
   );
 };
 
-Container.story = {
-  name: 'TabsContainer'
-};
+Container.storyName = 'TabsContainer';
 
-Hook.story = {
-  name: 'useTabs',
-  parameters: {
-    docs: {
-      storyDescription: `The \`useTabs\` hook implements the [tabs pattern](https://www.w3.org/TR/wai-aria-practices-1.1/#tabpanel) and can be used to build a tabs component.`
+Hook.storyName = 'useTabs';
+
+Hook.parameters = {
+  docs: {
+    description: {
+      story: `The \`useTabs\` hook implements the [tabs pattern](https://www.w3.org/TR/wai-aria-practices-1.1/#tabpanel) and can be used to build a tabs component.`
     }
   }
 };
@@ -172,6 +171,7 @@ export default {
   decorators: [withKnobs],
   component: TabsContainer,
   parameters: {
+    layout: 'centered',
     componentSubtitle: `A container component which wraps the useTabs hook.`
   }
 };

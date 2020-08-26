@@ -41,15 +41,14 @@ export const Hook = () => {
   return <Field id={text('id', uid({ name: 'useField' }))} />;
 };
 
-Container.story = {
-  name: 'FieldContainer'
-};
+Container.storyName = 'FieldContainer';
 
-Hook.story = {
-  name: 'useField',
-  parameters: {
-    docs: {
-      storyDescription: `The \`useField\` hook will supply the prop getters to handle \`aria-labelledby\` along
+Hook.storyName = 'useField';
+
+Hook.parameters = {
+  docs: {
+    description: {
+      story: `The \`useField\` hook will supply the prop getters to handle \`aria-labelledby\` along
       with for/id mapping and \`aria-describedby\` mapping when a hint is applied.`
     }
   }
@@ -60,6 +59,7 @@ export default {
   decorators: [withKnobs],
   component: FieldContainer,
   parameters: {
+    layout: 'centered',
     componentSubtitle: `A container component which wraps the useField hook.`
   }
 };

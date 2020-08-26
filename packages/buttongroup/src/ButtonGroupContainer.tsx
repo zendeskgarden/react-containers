@@ -11,7 +11,9 @@ import PropTypes from 'prop-types';
 import { useButtonGroup, IUseButtonGroupProps, UseButtonGroupReturnValue } from './useButtonGroup';
 
 export interface IButtonGroupContainerProps<Item> extends IUseButtonGroupProps<Item> {
+  /** A render prop function */
   render?: (options: UseButtonGroupReturnValue<Item>) => React.ReactNode;
+  /** A children render prop function */
   children?: (options: UseButtonGroupReturnValue<Item>) => React.ReactNode;
 }
 
@@ -24,16 +26,10 @@ export const ButtonGroupContainer: React.FunctionComponent<IButtonGroupContainer
 };
 
 ButtonGroupContainer.propTypes = {
-  /** A render prop function */
   children: PropTypes.func,
-  /** A children render prop function */
   render: PropTypes.func,
-  /** The focused item in a controlled buttongroup */
   focusedItem: PropTypes.any,
-  /** The selected item in a controlled buttongroup */
   selectedItem: PropTypes.any,
-  /** A callback function that receives the selected item */
   onSelect: PropTypes.func,
-  /** A callback function that receives the focused item */
   onFocus: PropTypes.func
 };

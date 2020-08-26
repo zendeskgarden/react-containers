@@ -11,7 +11,9 @@ import PropTypes from 'prop-types';
 import { useKeyboardFocus, IUseKeyboardFocusReturnValue } from './useKeyboardFocus';
 
 export interface IKeyboardFocusProps {
+  /** A children render prop function */
   render?: (options: IUseKeyboardFocusReturnValue) => React.ReactNode;
+  /** A render prop function */
   children?: (options: IUseKeyboardFocusReturnValue) => React.ReactNode;
 }
 
@@ -23,8 +25,6 @@ export const KeyboardFocusContainer: React.FunctionComponent<IKeyboardFocusProps
 };
 
 KeyboardFocusContainer.propTypes = {
-  /** A children render prop function */
   children: PropTypes.func,
-  /** A render prop function */
   render: PropTypes.func
 };

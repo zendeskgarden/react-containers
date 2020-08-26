@@ -99,15 +99,14 @@ export const Hook = () => {
   );
 };
 
-Container.story = {
-  name: 'SelectionContainer'
-};
+Container.storyName = 'SelectionContainer';
 
-Hook.story = {
-  name: 'useSelection',
-  parameters: {
-    docs: {
-      storyDescription: `The \`useSelection\` hook manages an items focus state including keyboard controls,
+Hook.storyName = 'useSelection';
+
+Hook.parameters = {
+  docs: {
+    description: {
+      story: `The \`useSelection\` hook manages an items focus state including keyboard controls,
       aria attributes and RTL support. It uses the 
       [roving tab index strategy](https://www.w3.org/TR/wai-aria-practices/#kbd_roving_tabindex).`
     }
@@ -119,6 +118,7 @@ export default {
   decorators: [withKnobs],
   component: SelectionContainer,
   parameters: {
+    layout: 'centered',
     componentSubtitle: `A container component which wraps the useSelection hook.`
   }
 };

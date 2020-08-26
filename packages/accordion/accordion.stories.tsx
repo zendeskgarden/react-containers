@@ -148,15 +148,14 @@ export const Hook = () => {
   );
 };
 
-Container.story = {
-  name: 'AccordionContainer'
-};
+Container.storyName = 'AccordionContainer';
 
-Hook.story = {
-  name: `useAccordion`,
-  parameters: {
-    docs: {
-      storyDescription: `The \`useAccordion\` hook manages toggle state and required accessibility
+Hook.storyName = 'useAccordion';
+
+Hook.parameters = {
+  docs: {
+    description: {
+      story: `The \`useAccordion\` hook manages toggle state and required accessibility
       attributes for a group of sections.`
     }
   }
@@ -167,6 +166,7 @@ export default {
   title: 'Accordion Container',
   decorators: [withKnobs],
   parameters: {
+    layout: 'centered',
     componentSubtitle: `A container component which wraps the useAccordion hook.`
   }
 };

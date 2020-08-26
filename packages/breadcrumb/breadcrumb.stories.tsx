@@ -35,24 +35,24 @@ export const Hook = () => {
   );
 };
 
-Hook.story = {
-  name: 'useBreadcrumb',
-  parameters: {
-    docs: {
-      storyDescription: `The \`useBreadcrumb\` hook implements the [breadcrumb](https://www.w3.org/TR/wai-aria-practices-1.1/#breadcrumb) design pattern and can be used to build a breadcrumb component.`
+Hook.storyName = 'useBreadcrumb';
+
+Hook.parameters = {
+  docs: {
+    description: {
+      story: `The \`useBreadcrumb\` hook implements the [breadcrumb](https://www.w3.org/TR/wai-aria-practices-1.1/#breadcrumb) design pattern and can be used to build a breadcrumb component.`
     }
   }
 };
 
-Container.story = {
-  name: 'BreadcrumbContainer'
-};
+Container.storyName = 'BreadcrumbContainer';
 
 export default {
   title: 'Breadcrumb Container',
   component: BreadcrumbContainer,
   decorators: [withKnobs],
   parameters: {
+    layout: 'centered',
     componentSubtitle: `A container component which wraps the useBreadcrumb hook.`
   }
 };

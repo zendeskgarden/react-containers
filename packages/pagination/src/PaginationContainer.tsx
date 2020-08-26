@@ -11,7 +11,9 @@ import PropTypes from 'prop-types';
 import { usePagination, IUsePaginationProps, IUsePaginationReturnValue } from './usePagination';
 
 export interface IPaginationContainerProps<Item> extends IUsePaginationProps<Item> {
+  /** A render prop function which receives the newly selected item */
   render?: (options: IUsePaginationReturnValue<Item>) => React.ReactNode;
+  /** A children render prop function which receives the newly selected item */
   children?: (options: IUsePaginationReturnValue<Item>) => React.ReactNode;
 }
 
@@ -24,16 +26,10 @@ export const PaginationContainer: React.FunctionComponent<IPaginationContainerPr
 };
 
 PaginationContainer.propTypes = {
-  /** A children render prop function which receives the newly selected item */
   children: PropTypes.func,
-  /** A render prop function which receives the newly selected item */
   render: PropTypes.func,
-  /** Sets the focused pagination item. Useful for controlled usages */
   focusedItem: PropTypes.any,
-  /** Sets the focused pagination item. Useful for controlled usages */
   selectedItem: PropTypes.any,
-  /** A callback function that receives the selected pagination item */
   onSelect: PropTypes.func,
-  /** A callback function that receives the focused pagination item */
   onFocus: PropTypes.func
 };

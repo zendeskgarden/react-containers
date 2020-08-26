@@ -11,7 +11,9 @@ import PropTypes from 'prop-types';
 import { useFocusJail, IUseFocusJailProps, IUseFocusJailReturnValue } from './useFocusJail';
 
 export interface IFocusJailContainerProps extends IUseFocusJailProps {
+  /** A render prop function which receives a focus jail prop getter */
   render?: (options: IUseFocusJailReturnValue) => React.ReactNode;
+  /** A children render prop function which receives a focus jail prop getter */
   children?: (options: IUseFocusJailReturnValue) => React.ReactNode;
 }
 
@@ -24,16 +26,10 @@ export const FocusJailContainer: React.FunctionComponent<IFocusJailContainerProp
 };
 
 FocusJailContainer.propTypes = {
-  /** A children render prop function which receives a focus jail prop getter */
   children: PropTypes.func,
-  /** A render prop function which receives a focus jail prop getter */
   render: PropTypes.func,
-  /** Focuses on the `containerRef` element after mounting */
   focusOnMount: PropTypes.bool,
-  /** The global environment where the focus jail is rendered */
   environment: PropTypes.any,
-  /** A [ref](https://reactjs.org/docs/refs-and-the-dom.html) pointing to the focus jail's container element */
   containerRef: PropTypes.any.isRequired,
-  /** A callback function that receives the focused element */
   focusElem: PropTypes.func
 };

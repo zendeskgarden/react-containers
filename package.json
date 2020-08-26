@@ -36,15 +36,13 @@
     "@rollup/plugin-commonjs": "15.0.0",
     "@rollup/plugin-node-resolve": "9.0.0",
     "@rollup/plugin-replace": "2.3.3",
-    "@storybook/addon-a11y": "5.3.19",
-    "@storybook/addon-centered": "5.3.19",
-    "@storybook/addon-docs": "5.3.19",
-    "@storybook/addon-knobs": "5.3.19",
-    "@storybook/addon-storysource": "5.3.19",
-    "@storybook/addons": "5.3.19",
-    "@storybook/preset-typescript": "3.0.0",
-    "@storybook/react": "5.3.19",
-    "@storybook/theming": "5.3.19",
+    "@storybook/addon-a11y": "6.0.18",
+    "@storybook/addon-docs": "6.0.18",
+    "@storybook/addon-knobs": "6.0.18",
+    "@storybook/addon-storysource": "6.0.18",
+    "@storybook/addons": "6.0.18",
+    "@storybook/react": "6.0.18",
+    "@storybook/theming": "6.0.18",
     "@testing-library/dom": "7.22.6",
     "@testing-library/jest-dom": "4.2.4",
     "@testing-library/react": "10.4.9",
@@ -112,6 +110,8 @@
     "webpack": "4.44.1"
   },
   "resolutions": {
-    "@types/react": "16.9.46"
+    "@types/react": "16.9.46",
+    "react": "16.13.1",
+    "react-dom": "16.13.1"
   }
 }

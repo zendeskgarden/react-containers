@@ -11,7 +11,9 @@ import PropTypes from 'prop-types';
 import { useFocusVisible, IUseFocusVisibleProps } from './useFocusVisible';
 
 export interface IFocusVisibleContainerProps extends Omit<IUseFocusVisibleProps, 'scope'> {
+  /** A render prop function which receives a `ref` */
   render?: (options: { ref: React.RefObject<HTMLDivElement> }) => React.ReactNode;
+  /** A children render prop function which receives a `ref` */
   children?: (options: { ref: React.RefObject<HTMLDivElement> }) => React.ReactNode;
 }
 
@@ -33,14 +35,9 @@ FocusVisibleContainer.defaultProps = {
 };
 
 FocusVisibleContainer.propTypes = {
-  /** A children render prop function which receives a `ref` */
   children: PropTypes.func,
-  /** A render prop function which receives a `ref` */
   render: PropTypes.func,
-  /** A relative document */
   relativeDocument: PropTypes.object,
-  /** A class name applied to the element with `:focus-visible` behavior */
   className: PropTypes.string,
-  /** A data attribute applied to the element with `:focus-visible` behavior */
   dataAttribute: PropTypes.string
 };
