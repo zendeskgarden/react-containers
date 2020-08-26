@@ -8,8 +8,11 @@
 import { useState, useLayoutEffect } from 'react';
 
 export interface IUseScheduleProps {
+  /** The duration of a schedule in miliseconds */
   duration?: number;
+  /** The delay in miliseconds prior to the beginning of the schedule */
   delayMS?: number;
+  /** Determines whether a schedule should loop */
   loop?: boolean;
 }
 

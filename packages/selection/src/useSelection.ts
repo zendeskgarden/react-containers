@@ -33,13 +33,21 @@ export type UseSelectionReturnValue<Item> = IUseSelectionState<Item> &
   IUseSelectionPropGetters<Item>;
 
 export interface IUseSelectionProps<Item> {
+  /** Determines the orientation of the selection */
   direction?: 'horizontal' | 'vertical' | 'both';
+  /** Sets the initial focused item */
   defaultFocusedIndex?: number;
+  /** Sets the initial selected item */
   defaultSelectedIndex?: number;
+  /** Determines if selection uses right-to-left writing direction */
   rtl?: boolean;
+  /** Sets the selected item in a controlled selection */
   selectedItem?: Item;
+  /** Sets the focused item in a controlled selection */
   focusedItem?: Item;
+  /** A callback function that receives the selected item */
   onSelect?: (selectedItem: Item) => void;
+  /** A callback function that receives the focused item */
   onFocus?: (focusedItem?: Item) => void;
 }
 

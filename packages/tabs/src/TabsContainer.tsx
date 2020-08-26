@@ -11,7 +11,9 @@ import PropTypes from 'prop-types';
 import { useTabs, IUseTabsProps, IUseTabsReturnValue } from './useTabs';
 
 export interface ITabsContainerProps extends IUseTabsProps<any> {
+  /** A render prop function */
   render?: (options: IUseTabsReturnValue<any>) => React.ReactNode;
+  /** A children render prop function */
   children?: (options: IUseTabsReturnValue<any>) => React.ReactNode;
 }
 
@@ -24,16 +26,10 @@ export const TabsContainer: React.FunctionComponent<ITabsContainerProps> = ({
 };
 
 TabsContainer.propTypes = {
-  /** A children render prop function */
   children: PropTypes.func,
-  /** A render prop function */
   render: PropTypes.func,
-  /** Determines the orientation of the tabs */
   vertical: PropTypes.bool,
-  /** Prefix used for generating tab element IDs */
   idPrefix: PropTypes.string,
-  /** Sets the default selected tab */
   defaultSelectedIndex: PropTypes.number,
-  /** Provides a callback function that returns the `selectedItem` when a `Tab` has been selected by keyboard or mouse */
   onSelect: PropTypes.func
 };

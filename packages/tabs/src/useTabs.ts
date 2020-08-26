@@ -30,7 +30,9 @@ export interface IUseTabsReturnValue<Item> extends IUseSelectionState<Item> {
 }
 
 export interface IUseTabsProps<Item> extends IUseSelectionProps<Item> {
+  /** Determines the orientation of the tabs */
   vertical?: boolean;
+  /** Prefix used for generating tab element IDs */
   idPrefix?: string;
 }
 

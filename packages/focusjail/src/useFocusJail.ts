@@ -11,10 +11,15 @@ import tabbable from 'tabbable';
 import activeElement from 'dom-helpers/activeElement';
 
 export interface IUseFocusJailProps {
+  /** Focuses on the `containerRef` element after mounting */
   focusOnMount?: boolean;
+  /** Determines whether to return keyboard focus to the last active element upon unmounting */
   restoreFocus?: boolean;
+  /** The global environment where the focus jail is rendered */
   environment?: Document;
+  /** A callback function that receives the focused element */
   focusElem?: (element: HTMLElement) => any;
+  /** A [ref](https://reactjs.org/docs/refs-and-the-dom.html) pointing to the focus jail's container element */
   containerRef: React.RefObject<HTMLElement>;
 }
 

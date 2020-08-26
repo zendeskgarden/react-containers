@@ -11,7 +11,9 @@ import PropTypes from 'prop-types';
 import { useSchedule, IUseScheduleProps, IUseScheduleReturnValue } from './useSchedule';
 
 export interface IScheduleContainerProps extends IUseScheduleProps {
+  /** A render prop function which receives the schedule state */
   render?: (options: IUseScheduleReturnValue) => React.ReactNode;
+  /** A children render prop function which receives the schedule state */
   children?: (options: IUseScheduleReturnValue) => React.ReactNode;
 }
 
@@ -30,14 +32,9 @@ ScheduleContainer.defaultProps = {
 };
 
 ScheduleContainer.propTypes = {
-  /** A children render prop function which receives the schedule state */
   children: PropTypes.func,
-  /** A render prop function which receives the schedule state */
   render: PropTypes.func,
-  /** The duration of a schedule in miliseconds */
   duration: PropTypes.number,
-  /** Determines whether a schedule should loop */
   loop: PropTypes.bool,
-  /** The delay in miliseconds prior to the beginning of the schedule */
   delayMS: PropTypes.number
 };

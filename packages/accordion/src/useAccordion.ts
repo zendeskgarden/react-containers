@@ -14,10 +14,14 @@ import {
 } from '@zendeskgarden/container-utilities';
 
 export interface IUseAccordionProps {
+  /** Prefixes IDs for the accordion trigger and panels  */
   idPrefix?: string;
+  /** Determines which sections are expanded in a controlled accordion */
   expandedSections?: number[];
   onChange?: (expanded: number) => any;
+  /** Determines if multiple panels can be expanded at the same time in an uncontrolled accordion */
   expandable?: boolean;
+  /** Determines if panels can be collapsed in an uncontrolled accordion */
   collapsible?: boolean;
 }
 
