@@ -164,6 +164,7 @@ export default {
   decorators: [withKnobs],
   component: ModalContainer,
   parameters: {
+    layout: 'centered',
     componentSubtitle: `A container component which wraps the useModal.`
   }
 };

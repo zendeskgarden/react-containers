@@ -52,6 +52,7 @@ export default {
   component: BreadcrumbContainer,
   decorators: [withKnobs],
   parameters: {
+    layout: 'centered',
     componentSubtitle: `A container component which wraps the useBreadcrumb hook.`
   }
 };

@@ -161,6 +161,7 @@ export default {
   decorators: [withKnobs],
   component: FocusVisibleContainer,
   parameters: {
+    layout: 'centered',
     componentSubtitle: `A container component which wraps the useFocusVisible hook.`
   }
 };

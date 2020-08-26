@@ -242,6 +242,7 @@ export default {
   decorators: [withKnobs],
   component: PaginationContainer,
   parameters: {
+    layout: 'centered',
     componentSubtitle: `A container component which wraps the usePagination hook.`
   }
 };

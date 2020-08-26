@@ -170,6 +170,7 @@ export default {
   decorators: [withKnobs],
   component: TooltipContainer,
   parameters: {
+    layout: 'centered',
     componentSubtitle: `A container component which wraps the useTooltip hook.`
   }
 };

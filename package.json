@@ -37,7 +37,6 @@
     "@rollup/plugin-node-resolve": "9.0.0",
     "@rollup/plugin-replace": "2.3.3",
     "@storybook/addon-a11y": "6.0.18",
-    "@storybook/addon-centered": "5.3.19",
     "@storybook/addon-docs": "6.0.18",
     "@storybook/addon-knobs": "6.0.18",
     "@storybook/addon-storysource": "6.0.18",

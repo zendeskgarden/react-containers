@@ -118,6 +118,7 @@ export default {
   decorators: [withKnobs],
   component: SelectionContainer,
   parameters: {
+    layout: 'centered',
     componentSubtitle: `A container component which wraps the useSelection hook.`
   }
 };

@@ -166,6 +166,7 @@ export default {
   title: 'Accordion Container',
   decorators: [withKnobs],
   parameters: {
+    layout: 'centered',
     componentSubtitle: `A container component which wraps the useAccordion hook.`
   }
 };

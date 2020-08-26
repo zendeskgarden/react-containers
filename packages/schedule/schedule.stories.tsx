@@ -71,6 +71,7 @@ export default {
   decorators: [withKnobs],
   component: ScheduleContainer,
   parameters: {
+    layout: 'centered',
     componentSubtitle: `A container component which wraps the useSchedule hook.`
   }
 };

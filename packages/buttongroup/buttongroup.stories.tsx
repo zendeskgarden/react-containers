@@ -92,6 +92,7 @@ export default {
   component: ButtonGroupContainer,
   decorators: [withKnobs],
   parameters: {
+    layout: 'centered',
     componentSubtitle: `A container component which wraps the useButtongroup hook.`
   }
 };
