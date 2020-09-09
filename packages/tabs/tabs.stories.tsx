@@ -12,11 +12,11 @@ import { withKnobs, boolean, text } from '@storybook/addon-knobs';
 import { TabsContainer, useTabs } from './src';
 
 const tabs = ['Tab 1', 'Tab 2', 'Tab 3'];
-const tabRefs = tabs.map(() => createRef());
 
 export const Container = () => {
   const vertical = boolean('vertical', false);
   const idPrefix = text('idPrefix', '');
+  const tabRefs = tabs.map(() => createRef());
 
   return (
     <TabsContainer vertical={vertical} idPrefix={idPrefix}>
@@ -94,6 +94,7 @@ export const Hook = () => {
   });
   const tabComponents: React.ReactElement[] = [];
   const tabPanels: React.ReactElement[] = [];
+  const tabRefs = tabs.map(() => createRef());
 
   tabs.forEach((tab, index) => {
     tabComponents.push(
