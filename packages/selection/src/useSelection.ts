@@ -148,42 +148,13 @@ function stateReducer(state: IUseSelectionState<any>, action: SELECTION_ACTION<a
       return { ...state, focusedItem: action.items[action.items.length - 1] };
     }
     case 'MOUSE_SELECT': {
-      let isSelectControlled = false;
-      let isFocusControlled = false;
-
-      if (action.onSelect) {
-        action.onSelect(action.payload);
-        isSelectControlled = true;
-      }
-
-      if (action.onFocus) {
-        action.onFocus(undefined);
-        isFocusControlled = true;
-      }
-
-      if (isFocusControlled && isSelectControlled) {
-        return state;
-      }
-
-      const updatedState = { ...state };
-
-      if (!isSelectControlled) {
-        updatedState.selectedItem = action.payload;
-      }
-
-      if (!isFocusControlled) {
-        updatedState.focusedItem = undefined;
-      }
-
-      return updatedState;
+      return {
+        ...state,
+        selectedItem: action.payload,
+        focusedItem: undefined
+      };
     }
     case 'KEYBOARD_SELECT': {
-      if (action.onSelect) {
-        action.onSelect(action.payload);
-
-        return state;
-      }
-
       return { ...state, selectedItem: action.payload };
     }
     case 'EXIT_WIDGET': {
@@ -236,10 +207,10 @@ export function useSelection<Item = any>({
 
   useEffect(() => {
     if (selectedItem === undefined && defaultSelectedIndex !== undefined) {
+      onSelect && onSelect(items[defaultSelectedIndex]);
       dispatch({
         type: 'KEYBOARD_SELECT',
-        payload: items[defaultSelectedIndex],
-        onSelect
+        payload: items[defaultSelectedIndex]
       });
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -308,7 +279,9 @@ export function useSelection<Item = any>({
         }
       },
       onClick: composeEventHandlers(onClick, () => {
-        dispatch({ type: 'MOUSE_SELECT', payload: item, onSelect, onFocus });
+        onSelect && onSelect(item);
+        onFocus && onFocus();
+        dispatch({ type: 'MOUSE_SELECT', payload: item });
       }),
       onKeyDown: composeEventHandlers(onKeyDown, (e: React.KeyboardEvent) => {
         if (
@@ -340,10 +313,10 @@ export function useSelection<Item = any>({
           dispatch({ type: 'END', items, onFocus });
           e.preventDefault();
         } else if (e.keyCode === KEY_CODES.SPACE || e.keyCode === KEY_CODES.ENTER) {
+          onSelect && onSelect(item);
           dispatch({
             type: 'KEYBOARD_SELECT',
-            payload: item,
-            onSelect
+            payload: item
           });
           e.preventDefault();
         }
