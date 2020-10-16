@@ -186,6 +186,7 @@ export function useSelection<Item = any>({
   onSelect,
   onFocus
 }: IUseSelectionProps<Item> = {}): UseSelectionReturnValue<Item> {
+  const isSelectedItemControlled = selectedItem !== undefined;
   const refs: React.MutableRefObject<any | null>[] = [];
   const items: Item[] = [];
 
@@ -208,10 +209,12 @@ export function useSelection<Item = any>({
   useEffect(() => {
     if (selectedItem === undefined && defaultSelectedIndex !== undefined) {
       onSelect && onSelect(items[defaultSelectedIndex]);
-      dispatch({
-        type: 'KEYBOARD_SELECT',
-        payload: items[defaultSelectedIndex]
-      });
+      if (!isSelectedItemControlled) {
+        dispatch({
+          type: 'KEYBOARD_SELECT',
+          payload: items[defaultSelectedIndex]
+        });
+      }
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -281,7 +284,9 @@ export function useSelection<Item = any>({
       onClick: composeEventHandlers(onClick, () => {
         onSelect && onSelect(item);
         onFocus && onFocus();
-        dispatch({ type: 'MOUSE_SELECT', payload: item });
+        if (!isSelectedItemControlled) {
+          dispatch({ type: 'MOUSE_SELECT', payload: item });
+        }
       }),
       onKeyDown: composeEventHandlers(onKeyDown, (e: React.KeyboardEvent) => {
         if (
@@ -314,10 +319,12 @@ export function useSelection<Item = any>({
           e.preventDefault();
         } else if (e.keyCode === KEY_CODES.SPACE || e.keyCode === KEY_CODES.ENTER) {
           onSelect && onSelect(item);
-          dispatch({
-            type: 'KEYBOARD_SELECT',
-            payload: item
-          });
+          if (!isSelectedItemControlled) {
+            dispatch({
+              type: 'KEYBOARD_SELECT',
+              payload: item
+            });
+          }
           e.preventDefault();
         }
       }),
