@@ -21,13 +21,6 @@
   resolved "https://registry.yarnpkg.com/@types/tabbable/-/tabbable-3.1.0.tgz#540d4c2729872560badcc220e73c9412c1d2bffe"
   integrity sha512-LL0q/bTlzseaXQ8j91eZ+Z8FQUzo0nwkng00B8365qULvFyiSOWylxV8m31Gmee3QuidkDqR72a9NRfR8s4qTw==
 
-"@zendeskgarden/container-utilities@^0.5.4":
-  version "0.5.4"
-  resolved "https://registry.yarnpkg.com/@zendeskgarden/container-utilities/-/container-utilities-0.5.4.tgz#8550404cafd0aab5ed80f3da0a51d424e8e3facb"
-  integrity sha512-Iz6YZ6va3JIShzKXKjK4TCf168GSX+/XeeBr6o9MTJ4K84lO0F0ZX2GIFuZmacfkBjCXfyNxj4aua/5/1ZXyPg==
-  dependencies:
-    "@babel/runtime" "^7.8.4"
-
 csstype@^2.6.6:
   version "2.6.7"
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-2.6.7.tgz#20b0024c20b6718f4eda3853a1f5a1cce7f5e4a5"

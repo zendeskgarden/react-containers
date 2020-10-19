@@ -9,7 +9,7 @@
 import React, { useRef } from 'react';
 import { KEY_CODES } from '@zendeskgarden/container-utilities';
 import userEvent from '@testing-library/user-event';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, waitFor } from '@testing-library/react';
 
 import { FocusJailContainer } from './FocusJailContainer';
 import { IUseFocusJailProps } from './useFocusJail';
@@ -161,27 +161,6 @@ describe('FocusJailContainer', () => {
         expect(focusSpy).toHaveBeenLastCalledWith(container);
       });
 
-      it("doesn't intercept tab key if not the first or last tabbable item", () => {
-        const focusableChildren = (
-          <>
-            <button>Focusable button</button>
-            <input ref={ref => setTimeout(() => ref && ref.focus())} />
-            <button>Another button</button>
-          </>
-        );
-        const { getByTestId } = render(
-          <BasicExample
-            focusElem={focusSpy}
-            restoreFocus={false}
-            focusableChildren={focusableChildren}
-          />
-        );
-
-        fireEvent.keyDown(getByTestId('container'), { keyCode: KEY_CODES.TAB });
-
-        expect(focusSpy).toHaveBeenCalledTimes(3);
-      });
-
       it('throws error if containerRef is null', () => {
         const originalError = console.error;
         let err = null;
@@ -240,21 +219,23 @@ describe('FocusJailContainer', () => {
       );
     };
 
-    it('can restore focus after unmounting', () => {
-      const { getByTestId, getByText } = render(<RestoreFocusExample />);
+    it('can restore focus after unmounting', async () => {
+      const { queryByText, getByText } = render(<RestoreFocusExample />);
       const openButton = getByText('open');
 
       expect(openButton).not.toHaveFocus();
 
       userEvent.click(openButton);
+
+      expect(getByText('close')).not.toHaveFocus();
+
       userEvent.tab();
 
-      expect(getByTestId('container')).toHaveFocus();
-      expect(openButton).not.toHaveFocus();
+      expect(getByText('close')).toHaveFocus();
 
-      const closeButton = getByText('close');
+      userEvent.click(getByText('close'));
 
-      userEvent.click(closeButton);
+      await waitFor(() => expect(queryByText('close')).not.toBeInTheDocument());
 
       expect(openButton).toHaveFocus();
     });
