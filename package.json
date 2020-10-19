@@ -43,7 +43,7 @@
     "@storybook/addons": "6.0.26",
     "@storybook/react": "6.0.26",
     "@storybook/theming": "6.0.26",
-    "@testing-library/dom": "7.26.0",
+    "@testing-library/dom": "7.26.1",
     "@testing-library/jest-dom": "4.2.4",
     "@testing-library/react": "11.1.0",
     "@testing-library/user-event": "12.1.8",
