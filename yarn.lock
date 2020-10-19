@@ -4601,7 +4601,21 @@
     "@svgr/plugin-svgo" "^5.4.0"
     loader-utils "^2.0.0"
 
-"@testing-library/dom@7.26.0", "@testing-library/dom@^7.26.0":
+"@testing-library/dom@7.26.1":
+  version "7.26.1"
+  resolved "https://registry.yarnpkg.com/@testing-library/dom/-/dom-7.26.1.tgz#6a0309525428f57903aa7fa881903df4cc1269c9"
+  integrity sha512-WVSkMxk6eJxGJnf7TPyct8d0NsC34FIg7SynbseroNDvMr+uDe923JJEVqoFROTntxLf2Eh6nTktM4pMmju+Lw==
+  dependencies:
+    "@babel/code-frame" "^7.10.4"
+    "@babel/runtime" "^7.10.3"
+    "@types/aria-query" "^4.2.0"
+    aria-query "^4.2.2"
+    chalk "^4.1.0"
+    dom-accessibility-api "^0.5.1"
+    lz-string "^1.4.4"
+    pretty-format "^26.4.2"
+
+"@testing-library/dom@^7.26.0":
   version "7.26.0"
   resolved "https://registry.yarnpkg.com/@testing-library/dom/-/dom-7.26.0.tgz#da4d052dc426a4ccc916303369c6e7552126f680"
   integrity sha512-fyKFrBbS1IigaE3FV21LyeC7kSGF84lqTlSYdKmGaHuK2eYQ/bXVPM5vAa2wx/AU1iPD6oQHsxy2QQ17q9AMCg==
