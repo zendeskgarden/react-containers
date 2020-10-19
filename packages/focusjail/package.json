@@ -30,9 +30,6 @@
     "react": "^16.8.0",
     "react-dom": "^16.8.0"
   },
-  "devDependencies": {
-    "@types/tabbable": "3.1.0"
-  },
   "keywords": [
     "a11y",
     "accessible",
