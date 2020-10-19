@@ -115,9 +115,9 @@ describe('FocusJailContainer', () => {
     it('retrieves references by refKey', () => {
       const { getByTestId } = render(<BasicExample />);
 
-      if (containerReference) {
-        expect(containerReference.current).toBe(getByTestId('container'));
-      }
+      if (!containerReference) return;
+
+      expect(containerReference.current).toBe(getByTestId('container'));
     });
 
     describe('onKeyDown()', () => {
