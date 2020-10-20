@@ -51,35 +51,35 @@ export interface IUseSelectionProps<Item> {
   onFocus?: (focusedItem?: Item) => void;
 }
 
-type onFocusCallback<Item> = (item?: Item) => void;
-type onSelectCallback<Item> = (item?: Item) => void;
+type onFocusFn<Item> = (item?: Item) => void;
+type onSelectFn<Item> = (item?: Item) => void;
 
 export type SELECTION_ACTION<Item> =
-  | { type: 'FOCUS'; onFocus?: onFocusCallback<Item>; payload?: any; focusedItem?: any }
+  | { type: 'FOCUS'; onFocus?: onFocusFn<Item>; payload?: any; focusedItem?: any }
   | {
       type: 'INCREMENT';
       focusedItem?: any;
       selectedItem?: any;
       items: any[];
-      onFocus?: onFocusCallback<Item>;
+      onFocus?: onFocusFn<Item>;
     }
   | {
       type: 'DECREMENT';
       focusedItem?: any;
       selectedItem?: any;
       items: any[];
-      onFocus?: onFocusCallback<Item>;
+      onFocus?: onFocusFn<Item>;
     }
-  | { type: 'HOME'; onFocus?: onFocusCallback<Item>; items: any[] }
-  | { type: 'END'; onFocus?: onFocusCallback<Item>; items: any[] }
+  | { type: 'HOME'; onFocus?: onFocusFn<Item>; items: any[] }
+  | { type: 'END'; onFocus?: onFocusFn<Item>; items: any[] }
   | {
       type: 'MOUSE_SELECT';
-      onSelect?: onSelectCallback<Item>;
-      onFocus?: onFocusCallback<Item>;
+      onSelect?: onSelectFn<Item>;
+      onFocus?: onFocusFn<Item>;
       payload: any;
     }
-  | { type: 'KEYBOARD_SELECT'; onSelect?: onSelectCallback<Item>; payload: any }
-  | { type: 'EXIT_WIDGET'; onFocus?: onFocusCallback<Item> };
+  | { type: 'KEYBOARD_SELECT'; onSelect?: onSelectFn<Item>; payload: any }
+  | { type: 'EXIT_WIDGET'; onFocus?: onFocusFn<Item> };
 
 function stateReducer(state: IUseSelectionState<any>, action: SELECTION_ACTION<any>) {
   switch (action.type) {
