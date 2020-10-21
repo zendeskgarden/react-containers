@@ -7,7 +7,7 @@
 
 import { createRef, useRef, useEffect, useState, useCallback } from 'react';
 import { composeEventHandlers, KEY_CODES } from '@zendeskgarden/container-utilities';
-import tabbable from 'tabbable';
+import { tabbable } from 'tabbable';
 import activeElement from 'dom-helpers/activeElement';
 
 export interface IUseFocusJailProps {
