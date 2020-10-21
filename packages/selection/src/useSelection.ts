@@ -51,11 +51,8 @@ export interface IUseSelectionProps<Item> {
   onFocus?: (focusedItem?: Item) => void;
 }
 
-type onFocusFn<Item> = (item?: Item) => void;
-type onSelectFn<Item> = (item?: Item) => void;
-
-export type SELECTION_ACTION<Item> =
-  | { type: 'FOCUS'; onFocus?: onFocusFn<Item>; payload?: any; focusedItem?: any }
+export type SELECTION_ACTION =
+  | { type: 'FOCUS'; payload?: any }
   | {
       type: 'INCREMENT';
       payload: any;
@@ -73,7 +70,7 @@ export type SELECTION_ACTION<Item> =
   | { type: 'KEYBOARD_SELECT'; payload: any }
   | { type: 'EXIT_WIDGET' };
 
-function stateReducer(state: IUseSelectionState<any>, action: SELECTION_ACTION<any>) {
+function stateReducer(state: IUseSelectionState<any>, action: SELECTION_ACTION) {
   switch (action.type) {
     case 'END':
     case 'HOME':
