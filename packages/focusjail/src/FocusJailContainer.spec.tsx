@@ -259,7 +259,7 @@ describe('FocusJailContainer', () => {
     };
 
     it('can restore focus after unmounting', async () => {
-      const { queryByText, getByText } = render(<RestoreFocusExample />);
+      const { queryByText, getByText, getByTestId } = render(<RestoreFocusExample />);
       const openButton = getByText('open');
 
       expect(openButton).not.toHaveFocus();
@@ -268,7 +268,7 @@ describe('FocusJailContainer', () => {
 
       expect(getByText('close')).not.toHaveFocus();
 
-      userEvent.tab();
+      userEvent.tab({ focusTrap: getByTestId('container') });
 
       expect(getByText('close')).toHaveFocus();
 
