@@ -9,7 +9,7 @@
 import React, { useRef } from 'react';
 import { KEY_CODES } from '@zendeskgarden/container-utilities';
 import userEvent from '@testing-library/user-event';
-import { render, fireEvent, waitFor } from '@testing-library/react';
+import { render, fireEvent, waitFor, screen } from '@testing-library/react';
 
 import { FocusJailContainer } from './FocusJailContainer';
 import { IUseFocusJailProps } from './useFocusJail';
@@ -159,6 +159,45 @@ describe('FocusJailContainer', () => {
 
         expect(focusSpy).toHaveBeenCalledTimes(3);
         expect(focusSpy).toHaveBeenLastCalledWith(container);
+      });
+
+      it("doesn't intercept tab key if not the first or last tabbable item", () => {
+        const { getByTestId } = render(
+          <BasicExample
+            focusElem={() => undefined}
+            restoreFocus={false}
+            focusableChildren={
+              <>
+                <p>non-focusable test</p>
+                <button>First button</button>
+                <button>Second button</button>
+                <button>Last button</button>
+              </>
+            }
+          />
+        );
+
+        const focusJailContainer = getByTestId('container');
+        const firstButton = screen.getByRole('button', { name: /First button/iu });
+        const secondButton = screen.getByRole('button', { name: /Second button/iu });
+        const lastButton = screen.getByRole('button', { name: /Last button/iu });
+
+        expect(document.body).toHaveFocus();
+
+        userEvent.tab({ focusTrap: focusJailContainer });
+        expect(firstButton).toHaveFocus();
+
+        userEvent.tab({ shift: true, focusTrap: focusJailContainer });
+        expect(firstButton).toHaveFocus();
+
+        userEvent.tab({ focusTrap: focusJailContainer });
+        expect(secondButton).toHaveFocus();
+
+        userEvent.tab({ focusTrap: focusJailContainer });
+        expect(lastButton).toHaveFocus();
+
+        userEvent.tab({ focusTrap: focusJailContainer });
+        expect(lastButton).toHaveFocus();
       });
 
       it('throws error if containerRef is null', () => {
