@@ -27,6 +27,11 @@
  * Released under the MIT License.
  */
 
+/*!
+* tabbable 5.1.2
+* @license MIT, https://github.com/focus-trap/tabbable/blob/master/LICENSE
+*/
+
 /*! axe v3.5.5
  * Copyright (c) 2020 Deque Systems, Inc.
  *
