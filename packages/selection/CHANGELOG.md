@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.7](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-selection@1.3.6...@zendeskgarden/container-selection@1.3.7) (2020-10-23)
+
+
+### Bug Fixes
+
+* **selection:** update reducer to not run side effect ([#241](https://github.com/zendeskgarden/react-containers/issues/241)) ([1107475](https://github.com/zendeskgarden/react-containers/commit/11074759f12af08b9b0a36fd3d5b52cc4a735dfb))
+
+
+
+
+
 ## [1.3.6](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-selection@1.3.5...@zendeskgarden/container-selection@1.3.6) (2020-06-10)
 
 **Note:** Version bump only for package @zendeskgarden/container-selection

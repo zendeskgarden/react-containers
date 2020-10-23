@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.4](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-focusjail@1.4.3...@zendeskgarden/container-focusjail@1.4.4) (2020-10-23)
+
+
+### Bug Fixes
+
+* **deps:** update dependency tabbable to v5 ([#248](https://github.com/zendeskgarden/react-containers/issues/248)) ([0388eb4](https://github.com/zendeskgarden/react-containers/commit/0388eb4bc585646fdeb28d5150339740f18dfcbd))
+* **focusjail:** use tab focusTrap option in test ([#250](https://github.com/zendeskgarden/react-containers/issues/250)) ([207c42a](https://github.com/zendeskgarden/react-containers/commit/207c42a0e505610f4578501cdddd1e73105c4ebd))
+
+
+
+
+
 ## [1.4.3](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-focusjail@1.4.2...@zendeskgarden/container-focusjail@1.4.3) (2020-06-10)
 
 **Note:** Version bump only for package @zendeskgarden/container-focusjail

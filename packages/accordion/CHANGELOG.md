@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.2](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-accordion@1.0.1...@zendeskgarden/container-accordion@1.0.2) (2020-10-23)
+
+
+### Bug Fixes
+
+* **accordion:** replace hidden styles to prevent Chromium auto-scroll ([#226](https://github.com/zendeskgarden/react-containers/issues/226)) ([1a489dd](https://github.com/zendeskgarden/react-containers/commit/1a489dda8ec260f314c79b0ba7676597c0114c6b))
+
+
+
+
+
 ## [1.0.1](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-accordion@1.0.0...@zendeskgarden/container-accordion@1.0.1) (2020-06-10)
 
 **Note:** Version bump only for package @zendeskgarden/container-accordion

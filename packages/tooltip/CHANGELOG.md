@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.6](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-tooltip@0.5.5...@zendeskgarden/container-tooltip@0.5.6) (2020-10-23)
+
+**Note:** Version bump only for package @zendeskgarden/container-tooltip
+
+
+
+
+
 ## [0.5.5](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-tooltip@0.5.4...@zendeskgarden/container-tooltip@0.5.5) (2020-06-10)
 
 **Note:** Version bump only for package @zendeskgarden/container-tooltip
