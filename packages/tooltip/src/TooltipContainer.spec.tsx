@@ -40,7 +40,7 @@ describe('TooltipContainer', () => {
   });
 
   it('defaults visibility state with isVisible prop', () => {
-    const { getByTestId } = render(<BasicExample isVisible={true} />);
+    const { getByTestId } = render(<BasicExample isVisible />);
 
     expect(getByTestId('tooltip')).toHaveAttribute('aria-hidden', 'false');
   });

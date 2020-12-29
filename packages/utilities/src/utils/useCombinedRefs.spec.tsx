@@ -16,6 +16,8 @@ describe('useCombinedRefs()', () => {
     return <div {...props} ref={targetRef} />;
   });
 
+  Example.displayName = 'Example';
+
   it('does not throw if no ref is provided', () => {
     expect(() => {
       render(<Example />);

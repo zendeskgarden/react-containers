@@ -120,7 +120,7 @@ describe('PaginationContainer', () => {
       };
 
       beforeEach(() => {
-        console.error = jest.fn(); // eslint-disable-line no-console
+        console.error = jest.fn();
 
         ref = React.createRef();
       });
@@ -171,7 +171,7 @@ describe('PaginationContainer', () => {
       };
 
       beforeEach(() => {
-        console.error = jest.fn(); // eslint-disable-line no-console
+        console.error = jest.fn();
 
         ref = React.createRef();
       });
@@ -219,7 +219,7 @@ describe('PaginationContainer', () => {
       };
 
       beforeEach(() => {
-        console.error = jest.fn(); // eslint-disable-line no-console
+        console.error = jest.fn();
 
         ref = React.createRef();
       });

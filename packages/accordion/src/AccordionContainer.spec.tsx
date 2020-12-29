@@ -49,7 +49,7 @@ describe('AccordionContainer', () => {
         <>
           {sections.map((section, index) => {
             return (
-              <div key={index}>
+              <div key={section}>
                 <div {...getHeaderProps({ ariaLevel: 1, 'data-test-id': 'header' })}>
                   <div {...getTriggerProps({ index, 'data-test-id': 'trigger' })}>Trigger</div>
                 </div>
@@ -68,7 +68,7 @@ describe('AccordionContainer', () => {
         <>
           {sections.map((section, index) => {
             return (
-              <div key={index}>
+              <div key={section}>
                 <h2 {...getHeaderProps({ role: null, ariaLevel: null, 'data-test-id': 'header' })}>
                   <button
                     {...getTriggerProps({
@@ -137,7 +137,6 @@ describe('AccordionContainer', () => {
     });
 
     it('throws error if aria level is not provided', () => {
-      /* eslint-disable no-console */
       const consoleError = console.error;
 
       console.error = jest.fn();
@@ -151,7 +150,6 @@ describe('AccordionContainer', () => {
       }).toThrow('ariaLevel');
 
       console.error = consoleError;
-      /* eslint-enable no-console */
     });
   });
 
@@ -255,7 +253,6 @@ describe('AccordionContainer', () => {
     });
 
     it('throws error if index is not provided', () => {
-      /* eslint-disable no-console */
       const consoleError = console.error;
 
       console.error = jest.fn();
@@ -269,7 +266,6 @@ describe('AccordionContainer', () => {
       }).toThrow('index');
 
       console.error = consoleError;
-      /* eslint-enable no-console */
     });
   });
 
@@ -359,7 +355,6 @@ describe('AccordionContainer', () => {
     });
 
     it('throws error if index is not provided', () => {
-      /* eslint-disable no-console */
       const consoleError = console.error;
 
       console.error = jest.fn();
@@ -373,7 +368,6 @@ describe('AccordionContainer', () => {
       }).toThrow('index');
 
       console.error = consoleError;
-      /* eslint-enable no-console */
     });
   });
 

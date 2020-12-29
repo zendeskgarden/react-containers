@@ -36,7 +36,7 @@ storiesOf('Accordion Container', module)
             const hidden = expandedSections.indexOf(index) === -1;
 
             return (
-              <div key={index}>
+              <div key={section as any}>
                 <h2 {...getHeaderProps({ role: null, ariaLevel: null })}>
                   <button
                     {...getTriggerProps({
@@ -96,7 +96,7 @@ storiesOf('Accordion Container', module)
               const hidden = expandedSections.indexOf(index) === -1;
 
               return (
-                <div key={index}>
+                <div key={section as any}>
                   <div {...getHeaderProps({ ariaLevel: 2 })}>
                     <div
                       {...getTriggerProps({

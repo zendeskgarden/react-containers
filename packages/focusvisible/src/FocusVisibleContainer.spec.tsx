@@ -18,9 +18,9 @@ describe('FocusVisibleContainer', () => {
       <FocusVisibleContainer>
         {({ ref }) => (
           <div ref={ref} data-test-id="wrapper">
-            <button data-test-id="button" tabIndex={0}></button>
+            <button data-test-id="button" tabIndex={0} />
             <input data-test-id="input" />
-            <textarea data-test-id="textarea"></textarea>
+            <textarea data-test-id="textarea" />
           </div>
         )}
       </FocusVisibleContainer>
@@ -28,19 +28,13 @@ describe('FocusVisibleContainer', () => {
   };
 
   it('throws error if scope is not provided', () => {
-    /* eslint-disable no-console */
     const originalError = console.error;
 
     console.error = jest.fn();
 
     expect(() => {
       const ErrorExample = () => {
-        /* eslint-disable @typescript-eslint/ban-ts-comment */
-        // @ts-ignore
-        // Ignoring to test JS runtime usage - should throw error
-        // when consumers do not pass a scope value into `useFocusVisible`.
         useFocusVisible();
-        /* eslint-enable @typescript-eslint/ban-ts-comment */
 
         return <div>test</div>;
       };
@@ -49,7 +43,6 @@ describe('FocusVisibleContainer', () => {
     }).toThrow('Error: the useFocusVisible() hook requires a "scope" property');
 
     console.error = originalError;
-    /* eslint-enable no-console */
   });
 
   it('leaves element intact if blured when not showing focus treatment', () => {
@@ -180,7 +173,7 @@ describe('FocusVisibleContainer', () => {
     it('applies focus-visible to textarea', () => {
       const { getByTestId } = render(
         <KeyboardModalityExample>
-          <textarea data-test-id="textarea"></textarea>
+          <textarea data-test-id="textarea" />
         </KeyboardModalityExample>
       );
 
@@ -194,7 +187,7 @@ describe('FocusVisibleContainer', () => {
     it('does not apply focus-visible to textrea with readOnly enabled', () => {
       const { getByTestId } = render(
         <KeyboardModalityExample>
-          <textarea data-test-id="textarea" readOnly></textarea>
+          <textarea data-test-id="textarea" readOnly />
         </KeyboardModalityExample>
       );
 
@@ -208,7 +201,7 @@ describe('FocusVisibleContainer', () => {
     it('does not apply focus-visible otherwise', () => {
       const { getByTestId } = render(
         <KeyboardModalityExample>
-          <div data-test-id="content" tabIndex={-1}></div>
+          <div data-test-id="content" tabIndex={-1} />
         </KeyboardModalityExample>
       );
 

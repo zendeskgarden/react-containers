@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 /**
  * Copyright Zendesk, Inc.
  *
@@ -234,7 +233,7 @@ describe('SelectionContainer', () => {
 
           describe('when dir is RTL', () => {
             it('increments focusedIndex if currently less than items length', () => {
-              const { getAllByTestId } = render(<BasicExample rtl={true} />);
+              const { getAllByTestId } = render(<BasicExample rtl />);
               const [item, secondItem] = getAllByTestId('item');
 
               fireEvent.focus(item);
@@ -244,7 +243,7 @@ describe('SelectionContainer', () => {
             });
 
             it('increments and wraps focusedIndex if currently greater than or equal to items length', () => {
-              const { getAllByTestId } = render(<BasicExample rtl={true} />);
+              const { getAllByTestId } = render(<BasicExample rtl />);
               const [item, , lastItem] = getAllByTestId('item');
 
               fireEvent.focus(lastItem);
@@ -278,7 +277,7 @@ describe('SelectionContainer', () => {
 
           describe('when dir is RTL', () => {
             it('decrements focusedIndex if currently greater than 0', () => {
-              const { getAllByTestId } = render(<BasicExample rtl={true} />);
+              const { getAllByTestId } = render(<BasicExample rtl />);
               const [item, secondItem] = getAllByTestId('item');
 
               fireEvent.focus(secondItem);
@@ -288,7 +287,7 @@ describe('SelectionContainer', () => {
             });
 
             it('decrements and wraps focusedIndex if currently 0', () => {
-              const { getAllByTestId } = render(<BasicExample rtl={true} />);
+              const { getAllByTestId } = render(<BasicExample rtl />);
               const [item, , lastItem] = getAllByTestId('item');
 
               fireEvent.focus(item);
