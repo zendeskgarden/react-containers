@@ -35,8 +35,7 @@
       "rules": {
         "jsx-a11y/label-has-associated-control": "off",
         "react/button-has-type": "off",
-        "react/jsx-key": "off",
-        "react/jsx-no-bind": "off"
+        "react/jsx-key": "off"
       }
     }
   ]
