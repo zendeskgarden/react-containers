@@ -12,7 +12,6 @@
   "overrides": [
     {
       "files": ["*.ts", "*.tsx"],
-      "parser": "@typescript-eslint/parser",
       "extends": [
         "@zendeskgarden/eslint-config/plugins/typescript",
         "prettier/@typescript-eslint"
@@ -28,8 +27,7 @@
       "files": ["*.spec.*"],
       "extends": "@zendeskgarden/eslint-config/plugins/jest",
       "rules": {
-        "no-console": "off",
-        "jest/lowercase-name": "off"
+        "no-console": "off"
       }
     },
     {
