@@ -9,7 +9,7 @@
 [coverage status badge]: https://flat.badgen.net/coveralls/c/github/zendeskgarden/react-containers/main
 [coverage status link]: https://coveralls.io/github/zendeskgarden/react-containers
 
-> :seedling: Garden is a design system for Zendesk
+> :seedling: Garden is the design system by Zendesk
 
 Garden Containers provide an accessible foundation to start from in your journey to building a11y,
 keyboard navigable and RTL aware components.
@@ -205,6 +205,6 @@ conduct](.github/CODE_OF_CONDUCT.md). Please participate accordingly.
 
 ## License
 
-Copyright 2020 Zendesk
+Copyright 2021 Zendesk
 
 Licensed under the [Apache License, Version 2.0](LICENSE.md)
