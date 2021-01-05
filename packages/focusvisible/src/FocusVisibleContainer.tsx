@@ -5,13 +5,15 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import { useRef } from 'react';
+import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 
 import { useFocusVisible, IUseFocusVisibleProps } from './useFocusVisible';
 
 export interface IFocusVisibleContainerProps extends Omit<IUseFocusVisibleProps, 'scope'> {
+  /** A render prop function which receives a `ref` */
   render?: (options: { ref: React.RefObject<HTMLDivElement> }) => React.ReactNode;
+  /** A children render prop function which receives a `ref` */
   children?: (options: { ref: React.RefObject<HTMLDivElement> }) => React.ReactNode;
 }
 
@@ -24,7 +26,12 @@ export const FocusVisibleContainer: React.FunctionComponent<IFocusVisibleContain
 
   useFocusVisible({ scope: scopeRef, ...options });
 
-  return render!({ ref: scopeRef }) as React.ReactElement;
+  return <>{render!({ ref: scopeRef }) as React.ReactElement}</>;
+};
+
+FocusVisibleContainer.defaultProps = {
+  className: 'garden-focus-visible',
+  dataAttribute: 'data-garden-focus-visible'
 };
 
 FocusVisibleContainer.propTypes = {

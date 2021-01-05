@@ -6,6 +6,7 @@
  */
 
 import React from 'react';
+import userEvent from '@testing-library/user-event';
 import { render, fireEvent } from '@testing-library/react';
 
 import { FocusVisibleContainer, useFocusVisible } from './';
@@ -17,7 +18,7 @@ describe('FocusVisibleContainer', () => {
     return (
       <FocusVisibleContainer>
         {({ ref }) => (
-          <div ref={ref} data-test-id="wrapper">
+          <div ref={ref} data-test-id="wrapper" tabIndex={-1}>
             <button data-test-id="button" tabIndex={0} />
             <input data-test-id="input" />
             <textarea data-test-id="textarea" />
@@ -49,7 +50,11 @@ describe('FocusVisibleContainer', () => {
     const { getByTestId } = render(<Example />);
     const button = getByTestId('button');
 
-    fireEvent.blur(button);
+    userEvent.tab();
+
+    expect(button).toHaveAttribute('data-garden-focus-visible');
+
+    userEvent.tab();
 
     expect(button).not.toHaveAttribute('data-garden-focus-visible');
   });
@@ -65,8 +70,7 @@ describe('FocusVisibleContainer', () => {
       expect(button).not.toHaveAttribute('data-garden-focus-visible');
     });
 
-    fireEvent.keyDown(button);
-    fireEvent.focus(button);
+    userEvent.tab();
 
     expect(button).toHaveAttribute('data-garden-focus-visible');
   });
@@ -75,8 +79,7 @@ describe('FocusVisibleContainer', () => {
     const { getByTestId } = render(<Example />);
     const button = getByTestId('button');
 
-    fireEvent.mouseDown(button);
-    fireEvent.focus(button);
+    userEvent.click(button);
 
     expect(button).not.toHaveAttribute('data-garden-focus-visible');
   });
@@ -86,8 +89,7 @@ describe('FocusVisibleContainer', () => {
       const { getByTestId } = render(<Example />);
       const wrapper = getByTestId('wrapper');
 
-      fireEvent.keyDown(wrapper);
-      fireEvent.focus(wrapper);
+      userEvent.click(wrapper);
 
       expect(wrapper).not.toHaveAttribute('data-garden-focus-visible');
     });
@@ -96,9 +98,9 @@ describe('FocusVisibleContainer', () => {
       const { getByTestId } = render(<Example />);
       const button = getByTestId('button');
 
-      // Manually call focus() to allow activeElement to be updated
-      button.focus();
-      fireEvent.keyDown(button);
+      expect(button).not.toHaveAttribute('data-garden-focus-visible');
+
+      userEvent.tab();
 
       expect(button).toHaveAttribute('data-garden-focus-visible');
     });
@@ -129,9 +131,17 @@ describe('FocusVisibleContainer', () => {
       const { getByTestId } = render(<Example />);
       const button = getByTestId('button');
 
-      fireEvent.keyDown(button);
-      fireEvent.focus(button);
-      fireEvent.focus(button);
+      expect(button).not.toHaveAttribute('data-garden-focus-visible');
+
+      userEvent.tab();
+
+      expect(button).toHaveAttribute('data-garden-focus-visible');
+
+      userEvent.tab({ shift: true });
+
+      expect(button).not.toHaveAttribute('data-garden-focus-visible');
+
+      userEvent.tab();
 
       expect(button).toHaveAttribute('data-garden-focus-visible');
     });
@@ -140,9 +150,13 @@ describe('FocusVisibleContainer', () => {
       const { getByTestId } = render(<Example />);
       const button = getByTestId('button');
 
-      fireEvent.keyDown(button);
-      fireEvent.focus(button);
-      fireEvent.blur(button);
+      expect(button).not.toHaveAttribute('data-garden-focus-visible');
+
+      userEvent.tab();
+
+      expect(button).toHaveAttribute('data-garden-focus-visible');
+
+      userEvent.tab();
       jest.runOnlyPendingTimers();
 
       expect(button).not.toHaveAttribute('data-garden-focus-visible');
@@ -165,7 +179,9 @@ describe('FocusVisibleContainer', () => {
 
       const input = getByTestId('input');
 
-      fireEvent.focus(input);
+      expect(input).not.toHaveAttribute('data-garden-focus-visible');
+
+      input.focus();
 
       expect(input).toHaveAttribute('data-garden-focus-visible');
     });
@@ -179,37 +195,23 @@ describe('FocusVisibleContainer', () => {
 
       const textarea = getByTestId('textarea');
 
-      fireEvent.focus(textarea);
+      expect(textarea).not.toHaveAttribute('data-garden-focus-visible');
+
+      textarea.focus();
 
       expect(textarea).toHaveAttribute('data-garden-focus-visible');
     });
 
-    it('does not apply focus-visible to textrea with readOnly enabled', () => {
-      const { getByTestId } = render(
+    it('does not apply focus-visible when element is not reachable via sequential keyboard navigation', () => {
+      const { getByText } = render(
         <KeyboardModalityExample>
-          <textarea data-test-id="textarea" readOnly />
+          <button tabIndex={-1}>click</button>
         </KeyboardModalityExample>
       );
 
-      const textarea = getByTestId('textarea');
+      userEvent.tab();
 
-      fireEvent.focus(textarea);
-
-      expect(textarea).not.toHaveAttribute('data-garden-focus-visible');
-    });
-
-    it('does not apply focus-visible otherwise', () => {
-      const { getByTestId } = render(
-        <KeyboardModalityExample>
-          <div data-test-id="content" tabIndex={-1} />
-        </KeyboardModalityExample>
-      );
-
-      const content = getByTestId('content');
-
-      fireEvent.focus(content);
-
-      expect(content).not.toHaveAttribute('data-garden-focus-visible');
+      expect(getByText('click')).not.toHaveAttribute('data-garden-focus-visible');
     });
   });
 });

@@ -5,12 +5,15 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import { usePagination, IUsePaginationProps, IUsePaginationReturnValue } from './usePagination';
 
 export interface IPaginationContainerProps<Item> extends IUsePaginationProps<Item> {
+  /** A render prop function which receives the newly selected item */
   render?: (options: IUsePaginationReturnValue<Item>) => React.ReactNode;
+  /** A children render prop function which receives the newly selected item */
   children?: (options: IUsePaginationReturnValue<Item>) => React.ReactNode;
 }
 
@@ -19,7 +22,7 @@ export const PaginationContainer: React.FunctionComponent<IPaginationContainerPr
   render = children,
   ...options
 }) => {
-  return render!(usePagination(options)) as React.ReactElement;
+  return <>{render!(usePagination(options)) as React.ReactElement}</>;
 };
 
 PaginationContainer.propTypes = {

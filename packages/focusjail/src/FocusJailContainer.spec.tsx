@@ -7,7 +7,8 @@
 
 import React, { useRef } from 'react';
 import { KEY_CODES } from '@zendeskgarden/container-utilities';
-import { render, fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { render, fireEvent, waitFor, screen } from '@testing-library/react';
 
 import { FocusJailContainer } from './FocusJailContainer';
 import { IUseFocusJailProps } from './useFocusJail';
@@ -113,9 +114,9 @@ describe('FocusJailContainer', () => {
     it('retrieves references by refKey', () => {
       const { getByTestId } = render(<BasicExample />);
 
-      if (containerReference) {
-        expect(containerReference.current).toBe(getByTestId('container'));
-      }
+      if (!containerReference) return;
+
+      expect(containerReference.current).toBe(getByTestId('container'));
     });
 
     describe('onKeyDown()', () => {
@@ -160,24 +161,42 @@ describe('FocusJailContainer', () => {
       });
 
       it("doesn't intercept tab key if not the first or last tabbable item", () => {
-        const focusableChildren = (
-          <>
-            <button>Focusable button</button>
-            <input ref={ref => setTimeout(() => ref && ref.focus())} />
-            <button>Another button</button>
-          </>
-        );
         const { getByTestId } = render(
           <BasicExample
-            focusElem={focusSpy}
+            focusElem={() => undefined}
             restoreFocus={false}
-            focusableChildren={focusableChildren}
+            focusableChildren={
+              <>
+                <p>non-focusable test</p>
+                <button>First button</button>
+                <button>Second button</button>
+                <button>Last button</button>
+              </>
+            }
           />
         );
 
-        fireEvent.keyDown(getByTestId('container'), { keyCode: KEY_CODES.TAB });
+        const focusJailContainer = getByTestId('container');
+        const firstButton = screen.getByRole('button', { name: /First button/iu });
+        const secondButton = screen.getByRole('button', { name: /Second button/iu });
+        const lastButton = screen.getByRole('button', { name: /Last button/iu });
 
-        expect(focusSpy).toHaveBeenCalledTimes(3);
+        expect(document.body).toHaveFocus();
+
+        userEvent.tab({ focusTrap: focusJailContainer });
+        expect(firstButton).toHaveFocus();
+
+        userEvent.tab({ shift: true, focusTrap: focusJailContainer });
+        expect(firstButton).toHaveFocus();
+
+        userEvent.tab({ focusTrap: focusJailContainer });
+        expect(secondButton).toHaveFocus();
+
+        userEvent.tab({ focusTrap: focusJailContainer });
+        expect(lastButton).toHaveFocus();
+
+        userEvent.tab({ focusTrap: focusJailContainer });
+        expect(lastButton).toHaveFocus();
       });
 
       it('throws error if containerRef is null', () => {
@@ -238,21 +257,23 @@ describe('FocusJailContainer', () => {
       );
     };
 
-    it('can restore focus after unmounting', () => {
-      const { getByTestId, getByText } = render(<RestoreFocusExample />);
+    it('can restore focus after unmounting', async () => {
+      const { queryByText, getByText, getByTestId } = render(<RestoreFocusExample />);
       const openButton = getByText('open');
 
       expect(openButton).not.toHaveFocus();
 
-      openButton.focus();
-      fireEvent.click(openButton);
+      userEvent.click(openButton);
 
-      expect(getByTestId('container')).toHaveFocus();
-      expect(openButton).not.toHaveFocus();
+      expect(getByText('close')).not.toHaveFocus();
 
-      const closeButton = getByText('close');
+      userEvent.tab({ focusTrap: getByTestId('container') });
 
-      fireEvent.click(closeButton);
+      expect(getByText('close')).toHaveFocus();
+
+      userEvent.click(getByText('close'));
+
+      await waitFor(() => expect(queryByText('close')).not.toBeInTheDocument());
 
       expect(openButton).toHaveFocus();
     });

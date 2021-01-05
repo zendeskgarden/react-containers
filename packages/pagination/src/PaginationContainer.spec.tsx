@@ -6,7 +6,8 @@
  */
 
 import React, { useRef } from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { render } from '@testing-library/react';
 import { IGetPageProps } from './usePagination';
 import { PaginationContainer } from './PaginationContainer';
 
@@ -252,7 +253,7 @@ describe('PaginationContainer', () => {
       });
       const page = getByTestId('page');
 
-      fireEvent.click(page);
+      userEvent.click(page);
       expect(page).toHaveAttribute('aria-label', 'Current page, Page 1');
     });
 

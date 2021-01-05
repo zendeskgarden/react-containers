@@ -5,12 +5,15 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import { useFocusJail, IUseFocusJailProps, IUseFocusJailReturnValue } from './useFocusJail';
 
 export interface IFocusJailContainerProps extends IUseFocusJailProps {
+  /** A render prop function which receives a focus jail prop getter */
   render?: (options: IUseFocusJailReturnValue) => React.ReactNode;
+  /** A children render prop function which receives a focus jail prop getter */
   children?: (options: IUseFocusJailReturnValue) => React.ReactNode;
 }
 
@@ -19,7 +22,7 @@ export const FocusJailContainer: React.FunctionComponent<IFocusJailContainerProp
   render = children,
   ...options
 }) => {
-  return render!(useFocusJail(options)) as React.ReactElement;
+  return <>{render!(useFocusJail(options)) as React.ReactElement}</>;
 };
 
 FocusJailContainer.propTypes = {

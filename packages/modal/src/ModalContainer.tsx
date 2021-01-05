@@ -5,12 +5,15 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import { useModal, IUseModalProps, IUseModalReturnValue } from './useModal';
 
 export interface IModalContainerProps extends IUseModalProps {
+  /** A render prop function */
   render?: (options: IUseModalReturnValue) => React.ReactNode;
+  /** A children render prop function */
   children?: (options: IUseModalReturnValue) => React.ReactNode;
 }
 
@@ -19,7 +22,7 @@ export const ModalContainer: React.FunctionComponent<IModalContainerProps> = ({
   render = children,
   ...options
 }) => {
-  return render!(useModal(options)) as React.ReactElement;
+  return <>{render!(useModal(options)) as React.ReactElement}</>;
 };
 
 ModalContainer.propTypes = {

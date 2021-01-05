@@ -5,12 +5,15 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import { useTabs, IUseTabsProps, IUseTabsReturnValue } from './useTabs';
 
 export interface ITabsContainerProps extends IUseTabsProps<any> {
+  /** A render prop function */
   render?: (options: IUseTabsReturnValue<any>) => React.ReactNode;
+  /** A children render prop function */
   children?: (options: IUseTabsReturnValue<any>) => React.ReactNode;
 }
 
@@ -19,7 +22,7 @@ export const TabsContainer: React.FunctionComponent<ITabsContainerProps> = ({
   render = children,
   ...options
 }) => {
-  return render!(useTabs(options)) as React.ReactElement;
+  return <>{render!(useTabs(options)) as React.ReactElement}</>;
 };
 
 TabsContainer.propTypes = {

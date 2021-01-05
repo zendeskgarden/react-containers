@@ -29,9 +29,13 @@ const INPUT_TYPES_WHITE_LIST: Record<string, boolean> = {
 };
 
 export interface IUseFocusVisibleProps {
+  /** A ref pointing to the scope which contains focus visible elements */
   scope: React.RefObject<HTMLElement | null>;
+  /** A relative document */
   relativeDocument?: any;
+  /** A class name applied to the element with `:focus-visible` behavior */
   className?: string;
+  /** A data attribute applied to the element with `:focus-visible` behavior */
   dataAttribute?: string;
 }
 

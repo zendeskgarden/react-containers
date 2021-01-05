@@ -10,8 +10,10 @@ import { useUIDSeed } from 'react-uid';
 import { composeEventHandlers, KEY_CODES } from '@zendeskgarden/container-utilities';
 
 export interface IUseTooltipProps {
+  /** Milliseconds of delay before open/close of tooltip is initiated  */
   delayMilliseconds?: number;
   id?: string;
+  /** Control visibility state of the tooltip */
   isVisible?: boolean;
 }
 

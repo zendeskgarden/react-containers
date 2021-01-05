@@ -6,7 +6,8 @@
  */
 
 import React, { createRef } from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { render } from '@testing-library/react';
 
 import { TabsContainer, ITabsContainerProps } from './TabsContainer';
 
@@ -62,7 +63,7 @@ describe('TabsContainer', () => {
     const { getAllByTestId } = render(<BasicExample onSelect={onSelectSpy} />);
     const [tab] = getAllByTestId('tab');
 
-    fireEvent.click(tab);
+    userEvent.click(tab);
 
     expect(onSelectSpy).toHaveBeenCalledWith('tab-1');
   });
@@ -122,7 +123,7 @@ describe('TabsContainer', () => {
         const [, , tab] = getAllByTestId('tab');
         const [firstPanel, secondPanel] = getAllByTestId('tab-panel');
 
-        fireEvent.click(tab);
+        userEvent.click(tab);
 
         expect(firstPanel).toHaveAttribute('hidden');
         expect(secondPanel).toHaveAttribute('hidden');
@@ -133,7 +134,7 @@ describe('TabsContainer', () => {
         const [, tab] = getAllByTestId('tab');
         const [, tabPanel] = getAllByTestId('tab-panel');
 
-        fireEvent.click(tab);
+        userEvent.click(tab);
 
         expect(tabPanel).not.toHaveAttribute('hidden');
       });
