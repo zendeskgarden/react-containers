@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 /**
  * Copyright Zendesk, Inc.
  *
@@ -27,10 +26,10 @@ describe('FocusJailContainer', () => {
     restoreFocus,
     focusElem = focusSpy,
     environment,
-    ...props
+    focusableChildren
   }: IBasicExampleProps = {}) => {
     const containerRef = useRef(null);
-    const focusableChildren = props.focusableChildren || (
+    const focusJailContainerChildren = focusableChildren || (
       <>
         <button data-test-id="button">focusable button</button>
         <input data-test-id="input" />
@@ -56,7 +55,7 @@ describe('FocusJailContainer', () => {
               })}
             >
               <p>non-focusable test</p>
-              {focusableChildren}
+              {focusJailContainerChildren}
             </div>
           );
         }}
@@ -97,7 +96,7 @@ describe('FocusJailContainer', () => {
       expect(() => {
         render(
           /* eslint-disable @typescript-eslint/ban-ts-comment */
-          // @ts-ignore
+          // @ts-expect-error
           <FocusJailContainer>
             {({ getContainerProps }) => (
               <div {...getContainerProps({ 'data-test-id': 'container-no-ref' })}>Test</div>

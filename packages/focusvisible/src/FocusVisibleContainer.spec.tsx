@@ -19,9 +19,9 @@ describe('FocusVisibleContainer', () => {
       <FocusVisibleContainer>
         {({ ref }) => (
           <div ref={ref} data-test-id="wrapper" tabIndex={-1}>
-            <button data-test-id="button" tabIndex={0}></button>
+            <button data-test-id="button" tabIndex={0} />
             <input data-test-id="input" />
-            <textarea data-test-id="textarea"></textarea>
+            <textarea data-test-id="textarea" />
           </div>
         )}
       </FocusVisibleContainer>
@@ -29,19 +29,13 @@ describe('FocusVisibleContainer', () => {
   };
 
   it('throws error if scope is not provided', () => {
-    /* eslint-disable no-console */
     const originalError = console.error;
 
     console.error = jest.fn();
 
     expect(() => {
       const ErrorExample = () => {
-        /* eslint-disable @typescript-eslint/ban-ts-comment */
-        // @ts-ignore
-        // Ignoring to test JS runtime usage - should throw error
-        // when consumers do not pass a scope value into `useFocusVisible`.
         useFocusVisible();
-        /* eslint-enable @typescript-eslint/ban-ts-comment */
 
         return <div>test</div>;
       };
@@ -50,7 +44,6 @@ describe('FocusVisibleContainer', () => {
     }).toThrow('Error: the useFocusVisible() hook requires a "scope" property');
 
     console.error = originalError;
-    /* eslint-enable no-console */
   });
 
   it('leaves element intact if blured when not showing focus treatment', () => {
@@ -196,7 +189,7 @@ describe('FocusVisibleContainer', () => {
     it('applies focus-visible to textarea', () => {
       const { getByTestId } = render(
         <KeyboardModalityExample>
-          <textarea data-test-id="textarea"></textarea>
+          <textarea data-test-id="textarea" />
         </KeyboardModalityExample>
       );
 

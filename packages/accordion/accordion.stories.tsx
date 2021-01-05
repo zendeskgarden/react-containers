@@ -42,7 +42,7 @@ export const Container = () => {
             const hidden = expandedSections.indexOf(index) === -1;
 
             return (
-              <div key={index}>
+              <div key={section as any}>
                 <div {...getHeaderProps({ ariaLevel: 2 })}>
                   <div
                     {...getTriggerProps({
@@ -108,7 +108,7 @@ export const Hook = () => {
           const hidden = expandedSections.indexOf(index) === -1;
 
           return (
-            <div key={index}>
+            <div key={section as any}>
               <h2 {...getHeaderProps({ role: null, ariaLevel: null })}>
                 <button
                   {...getTriggerProps({

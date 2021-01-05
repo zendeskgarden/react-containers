@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 /**
  * Copyright Zendesk, Inc.
  *
@@ -228,7 +227,7 @@ describe('SelectionContainer', () => {
 
           describe('when dir is RTL', () => {
             it('focuses on the second item when triggered from first item', () => {
-              const { getByText } = render(<BasicExample rtl={true} />);
+              const { getByText } = render(<BasicExample rtl />);
               const item = getByText('Item-1');
               const secondItem = getByText('Item-2');
 
@@ -240,7 +239,7 @@ describe('SelectionContainer', () => {
             });
 
             it('focuses on the first item when triggered from last item', () => {
-              const { getByText } = render(<BasicExample rtl={true} />);
+              const { getByText } = render(<BasicExample rtl />);
               const item = getByText('Item-1');
               const lastItem = getByText('Item-3');
 
@@ -278,7 +277,7 @@ describe('SelectionContainer', () => {
 
           describe('when dir is RTL', () => {
             it('focuses on the first item when triggered from second item', () => {
-              const { getByText } = render(<BasicExample rtl={true} />);
+              const { getByText } = render(<BasicExample rtl />);
               const item = getByText('Item-1');
               const secondItem = getByText('Item-2');
 
@@ -289,7 +288,7 @@ describe('SelectionContainer', () => {
             });
 
             it('focuses on the last item when triggered from first item', () => {
-              const { getByText } = render(<BasicExample rtl={true} />);
+              const { getByText } = render(<BasicExample rtl />);
               const item = getByText('Item-1');
               const lastItem = getByText('Item-3');
 
