@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.5](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-modal@0.8.4...@zendeskgarden/container-modal@0.8.5) (2021-01-15)
+
+**Note:** Version bump only for package @zendeskgarden/container-modal
+
+
+
+
+
 ## [0.8.4](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-modal@0.8.3...@zendeskgarden/container-modal@0.8.4) (2020-10-23)
 
 **Note:** Version bump only for package @zendeskgarden/container-modal

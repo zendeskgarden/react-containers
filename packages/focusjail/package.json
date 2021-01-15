@@ -8,7 +8,7 @@
   "bugs": {
     "url": "https://github.com/zendeskgarden/react-containers/issues"
   },
-  "version": "1.4.4",
+  "version": "1.4.5",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
   "files": [
@@ -21,7 +21,7 @@
   "types": "dist/typings/index.d.ts",
   "dependencies": {
     "@babel/runtime": "^7.8.4",
-    "@zendeskgarden/container-utilities": "^0.5.4",
+    "@zendeskgarden/container-utilities": "^0.5.5",
     "dom-helpers": "^5.1.0",
     "tabbable": "^5.0.0"
   },
