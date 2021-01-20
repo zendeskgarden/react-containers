@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "scripts": {
     "build": "lerna run build --stream",
-    "build:demo": "build-storybook -o demo/storybook",
+    "build:demo": "build-storybook -o demo",
     "format": "prettier-package-json --write && yarn format:package_json --write && yarn format:js --write && yarn format:md --write",
     "format:all": "prettier-package-json --list-different && yarn format:package_json --list-different && yarn format:js --check && yarn format:md --check",
     "format:js": "prettier --loglevel warn '{packages,utils}/**/*.{js,ts,tsx}' '!packages/**/dist/**'",
