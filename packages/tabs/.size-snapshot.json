@@ -29,8 +29,8 @@
     "gzipped": 1031,
     "treeshaked": {
       "rollup": {
-        "code": 213,
-        "import_statements": 167
+        "code": 147,
+        "import_statements": 101
       },
       "webpack": {
         "code": 1250
