@@ -6,15 +6,13 @@
  */
 
 import React from 'react';
-import { withKnobs, select, boolean, number } from '@storybook/addon-knobs';
-
 import { SelectionContainer, useSelection } from './src';
 
-export const Container = () => {
+export const Container = ({ defaultFocusedIndex }) => {
   const items = ['Item 1', 'Item 2', 'Item 3'];
 
   return (
-    <SelectionContainer direction="vertical" defaultFocusedIndex={number('defaultFocusedIndex', 0)}>
+    <SelectionContainer direction="vertical" defaultFocusedIndex={defaultFocusedIndex}>
       {({ selectedItem, focusedItem, getContainerProps, getItemProps }) => (
         <ul {...getContainerProps()}>
           {items.map(item => {
@@ -42,15 +40,14 @@ export const Container = () => {
   );
 };
 
-export const Hook = () => {
+export const Hook = ({ direction, defaultSelectedIndex, rtl }) => {
   const items = ['One', 'Two', 'Three'];
-  const isRtl = boolean('Enable RTL', false);
 
-  const Selection = ({ direction }: { direction?: 'both' | 'horizontal' | 'vertical' }) => {
+  const Selection = () => {
     const { focusedItem, selectedItem, getContainerProps, getItemProps } = useSelection<string>({
       direction,
-      defaultSelectedIndex: number('defaultSelectedIndex', 0),
-      rtl: isRtl
+      defaultSelectedIndex,
+      rtl
     });
 
     return (
@@ -84,24 +81,16 @@ export const Hook = () => {
     );
   };
 
-  return (
-    <Selection
-      direction={select(
-        'Direction',
-        {
-          vertical: 'vertical',
-          horizontal: 'horizontal',
-          both: 'both'
-        },
-        'horizontal'
-      )}
-    />
-  );
+  return <Selection />;
 };
 
 Container.storyName = 'SelectionContainer';
 
 Hook.storyName = 'useSelection';
+
+Hook.args = {
+  defaultSelectedIndex: 0
+};
 
 Hook.parameters = {
   docs: {
@@ -115,7 +104,6 @@ Hook.parameters = {
 
 export default {
   title: 'Selection Container',
-  decorators: [withKnobs],
   component: SelectionContainer,
   parameters: {
     layout: 'centered',

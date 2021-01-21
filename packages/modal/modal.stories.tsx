@@ -6,9 +6,6 @@
  */
 
 import React, { useState, useRef } from 'react';
-
-import { withKnobs, boolean } from '@storybook/addon-knobs';
-
 import { ModalContainer, useModal } from './src';
 
 export const Container = () => {
@@ -78,9 +75,8 @@ export const Container = () => {
   );
 };
 
-export const Hook = () => {
+export const Hook = ({ restoreFocus }) => {
   const [isModalVisible, setModalVisibility] = useState(false);
-  const restoreFocus = boolean('restoreFocus', true);
   const modalRef = useRef(null);
   const {
     getBackdropProps,
@@ -151,6 +147,10 @@ Container.storyName = 'ModalContainer';
 
 Hook.storyName = 'useModal';
 
+Hook.args = {
+  restoreFocus: true
+};
+
 Hook.parameters = {
   docs: {
     description: {
@@ -161,7 +161,6 @@ Hook.parameters = {
 
 export default {
   title: 'Modal Container',
-  decorators: [withKnobs],
   component: ModalContainer,
   parameters: {
     layout: 'centered',

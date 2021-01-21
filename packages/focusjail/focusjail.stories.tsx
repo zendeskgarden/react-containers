@@ -6,16 +6,13 @@
  */
 
 import React, { useRef, createRef } from 'react';
-
-import { withKnobs, boolean } from '@storybook/addon-knobs';
-
 import { FocusJailContainer, useFocusJail } from './src';
 
-export const Container = () => {
+export const Container = ({ focusOnMount }) => {
   const containerRef = createRef<HTMLElement>();
 
   return (
-    <FocusJailContainer containerRef={containerRef} focusOnMount={boolean('focusOnMount', true)}>
+    <FocusJailContainer containerRef={containerRef} focusOnMount={focusOnMount}>
       {({ getContainerProps }) => (
         <>
           <input />
@@ -30,10 +27,10 @@ export const Container = () => {
   );
 };
 
-export const Hook = () => {
+export const Hook = ({ focusOnMount }) => {
   const containerRef = useRef(null);
   const { getContainerProps } = useFocusJail({
-    focusOnMount: boolean('focusOnMount', true),
+    focusOnMount,
     containerRef
   });
 
@@ -51,7 +48,15 @@ export const Hook = () => {
 
 Container.storyName = 'FocusJailContainer';
 
+Container.args = {
+  focusOnMount: true
+};
+
 Hook.storyName = 'useFocusJail';
+
+Hook.args = {
+  focusOnMount: true
+};
 
 Hook.parameters = {
   docs: {
@@ -64,7 +69,6 @@ Hook.parameters = {
 
 export default {
   title: 'FocusJail Container',
-  decorators: [withKnobs],
   component: FocusJailContainer,
   parameters: {
     layout: 'centered',

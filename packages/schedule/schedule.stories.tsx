@@ -6,18 +6,11 @@
  */
 
 import React from 'react';
-
-import { withKnobs, boolean, number } from '@storybook/addon-knobs';
-
 import { ScheduleContainer, useSchedule } from './src';
 
-export const Container = () => (
-  <ScheduleContainer
-    duration={number('duration', 1250)}
-    loop={boolean('loop', true)}
-    delayMS={number('delayMS', 750)}
-  >
-    {({ elapsed, delayMS, delayComplete }) => {
+export const Container = ({ duration, loop, delayMS }) => (
+  <ScheduleContainer duration={duration} loop={loop} delayMS={delayMS}>
+    {({ elapsed, delayComplete }) => {
       if (!delayComplete && delayMS !== 0) {
         return <div>Delay...</div>;
       }
@@ -32,11 +25,8 @@ export const Container = () => (
   </ScheduleContainer>
 );
 
-export const Hook = () => {
+export const Hook = ({ duration, loop, delayMS }) => {
   const Animation = () => {
-    const duration = number('duration', 1250);
-    const loop = boolean('loop', true);
-    const delayMS = number('delayMS', 750);
     const { elapsed, delayComplete } = useSchedule({ duration, loop, delayMS });
 
     if (!delayComplete && delayMS !== 0) {
@@ -54,9 +44,19 @@ export const Hook = () => {
   return <Animation />;
 };
 
+const ARGS = {
+  duration: 1250,
+  loop: true,
+  delayMS: 750
+};
+
 Container.storyName = 'ScheduleContainer';
 
+Container.args = ARGS;
+
 Hook.storyName = 'useSchedule';
+
+Hook.args = ARGS;
 
 Hook.parameters = {
   docs: {
@@ -68,7 +68,6 @@ Hook.parameters = {
 
 export default {
   title: 'Schedule Container',
-  decorators: [withKnobs],
   component: ScheduleContainer,
   parameters: {
     layout: 'centered',

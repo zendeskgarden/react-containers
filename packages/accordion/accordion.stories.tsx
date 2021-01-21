@@ -6,8 +6,6 @@
  */
 
 import React, { createRef, CSSProperties } from 'react';
-
-import { boolean, number, withKnobs } from '@storybook/addon-knobs';
 import { AccordionContainer, useAccordion, IUseAccordionReturnValue } from './src';
 
 const visuallyHidden: CSSProperties = {
@@ -21,13 +19,12 @@ const visuallyHidden: CSSProperties = {
   whiteSpace: 'nowrap'
 };
 
-export const Container = () => {
-  const size = number('Sections', 5, { range: true, min: 1, max: 9 });
-  const sections = Array(size)
+export const Container = ({ sections, expandable, collapsible }) => {
+  const _sections = Array(sections)
     .fill(undefined)
     .map(() => createRef());
 
-  const Accordion = ({ expandable = true, collapsible = true } = {}) => (
+  const Accordion = () => (
     <AccordionContainer expandable={expandable} collapsible={collapsible}>
       {({
         getHeaderProps,
@@ -37,7 +34,7 @@ export const Container = () => {
         disabledSections
       }: IUseAccordionReturnValue) => (
         <div style={{ width: 300 }}>
-          {sections.map((section, index) => {
+          {_sections.map((section, index) => {
             const disabled = disabledSections.indexOf(index) !== -1;
             const hidden = expandedSections.indexOf(index) === -1;
 
@@ -78,21 +75,15 @@ export const Container = () => {
     </AccordionContainer>
   );
 
-  return (
-    <Accordion
-      expandable={boolean('Expandable', true)}
-      collapsible={boolean('Collapsible', true)}
-    />
-  );
+  return <Accordion />;
 };
 
-export const Hook = () => {
-  const size = number('Sections', 5, { range: true, min: 1, max: 9 });
-  const sections = Array(size)
+export const Hook = ({ sections, expandable, collapsible }) => {
+  const _sections = Array(sections)
     .fill(undefined)
     .map(() => createRef());
 
-  const Accordion = ({ expandable = true, collapsible = true } = {}) => {
+  const Accordion = () => {
     const {
       getHeaderProps,
       getTriggerProps,
@@ -103,7 +94,7 @@ export const Hook = () => {
 
     return (
       <div style={{ width: 300 }}>
-        {sections.map((section, index) => {
+        {_sections.map((section, index) => {
           const disabled = disabledSections.indexOf(index) !== -1;
           const hidden = expandedSections.indexOf(index) === -1;
 
@@ -140,17 +131,32 @@ export const Hook = () => {
     );
   };
 
-  return (
-    <Accordion
-      expandable={boolean('Expandable', true)}
-      collapsible={boolean('Collapsible', true)}
-    />
-  );
+  return <Accordion />;
+};
+
+const ARG_TYPES = {
+  sections: {
+    control: { type: 'range', min: 1, max: 9 }
+  }
+};
+
+const ARGS = {
+  sections: 5,
+  expandable: true,
+  collapsible: true
 };
 
 Container.storyName = 'AccordionContainer';
 
+Container.argTypes = ARG_TYPES;
+
+Container.args = ARGS;
+
 Hook.storyName = 'useAccordion';
+
+Hook.argTypes = ARG_TYPES;
+
+Hook.args = ARGS;
 
 Hook.parameters = {
   docs: {
@@ -164,7 +170,6 @@ Hook.parameters = {
 export default {
   component: AccordionContainer,
   title: 'Accordion Container',
-  decorators: [withKnobs],
   parameters: {
     layout: 'centered',
     componentSubtitle: `A container component which wraps the useAccordion hook.`

@@ -1,14 +1,9 @@
 # General ignores
 .env
+demo
 node_modules
 *.log
 
 # Package specific
 packages/**/dist
 package-lock.json
-
-# Demo specific
-demo/**/*
-!demo/index.html
-!demo/index.svg
-!demo/zendesk.svg

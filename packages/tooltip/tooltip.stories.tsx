@@ -6,19 +6,14 @@
  */
 
 import React, { useRef } from 'react';
-import { withKnobs, number, boolean } from '@storybook/addon-knobs';
-
 import { TooltipContainer, useTooltip } from './src';
 import { usePopper } from '../../utils/usePopper';
 
-export const Container = () => {
+export const Container = ({ delayMilliseconds }) => {
   const tooltipRef = useRef(null);
 
   return (
-    <TooltipContainer
-      isVisible={boolean('isVisible', false)}
-      delayMilliseconds={number('Tooltip delay', 500)}
-    >
+    <TooltipContainer delayMilliseconds={delayMilliseconds}>
       {({ isVisible, getTooltipProps, getTriggerProps }) => {
         const styles: React.CSSProperties = {
           visibility: isVisible ? 'visible' : 'hidden',
@@ -46,12 +41,11 @@ export const Container = () => {
   );
 };
 
-export const Hook = () => {
+export const Hook = ({ delayMilliseconds }) => {
   const tooltipRef = useRef(null);
 
   const { isVisible, getTooltipProps, getTriggerProps } = useTooltip({
-    isVisible: boolean('isVisible', false),
-    delayMilliseconds: number('Tooltip delay', 500)
+    delayMilliseconds
   });
 
   const styles: React.CSSProperties = {
@@ -77,13 +71,12 @@ export const Hook = () => {
   );
 };
 
-export const WithPopper = () => {
+export const WithPopper = ({ delayMilliseconds }) => {
   const tooltipRef = useRef(null);
   const triggerRef = useRef(null);
 
   const { isVisible, getTooltipProps, getTriggerProps } = useTooltip({
-    isVisible: boolean('isVisible', false),
-    delayMilliseconds: number('Tooltip delay', 500)
+    delayMilliseconds
   });
   const { style } = usePopper({ referenceRef: triggerRef, popperRef: tooltipRef });
 
@@ -104,12 +97,11 @@ export const WithPopper = () => {
   );
 };
 
-export const FocusableTooltip = () => {
+export const FocusableTooltip = ({ delayMilliseconds }) => {
   const tooltipRef = useRef(null);
 
   const { isVisible, getTooltipProps, getTriggerProps, openTooltip, closeTooltip } = useTooltip({
-    isVisible: boolean('isVisible', false),
-    delayMilliseconds: number('Tooltip delay', 500)
+    delayMilliseconds
   });
 
   const styles: React.CSSProperties = {
@@ -139,7 +131,15 @@ export const FocusableTooltip = () => {
 
 Container.storyName = 'TooltipContainer';
 
+Container.args = {
+  delayMilliseconds: 500
+};
+
 Hook.storyName = 'useTooltip';
+
+Hook.args = {
+  delayMilliseconds: 500
+};
 
 Hook.parameters = {
   docs: {
@@ -151,6 +151,10 @@ Hook.parameters = {
 
 WithPopper.storyName = 'positioning via Popper.js';
 
+WithPopper.args = {
+  delayMilliseconds: 500
+};
+
 WithPopper.parameters = {
   docs: {
     description: {
@@ -161,13 +165,16 @@ WithPopper.parameters = {
 
 FocusableTooltip.storyName = 'with focusable tooltip';
 
+FocusableTooltip.args = {
+  delayMilliseconds: 500
+};
+
 FocusableTooltip.parameters = {
   docs: { description: { story: `This story demonstrates focusable content within the tooltip.` } }
 };
 
 export default {
   title: 'Tooltip Container',
-  decorators: [withKnobs],
   component: TooltipContainer,
   parameters: {
     layout: 'centered',

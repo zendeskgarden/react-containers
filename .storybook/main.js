@@ -8,9 +8,8 @@
 module.exports = {
   stories: ['../packages/**/*.stories.tsx'],
   addons: [
-    '@storybook/addon-knobs',
-    '@storybook/addon-storysource',
+    { name: '@storybook/addon-essentials', options: { actions: false, viewport: false } },
     '@storybook/addon-a11y',
-    '@storybook/addon-docs'
+    '@storybook/addon-storysource'
   ]
 };
