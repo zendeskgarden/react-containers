@@ -6,16 +6,11 @@
  */
 
 import React, { createRef } from 'react';
-
-import { withKnobs, boolean, text } from '@storybook/addon-knobs';
-
 import { TabsContainer, useTabs } from './src';
 
 const tabs = ['Tab 1', 'Tab 2', 'Tab 3'];
 
-export const Container = () => {
-  const vertical = boolean('vertical', false);
-  const idPrefix = text('idPrefix', '');
+export const Container = ({ vertical, idPrefix }) => {
   const tabRefs = tabs.map(() => createRef());
 
   return (
@@ -86,11 +81,10 @@ export const Container = () => {
   );
 };
 
-export const Hook = () => {
-  const vertical = boolean('vertical', false);
+export const Hook = ({ vertical, idPrefix }) => {
   const { selectedItem, getTabProps, getTabListProps, getTabPanelProps } = useTabs<string>({
     vertical,
-    idPrefix: text('idPrefix', '')
+    idPrefix
   });
   const tabComponents: React.ReactElement[] = [];
   const tabPanels: React.ReactElement[] = [];
@@ -157,7 +151,15 @@ export const Hook = () => {
 
 Container.storyName = 'TabsContainer';
 
+Container.args = {
+  vertical: false
+};
+
 Hook.storyName = 'useTabs';
+
+Hook.args = {
+  vertical: false
+};
 
 Hook.parameters = {
   docs: {
@@ -169,7 +171,6 @@ Hook.parameters = {
 
 export default {
   title: 'Tabs Container',
-  decorators: [withKnobs],
   component: TabsContainer,
   parameters: {
     layout: 'centered',

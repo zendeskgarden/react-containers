@@ -7,12 +7,10 @@
 
 import React from 'react';
 import { uid } from 'react-uid';
-import { withKnobs, text } from '@storybook/addon-knobs';
-
 import { FieldContainer, useField } from './src';
 
-export const Container = () => (
-  <FieldContainer id={text('id', uid({ name: 'FieldContainer' }))}>
+export const Container = ({ id }) => (
+  <FieldContainer id={id}>
     {({ getLabelProps, getInputProps, getHintProps }) => (
       <>
         <label {...getLabelProps()}>Accessible Native Input</label>
@@ -23,8 +21,8 @@ export const Container = () => (
   </FieldContainer>
 );
 
-export const Hook = () => {
-  const Field = ({ id }: { id: string }) => {
+export const Hook = ({ id }) => {
+  const Field = () => {
     const { getLabelProps, getInputProps, getHintProps } = useField(id);
     const [value, setVal] = React.useState('');
     const onChange = (event: React.ChangeEvent<HTMLInputElement>) => setVal(event.target.value);
@@ -38,12 +36,20 @@ export const Hook = () => {
     );
   };
 
-  return <Field id={text('id', uid({ name: 'useField' }))} />;
+  return <Field />;
 };
 
 Container.storyName = 'FieldContainer';
 
+Container.args = {
+  id: uid({ name: 'FieldContainer' })
+};
+
 Hook.storyName = 'useField';
+
+Hook.args = {
+  id: uid({ name: 'useField' })
+};
 
 Hook.parameters = {
   docs: {
@@ -56,7 +62,6 @@ Hook.parameters = {
 
 export default {
   title: 'Field Container',
-  decorators: [withKnobs],
   component: FieldContainer,
   parameters: {
     layout: 'centered',

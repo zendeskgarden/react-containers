@@ -32,5 +32,6 @@ ModalContainer.propTypes = {
   modalRef: PropTypes.any.isRequired,
   id: PropTypes.string,
   focusOnMount: PropTypes.bool,
+  restoreFocus: PropTypes.bool,
   environment: PropTypes.any
 };
