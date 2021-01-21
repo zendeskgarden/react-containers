@@ -11,9 +11,10 @@ import { DEFAULT_THEME } from '@zendeskgarden/react-theming';
 
 addons.setConfig({
   theme: create({
-    brandTitle: 'React Containers',
-    brandUrl: 'https://zendeskgarden.github.io/',
-    brandImage: '../garden.svg',
+    brandTitle: 'Zendesk Garden React Containers',
+    brandUrl: 'https://github.com/zendeskgarden/react-containers',
+    brandImage: null,
+    colorSecondary: DEFAULT_THEME.palette.blue[600],
     fontBase: DEFAULT_THEME.fonts.system,
     fontCode: DEFAULT_THEME.fonts.mono
   })
