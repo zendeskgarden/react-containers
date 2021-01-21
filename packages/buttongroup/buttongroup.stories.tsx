@@ -6,8 +6,6 @@
  */
 
 import React, { createRef, useState } from 'react';
-import { withKnobs } from '@storybook/addon-knobs';
-
 import { ButtonGroupContainer, useButtonGroup } from './src';
 
 const buttons = ['Button 1', 'Button 2', 'Button 3'];
@@ -90,7 +88,6 @@ Hook.parameters = {
 export default {
   title: 'Buttongroup Container',
   component: ButtonGroupContainer,
-  decorators: [withKnobs],
   parameters: {
     layout: 'centered',
     componentSubtitle: `A container component which wraps the useButtongroup hook.`

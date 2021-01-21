@@ -6,9 +6,6 @@
  */
 
 import React from 'react';
-
-import { withKnobs } from '@storybook/addon-knobs';
-
 import { BreadcrumbContainer, useBreadcrumb } from './src';
 
 export const Container = () => (
@@ -50,7 +47,6 @@ Container.storyName = 'BreadcrumbContainer';
 export default {
   title: 'Breadcrumb Container',
   component: BreadcrumbContainer,
-  decorators: [withKnobs],
   parameters: {
     layout: 'centered',
     componentSubtitle: `A container component which wraps the useBreadcrumb hook.`

@@ -7,9 +7,6 @@
 
 import React, { useRef } from 'react';
 import styled from 'styled-components';
-
-import { withKnobs } from '@storybook/addon-knobs';
-
 import { useFocusVisible, FocusVisibleContainer } from './src';
 import { useSelection } from '../selection/src';
 
@@ -158,7 +155,6 @@ WithSelection.parameters = {
 
 export default {
   title: 'FocusVisible Container',
-  decorators: [withKnobs],
   component: FocusVisibleContainer,
   parameters: {
     layout: 'centered',

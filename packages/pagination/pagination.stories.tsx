@@ -6,9 +6,6 @@
  */
 
 import React, { useRef, useState } from 'react';
-
-import { withKnobs } from '@storybook/addon-knobs';
-
 import { PaginationContainer, usePagination } from './src';
 
 const pages = new Array(7).fill('page');
@@ -239,7 +236,6 @@ Hook.parameters = {
 
 export default {
   title: 'Pagination Container',
-  decorators: [withKnobs],
   component: PaginationContainer,
   parameters: {
     layout: 'centered',

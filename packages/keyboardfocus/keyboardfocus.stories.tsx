@@ -6,9 +6,6 @@
  */
 
 import React from 'react';
-
-import { withKnobs } from '@storybook/addon-knobs';
-
 import { KeyboardFocusContainer, useKeyboardFocus } from './src';
 
 export const Container = () => (
@@ -59,7 +56,6 @@ Hook.parameters = {
 
 export default {
   title: 'KeyboardFocus Container',
-  decorators: [withKnobs],
   component: KeyboardFocusContainer,
   parameters: {
     layout: 'centered',
