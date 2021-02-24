@@ -102,10 +102,10 @@ export function useModal(
     };
   };
 
-  const getCloseProps = ({ onMouseUp, ...other } = {} as any) => {
+  const getCloseProps = ({ onClick, ...other } = {} as any) => {
     return {
       'aria-label': 'Close modal',
-      onMouseUp: composeEventHandlers(onMouseUp, (event: MouseEvent) => {
+      onClick: composeEventHandlers(onClick, (event: MouseEvent) => {
         closeModal(event);
       }),
       ...other
