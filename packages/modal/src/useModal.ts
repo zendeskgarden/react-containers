@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useUIDSeed } from 'react-uid';
 import { composeEventHandlers, KEY_CODES } from '@zendeskgarden/container-utilities';
 import { useFocusJail } from '@zendeskgarden/container-focusjail';
@@ -48,15 +48,20 @@ export function useModal(
   const [idPrefix] = useState(_id || seed(`modal_${PACKAGE_VERSION}`));
   const titleId = `${idPrefix}--title`;
   const contentId = `${idPrefix}--content`;
+  const isModalMousedDownRef = useRef(false);
 
   const closeModal = (event: KeyboardEvent | MouseEvent) => {
     onClose && onClose(event);
   };
 
-  const getBackdropProps = ({ onClick, ...other } = {} as any) => {
+  const getBackdropProps = ({ onMouseUp, ...other } = {} as any) => {
     return {
-      onClick: composeEventHandlers(onClick, (event: MouseEvent) => {
-        closeModal(event);
+      onMouseUp: composeEventHandlers(onMouseUp, (event: MouseEvent) => {
+        if (!isModalMousedDownRef.current) {
+          closeModal(event);
+        }
+
+        isModalMousedDownRef.current = false;
       }),
       'data-garden-container-id': 'containers.modal',
       'data-garden-container-version': PACKAGE_VERSION,
@@ -64,19 +69,15 @@ export function useModal(
     };
   };
 
-  const getModalProps = ({ role = 'dialog', onClick, onKeyDown, ...other } = {} as any) => {
+  const getModalProps = ({ role = 'dialog', onKeyDown, onMouseDown, ...other } = {} as any) => {
     return {
       role,
       tabIndex: -1,
       'aria-modal': true,
       'aria-labelledby': titleId,
       'aria-describedby': contentId,
-      onClick: composeEventHandlers(onClick, (event: MouseEvent) => {
-        /**
-         * Don't want to trigger the backdrop close event
-         * if click originates within the Modal
-         */
-        event.stopPropagation();
+      onMouseDown: composeEventHandlers(onMouseDown, () => {
+        isModalMousedDownRef.current = true;
       }),
       onKeyDown: composeEventHandlers(onKeyDown, (event: KeyboardEvent) => {
         if (event.keyCode === KEY_CODES.ESCAPE) {
@@ -101,10 +102,10 @@ export function useModal(
     };
   };
 
-  const getCloseProps = ({ onClick, ...other } = {} as any) => {
+  const getCloseProps = ({ onMouseUp, ...other } = {} as any) => {
     return {
       'aria-label': 'Close modal',
-      onClick: composeEventHandlers(onClick, (event: MouseEvent) => {
+      onMouseUp: composeEventHandlers(onMouseUp, (event: MouseEvent) => {
         closeModal(event);
       }),
       ...other
