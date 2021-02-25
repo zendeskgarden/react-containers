@@ -52,6 +52,14 @@ describe('FocusJailContainer', () => {
       userEvent.click(getByTestId('backdrop'));
       expect(onCloseSpy).toHaveBeenCalled();
     });
+
+    it('does not call onClose when inital click occurs within modal', () => {
+      const { getByTestId } = render(<BasicExample onClose={onCloseSpy} />);
+
+      fireEvent.mouseDown(getByTestId('modal'));
+      fireEvent.mouseUp(getByTestId('backdrop'));
+      expect(onCloseSpy).not.toHaveBeenCalled();
+    });
   });
 
   describe('getModalProps()', () => {
