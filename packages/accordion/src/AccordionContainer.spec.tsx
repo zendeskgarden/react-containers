@@ -30,7 +30,9 @@ describe('AccordionContainer', () => {
     expect(triggerButton).not.toHaveAttribute('disabled');
   });
 
-  const sections = Array(3).fill(undefined);
+  const sections = Array(3)
+    .fill(undefined)
+    .map((s, i) => i);
   const CONTAINER_ID_PREFIX = 'test';
 
   const BasicExample = ({
