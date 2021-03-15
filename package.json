@@ -15,7 +15,7 @@
     "lint:js": "eslint packages/*/src/ packages/*/*.stories.tsx utils/ .storybook/**/*.js --ext js,ts,tsx --max-warnings 0",
     "lint:md": "markdownlint README.md packages/*/src/**/*.md packages/*/src/*.md packages/*/README.md",
     "new": "utils/scripts/new.js",
-    "prepare": "yarn build",
+    "prepare": "husky install && yarn build",
     "start": "start-storybook -p 6006",
     "start:demo": "yarn build:demo && live-server demo",
     "tag": "lerna version --conventional-commits",
