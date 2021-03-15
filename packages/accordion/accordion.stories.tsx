@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React, { createRef, CSSProperties } from 'react';
+import React, { CSSProperties } from 'react';
 import { AccordionContainer, useAccordion, IUseAccordionReturnValue } from './src';
 
 const visuallyHidden: CSSProperties = {
@@ -22,7 +22,7 @@ const visuallyHidden: CSSProperties = {
 export const Container = ({ sections, expandable, collapsible }) => {
   const _sections = Array(sections)
     .fill(undefined)
-    .map(() => createRef());
+    .map((s, i) => i);
 
   const Accordion = () => (
     <AccordionContainer expandable={expandable} collapsible={collapsible}>
@@ -39,7 +39,7 @@ export const Container = ({ sections, expandable, collapsible }) => {
             const hidden = expandedSections.indexOf(index) === -1;
 
             return (
-              <div key={section as any}>
+              <div key={section}>
                 <div {...getHeaderProps({ ariaLevel: 2 })}>
                   <div
                     {...getTriggerProps({
@@ -81,7 +81,7 @@ export const Container = ({ sections, expandable, collapsible }) => {
 export const Hook = ({ sections, expandable, collapsible }) => {
   const _sections = Array(sections)
     .fill(undefined)
-    .map(() => createRef());
+    .map((s, i) => i);
 
   const Accordion = () => {
     const {
@@ -99,7 +99,7 @@ export const Hook = ({ sections, expandable, collapsible }) => {
           const hidden = expandedSections.indexOf(index) === -1;
 
           return (
-            <div key={section as any}>
+            <div key={section}>
               <h2 {...getHeaderProps({ role: null, ariaLevel: null })}>
                 <button
                   {...getTriggerProps({
