@@ -54,7 +54,7 @@
     "@types/webpack-env": "1.16.0",
     "@typescript-eslint/eslint-plugin": "4.17.0",
     "@typescript-eslint/parser": "4.17.0",
-    "@zendeskgarden/eslint-config": "17.1.0",
+    "@zendeskgarden/eslint-config": "19.0.0",
     "@zendeskgarden/react-theming": "8.33.0",
     "@zendeskgarden/scripts": "0.1.11",
     "acorn-jsx": "5.3.1",
