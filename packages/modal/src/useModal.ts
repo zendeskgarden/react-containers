@@ -55,15 +55,20 @@ export function useModal(
   };
 
   const getBackdropProps = ({ onMouseUp, ...other } = {} as any) => {
+    const containerId = 'containers.modal';
+
     return {
       onMouseUp: composeEventHandlers(onMouseUp, (event: MouseEvent) => {
-        if (!isModalMousedDownRef.current) {
+        const target = event.target as HTMLElement;
+        const isModalContainer = containerId === target.getAttribute('data-garden-container-id');
+
+        if (!isModalMousedDownRef.current && isModalContainer) {
           closeModal(event);
         }
 
         isModalMousedDownRef.current = false;
       }),
-      'data-garden-container-id': 'containers.modal',
+      'data-garden-container-id': containerId,
       'data-garden-container-version': PACKAGE_VERSION,
       ...other
     };
