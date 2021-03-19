@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.5](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-accordion@1.0.4...@zendeskgarden/container-accordion@1.0.5) (2021-03-19)
+
+
+### Bug Fixes
+
+* **accordions:** provide valid React keys ([#281](https://github.com/zendeskgarden/react-containers/issues/281)) ([dc58f61](https://github.com/zendeskgarden/react-containers/commit/dc58f6199dccfa63911e4b9971ffc0eb9e42c4e3))
+
+
+
+
+
 ## [1.0.4](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-accordion@1.0.3...@zendeskgarden/container-accordion@1.0.4) (2021-02-25)
 
 **Note:** Version bump only for package @zendeskgarden/container-accordion

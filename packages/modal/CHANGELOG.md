@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.7](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-modal@0.8.6...@zendeskgarden/container-modal@0.8.7) (2021-03-19)
+
+
+### Bug Fixes
+
+* **modals:** only close modal onmouseup for modal container ([#282](https://github.com/zendeskgarden/react-containers/issues/282)) ([8e1b94c](https://github.com/zendeskgarden/react-containers/commit/8e1b94c53f686bc75a3ca3156d6cdce6f5ac27eb))
+
+
+
+
+
 ## [0.8.6](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-modal@0.8.5...@zendeskgarden/container-modal@0.8.6) (2021-02-25)
 
 
