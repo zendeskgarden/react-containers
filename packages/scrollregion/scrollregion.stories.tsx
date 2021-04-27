@@ -99,7 +99,7 @@ const Content = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(({ ..
         style={{ margin: '12px 8px' }}
         onChange={e => setHasPadding(e.target.checked)}
       />
-      <label htmlFor="padding-toggle">Toggle paddinxg</label>
+      <label htmlFor="padding-toggle">Toggle padding</label>
       <StyledCustomFocus
         ref={mergedRefs}
         tabIndex={containerTabIndex}
