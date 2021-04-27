@@ -16,7 +16,7 @@ export interface IScrollRegionContainerProps extends IUseScrollRegion {
   children?: (tabIndex: number | undefined) => React.ReactNode;
 }
 
-export const ScrollRegionContainer: React.FunctionComponent<any> = ({
+export const ScrollRegionContainer: React.FunctionComponent<IScrollRegionContainerProps> = ({
   children,
   render = children,
   ...props
@@ -26,5 +26,7 @@ export const ScrollRegionContainer: React.FunctionComponent<any> = ({
 
 ScrollRegionContainer.propTypes = {
   children: PropTypes.func,
-  render: PropTypes.func
+  render: PropTypes.func,
+  containerRef: PropTypes.any.isRequired,
+  dependency: PropTypes.any
 };
