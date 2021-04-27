@@ -22,10 +22,10 @@
   "dependencies": {
     "@babel/runtime": "^7.8.4",
     "lodash.debounce": "^4.0.8",
+    "prop-types": "^15.7.2",
     "react-merge-refs": "^1.1.0"
   },
   "peerDependencies": {
-    "prop-types": "^15.6.1",
     "react": ">=16.8.0",
     "react-dom": ">=16.8.0"
   },
