@@ -40,6 +40,7 @@ export const Container = () => {
             type="checkbox"
             id="container-toggle"
             onChange={e => setOverflow(e.target.checked)}
+            style={{ margin: '4px' }}
           />
           <label htmlFor="container-toggle">Toggle overflow</label>
           <StyledCustomFocus ref={containerRef} tabIndex={containerTabIndex}>
@@ -66,7 +67,12 @@ export const Hook = () => {
 
   return (
     <div ref={focusVisibleRef} style={{ margin: '2px' }}>
-      <input type="checkbox" id="hook-toggle" onChange={e => setOverflow(e.target.checked)} />
+      <input
+        type="checkbox"
+        id="hook-toggle"
+        onChange={e => setOverflow(e.target.checked)}
+        style={{ margin: '4px' }}
+      />
       <label htmlFor="hook-toggle">Toggle overflow</label>
       <StyledCustomFocus ref={containerRef} tabIndex={containerTabIndex}>
         <p style={{ lineHeight: overflow ? '32px' : 'initial' }}>
