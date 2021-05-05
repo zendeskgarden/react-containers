@@ -34,6 +34,6 @@ module.exports = {
     '!**/node_modules/**',
     '!**/vendor/**'
   ],
-  coverageDirectory: '<rootDir>/demo/coverage',
+  coverageDirectory: '<rootDir>/utils/storybook/coverage',
   testPathIgnorePatterns: ['/node_modules/', '<rootDir>/packages/.template']
 };
