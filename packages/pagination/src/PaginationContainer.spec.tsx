@@ -9,7 +9,7 @@ import React, { useRef } from 'react';
 import userEvent from '@testing-library/user-event';
 import { render } from '@testing-library/react';
 import { IGetPageProps } from './usePagination';
-import { PaginationContainer } from './PaginationContainer';
+import { PaginationContainer } from './';
 
 describe('PaginationContainer', () => {
   const pages = [1, 2, 3, 4, 5];

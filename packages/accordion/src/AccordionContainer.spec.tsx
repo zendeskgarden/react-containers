@@ -9,8 +9,7 @@ import React from 'react';
 import userEvent from '@testing-library/user-event';
 import { render, fireEvent } from '@testing-library/react';
 import { KEY_CODES } from '@zendeskgarden/container-utilities';
-import { AccordionContainer } from './AccordionContainer';
-import { IUseAccordionReturnValue, IUseAccordionProps } from './useAccordion';
+import { AccordionContainer, IUseAccordionReturnValue, IUseAccordionProps } from './';
 
 describe('AccordionContainer', () => {
   it('renders with expected return values', () => {

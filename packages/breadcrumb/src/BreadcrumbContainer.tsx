@@ -8,7 +8,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import useBreadcrumb, { IUseBreadcrumbReturnValue } from './useBreadcrumb';
+import { useBreadcrumb, IUseBreadcrumbReturnValue } from './useBreadcrumb';
 
 export interface IBreadcrumbContainerProps {
   /** A render prop function */
@@ -17,7 +17,7 @@ export interface IBreadcrumbContainerProps {
   children?: (options: IUseBreadcrumbReturnValue) => React.ReactNode;
 }
 
-const BreadcrumbContainer: React.FunctionComponent<IBreadcrumbContainerProps> = ({
+export const BreadcrumbContainer: React.FunctionComponent<IBreadcrumbContainerProps> = ({
   children,
   render = children
 }) => {
@@ -28,5 +28,3 @@ BreadcrumbContainer.propTypes = {
   render: PropTypes.func,
   children: PropTypes.func
 };
-
-export default BreadcrumbContainer;

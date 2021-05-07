@@ -8,7 +8,7 @@
 import React from 'react';
 import { render, act } from '@testing-library/react';
 
-import { ScheduleContainer, IScheduleContainerProps } from './ScheduleContainer';
+import { ScheduleContainer, IScheduleContainerProps } from './';
 
 jest.useFakeTimers();
 

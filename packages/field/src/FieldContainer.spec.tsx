@@ -8,7 +8,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 
-import { FieldContainer } from './FieldContainer';
+import { FieldContainer } from './';
 
 describe('FieldContainer', () => {
   const CONTAINER_ID = 'test';

@@ -9,7 +9,7 @@ import React from 'react';
 import userEvent from '@testing-library/user-event';
 import { render, fireEvent } from '@testing-library/react';
 
-import { KeyboardFocusContainer } from './KeyboardFocusContainer';
+import { KeyboardFocusContainer } from './';
 
 jest.useFakeTimers();
 
