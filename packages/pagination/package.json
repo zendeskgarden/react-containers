@@ -1,5 +1,6 @@
 {
   "name": "@zendeskgarden/container-pagination",
+  "version": "0.3.9",
   "description": "Containers relating to pagination in the Garden Design System",
   "license": "Apache-2.0",
   "author": "Zendesk Garden <garden@zendesk.com>",
@@ -8,7 +9,6 @@
   "bugs": {
     "url": "https://github.com/zendeskgarden/react-containers/issues"
   },
-  "version": "0.3.9",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
   "files": [

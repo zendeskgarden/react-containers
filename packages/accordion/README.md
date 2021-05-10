@@ -26,17 +26,12 @@ attributes for a group of sections.
 import { useAccordion } from '@zendeskgarden/container-accordion';
 
 const Accordion = ({ expandable = true, collapsible = true } = {}) => {
-  const {
-    getHeaderProps,
-    getTriggerProps,
-    getPanelProps,
-    expandedSections,
-    disabledSections
-  } = useAccordion({
-    expandedSections: [0],
-    expandable,
-    collapsible
-  });
+  const { getHeaderProps, getTriggerProps, getPanelProps, expandedSections, disabledSections } =
+    useAccordion({
+      expandedSections: [0],
+      expandable,
+      collapsible
+    });
 
   return (
     <>
