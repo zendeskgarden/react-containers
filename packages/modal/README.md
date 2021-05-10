@@ -25,13 +25,8 @@ import { useModal } from '@zendeskgarden/container-modal';
 const Modal = () => {
   const [isModalVisible, setModalVisibility] = useState(false);
   const modalRef = useRef(null);
-  const {
-    getBackdropProps,
-    getModalProps,
-    getTitleProps,
-    getContentProps,
-    getCloseProps
-  } = useModal({ onClose: () => setModalVisibility(false), modalRef });
+  const { getBackdropProps, getModalProps, getTitleProps, getContentProps, getCloseProps } =
+    useModal({ onClose: () => setModalVisibility(false), modalRef });
 
   return (
     <>

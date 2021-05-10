@@ -29,9 +29,8 @@ export type UseButtonGroupReturnValue<Item> = IUseSelectionState<Item> &
 export function useButtonGroup<Item = any>(
   options: IUseButtonGroupProps<Item>
 ): UseButtonGroupReturnValue<Item> {
-  const { selectedItem, focusedItem, getContainerProps, getItemProps } = useSelection<Item>(
-    options
-  );
+  const { selectedItem, focusedItem, getContainerProps, getItemProps } =
+    useSelection<Item>(options);
 
   const getGroupProps = ({ role = 'group', ...other } = {}) => {
     return {

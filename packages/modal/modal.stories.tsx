@@ -78,18 +78,13 @@ export const Container = () => {
 export const Hook = ({ restoreFocus }) => {
   const [isModalVisible, setModalVisibility] = useState(false);
   const modalRef = useRef(null);
-  const {
-    getBackdropProps,
-    getModalProps,
-    getTitleProps,
-    getContentProps,
-    getCloseProps
-  } = useModal({
-    onClose: () => setModalVisibility(false),
-    modalRef,
-    restoreFocus,
-    environment: window.document
-  });
+  const { getBackdropProps, getModalProps, getTitleProps, getContentProps, getCloseProps } =
+    useModal({
+      onClose: () => setModalVisibility(false),
+      modalRef,
+      restoreFocus,
+      environment: window.document
+    });
 
   return (
     <div style={{ height: '60vh', display: 'flex', alignItems: 'center' }}>

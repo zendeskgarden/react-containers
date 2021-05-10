@@ -10,6 +10,7 @@ module.exports = {
   addons: [
     { name: '@storybook/addon-essentials', options: { actions: false, viewport: false } },
     '@storybook/addon-a11y',
-    '@storybook/addon-storysource'
+    '@storybook/addon-storysource',
+    '@storybook/addon-postcss'
   ]
 };

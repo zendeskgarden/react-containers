@@ -1,5 +1,6 @@
 {
   "name": "@zendeskgarden/container-utilities",
+  "version": "0.5.5",
   "description": "Container utilities in the Garden Design System",
   "license": "Apache-2.0",
   "author": "Zendesk Garden <garden@zendesk.com>",
@@ -8,7 +9,6 @@
   "bugs": {
     "url": "https://github.com/zendeskgarden/react-containers/issues"
   },
-  "version": "0.5.5",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
   "files": [

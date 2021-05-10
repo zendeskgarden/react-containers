@@ -84,13 +84,8 @@ export const Hook = ({ sections, expandable, collapsible }) => {
     .map((s, i) => i);
 
   const Accordion = () => {
-    const {
-      getHeaderProps,
-      getTriggerProps,
-      getPanelProps,
-      expandedSections,
-      disabledSections
-    } = useAccordion({ expandable, collapsible });
+    const { getHeaderProps, getTriggerProps, getPanelProps, expandedSections, disabledSections } =
+      useAccordion({ expandable, collapsible });
 
     return (
       <div style={{ width: 300 }}>
