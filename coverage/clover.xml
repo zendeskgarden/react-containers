@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1620668092965" clover="3.2.0">
-  <project timestamp="1620668092965" name="All files">
+<coverage generated="1620669587859" clover="3.2.0">
+  <project timestamp="1620669587859" name="All files">
     <metrics statements="674" coveredstatements="667" conditionals="412" coveredconditionals="348" methods="181" coveredmethods="165" elements="1267" coveredelements="1180" complexity="0" loc="674" ncloc="674" packages="16" files="48" classes="48"/>
     <package name="accordion.src">
       <metrics statements="60" coveredstatements="60" conditionals="45" coveredconditionals="41" methods="11" coveredmethods="10"/>
@@ -121,14 +121,14 @@
         <metrics statements="10" coveredstatements="10" conditionals="5" coveredconditionals="3" methods="5" coveredmethods="5"/>
         <line num="8" count="1" type="stmt"/>
         <line num="29" count="1" type="stmt"/>
-        <line num="32" count="7" type="stmt"/>
-        <line num="36" count="7" type="cond" truecount="1" falsecount="1"/>
-        <line num="37" count="7" type="stmt"/>
-        <line num="45" count="7" type="cond" truecount="2" falsecount="1"/>
-        <line num="46" count="21" type="stmt"/>
-        <line num="53" count="7" type="stmt"/>
-        <line num="56" count="7" type="stmt"/>
-        <line num="57" count="21" type="stmt"/>
+        <line num="33" count="7" type="stmt"/>
+        <line num="35" count="7" type="cond" truecount="1" falsecount="1"/>
+        <line num="36" count="7" type="stmt"/>
+        <line num="44" count="7" type="cond" truecount="2" falsecount="1"/>
+        <line num="45" count="21" type="stmt"/>
+        <line num="52" count="7" type="stmt"/>
+        <line num="55" count="7" type="stmt"/>
+        <line num="56" count="21" type="stmt"/>
       </file>
     </package>
     <package name="field.src">
@@ -199,7 +199,7 @@
         <line num="61" count="18" type="stmt"/>
         <line num="63" count="27" type="cond" truecount="2" falsecount="0"/>
         <line num="69" count="41" type="stmt"/>
-        <line num="70" count="8" type="cond" truecount="2" falsecount="0"/>
+        <line num="70" count="7" type="cond" truecount="2" falsecount="0"/>
         <line num="71" count="1" type="stmt"/>
         <line num="77" count="41" type="stmt"/>
         <line num="78" count="4" type="cond" truecount="1" falsecount="1"/>
@@ -207,18 +207,18 @@
         <line num="80" count="4" type="stmt"/>
         <line num="82" count="4" type="cond" truecount="1" falsecount="1"/>
         <line num="85" count="41" type="stmt"/>
-        <line num="86" count="7" type="stmt"/>
-        <line num="88" count="7" type="stmt"/>
+        <line num="86" count="6" type="stmt"/>
+        <line num="88" count="6" type="stmt"/>
         <line num="94" count="41" type="cond" truecount="0" falsecount="1"/>
         <line num="95" count="41" type="stmt"/>
-        <line num="97" count="12" type="cond" truecount="2" falsecount="0"/>
+        <line num="97" count="11" type="cond" truecount="2" falsecount="0"/>
         <line num="98" count="4" type="stmt"/>
-        <line num="100" count="8" type="stmt"/>
-        <line num="102" count="7" type="stmt"/>
-        <line num="104" count="7" type="cond" truecount="2" falsecount="0"/>
+        <line num="100" count="7" type="stmt"/>
+        <line num="102" count="6" type="stmt"/>
+        <line num="104" count="6" type="cond" truecount="2" falsecount="0"/>
         <line num="108" count="2" type="stmt"/>
         <line num="109" count="2" type="stmt"/>
-        <line num="112" count="7" type="cond" truecount="4" falsecount="0"/>
+        <line num="112" count="6" type="cond" truecount="4" falsecount="0"/>
         <line num="113" count="2" type="stmt"/>
         <line num="114" count="2" type="stmt"/>
         <line num="123" count="41" type="stmt"/>
@@ -821,7 +821,7 @@
         <line num="9" count="9" type="stmt"/>
         <line num="10" count="422" type="stmt"/>
         <line num="11" count="9" type="stmt"/>
-        <line num="12" count="173" type="stmt"/>
+        <line num="12" count="172" type="stmt"/>
       </file>
     </package>
     <package name="utilities.src.utils">
@@ -842,9 +842,9 @@
         <metrics statements="5" coveredstatements="5" conditionals="4" coveredconditionals="4" methods="3" coveredmethods="3"/>
         <line num="26" count="10" type="stmt"/>
         <line num="27" count="2031" type="stmt"/>
-        <line num="28" count="169" type="stmt"/>
-        <line num="29" count="337" type="cond" truecount="2" falsecount="0"/>
-        <line num="31" count="336" type="cond" truecount="2" falsecount="0"/>
+        <line num="28" count="168" type="stmt"/>
+        <line num="29" count="335" type="cond" truecount="2" falsecount="0"/>
+        <line num="31" count="334" type="cond" truecount="2" falsecount="0"/>
       </file>
       <file name="getControlledValue.ts" path="/home/circleci/project/packages/utilities/src/utils/getControlledValue.ts">
         <metrics statements="5" coveredstatements="5" conditionals="2" coveredconditionals="2" methods="1" coveredmethods="1"/>
