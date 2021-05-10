@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/7</span>
+                <span class='fraction'>7/7</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/1</span>
+                <span class='fraction'>1/1</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/1</span>
+                <span class='fraction'>1/1</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/6</span>
+                <span class='fraction'>6/6</span>
             </div>
         
             
@@ -55,7 +55,7 @@
             Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
         </p>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -96,9 +96,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -107,15 +107,15 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -128,9 +128,9 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 &nbsp;
-<span class="cstat-no" title="statement not covered" >import React from 'react';</span>
-<span class="cstat-no" title="statement not covered" >import PropTypes from 'prop-types';</span>
-<span class="cstat-no" title="statement not covered" >import { useScrollRegion, IUseScrollRegion } from './useScrollRegion';</span>
+import React from 'react';
+import PropTypes from 'prop-types';
+import { useScrollRegion, IUseScrollRegion } from './useScrollRegion';
 &nbsp;
 export interface IScrollRegionContainerProps extends IUseScrollRegion {
   /** A render prop function which receives the tab index */
@@ -139,15 +139,15 @@ export interface IScrollRegionContainerProps extends IUseScrollRegion {
   children?: (tabIndex: number | undefined) =&gt; React.ReactNode;
 }
 &nbsp;
-export const <span class="cstat-no" title="statement not covered" >ScrollRegionContainer: React.FunctionComponent&lt;IScrollRegionContainerProps&gt; = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(</span>{</span></span>
+export const ScrollRegionContainer: React.FunctionComponent&lt;IScrollRegionContainerProps&gt; = ({
   children,
-  render = <span class="branch-0 cbranch-no" title="branch not covered" >children,</span>
+  render = children,
   ...props
 }) =&gt; {
-<span class="cstat-no" title="statement not covered" >  return &lt;&gt;{render!(useScrollRegion(props)) as React.ReactElement}&lt;/&gt;;</span>
+  return &lt;&gt;{render!(useScrollRegion(props)) as React.ReactElement}&lt;/&gt;;
 };
 &nbsp;
-<span class="cstat-no" title="statement not covered" >ScrollRegionContainer.propTypes = {</span>
+ScrollRegionContainer.propTypes = {
   children: PropTypes.func,
   render: PropTypes.func,
   containerRef: PropTypes.any.isRequired,
@@ -160,7 +160,7 @@ export const <span class="cstat-no" title="statement not covered" >ScrollRegionC
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Mon May 10 2021 17:34:04 GMT+0000 (Coordinated Universal Time)
+                at Mon May 10 2021 17:34:52 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>

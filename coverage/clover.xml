@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1620668044637" clover="3.2.0">
-  <project timestamp="1620668044637" name="All files">
-    <metrics statements="675" coveredstatements="637" conditionals="412" coveredconditionals="347" methods="181" coveredmethods="151" elements="1268" coveredelements="1135" complexity="0" loc="675" ncloc="675" packages="16" files="48" classes="48"/>
+<coverage generated="1620668092965" clover="3.2.0">
+  <project timestamp="1620668092965" name="All files">
+    <metrics statements="674" coveredstatements="667" conditionals="412" coveredconditionals="348" methods="181" coveredmethods="165" elements="1267" coveredelements="1180" complexity="0" loc="674" ncloc="674" packages="16" files="48" classes="48"/>
     <package name="accordion.src">
-      <metrics statements="60" coveredstatements="57" conditionals="45" coveredconditionals="41" methods="11" coveredmethods="9"/>
+      <metrics statements="60" coveredstatements="60" conditionals="45" coveredconditionals="41" methods="11" coveredmethods="10"/>
       <file name="AccordionContainer.tsx" path="/home/circleci/project/packages/accordion/src/AccordionContainer.tsx">
         <metrics statements="8" coveredstatements="8" conditionals="1" coveredconditionals="1" methods="1" coveredmethods="1"/>
         <line num="8" count="1" type="stmt"/>
@@ -16,10 +16,10 @@
         <line num="31" count="1" type="stmt"/>
       </file>
       <file name="index.ts" path="/home/circleci/project/packages/accordion/src/index.ts">
-        <metrics statements="3" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="0"/>
-        <line num="9" count="0" type="stmt"/>
-        <line num="10" count="0" type="stmt"/>
-        <line num="17" count="0" type="stmt"/>
+        <metrics statements="3" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="1"/>
+        <line num="9" count="1" type="stmt"/>
+        <line num="10" count="1" type="stmt"/>
+        <line num="17" count="39" type="stmt"/>
       </file>
       <file name="useAccordion.ts" path="/home/circleci/project/packages/accordion/src/useAccordion.ts">
         <metrics statements="49" coveredstatements="49" conditionals="44" coveredconditionals="40" methods="8" coveredmethods="8"/>
@@ -75,21 +75,20 @@
       </file>
     </package>
     <package name="breadcrumb.src">
-      <metrics statements="15" coveredstatements="13" conditionals="4" coveredconditionals="2" methods="6" coveredmethods="4"/>
+      <metrics statements="14" coveredstatements="14" conditionals="4" coveredconditionals="2" methods="6" coveredmethods="5"/>
       <file name="BreadcrumbContainer.tsx" path="/home/circleci/project/packages/breadcrumb/src/BreadcrumbContainer.tsx">
-        <metrics statements="7" coveredstatements="7" conditionals="1" coveredconditionals="1" methods="1" coveredmethods="1"/>
+        <metrics statements="6" coveredstatements="6" conditionals="1" coveredconditionals="1" methods="1" coveredmethods="1"/>
         <line num="8" count="1" type="stmt"/>
         <line num="9" count="1" type="stmt"/>
         <line num="11" count="1" type="stmt"/>
         <line num="20" count="1" type="stmt"/>
         <line num="24" count="2" type="stmt"/>
         <line num="27" count="1" type="stmt"/>
-        <line num="32" count="1" type="stmt"/>
       </file>
       <file name="index.ts" path="/home/circleci/project/packages/breadcrumb/src/index.ts">
-        <metrics statements="2" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="0"/>
-        <line num="10" count="0" type="stmt"/>
-        <line num="13" count="0" type="stmt"/>
+        <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="1"/>
+        <line num="10" count="1" type="stmt"/>
+        <line num="13" count="3" type="stmt"/>
       </file>
       <file name="useBreadcrumb.ts" path="/home/circleci/project/packages/breadcrumb/src/useBreadcrumb.ts">
         <metrics statements="6" coveredstatements="6" conditionals="3" coveredconditionals="1" methods="3" coveredmethods="3"/>
@@ -102,7 +101,7 @@
       </file>
     </package>
     <package name="buttongroup.src">
-      <metrics statements="19" coveredstatements="16" conditionals="6" coveredconditionals="4" methods="8" coveredmethods="6"/>
+      <metrics statements="19" coveredstatements="19" conditionals="6" coveredconditionals="4" methods="8" coveredmethods="7"/>
       <file name="ButtonGroupContainer.tsx" path="/home/circleci/project/packages/buttongroup/src/ButtonGroupContainer.tsx">
         <metrics statements="6" coveredstatements="6" conditionals="1" coveredconditionals="1" methods="1" coveredmethods="1"/>
         <line num="8" count="1" type="stmt"/>
@@ -113,10 +112,10 @@
         <line num="28" count="1" type="stmt"/>
       </file>
       <file name="index.ts" path="/home/circleci/project/packages/buttongroup/src/index.ts">
-        <metrics statements="3" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="0"/>
-        <line num="9" count="0" type="stmt"/>
-        <line num="10" count="0" type="stmt"/>
-        <line num="17" count="0" type="stmt"/>
+        <metrics statements="3" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="1"/>
+        <line num="9" count="1" type="stmt"/>
+        <line num="10" count="1" type="stmt"/>
+        <line num="17" count="6" type="stmt"/>
       </file>
       <file name="useButtonGroup.ts" path="/home/circleci/project/packages/buttongroup/src/useButtonGroup.ts">
         <metrics statements="10" coveredstatements="10" conditionals="5" coveredconditionals="3" methods="5" coveredmethods="5"/>
@@ -133,7 +132,7 @@
       </file>
     </package>
     <package name="field.src">
-      <metrics statements="23" coveredstatements="21" conditionals="14" coveredconditionals="10" methods="7" coveredmethods="5"/>
+      <metrics statements="23" coveredstatements="23" conditionals="14" coveredconditionals="10" methods="7" coveredmethods="6"/>
       <file name="FieldContainer.tsx" path="/home/circleci/project/packages/field/src/FieldContainer.tsx">
         <metrics statements="6" coveredstatements="6" conditionals="1" coveredconditionals="1" methods="1" coveredmethods="1"/>
         <line num="8" count="1" type="stmt"/>
@@ -144,9 +143,9 @@
         <line num="30" count="1" type="stmt"/>
       </file>
       <file name="index.ts" path="/home/circleci/project/packages/field/src/index.ts">
-        <metrics statements="2" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="0"/>
-        <line num="9" count="0" type="stmt"/>
-        <line num="12" count="0" type="stmt"/>
+        <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="1"/>
+        <line num="9" count="1" type="stmt"/>
+        <line num="12" count="5" type="stmt"/>
       </file>
       <file name="useField.ts" path="/home/circleci/project/packages/field/src/useField.ts">
         <metrics statements="15" coveredstatements="15" conditionals="13" coveredconditionals="9" methods="4" coveredmethods="4"/>
@@ -168,7 +167,7 @@
       </file>
     </package>
     <package name="focusjail.src">
-      <metrics statements="55" coveredstatements="55" conditionals="41" coveredconditionals="36" methods="13" coveredmethods="12"/>
+      <metrics statements="55" coveredstatements="55" conditionals="41" coveredconditionals="36" methods="13" coveredmethods="13"/>
       <file name="FocusJailContainer.tsx" path="/home/circleci/project/packages/focusjail/src/FocusJailContainer.tsx">
         <metrics statements="6" coveredstatements="6" conditionals="1" coveredconditionals="1" methods="1" coveredmethods="1"/>
         <line num="8" count="2" type="stmt"/>
@@ -179,9 +178,9 @@
         <line num="28" count="2" type="stmt"/>
       </file>
       <file name="index.ts" path="/home/circleci/project/packages/focusjail/src/index.ts">
-        <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="1"/>
-        <line num="9" count="23" type="stmt"/>
-        <line num="12" count="1" type="stmt"/>
+        <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
+        <line num="9" count="24" type="stmt"/>
+        <line num="12" count="13" type="stmt"/>
       </file>
       <file name="useFocusJail.ts" path="/home/circleci/project/packages/focusjail/src/useFocusJail.ts">
         <metrics statements="47" coveredstatements="47" conditionals="40" coveredconditionals="35" methods="10" coveredmethods="10"/>
@@ -366,7 +365,7 @@
       </file>
     </package>
     <package name="keyboardfocus.src">
-      <metrics statements="30" coveredstatements="28" conditionals="5" coveredconditionals="4" methods="11" coveredmethods="9"/>
+      <metrics statements="30" coveredstatements="30" conditionals="5" coveredconditionals="4" methods="11" coveredmethods="10"/>
       <file name="KeyboardFocusContainer.tsx" path="/home/circleci/project/packages/keyboardfocus/src/KeyboardFocusContainer.tsx">
         <metrics statements="6" coveredstatements="6" conditionals="1" coveredconditionals="1" methods="1" coveredmethods="1"/>
         <line num="8" count="1" type="stmt"/>
@@ -377,9 +376,9 @@
         <line num="27" count="1" type="stmt"/>
       </file>
       <file name="index.ts" path="/home/circleci/project/packages/keyboardfocus/src/index.ts">
-        <metrics statements="2" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="0"/>
-        <line num="9" count="0" type="stmt"/>
-        <line num="12" count="0" type="stmt"/>
+        <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="1"/>
+        <line num="9" count="1" type="stmt"/>
+        <line num="12" count="6" type="stmt"/>
       </file>
       <file name="useKeyboardFocus.ts" path="/home/circleci/project/packages/keyboardfocus/src/useKeyboardFocus.ts">
         <metrics statements="22" coveredstatements="22" conditionals="4" coveredconditionals="3" methods="8" coveredmethods="8"/>
@@ -408,7 +407,7 @@
       </file>
     </package>
     <package name="modal.src">
-      <metrics statements="43" coveredstatements="41" conditionals="20" coveredconditionals="13" methods="15" coveredmethods="13"/>
+      <metrics statements="43" coveredstatements="43" conditionals="20" coveredconditionals="13" methods="15" coveredmethods="14"/>
       <file name="ModalContainer.tsx" path="/home/circleci/project/packages/modal/src/ModalContainer.tsx">
         <metrics statements="6" coveredstatements="6" conditionals="1" coveredconditionals="1" methods="1" coveredmethods="1"/>
         <line num="8" count="1" type="stmt"/>
@@ -419,9 +418,9 @@
         <line num="28" count="1" type="stmt"/>
       </file>
       <file name="index.ts" path="/home/circleci/project/packages/modal/src/index.ts">
-        <metrics statements="2" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="0"/>
-        <line num="9" count="0" type="stmt"/>
-        <line num="12" count="0" type="stmt"/>
+        <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="1"/>
+        <line num="9" count="1" type="stmt"/>
+        <line num="12" count="12" type="stmt"/>
       </file>
       <file name="useModal.ts" path="/home/circleci/project/packages/modal/src/useModal.ts">
         <metrics statements="35" coveredstatements="35" conditionals="19" coveredconditionals="12" methods="12" coveredmethods="12"/>
@@ -463,7 +462,7 @@
       </file>
     </package>
     <package name="pagination.src">
-      <metrics statements="28" coveredstatements="25" conditionals="19" coveredconditionals="15" methods="12" coveredmethods="10"/>
+      <metrics statements="28" coveredstatements="28" conditionals="19" coveredconditionals="15" methods="12" coveredmethods="11"/>
       <file name="PaginationContainer.tsx" path="/home/circleci/project/packages/pagination/src/PaginationContainer.tsx">
         <metrics statements="6" coveredstatements="6" conditionals="1" coveredconditionals="1" methods="1" coveredmethods="1"/>
         <line num="8" count="1" type="stmt"/>
@@ -474,10 +473,10 @@
         <line num="28" count="1" type="stmt"/>
       </file>
       <file name="index.ts" path="/home/circleci/project/packages/pagination/src/index.ts">
-        <metrics statements="3" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="0"/>
-        <line num="9" count="0" type="stmt"/>
-        <line num="10" count="0" type="stmt"/>
-        <line num="18" count="0" type="stmt"/>
+        <metrics statements="3" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="1"/>
+        <line num="9" count="1" type="stmt"/>
+        <line num="10" count="1" type="stmt"/>
+        <line num="18" count="15" type="stmt"/>
       </file>
       <file name="usePagination.ts" path="/home/circleci/project/packages/pagination/src/usePagination.ts">
         <metrics statements="19" coveredstatements="19" conditionals="18" coveredconditionals="14" methods="9" coveredmethods="9"/>
@@ -503,7 +502,7 @@
       </file>
     </package>
     <package name="schedule.src">
-      <metrics statements="39" coveredstatements="35" conditionals="11" coveredconditionals="5" methods="10" coveredmethods="8"/>
+      <metrics statements="39" coveredstatements="37" conditionals="11" coveredconditionals="5" methods="10" coveredmethods="9"/>
       <file name="ScheduleContainer.tsx" path="/home/circleci/project/packages/schedule/src/ScheduleContainer.tsx">
         <metrics statements="7" coveredstatements="7" conditionals="1" coveredconditionals="1" methods="1" coveredmethods="1"/>
         <line num="8" count="1" type="stmt"/>
@@ -515,9 +514,9 @@
         <line num="34" count="1" type="stmt"/>
       </file>
       <file name="index.ts" path="/home/circleci/project/packages/schedule/src/index.ts">
-        <metrics statements="2" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="0"/>
-        <line num="8" count="0" type="stmt"/>
-        <line num="9" count="0" type="stmt"/>
+        <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="1"/>
+        <line num="8" count="1" type="stmt"/>
+        <line num="9" count="10" type="stmt"/>
       </file>
       <file name="useSchedule.ts" path="/home/circleci/project/packages/schedule/src/useSchedule.ts">
         <metrics statements="30" coveredstatements="28" conditionals="10" coveredconditionals="4" methods="7" coveredmethods="7"/>
@@ -554,20 +553,20 @@
       </file>
     </package>
     <package name="scrollregion.src">
-      <metrics statements="30" coveredstatements="22" conditionals="7" coveredconditionals="5" methods="8" coveredmethods="5"/>
+      <metrics statements="30" coveredstatements="30" conditionals="7" coveredconditionals="6" methods="8" coveredmethods="7"/>
       <file name="ScrollRegionContainer.tsx" path="/home/circleci/project/packages/scrollregion/src/ScrollRegionContainer.tsx">
-        <metrics statements="6" coveredstatements="0" conditionals="1" coveredconditionals="0" methods="1" coveredmethods="0"/>
-        <line num="8" count="0" type="stmt"/>
-        <line num="9" count="0" type="stmt"/>
-        <line num="10" count="0" type="stmt"/>
-        <line num="19" count="0" type="stmt"/>
-        <line num="24" count="0" type="stmt"/>
-        <line num="27" count="0" type="stmt"/>
+        <metrics statements="6" coveredstatements="6" conditionals="1" coveredconditionals="1" methods="1" coveredmethods="1"/>
+        <line num="8" count="1" type="stmt"/>
+        <line num="9" count="1" type="stmt"/>
+        <line num="10" count="1" type="stmt"/>
+        <line num="19" count="1" type="stmt"/>
+        <line num="24" count="3" type="stmt"/>
+        <line num="27" count="1" type="stmt"/>
       </file>
       <file name="index.ts" path="/home/circleci/project/packages/scrollregion/src/index.ts">
-        <metrics statements="2" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="0"/>
-        <line num="8" count="0" type="stmt"/>
-        <line num="9" count="0" type="stmt"/>
+        <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="1"/>
+        <line num="8" count="1" type="stmt"/>
+        <line num="9" count="3" type="stmt"/>
       </file>
       <file name="useScrollRegion.ts" path="/home/circleci/project/packages/scrollregion/src/useScrollRegion.ts">
         <metrics statements="22" coveredstatements="22" conditionals="6" coveredconditionals="5" methods="5" coveredmethods="5"/>
@@ -596,7 +595,7 @@
       </file>
     </package>
     <package name="selection.src">
-      <metrics statements="102" coveredstatements="100" conditionals="122" coveredconditionals="104" methods="15" coveredmethods="14"/>
+      <metrics statements="102" coveredstatements="100" conditionals="122" coveredconditionals="104" methods="15" coveredmethods="15"/>
       <file name="SelectionContainer.tsx" path="/home/circleci/project/packages/selection/src/SelectionContainer.tsx">
         <metrics statements="7" coveredstatements="7" conditionals="1" coveredconditionals="1" methods="1" coveredmethods="1"/>
         <line num="8" count="4" type="stmt"/>
@@ -608,10 +607,10 @@
         <line num="33" count="4" type="stmt"/>
       </file>
       <file name="index.ts" path="/home/circleci/project/packages/selection/src/index.ts">
-        <metrics statements="3" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="1"/>
-        <line num="9" count="3" type="stmt"/>
-        <line num="10" count="60" type="stmt"/>
-        <line num="18" count="3" type="stmt"/>
+        <metrics statements="3" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
+        <line num="9" count="4" type="stmt"/>
+        <line num="10" count="61" type="stmt"/>
+        <line num="18" count="42" type="stmt"/>
       </file>
       <file name="useSelection.ts" path="/home/circleci/project/packages/selection/src/useSelection.ts">
         <metrics statements="92" coveredstatements="90" conditionals="121" coveredconditionals="103" methods="12" coveredmethods="12"/>
@@ -710,7 +709,7 @@
       </file>
     </package>
     <package name="tabs.src">
-      <metrics statements="32" coveredstatements="30" conditionals="18" coveredconditionals="14" methods="10" coveredmethods="8"/>
+      <metrics statements="32" coveredstatements="32" conditionals="18" coveredconditionals="14" methods="10" coveredmethods="9"/>
       <file name="TabsContainer.tsx" path="/home/circleci/project/packages/tabs/src/TabsContainer.tsx">
         <metrics statements="6" coveredstatements="6" conditionals="1" coveredconditionals="1" methods="1" coveredmethods="1"/>
         <line num="8" count="1" type="stmt"/>
@@ -721,9 +720,9 @@
         <line num="28" count="1" type="stmt"/>
       </file>
       <file name="index.ts" path="/home/circleci/project/packages/tabs/src/index.ts">
-        <metrics statements="2" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="0"/>
-        <line num="9" count="0" type="stmt"/>
-        <line num="12" count="0" type="stmt"/>
+        <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="1"/>
+        <line num="9" count="1" type="stmt"/>
+        <line num="12" count="12" type="stmt"/>
       </file>
       <file name="useTabs.ts" path="/home/circleci/project/packages/tabs/src/useTabs.ts">
         <metrics statements="24" coveredstatements="24" conditionals="17" coveredconditionals="13" methods="7" coveredmethods="7"/>
@@ -754,7 +753,7 @@
       </file>
     </package>
     <package name="tooltip.src">
-      <metrics statements="49" coveredstatements="45" conditionals="19" coveredconditionals="16" methods="21" coveredmethods="17"/>
+      <metrics statements="49" coveredstatements="47" conditionals="19" coveredconditionals="16" methods="21" coveredmethods="18"/>
       <file name="TooltipContainer.tsx" path="/home/circleci/project/packages/tooltip/src/TooltipContainer.tsx">
         <metrics statements="6" coveredstatements="6" conditionals="1" coveredconditionals="1" methods="1" coveredmethods="1"/>
         <line num="8" count="1" type="stmt"/>
@@ -765,9 +764,9 @@
         <line num="28" count="1" type="stmt"/>
       </file>
       <file name="index.ts" path="/home/circleci/project/packages/tooltip/src/index.ts">
-        <metrics statements="2" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="0"/>
-        <line num="9" count="0" type="stmt"/>
-        <line num="12" count="0" type="stmt"/>
+        <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="1"/>
+        <line num="9" count="1" type="stmt"/>
+        <line num="12" count="16" type="stmt"/>
       </file>
       <file name="useTooltip.ts" path="/home/circleci/project/packages/tooltip/src/useTooltip.ts">
         <metrics statements="41" coveredstatements="39" conditionals="18" coveredconditionals="15" methods="18" coveredmethods="16"/>
