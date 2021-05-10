@@ -10,7 +10,7 @@ import { KEY_CODES } from '@zendeskgarden/container-utilities';
 import userEvent from '@testing-library/user-event';
 import { render, fireEvent } from '@testing-library/react';
 
-import { SelectionContainer, ISelectionContainerProps } from './SelectionContainer';
+import { SelectionContainer, ISelectionContainerProps } from './';
 
 describe('SelectionContainer', () => {
   const itemValues = ['Item-1', 'Item-2', 'Item-3'];

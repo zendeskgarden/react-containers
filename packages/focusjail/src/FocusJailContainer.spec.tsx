@@ -10,8 +10,7 @@ import { KEY_CODES } from '@zendeskgarden/container-utilities';
 import userEvent from '@testing-library/user-event';
 import { render, fireEvent, waitFor, screen } from '@testing-library/react';
 
-import { FocusJailContainer } from './FocusJailContainer';
-import { IUseFocusJailProps } from './useFocusJail';
+import { FocusJailContainer, IUseFocusJailProps } from './';
 
 interface IBasicExampleProps extends Omit<IUseFocusJailProps, 'containerRef'> {
   focusableChildren?: React.ReactElement | React.ReactElement[];

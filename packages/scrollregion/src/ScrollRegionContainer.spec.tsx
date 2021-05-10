@@ -8,19 +8,22 @@
 import React, { useRef } from 'react';
 import userEvent from '@testing-library/user-event';
 import { render, screen, act } from '@testing-library/react';
-import { useScrollRegion } from './useScrollRegion';
+import { ScrollRegionContainer } from './index';
 
 jest.useFakeTimers();
 
 describe('ScrollRegionContainer', () => {
   const Example = () => {
     const containerRef = useRef<HTMLDivElement>(null);
-    const containerTabIndex = useScrollRegion({ containerRef });
 
     return (
-      <div ref={containerRef} tabIndex={containerTabIndex} data-test-id="container">
-        <p>Turnip greens yarrow ricebean rutabaga endive cauliflower sea.</p>
-      </div>
+      <ScrollRegionContainer containerRef={containerRef}>
+        {containerTabIndex => (
+          <div ref={containerRef} tabIndex={containerTabIndex} data-test-id="container">
+            <p>Turnip greens yarrow ricebean rutabaga endive cauliflower sea.</p>
+          </div>
+        )}
+      </ScrollRegionContainer>
     );
   };
 

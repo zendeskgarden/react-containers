@@ -10,7 +10,7 @@ export interface IUseBreadcrumbReturnValue {
   getCurrentPageProps: <T>(options?: T & React.HTMLProps<any>) => T & React.HTMLProps<any>;
 }
 
-export default function useBreadcrumb(): IUseBreadcrumbReturnValue {
+export function useBreadcrumb(): IUseBreadcrumbReturnValue {
   const getContainerProps = (
     { role = 'navigation', ...other }: React.HTMLProps<any> = {} as any
   ): any => {

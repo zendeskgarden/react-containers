@@ -9,7 +9,7 @@ import React, { createRef } from 'react';
 import userEvent from '@testing-library/user-event';
 import { render } from '@testing-library/react';
 
-import { ButtonGroupContainer } from './ButtonGroupContainer';
+import { ButtonGroupContainer } from './';
 
 describe('ButtonGroupContainer', () => {
   const buttons = ['button-1', 'button-2', 'button-3'];

@@ -8,7 +8,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 
-import BreadcrumbContainer from './BreadcrumbContainer';
+import { BreadcrumbContainer } from './';
 
 describe('BreadcrumbContainer', () => {
   const BasicExample = () => (

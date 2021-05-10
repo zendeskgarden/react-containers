@@ -9,8 +9,7 @@ import React, { createRef } from 'react';
 import userEvent from '@testing-library/user-event';
 import { render, fireEvent } from '@testing-library/react';
 import { KEY_CODES } from '@zendeskgarden/container-utilities';
-import { ModalContainer } from './ModalContainer';
-import { IUseModalReturnValue } from './useModal';
+import { ModalContainer, IUseModalReturnValue } from './';
 
 describe('FocusJailContainer', () => {
   let onCloseSpy: jest.Mock;

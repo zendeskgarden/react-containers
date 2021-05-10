@@ -9,7 +9,7 @@ import React, { createRef } from 'react';
 import userEvent from '@testing-library/user-event';
 import { render } from '@testing-library/react';
 
-import { TabsContainer, ITabsContainerProps } from './TabsContainer';
+import { TabsContainer, ITabsContainerProps } from './';
 
 describe('TabsContainer', () => {
   const idPrefix = 'test_id';
