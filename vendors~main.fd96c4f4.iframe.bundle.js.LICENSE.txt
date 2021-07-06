@@ -53,7 +53,7 @@ object-assign
 * @license MIT, https://github.com/focus-trap/tabbable/blob/master/LICENSE
 */
 
-/*! axe v4.2.0
+/*! axe v4.2.3
  * Copyright (c) 2021 Deque Systems, Inc.
  *
  * Your use of this Source Code Form is subject to the terms of the Mozilla Public
