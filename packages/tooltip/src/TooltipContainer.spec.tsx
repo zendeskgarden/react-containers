@@ -31,10 +31,6 @@ describe('TooltipContainer', () => {
     );
   };
 
-  beforeEach(() => {
-    (clearTimeout as jest.Mock).mockClear();
-  });
-
   it('defaults visibility state with isVisible prop', () => {
     const { getByText } = render(<BasicExample isVisible />);
 
@@ -112,6 +108,7 @@ describe('TooltipContainer', () => {
       });
 
       it('should clear open timeout if unmounted during interval', () => {
+        jest.spyOn(window, 'clearTimeout');
         const { getByText, unmount } = render(<BasicExample />);
 
         userEvent.hover(getByText('trigger'));
@@ -119,6 +116,8 @@ describe('TooltipContainer', () => {
         unmount();
         // 3 total clearTimeouts occur during this action
         expect(clearTimeout).toHaveBeenCalledTimes(3);
+
+        (clearTimeout as jest.Mock).mockRestore();
       });
     });
 

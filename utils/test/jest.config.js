@@ -9,6 +9,7 @@ const path = require('path');
 const { defaults } = require('jest-config');
 
 module.exports = {
+  testEnvironment: 'jsdom',
   rootDir: '../../',
   preset: 'ts-jest/presets/js-with-babel',
   modulePathIgnorePatterns: ['./node_modules'],
