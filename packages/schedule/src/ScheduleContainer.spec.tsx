@@ -26,13 +26,9 @@ describe('ScheduleContainer', () => {
   );
 
   beforeEach(() => {
-    jest.spyOn(window, 'requestAnimationFrame').mockImplementation((cb: FrameRequestCallback) => {
-      const timerId = setTimeout(() => {
-        cb(Date.now());
-      }, 1000 / 60);
-
-      return Number(timerId);
-    });
+    jest.spyOn(window, 'setTimeout');
+    jest.spyOn(window, 'requestAnimationFrame');
+    jest.spyOn(window, 'clearTimeout');
     jest.spyOn(window, 'cancelAnimationFrame');
     (clearTimeout as jest.Mock).mockClear();
   });
@@ -117,7 +113,7 @@ describe('ScheduleContainer', () => {
       jest.runOnlyPendingTimers(); // loopTimeout
     });
 
-    expect(setTimeout).toHaveBeenCalledTimes(4);
+    expect(setTimeout).toHaveBeenCalledTimes(2);
   });
 
   it('animation loops once initial duration has completed', () => {
@@ -129,6 +125,6 @@ describe('ScheduleContainer', () => {
       jest.runOnlyPendingTimers(); // loopTimeout
     });
 
-    expect(setTimeout).toHaveBeenCalledTimes(6);
+    expect(setTimeout).toHaveBeenCalledTimes(3);
   });
 });
