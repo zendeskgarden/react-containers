@@ -31,6 +31,7 @@ to install.
 | [`@zendeskgarden/container-modal`](packages/modal)                 | [![npm version][modal npm version]][modal npm link]                 | [![npm version][modal size bundle]][modal size link]                 | [![Dependency Status][modal dependency status]][modal dependency link]                 |
 | [`@zendeskgarden/container-pagination`](packages/pagination)       | [![npm version][pagination npm version]][pagination npm link]       | [![npm version][pagination size bundle]][pagination size link]       | [![Dependency Status][pagination dependency status]][pagination dependency link]       |
 | [`@zendeskgarden/container-schedule`](packages/schedule)           | [![npm version][schedule npm version]][schedule npm link]           | [![npm version][schedule size bundle]][schedule size link]           | [![Dependency Status][schedule dependency status]][schedule dependency link]           |
+| [`@zendeskgarden/container-scrollregion`](packages/scrollregion)   | [![npm version][scrollregion npm version]][scrollregion npm link]   | [![npm version][scrollregion size bundle]][scrollregion size link]   | [![Dependency Status][scrollregion dependency status]][scrollregion dependency link]   |
 | [`@zendeskgarden/container-selection`](packages/selection)         | [![npm version][selection npm version]][selection npm link]         | [![npm version][selection size bundle]][selection size link]         | [![Dependency Status][selection dependency status]][selection dependency link]         |
 | [`@zendeskgarden/container-tabs`](packages/tabs)                   | [![npm version][tabs npm version]][tabs npm link]                   | [![npm version][tabs size bundle]][tabs size link]                   | [![Dependency Status][tabs dependency status]][tabs dependency link]                   |
 | [`@zendeskgarden/container-tooltip`](packages/tooltip)             | [![npm version][tooltip npm version]][tooltip npm link]             | [![npm version][tooltip size bundle]][tooltip size link]             | [![Dependency Status][tooltip dependency status]][tooltip dependency link]             |
@@ -96,6 +97,12 @@ to install.
 [schedule size link]: https://bundlephobia.com/result?p=@zendeskgarden/container-schedule
 [schedule dependency status]: https://flat.badgen.net/david/dep/zendeskgarden/react-containers/packages/schedule
 [schedule dependency link]: https://david-dm.org/zendeskgarden/react-containers?path=packages/schedule
+[scrollregion npm version]: https://flat.badgen.net/npm/v/@zendeskgarden/container-scrollregion
+[scrollregion npm link]: https://www.npmjs.com/package/@zendeskgarden/container-scrollregion
+[scrollregion size bundle]: https://flat.badgen.net/bundlephobia/minzip/@zendeskgarden/container-scrollregion
+[scrollregion size link]: https://bundlephobia.com/result?p=@zendeskgarden/container-scrollregion
+[scrollregion dependency status]: https://flat.badgen.net/david/dep/zendeskgarden/react-containers/packages/scrollregion
+[scrollregion dependency link]: https://david-dm.org/zendeskgarden/react-containers?path=packages/scrollregion
 [selection npm version]: https://flat.badgen.net/npm/v/@zendeskgarden/container-selection
 [selection npm link]: https://www.npmjs.com/package/@zendeskgarden/container-selection
 [selection size bundle]: https://flat.badgen.net/bundlephobia/minzip/@zendeskgarden/container-selection
@@ -123,11 +130,11 @@ to install.
 
 ## Usage
 
-Our packages are easily consumable with [create-react-app](https://github.com/facebook/create-react-app)
+Packages are easily consumable with [create-react-app](https://github.com/facebook/create-react-app)
 and standard webpack configs.
 
 All packages follow a similar installation process. Below is an example of
-consuming our [container-schedule](https://www.npmjs.com/package/@zendeskgarden/container-schedule)
+consuming the [container-schedule](https://www.npmjs.com/package/@zendeskgarden/container-schedule)
 package.
 
 ### Install dependencies
