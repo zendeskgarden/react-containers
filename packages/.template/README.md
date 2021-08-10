@@ -14,7 +14,7 @@ npm install @zendeskgarden/container-{{component}}
 
 ## Usage
 
-For live examples check out our [storybook](https://zendeskgarden.github.io/react-containers).
+Check out [storybook](https://zendeskgarden.github.io/react-containers) for live examples.
 
 ### useExample
 
@@ -40,7 +40,6 @@ import { ExampleContainer } from '@zendeskgarden/container-{{component}}';
   TODO:
 
   * [ ] Add {{component}} to root README table.
-  * [ ] Add {{component}} stories.js.
-  * [ ] Add {{component}} to demo `index.html`.
+  * [ ] Add {{component}} stories.tsx.
   * [ ] Delete this comment block.
 -->
