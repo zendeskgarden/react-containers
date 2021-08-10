@@ -19,11 +19,11 @@ export interface IExampleContainerProps extends IUseExampleProps {
 export const ExampleContainer: React.FC<IExampleContainerProps> = props => {
   const { children, render = children, ...options } = props;
 
-  return <>{render(useExample(options)) as React.ReactElement}</>;
+  return <>{render!(useExample(options)) as React.ReactElement}</>;
 };
 
 ExampleContainer.propTypes = {
   children: PropTypes.func,
   render: PropTypes.func,
-  coolProp: PropTypes.string
+  label: PropTypes.string
 };

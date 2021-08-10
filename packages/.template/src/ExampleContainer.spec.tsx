@@ -13,13 +13,13 @@ import { IUseExampleReturnValue } from './useExample';
 describe('ExampleContainer', () => {
   const BasicExample = () => (
     <ExampleContainer>
-      {({ getCoolProps }: IUseExampleReturnValue) => (
-        <div {...getCoolProps({ 'data-test-id': 'div' })} />
+      {({ getExampleProps }: IUseExampleReturnValue) => (
+        <div {...getExampleProps({ 'data-test-id': 'div' })} />
       )}
     </ExampleContainer>
   );
 
-  describe('getCoolProps', () => {
+  describe('getExampleProps', () => {
     it('applies correct accessibility role', () => {
       const { getByTestId } = render(<BasicExample />);
       const element = getByTestId('div');

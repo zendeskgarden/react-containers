@@ -8,22 +8,18 @@
 import { HTMLProps, useState } from 'react';
 
 export interface IUseExampleProps {
-  /** Documents the cool prop */
-  coolProp?: string;
-}
-
-interface ICoolProps extends HTMLProps<any> {
-  ariaLabel?: string;
+  /** Documents the label prop */
+  label?: string;
 }
 
 export interface IUseExampleReturnValue {
-  getCoolProps: <T>(options?: T & ICoolProps) => any;
+  getExampleProps: <T>(options?: T & HTMLProps<any>) => any;
 }
 
-export function useExample({ coolProp }: IUseExampleProps = {}): IUseExampleReturnValue {
-  const [label] = useState(coolProp || 'cool');
+export function useExample({ label }: IUseExampleProps = {}): IUseExampleReturnValue {
+  const [ariaLabel] = useState(label);
 
-  const getCoolProps = ({ role = 'region', ariaLabel = label, ...props }: ICoolProps = {}) => ({
+  const getExampleProps = ({ role = 'region', ...props }: HTMLProps<any> = {}) => ({
     role,
     'aria-label': ariaLabel,
     'data-garden-container-id': 'containers.example',
@@ -32,6 +28,6 @@ export function useExample({ coolProp }: IUseExampleProps = {}): IUseExampleRetu
   });
 
   return {
-    getCoolProps
+    getExampleProps
   };
 }
