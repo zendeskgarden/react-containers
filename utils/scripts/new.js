@@ -39,6 +39,8 @@ const bootstrap = async (component, spinner) => {
  *
  * @param {String} component Component name.
  * @param {Ora} spinner Terminal spinner.
+ *
+ * @returns The package destination directory path.
  */
 const generate = async (component, spinner) => {
   const src = resolve(__dirname, '..', '..', 'packages', '.template');
@@ -46,7 +48,10 @@ const generate = async (component, spinner) => {
   const tags = { component };
 
   info(`Generating package...`, spinner);
-  await garden.lernaNew({ src, dest, tags, spinner });
+
+  const result = await garden.lernaNew({ src, dest, tags, spinner });
+
+  return result.dest;
 };
 
 program
@@ -57,9 +62,11 @@ program
 
     try {
       spinner.start();
-      await generate(component, spinner);
+
+      const path = await generate(component, spinner);
+
       await bootstrap(component, spinner);
-      spinner.succeed(`Success.`);
+      spinner.succeed(`Success.\nThe new package – ${path} – is ready for development.`);
     } catch (error) {
       spinner.fail(error.message || error);
       process.exitCode = 1;
@@ -68,26 +75,3 @@ program
     }
   })
   .parse(process.argv);
-
-/*
-
-retrievePrompts()
-  .then(copyDefaultPackage)
-  .then(({ packageName }) => {
-    return Promise.all([updatePackageJson({ packageName }), updateReadme({ packageName })]).then(
-      () => {
-        console.log(
-          chalk.green(
-            `Successfully created package "@zendeskgarden/container-${packageName}" at "packages/${packageName}"`
-          )
-        );
-
-        return { packageName };
-      }
-    );
-  })
-  .then(performLernaBootstrap)
-  .then(() => {
-    console.log(pelorous(`Start local development with: "${chalk.white(`yarn start`)}"`));
-  });
-*/
