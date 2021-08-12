@@ -6,7 +6,7 @@
  */
 
 /* Hooks */
-export { use{{capitalize component}}, IUse{{capitalize component}}Props, IUse{{capitalize component}}ReturnValue } from './use{{capitalize component}}';
+export { useExample, IUseExampleProps, IUseExampleReturnValue } from './useExample';
 
 /* Render-props */
-export { {{capitalize component}}Container, I{{capitalize component}}ContainerProps } from './{{capitalize component}}Container';
+export { ExampleContainer, IExampleContainerProps } from './ExampleContainer';
