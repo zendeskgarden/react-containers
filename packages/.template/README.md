@@ -1,45 +1,44 @@
-# @zendeskgarden/container-{{component}} [![npm version][npm version badge]][npm version link]
+# @zendeskgarden/container-{{lowercase component}} [![npm version][npm version badge]][npm version link]
 
-[npm version badge]: https://flat.badgen.net/npm/v/@zendeskgarden/container-{{component}}
-[npm version link]: https://www.npmjs.com/package/@zendeskgarden/container-{{component}}
+[npm version badge]: https://flat.badgen.net/npm/v/@zendeskgarden/container-{{lowercase component}}
+[npm version link]: https://www.npmjs.com/package/@zendeskgarden/container-{{lowercase component}}
 
-This package includes containers relating to {{component}} in the
+This package includes containers relating to {{capitalize component}} in the
 [Garden Design System](https://zendeskgarden.github.io/).
 
 ## Installation
 
 ```sh
-npm install @zendeskgarden/container-{{component}}
+npm install @zendeskgarden/container-{{lowercase component}}
 ```
 
 ## Usage
 
 Check out [storybook](https://zendeskgarden.github.io/react-containers) for live examples.
 
-### useExample
+### use{{capitalize component}}
 
 ```jsx static
-import { useExample } from '@zendeskgarden/container-{{component}}';
+import { use{{capitalize component}} } from '@zendeskgarden/container-{{lowercase component}}';
 
-const Example = () => {
-  const { getExampleProps } = useExample();
+const {{capitalize component}} = () => {
+  const { get{{capitalize component}}Props } = use{{capitalize component}}();
 
-  return <div {...getExampleProps()} />;
+  return <div {...get{{capitalize component}}Props()} />;
 };
 ```
 
-### ExampleContainer
+### {{capitalize component}}Container
 
 ```jsx static
-import { ExampleContainer } from '@zendeskgarden/container-{{component}}';
+import { {{capitalize component}}Container } from '@zendeskgarden/container-{{lowercase component}}';
 
-<ExampleContainer>{({ getExampleProps }) => <div {...getExampleProps()} />}</ExampleContainer>;
+<{{capitalize component}}Container>{({ get{{capitalize component}}Props }) => <div {...get{{capitalize component}}Props()} />}</{{capitalize component}}Container>;
 ```
 
 <!--
   TODO:
 
-  * [ ] Add {{component}} to root README table.
-  * [ ] Add {{component}} stories.tsx.
+  * [ ] Add {{capitalize component}} to root README table.
   * [ ] Delete this comment block.
 -->

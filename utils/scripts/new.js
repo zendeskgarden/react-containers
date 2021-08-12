@@ -7,95 +7,69 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-/* eslint-disable no-console */
+const program = require('commander');
+const execa = require('execa');
+const garden = require('@zendeskgarden/scripts');
+const ora = require('ora');
+const resolve = require('path').resolve;
 
-const inquirer = require('inquirer');
-const chalk = require('chalk');
-const pelorous = chalk.hex('#30AABC');
-const path = require('path');
-const fs = require('fs-extra');
-const childProcess = require('child_process');
-const handlebars = require('handlebars');
+const info = (message, spinner) => spinner.info(message).start();
 
 /**
- * Register handlebars template helper utilities
+ * Bootstrap the new package.
+ *
+ * @param {String} component Component name.
+ * @param {Ora} spinner Terminal spinner.
  */
-require('handlebars-helpers')({
-  handlebars
-});
+const bootstrap = async (component, spinner) => {
+  info(`Bootstrapping package...`, spinner);
 
-const welcomeSplashScreen = () => {
-  console.log(pelorous('#################################'));
-  console.log(pelorous(`#### ${chalk.white('Garden - Create Package')} ####`));
-  console.log(pelorous('#################################'));
+  const lernaArgs = [
+    'lerna',
+    'bootstrap',
+    '--scope',
+    `@zendeskgarden/container-${component.toLowerCase()}`
+  ];
+
+  await execa('yarn', lernaArgs, { stdin: process.stdin, stdout: process.stdout });
 };
 
-const retrievePrompts = () => {
-  return inquirer.prompt([
-    {
-      name: 'packageName',
-      message: 'What name would you like to give this package?',
-      default: 'example'
+/**
+ * Generate the new package based on the package template.
+ *
+ * @param {String} component Component name.
+ * @param {Ora} spinner Terminal spinner.
+ */
+const generate = async (component, spinner) => {
+  const src = resolve(__dirname, '..', '..', 'packages', '.template');
+  const dest = resolve(__dirname, '..', '..', 'packages', component.toLowerCase());
+  const tags = { component };
+
+  info(`Generating package...`, spinner);
+  await garden.lernaNew({ src, dest, tags, spinner });
+};
+
+program
+  .description('Generate a new react-containers package')
+  .argument('<name>', 'ComponentName')
+  .action(async component => {
+    const spinner = ora();
+
+    try {
+      spinner.start();
+      await generate(component, spinner);
+      await bootstrap(component, spinner);
+      spinner.succeed(`Success.`);
+    } catch (error) {
+      spinner.fail(error.message || error);
+      process.exitCode = 1;
+    } finally {
+      spinner.stop();
     }
-  ]);
-};
+  })
+  .parse(process.argv);
 
-const copyDefaultPackage = ({ packageName }) => {
-  if (!packageName) {
-    throw new Error('"packageName" must be defined');
-  }
-
-  const defaultPackagePath = path.resolve(__dirname, '..', '..', 'packages', '.template');
-  const newPackagePath = path.resolve(__dirname, '..', '..', 'packages', packageName);
-
-  return fs.copy(defaultPackagePath, newPackagePath).then(() => ({ packageName }));
-};
-
-const updatePackageJson = ({ packageName }) => {
-  const packageJsonPath = path.resolve(
-    __dirname,
-    '..',
-    '..',
-    'packages',
-    packageName,
-    'package.json'
-  );
-
-  return fs.readFile(packageJsonPath, 'utf-8').then(originalPackageJsonContent => {
-    const template = handlebars.compile(originalPackageJsonContent);
-    const newPackageJsonContent = template({ component: packageName });
-
-    return fs.writeFile(packageJsonPath, newPackageJsonContent);
-  });
-};
-
-const updateReadme = ({ packageName }) => {
-  const readmePath = path.resolve(__dirname, '..', '..', 'packages', packageName, 'README.md');
-
-  return fs.readFile(readmePath, 'utf-8').then(originalReadmeContent => {
-    const template = handlebars.compile(originalReadmeContent);
-    const newReadmeContent = template({ component: packageName });
-
-    return fs.writeFile(readmePath, newReadmeContent);
-  });
-};
-
-const performLernaBootstrap = ({ packageName }) => {
-  console.log(chalk.blue('Bootstrapping dependencies for new package...'));
-
-  return new Promise((resolve, reject) => {
-    childProcess.exec('yarn postinstall', (err, stdout, stderr) => {
-      if (err) {
-        reject(stderr);
-      }
-
-      console.log(chalk.blue('Lerna Bootstrapping complete'));
-      resolve({ packageName });
-    });
-  });
-};
-
-welcomeSplashScreen();
+/*
 
 retrievePrompts()
   .then(copyDefaultPackage)
@@ -116,3 +90,4 @@ retrievePrompts()
   .then(() => {
     console.log(pelorous(`Start local development with: "${chalk.white(`yarn start`)}"`));
   });
+*/

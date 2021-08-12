@@ -1,7 +1,7 @@
 {
-  "name": "@zendeskgarden/container-{{component}}",
+  "name": "@zendeskgarden/container-{{lowercase component}}",
   "version": "0.0.0",
-  "description": "Containers relating to {{component}} in the Garden Design System",
+  "description": "Containers relating to {{capitalize component}} in the Garden Design System",
   "license": "Apache-2.0",
   "author": "Zendesk Garden <garden@zendesk.com>",
   "homepage": "https://garden.zendesk.com/",
