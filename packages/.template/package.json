@@ -1,5 +1,6 @@
 {
   "name": "@zendeskgarden/container-{{component}}",
+  "version": "0.0.0",
   "description": "Containers relating to {{component}} in the Garden Design System",
   "license": "Apache-2.0",
   "author": "Zendesk Garden <garden@zendesk.com>",
@@ -8,7 +9,6 @@
   "bugs": {
     "url": "https://github.com/zendeskgarden/react-containers/issues"
   },
-  "version": "0.0.0",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
   "files": [
@@ -18,6 +18,10 @@
     "build": "../../utils/scripts/build.sh"
   },
   "sideEffects": false,
+  "types": "dist/typings/index.d.ts",
+  "dependencies": {
+    "@babel/runtime": "^7.8.4"
+  },
   "peerDependencies": {
     "prop-types": "^15.6.1",
     "react": ">=16.8.0",
@@ -29,11 +33,12 @@
     "container",
     "garden",
     "headless",
+    "hook",
     "react",
     "zendesk"
   ],
   "publishConfig": {
     "access": "public"
   },
-  "zendeskgarden:src": "src/index.js"
+  "zendeskgarden:src": "src/index.ts"
 }

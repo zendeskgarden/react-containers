@@ -7,21 +7,24 @@
 
 import React from 'react';
 import { render } from '@testing-library/react';
-
-import { ExampleContainer } from './ExampleContainer';
+import { ExampleContainer } from './';
+import { IUseExampleReturnValue } from './useExample';
 
 describe('ExampleContainer', () => {
   const BasicExample = () => (
     <ExampleContainer>
-      {({ getCoolProps }) => <div {...getCoolProps({ 'data-test-id': 'div' })} />}
+      {({ getExampleProps }: IUseExampleReturnValue) => (
+        <div {...getExampleProps({ 'data-test-id': 'div' })} />
+      )}
     </ExampleContainer>
   );
 
-  describe('getCoolProps', () => {
+  describe('getExampleProps', () => {
     it('applies correct accessibility role', () => {
       const { getByTestId } = render(<BasicExample />);
+      const element = getByTestId('div');
 
-      expect(getByTestId('div')).toHaveAttribute('role', 'region');
+      expect(element).toHaveAttribute('role', 'region');
     });
   });
 });
