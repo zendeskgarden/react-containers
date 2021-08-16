@@ -256,50 +256,54 @@ export function useSelection<Item = any>({
           onFocus && onFocus(items[nextIndex]);
         };
 
-        if (
-          (e.keyCode === KEY_CODES.UP && verticalDirection) ||
-          (e.keyCode === KEY_CODES.LEFT && horizontalDirection)
-        ) {
-          if (rtl && !verticalDirection) {
-            onIncrement();
-          } else {
-            onDecrement();
-          }
+        const hasModifierKeyPressed = e.ctrlKey || e.metaKey || e.shiftKey || e.altKey;
 
-          e.preventDefault();
-        } else if (
-          (e.keyCode === KEY_CODES.DOWN && verticalDirection) ||
-          (e.keyCode === KEY_CODES.RIGHT && horizontalDirection)
-        ) {
-          if (rtl && !verticalDirection) {
-            onDecrement();
-          } else {
-            onIncrement();
-          }
+        if (!hasModifierKeyPressed) {
+          if (
+            (e.keyCode === KEY_CODES.UP && verticalDirection) ||
+            (e.keyCode === KEY_CODES.LEFT && horizontalDirection)
+          ) {
+            if (rtl && !verticalDirection) {
+              onIncrement();
+            } else {
+              onDecrement();
+            }
 
-          e.preventDefault();
-        } else if (e.keyCode === KEY_CODES.HOME) {
-          if (!isFocusedItemControlled) {
-            dispatch({ type: 'HOME', payload: items[0] });
-          }
-          onFocus && onFocus(items[0]);
-          e.preventDefault();
-        } else if (e.keyCode === KEY_CODES.END) {
-          if (!isFocusedItemControlled) {
-            dispatch({ type: 'END', payload: items[items.length - 1] });
-          }
-          onFocus && onFocus(items[items.length - 1]);
+            e.preventDefault();
+          } else if (
+            (e.keyCode === KEY_CODES.DOWN && verticalDirection) ||
+            (e.keyCode === KEY_CODES.RIGHT && horizontalDirection)
+          ) {
+            if (rtl && !verticalDirection) {
+              onDecrement();
+            } else {
+              onIncrement();
+            }
 
-          e.preventDefault();
-        } else if (e.keyCode === KEY_CODES.SPACE || e.keyCode === KEY_CODES.ENTER) {
-          onSelect && onSelect(item);
-          if (!isSelectedItemControlled) {
-            dispatch({
-              type: 'KEYBOARD_SELECT',
-              payload: item
-            });
+            e.preventDefault();
+          } else if (e.keyCode === KEY_CODES.HOME) {
+            if (!isFocusedItemControlled) {
+              dispatch({ type: 'HOME', payload: items[0] });
+            }
+            onFocus && onFocus(items[0]);
+            e.preventDefault();
+          } else if (e.keyCode === KEY_CODES.END) {
+            if (!isFocusedItemControlled) {
+              dispatch({ type: 'END', payload: items[items.length - 1] });
+            }
+            onFocus && onFocus(items[items.length - 1]);
+
+            e.preventDefault();
+          } else if (e.keyCode === KEY_CODES.SPACE || e.keyCode === KEY_CODES.ENTER) {
+            onSelect && onSelect(item);
+            if (!isSelectedItemControlled) {
+              dispatch({
+                type: 'KEYBOARD_SELECT',
+                payload: item
+              });
+            }
+            e.preventDefault();
           }
-          e.preventDefault();
         }
       }),
       ...other

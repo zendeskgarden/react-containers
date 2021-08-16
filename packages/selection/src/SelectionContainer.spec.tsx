@@ -166,6 +166,16 @@ describe('SelectionContainer', () => {
         });
       });
 
+      describe('CTRL+ENTER keyCode', () => {
+        it('is not consumed', () => {
+          const { getByText } = render(<BasicExample />);
+          const item = getByText('Item-1');
+
+          fireEvent.keyDown(item, { keyCode: KEY_CODES.ENTER, ctrlKey: true });
+          expect(item).toHaveAttribute('aria-selected', 'false');
+        });
+      });
+
       describe('SPACE keyCode', () => {
         it('selects currently focused item', () => {
           const { getByText } = render(<BasicExample />);
