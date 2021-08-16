@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.10](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-selection@1.3.9...@zendeskgarden/container-selection@1.3.10) (2021-08-16)
+
+
+### Bug Fixes
+
+* **selection:** stop hijacking keyboard events with modifier pressed ([#341](https://github.com/zendeskgarden/react-containers/issues/341)) ([84f4aaf](https://github.com/zendeskgarden/react-containers/commit/84f4aaf75a3c2fcdc2d25c42cc715441719a4a91))
+
+
+
+
+
 ## [1.3.9](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-selection@1.3.8...@zendeskgarden/container-selection@1.3.9) (2021-02-25)
 
 **Note:** Version bump only for package @zendeskgarden/container-selection

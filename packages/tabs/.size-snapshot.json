@@ -19,13 +19,13 @@
     }
   },
   "index.cjs.js": {
-    "bundled": 5329,
-    "minified": 2977,
+    "bundled": 5331,
+    "minified": 2979,
     "gzipped": 1183
   },
   "index.esm.js": {
-    "bundled": 4778,
-    "minified": 2527,
+    "bundled": 4780,
+    "minified": 2529,
     "gzipped": 1072,
     "treeshaked": {
       "rollup": {
