@@ -11,6 +11,7 @@ import { composeEventHandlers, getControlledValue } from '@zendeskgarden/contain
 export interface IUseTreeviewProps {
   /** Determines which sections are expanded in a controlled treeview */
   expandedNodes?: string[];
+  onChange?: (expandedNodes: string[]) => void;
 }
 
 export interface IGetTreeItemProps extends HTMLProps<any> {
@@ -25,7 +26,10 @@ export interface IUseTreeviewReturnValue {
   expandedNodes: string[];
 }
 
-export function useTreeview({ expandedNodes }: IUseTreeviewProps = {}): IUseTreeviewReturnValue {
+export function useTreeview({
+  expandedNodes,
+  onChange = () => undefined
+}: IUseTreeviewProps = {}): IUseTreeviewReturnValue {
   const isControlled = expandedNodes !== null && expandedNodes !== undefined;
 
   const [openedNodes, setExpandedNodes] = useState<string[]>([]);
@@ -44,9 +48,11 @@ export function useTreeview({ expandedNodes }: IUseTreeviewProps = {}): IUseTree
   };
 
   const toggleParent = (index: string) => {
-    setExpandedNodes(
-      openedNodes.includes(index) ? openedNodes.filter(i => i !== index) : [...openedNodes, index]
-    );
+    const newValue = openedNodes.includes(index)
+      ? openedNodes.filter(i => i !== index)
+      : [...openedNodes, index];
+    setExpandedNodes(newValue);
+    onChange(newValue);
   };
 
   const getTreeProps = ({ role = 'tree', ...props }: HTMLProps<any> = {}) => ({
@@ -72,7 +78,7 @@ export function useTreeview({ expandedNodes }: IUseTreeviewProps = {}): IUseTree
 
     return {
       role: role === null || role === undefined ? role : 'treeitem',
-      'aria-expanded': expanded, // TODO: control
+      'aria-expanded': expanded,
       'data-garden-container-version': PACKAGE_VERSION,
       onClick: composeEventHandlers(props.onClick, (e: MouseEvent) => {
         if (itemType !== 'parent') {

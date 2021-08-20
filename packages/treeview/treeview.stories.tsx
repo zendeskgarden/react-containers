@@ -6,11 +6,13 @@
  */
 
 import React from 'react';
-import { TreeviewContainer, IUseTreeviewProps, useTreeview } from './src';
+import { TreeviewContainer, useTreeview } from './src';
 import styled from 'styled-components';
+import { IUseTreeviewReturnValue } from './dist/typings';
 
 const UlTreeRoot = styled.ul`
   margin: 1em;
+
   li {
     margin-left: 1em;
   }
@@ -20,6 +22,7 @@ const UlTreeRoot = styled.ul`
 
     &[aria-expanded='true'] {
       list-style-type: '↓';
+
       & > [role='group'] {
         display: initial;
       }
@@ -27,6 +30,7 @@ const UlTreeRoot = styled.ul`
 
     &[aria-expanded='false'] {
       list-style-type: '→';
+
       & > [role='group'] {
         display: none;
       }
@@ -100,45 +104,104 @@ const FOOD: IFoodNode[] = [
 ];
 
 const ARGS = {
-  label: 'test',
-  text: 'Hello world'
+  controlled: true,
+  expandedNodes: ['Grains'],
+  nodes: FOOD
 };
 
-// export const Container = ({ label, text }) => (
-//   <TreeviewContainer>
-//     {({ getTreeProps }: IUseTreeviewReturnValue) => (
-//       <div {...getTreeProps({ label })}>{text}</div>
-//     )}
-//   </TreeviewContainer>
-// );
-//
-// Container.storyName = 'TreeviewContainer';
-// Container.args = ARGS;
+export const Container = ({ nodes, controlled, expandedNodes, onChange }) => {
+  const EndNode = ({ name, ...props }) => (
+    <li role="none">
+      <a href={`https://en.wikipedia.org/wiki/${name}`} {...props}>
+        {name}
+      </a>
+    </li>
+  );
 
-export const Hook = () => {
-  const Treeview = (props: IUseTreeviewProps) => {
-    const { getTreeProps, getTreeItemProps, getGroupProps } = useTreeview(props);
+  const ParentNode = ({ name, children, ...props }) => (
+    <li key={name} {...props}>
+      <span>{name}</span>
+      {children}
+    </li>
+  );
+
+  const Group = props => <ul {...props} />;
+  const Treeview = () => {
+    return (
+      <TreeviewContainer expandedNodes={controlled ? expandedNodes : undefined} onChange={onChange}>
+        {({ getTreeProps, getTreeItemProps, getGroupProps }: IUseTreeviewReturnValue) => {
+          const renderNode = (node: IFoodNode) =>
+            node.children ? (
+              <ParentNode
+                key={node.name}
+                {...getTreeItemProps({
+                  index: node.name,
+                  itemType: 'parent',
+                  name: node.name
+                })}
+              >
+                <Group {...getGroupProps()}>{node.children.map(renderNode)}</Group>
+              </ParentNode>
+            ) : (
+              <EndNode
+                key={node.name}
+                {...getTreeItemProps({ itemType: 'end', name: node.name })}
+              />
+            );
+
+          return <UlTreeRoot {...getTreeProps()}>{nodes.map(renderNode)}</UlTreeRoot>;
+        }}
+      </TreeviewContainer>
+    );
+  };
+
+  return <Treeview />;
+};
+
+Container.storyName = 'TreeviewContainer';
+Container.args = ARGS;
+
+export const Hook = ({ nodes, controlled, expandedNodes, onChange }) => {
+  const EndNode = ({ name, ...props }) => (
+    <li role="none">
+      <a href={`https://en.wikipedia.org/wiki/${name}`} {...props}>
+        {name}
+      </a>
+    </li>
+  );
+
+  const ParentNode = ({ name, children, ...props }) => (
+    <li key={name} {...props}>
+      <span>{name}</span>
+      {children}
+    </li>
+  );
+
+  const Group = props => <ul {...props} />;
+
+  const Treeview = () => {
+    const { getTreeProps, getTreeItemProps, getGroupProps } = useTreeview({
+      expandedNodes: controlled ? expandedNodes : undefined,
+      onChange
+    });
 
     const renderNode = (node: IFoodNode) =>
       node.children ? (
-        <li key={node.name} {...getTreeItemProps({ index: node.name, itemType: 'parent' })}>
-          <span>{node.name}</span>
-          <ul {...getGroupProps()}>{node.children.map(renderNode)}</ul>
-        </li>
+        <ParentNode
+          key={node.name}
+          {...getTreeItemProps({
+            index: node.name,
+            itemType: 'parent',
+            name: node.name
+          })}
+        >
+          <Group {...getGroupProps()}>{node.children.map(renderNode)}</Group>
+        </ParentNode>
       ) : (
-        <li key={node.name} role="none">
-          <a
-            {...getTreeItemProps({
-              itemType: 'end',
-              href: `https://en.wikipedia.org/wiki/${node.name}`
-            })}
-          >
-            {node.name}
-          </a>
-        </li>
+        <EndNode key={node.name} {...getTreeItemProps({ itemType: 'end', name: node.name })} />
       );
 
-    return <UlTreeRoot {...getTreeProps()}>{FOOD.map(renderNode)}</UlTreeRoot>;
+    return <UlTreeRoot {...getTreeProps()}>{nodes.map(renderNode)}</UlTreeRoot>;
   };
 
   return <Treeview />;
@@ -147,20 +210,16 @@ export const Hook = () => {
 Hook.storyName = 'useTreeview';
 Hook.args = ARGS;
 
-Hook.parameters = {
-  docs: {
-    description: {
-      story: `The \`useTreeview\` hook manages toggle state and required accessibility
-      attributes for a group of sections.`
-    }
-  }
-};
-
 export default {
   component: TreeviewContainer,
   title: 'Treeview Container',
   parameters: {
     layout: 'centered',
     componentSubtitle: `A container component which wraps the useTreeview hook.`
+  },
+  argTypes: {
+    onChange: {
+      action: 'change'
+    }
   }
 };
