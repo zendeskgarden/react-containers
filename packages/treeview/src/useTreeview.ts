@@ -10,7 +10,7 @@ import { composeEventHandlers, getControlledValue } from '@zendeskgarden/contain
 
 export interface IUseTreeviewProps {
   /** Determines which sections are expanded in a controlled treeview */
-  expandedNodes?: string[];
+  openNodes?: string[];
   onChange?: (expandedNodes: string[]) => void;
 }
 
@@ -23,7 +23,7 @@ export interface IUseTreeviewReturnValue {
   getTreeProps: <T>(options?: T & HTMLProps<any>) => any;
   getTreeItemProps: <T>(options?: T & IGetTreeItemProps) => any;
   getGroupProps: <T>(options?: T & HTMLProps<any>) => any;
-  expandedNodes: string[];
+  openNodes: string[];
 }
 
 /**
@@ -35,16 +35,16 @@ export interface IUseTreeviewReturnValue {
  * @param onChange
  */
 export function useTreeview({
-  expandedNodes,
+  openNodes,
   onChange = () => undefined
 }: IUseTreeviewProps = {}): IUseTreeviewReturnValue {
-  const isControlled = expandedNodes !== null && expandedNodes !== undefined;
+  const isControlled = openNodes !== null && openNodes !== undefined;
 
-  const [openedNodes, setExpandedNodes] = useState<string[]>([]);
+  const [openNodesState, setOpenNodes] = useState<string[]>([]);
 
   const controlledExpandedState = getControlledValue<string[] | undefined>(
-    expandedNodes,
-    Array.from(openedNodes)
+    openNodes,
+    Array.from(openNodesState)
   )!;
 
   const isNodeExpanded = (index: string | undefined): boolean => {
@@ -52,15 +52,15 @@ export function useTreeview({
       return false;
     }
 
-    return isControlled ? controlledExpandedState.includes(index) : openedNodes.includes(index);
+    return isControlled ? controlledExpandedState.includes(index) : openNodesState.includes(index);
   };
 
   const toggleParent = (index: string) => {
-    const newValue = openedNodes.includes(index)
-      ? openedNodes.filter(i => i !== index)
-      : [...openedNodes, index];
+    const newValue = openNodesState.includes(index)
+      ? openNodesState.filter(i => i !== index)
+      : [...openNodesState, index];
 
-    setExpandedNodes(newValue);
+    setOpenNodes(newValue);
     onChange(newValue);
   };
 
@@ -113,6 +113,6 @@ export function useTreeview({
     getTreeProps,
     getTreeItemProps,
     getGroupProps,
-    expandedNodes: Array.from(openedNodes)
+    openNodes: Array.from(openNodesState)
   };
 }

@@ -70,15 +70,15 @@ interface IContainerTestResult {
 
 const renderContainerTestCase = ({
   data,
-  expandedNodes
+  openNodes
 }: {
   data: IFoodNode[];
-  expandedNodes?: string[];
+  openNodes?: string[];
 }): IContainerTestResult => {
   const onChangeMock = jest.fn();
   const onClickMock = jest.fn();
   const renderResult = render(
-    <TreeviewContainer onChange={onChangeMock} expandedNodes={expandedNodes}>
+    <TreeviewContainer onChange={onChangeMock} openNodes={openNodes}>
       {({ getTreeProps, getTreeItemProps, getGroupProps }: IUseTreeviewReturnValue) => {
         const renderNode = (node: IFoodNode) =>
           node.children ? (

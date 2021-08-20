@@ -128,7 +128,7 @@ export const Container = ({ nodes, controlled, expandedNodes, onChange }) => {
   const Group = props => <ul {...props} />;
   const Treeview = () => {
     return (
-      <TreeviewContainer expandedNodes={controlled ? expandedNodes : undefined} onChange={onChange}>
+      <TreeviewContainer openNodes={controlled ? expandedNodes : undefined} onChange={onChange}>
         {({ getTreeProps, getTreeItemProps, getGroupProps }: IUseTreeviewReturnValue) => {
           const renderNode = (node: IFoodNode) =>
             node.children ? (
@@ -181,7 +181,7 @@ export const Hook = ({ nodes, controlled, expandedNodes, onChange, onClick }) =>
 
   const Treeview = () => {
     const { getTreeProps, getTreeItemProps, getGroupProps } = useTreeview({
-      expandedNodes: controlled ? expandedNodes : undefined,
+      openNodes: controlled ? expandedNodes : undefined,
       onChange
     });
 
