@@ -10,7 +10,7 @@ import { TreeviewContainer, useTreeview } from './src';
 import styled from 'styled-components';
 import { IUseTreeviewReturnValue } from './dist/typings';
 
-const UlTreeRoot = styled.ul`
+const Tree = styled.ul`
   margin: 1em;
 
   li {
@@ -149,7 +149,7 @@ export const Container = ({ nodes, controlled, expandedNodes, onChange }) => {
               />
             );
 
-          return <UlTreeRoot {...getTreeProps()}>{nodes.map(renderNode)}</UlTreeRoot>;
+          return <Tree {...getTreeProps()}>{nodes.map(renderNode)}</Tree>;
         }}
       </TreeviewContainer>
     );
@@ -161,7 +161,7 @@ export const Container = ({ nodes, controlled, expandedNodes, onChange }) => {
 Container.storyName = 'TreeviewContainer';
 Container.args = ARGS;
 
-export const Hook = ({ nodes, controlled, expandedNodes, onChange }) => {
+export const Hook = ({ nodes, controlled, expandedNodes, onChange, onClick }) => {
   const EndNode = ({ name, ...props }) => (
     <li role="none">
       <a href={`https://en.wikipedia.org/wiki/${name}`} {...props}>
@@ -192,16 +192,20 @@ export const Hook = ({ nodes, controlled, expandedNodes, onChange }) => {
           {...getTreeItemProps({
             index: node.name,
             itemType: 'parent',
-            name: node.name
+            name: node.name,
+            onClick
           })}
         >
           <Group {...getGroupProps()}>{node.children.map(renderNode)}</Group>
         </ParentNode>
       ) : (
-        <EndNode key={node.name} {...getTreeItemProps({ itemType: 'end', name: node.name })} />
+        <EndNode
+          key={node.name}
+          {...getTreeItemProps({ itemType: 'end', name: node.name, onClick })}
+        />
       );
 
-    return <UlTreeRoot {...getTreeProps()}>{nodes.map(renderNode)}</UlTreeRoot>;
+    return <Tree {...getTreeProps()}>{nodes.map(renderNode)}</Tree>;
   };
 
   return <Treeview />;
@@ -220,6 +224,9 @@ export default {
   argTypes: {
     onChange: {
       action: 'change'
+    },
+    onClick: {
+      action: 'click'
     }
   }
 };

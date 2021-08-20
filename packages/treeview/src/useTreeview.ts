@@ -26,6 +26,14 @@ export interface IUseTreeviewReturnValue {
   expandedNodes: string[];
 }
 
+/**
+ * TODO:
+ * - expandable: PropTypes.bool,
+ * - collapsible
+ * - a11y controls
+ * @param expandedNodes
+ * @param onChange
+ */
 export function useTreeview({
   expandedNodes,
   onChange = () => undefined
@@ -51,6 +59,7 @@ export function useTreeview({
     const newValue = openedNodes.includes(index)
       ? openedNodes.filter(i => i !== index)
       : [...openedNodes, index];
+
     setExpandedNodes(newValue);
     onChange(newValue);
   };
@@ -66,6 +75,7 @@ export function useTreeview({
     index,
     role = 'treeitem',
     itemType = 'end',
+    onClick,
     ...props
   }: IGetTreeItemProps = {}) => {
     if (itemType === 'parent' && index === undefined) {
@@ -80,7 +90,7 @@ export function useTreeview({
       role: role === null || role === undefined ? role : 'treeitem',
       'aria-expanded': expanded,
       'data-garden-container-version': PACKAGE_VERSION,
-      onClick: composeEventHandlers(props.onClick, (e: MouseEvent) => {
+      onClick: composeEventHandlers(onClick, (e: MouseEvent) => {
         if (itemType !== 'parent') {
           return;
         }
