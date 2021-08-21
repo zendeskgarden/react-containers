@@ -7,8 +7,9 @@
 
 import React, { PropsWithChildren } from 'react';
 import { fireEvent, render, RenderResult, screen } from '@testing-library/react';
-import { TreeviewContainer } from './';
+
 import { IUseTreeviewReturnValue } from './useTreeview';
+import { TreeviewContainer } from './TreeviewContainer';
 
 interface IFoodNode {
   name: string;
