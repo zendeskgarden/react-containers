@@ -49,6 +49,7 @@ This package offers a headless implementation to
    right role...
 2. For the `tree` element, should I throw an error if both the `label` or `labelledBy` props are
    nil?
+3. Do I need to implement a `expandable`, `collapsible` logic like in the accordion container?
 
 ## Installation
 

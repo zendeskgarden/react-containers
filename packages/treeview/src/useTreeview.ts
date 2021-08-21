@@ -7,8 +7,14 @@
 
 import { HTMLProps, useState } from 'react';
 import { composeEventHandlers, getControlledValue } from '@zendeskgarden/container-utilities';
+import {
+  useSelection,
+  IGetItemPropsOptions,
+  IUseSelectionState,
+  IUseSelectionProps
+} from '@zendeskgarden/container-selection';
 
-export interface IUseTreeviewProps {
+export interface IUseTreeviewProps<Item> extends IUseSelectionProps<Item> {
   /** Determines which sections are expanded in a controlled treeview */
   openNodes?: string[];
   onChange?: (expandedNodes: string[]) => void;
@@ -19,16 +25,25 @@ export interface IGetTreeProps extends HTMLProps<any> {
   labelledBy?: string;
 }
 
-export interface IGetTreeItemProps extends HTMLProps<any> {
+export interface IGetTreeItemProps<Item> extends IGetItemPropsOptions<Item>, HTMLProps<any> {
   index?: string;
-  itemType?: 'parent' | 'end';
+  item: Item;
+  nodeType?: 'parent' | 'end';
 }
 
-export interface IUseTreeviewReturnValue {
-  getTreeProps: <T>(options?: T & HTMLProps<any>) => any;
-  getTreeItemProps: <T>(options?: T & IGetTreeItemProps) => any;
-  getGroupProps: <T>(options?: T & HTMLProps<any>) => any;
+export interface IUseTreeviewReturnValue<Item> extends IUseSelectionState<Item> {
   openNodes: string[];
+  getTreeProps: <T extends IGetTreeProps>(options?: T) => any;
+  getTreeItemProps: <T extends IGetTreeItemProps<Item>>(options?: T) => any;
+  getGroupProps: <T>(options?: T & HTMLProps<any>) => any;
+}
+
+function requiredArguments(arg: any, argStr: string, methodName: string) {
+  if (typeof arg === 'undefined' || arg === null) {
+    throw new Error(
+      `Accessibility Error: You must provide an "${argStr}" option to "${methodName}()"`
+    );
+  }
 }
 
 /**
@@ -39,10 +54,16 @@ export interface IUseTreeviewReturnValue {
  * @param expandedNodes
  * @param onChange
  */
-export function useTreeview({
+export function useTreeview<Item = any>({
   openNodes,
-  onChange = () => undefined
-}: IUseTreeviewProps = {}): IUseTreeviewReturnValue {
+  onChange = () => undefined,
+  ...options
+}: IUseTreeviewProps<Item> = {}): IUseTreeviewReturnValue<Item> {
+  const { selectedItem, focusedItem, getContainerProps, getItemProps } = useSelection<Item>({
+    direction: 'vertical', // TODO: implement direction
+    defaultSelectedIndex: 0,
+    ...options
+  });
   const [openNodesState, setOpenNodes] = useState<string[]>([]);
   const controlledOpenedState = getControlledValue<string[] | undefined>(
     openNodes,
@@ -83,28 +104,33 @@ export function useTreeview({
     };
   };
 
-  const getTreeItemProps = ({
-    index,
-    role = 'treeitem',
-    itemType = 'end',
-    onClick,
-    ...props
-  }: IGetTreeItemProps = {}) => {
-    if (itemType === 'parent' && index === undefined) {
+  const getTreeItemProps = (
+    {
+      index,
+      item,
+      role = 'treeitem',
+      nodeType = 'end',
+      onClick,
+      ...props
+    }: IGetTreeItemProps<Item> = {} as any
+  ) => {
+    requiredArguments(item, 'item', 'getTreeItemProps');
+    if (nodeType === 'parent' && index === undefined) {
       throw new Error(
         'Accessibility Error: You must provide an `index` option to `getTreeItemProps()` for parent nodes'
       );
     }
     // TODO: Throw error role is not treeitem?
 
-    const expanded = itemType === 'parent' ? isNodeExpanded(index) : undefined;
+    const expanded = nodeType === 'parent' ? isNodeExpanded(index) : undefined;
 
     return {
       role: role === null || role === undefined ? role : 'treeitem',
+      item,
       'aria-expanded': expanded,
       'data-garden-container-version': PACKAGE_VERSION,
       onClick: composeEventHandlers(onClick, (e: MouseEvent) => {
-        if (itemType !== 'parent') {
+        if (nodeType !== 'parent') {
           return;
         }
         e.stopPropagation();
@@ -124,9 +150,11 @@ export function useTreeview({
   };
 
   return {
-    getTreeProps,
-    getTreeItemProps,
-    getGroupProps,
-    openNodes: Array.from(openNodesState)
+    selectedItem,
+    focusedItem,
+    openNodes: Array.from(openNodesState),
+    getTreeProps: props => getContainerProps(getTreeProps(props) as any),
+    getTreeItemProps: props => getItemProps(getTreeItemProps(props) as any),
+    getGroupProps
   };
 }

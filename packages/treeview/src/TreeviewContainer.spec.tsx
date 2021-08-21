@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React, { PropsWithChildren } from 'react';
+import React, { createRef, PropsWithChildren } from 'react';
 import { fireEvent, render, RenderResult, screen } from '@testing-library/react';
 
 import { IUseTreeviewReturnValue } from './useTreeview';
@@ -80,14 +80,16 @@ const renderContainerTestCase = ({
   const onClickMock = jest.fn();
   const renderResult = render(
     <TreeviewContainer onChange={onChangeMock} openNodes={openNodes}>
-      {({ getTreeProps, getTreeItemProps, getGroupProps }: IUseTreeviewReturnValue) => {
+      {({ getTreeProps, getTreeItemProps, getGroupProps }: IUseTreeviewReturnValue<string>) => {
         const renderNode = (node: IFoodNode) =>
           node.children ? (
             <ParentNode
               key={node.name}
               {...getTreeItemProps({
-                itemType: 'parent',
+                nodeType: 'parent',
                 index: node.name,
+                item: node.name,
+                focusRef: createRef(),
                 name: node.name,
                 onClick: () => {
                   onClickMock(node.name);
@@ -100,8 +102,10 @@ const renderContainerTestCase = ({
             <EndNode
               key={node.name}
               {...getTreeItemProps({
-                itemType: 'end',
+                nodeType: 'end',
                 name: node.name,
+                item: node.name,
+                focusRef: createRef(),
                 onClick: e => {
                   onClickMock(node.name);
                   e.stopPropagation();
@@ -163,6 +167,7 @@ describe('TreeviewContainer', () => {
 
   describe('Controlled state', () => {
     let result: IContainerTestResult;
+
     beforeEach(() => {
       result = renderContainerTestCase({ openNodes: ['Vegetables'] });
     });
@@ -183,6 +188,7 @@ describe('TreeviewContainer', () => {
 
     it('should return an empty state when the Vegetables node is clicked on', () => {
       const vegetableSpanElement = screen.getByText('Vegetables');
+
       screen.getAllByRole('treeitem', { expanded: true }).forEach(e => {
         if (e.contains(vegetableSpanElement)) {
           fireEvent.click(vegetableSpanElement);
@@ -202,6 +208,7 @@ describe('TreeviewContainer', () => {
   describe('Mouse controls', () => {
     describe('when a parent node is clicked on', () => {
       let result: IContainerTestResult;
+
       beforeEach(() => {
         result = renderContainerTestCase();
         fireEvent.click(screen.queryAllByTestId('treeview-parent')[0]);
@@ -224,6 +231,7 @@ describe('TreeviewContainer', () => {
 
     describe('when an end node is clicked on', () => {
       let result: IContainerTestResult;
+
       beforeEach(() => {
         result = renderContainerTestCase();
         fireEvent.click(screen.queryAllByTestId('treeview-end')[0]);
@@ -248,12 +256,18 @@ describe('TreeviewContainer', () => {
       expect(() => {
         render(
           <TreeviewContainer>
-            {({ getTreeProps, getTreeItemProps, getGroupProps }: IUseTreeviewReturnValue) => (
+            {({
+              getTreeProps,
+              getTreeItemProps,
+              getGroupProps
+            }: IUseTreeviewReturnValue<string>) => (
               <ul data-test-id="treeview-tree" {...getTreeProps()}>
                 <ParentNode
                   {...getTreeItemProps({
-                    itemType: 'parent',
+                    nodeType: 'parent',
                     index: undefined,
+                    item: 'undefined',
+                    focusRef: createRef(),
                     name: 'name'
                   })}
                 >

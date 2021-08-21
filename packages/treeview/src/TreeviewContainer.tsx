@@ -9,14 +9,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useTreeview, IUseTreeviewProps, IUseTreeviewReturnValue } from './useTreeview';
 
-export interface ITreeviewContainerProps extends IUseTreeviewProps {
+export interface ITreeviewContainerProps<Item> extends IUseTreeviewProps<Item> {
   /** Documents the render function */
-  render?: (options: IUseTreeviewReturnValue) => React.ReactNode;
+  render?: (options: IUseTreeviewReturnValue<Item>) => React.ReactNode;
   /** Documents the children prop */
-  children?: (options: IUseTreeviewReturnValue) => React.ReactNode;
+  children?: (options: IUseTreeviewReturnValue<Item>) => React.ReactNode;
 }
 
-export const TreeviewContainer: React.FC<ITreeviewContainerProps> = props => {
+export const TreeviewContainer: React.FC<ITreeviewContainerProps<any>> = props => {
   const { children, render = children, ...options } = props;
 
   return <>{render!(useTreeview(options)) as React.ReactElement}</>;

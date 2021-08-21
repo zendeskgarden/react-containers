@@ -5,10 +5,9 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React from 'react';
+import React, { createRef } from 'react';
 import { TreeviewContainer, useTreeview } from './src';
 import styled from 'styled-components';
-import { IUseTreeviewReturnValue } from './dist/typings';
 
 const Tree = styled.ul`
   margin: 1em;
@@ -129,14 +128,15 @@ export const Container = ({ nodes, controlled, expandedNodes, onChange }) => {
   const Treeview = () => {
     return (
       <TreeviewContainer openNodes={controlled ? expandedNodes : undefined} onChange={onChange}>
-        {({ getTreeProps, getTreeItemProps, getGroupProps }: IUseTreeviewReturnValue) => {
+        {({ getTreeProps, getTreeItemProps, getGroupProps }) => {
           const renderNode = (node: IFoodNode) =>
             node.children ? (
               <ParentNode
                 key={node.name}
                 {...getTreeItemProps({
                   index: node.name,
-                  itemType: 'parent',
+                  item: node.name,
+                  nodeType: 'parent',
                   name: node.name
                 })}
               >
@@ -145,7 +145,7 @@ export const Container = ({ nodes, controlled, expandedNodes, onChange }) => {
             ) : (
               <EndNode
                 key={node.name}
-                {...getTreeItemProps({ itemType: 'end', name: node.name })}
+                {...getTreeItemProps({ nodeType: 'end', name: node.name })}
               />
             );
 
@@ -180,7 +180,7 @@ export const Hook = ({ nodes, controlled, expandedNodes, onChange, onClick }) =>
   const Group = props => <ul {...props} />;
 
   const Treeview = () => {
-    const { getTreeProps, getTreeItemProps, getGroupProps } = useTreeview({
+    const { getTreeProps, getTreeItemProps, getGroupProps } = useTreeview<string>({
       openNodes: controlled ? expandedNodes : undefined,
       onChange
     });
@@ -190,8 +190,10 @@ export const Hook = ({ nodes, controlled, expandedNodes, onChange, onClick }) =>
         <ParentNode
           key={node.name}
           {...getTreeItemProps({
+            nodeType: 'parent',
             index: node.name,
-            itemType: 'parent',
+            item: node.name,
+            focusRef: createRef(),
             name: node.name,
             onClick
           })}
@@ -201,7 +203,13 @@ export const Hook = ({ nodes, controlled, expandedNodes, onChange, onClick }) =>
       ) : (
         <EndNode
           key={node.name}
-          {...getTreeItemProps({ itemType: 'end', name: node.name, onClick })}
+          {...getTreeItemProps({
+            nodeType: 'end',
+            item: node.name,
+            focusRef: createRef(),
+            name: node.name,
+            onClick
+          })}
         />
       );
 
