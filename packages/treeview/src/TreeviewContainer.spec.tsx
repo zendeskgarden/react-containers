@@ -69,12 +69,12 @@ interface IContainerTestResult {
 }
 
 const renderContainerTestCase = ({
-  data,
+  data = TEST_DATA,
   openNodes
 }: {
-  data: IFoodNode[];
+  data?: IFoodNode[];
   openNodes?: string[];
-}): IContainerTestResult => {
+} = {}): IContainerTestResult => {
   const onChangeMock = jest.fn();
   const onClickMock = jest.fn();
   const renderResult = render(
@@ -128,7 +128,7 @@ const renderContainerTestCase = ({
 describe('TreeviewContainer', () => {
   describe('Tree item', () => {
     it('applies correct accessibility role', () => {
-      renderContainerTestCase({ data: TEST_DATA });
+      renderContainerTestCase();
       const element = screen.getByTestId('treeview-tree');
 
       expect(element).toHaveAttribute('role', 'tree');
@@ -137,7 +137,7 @@ describe('TreeviewContainer', () => {
 
   describe('Parent Nodes', () => {
     it('should nave a parent node with the treeitem role and an aria-expanded and a direct children with the group role', () => {
-      renderContainerTestCase({ data: TEST_DATA });
+      renderContainerTestCase();
       screen.getAllByTestId('treeview-parent').forEach(element => {
         expect(element).toHaveAttribute('role', 'treeitem');
         expect(element).toHaveAttribute('aria-expanded');
@@ -151,7 +151,7 @@ describe('TreeviewContainer', () => {
 
   describe('End Nodes', () => {
     it('should have end nodes with a treeitem role and no aria-expanded attribute.', () => {
-      renderContainerTestCase({ data: TEST_DATA });
+      renderContainerTestCase();
       screen.getAllByTestId('treeview-end').forEach(element => {
         expect(element).toHaveAttribute('role', 'treeitem');
 
@@ -160,11 +160,49 @@ describe('TreeviewContainer', () => {
     });
   });
 
+  describe('Controlled state', () => {
+    let result: IContainerTestResult;
+    beforeEach(() => {
+      result = renderContainerTestCase({ openNodes: ['Vegetables'] });
+    });
+
+    it('should only have the vegetables node opened by default', () => {
+      const vegetableSpanElement = screen.getByText('Vegetables');
+
+      expect(screen.getByRole('treeitem', { expanded: true })).toContainElement(
+        vegetableSpanElement
+      );
+    });
+
+    it('onChange should be called with the new state when another node is opened', () => {
+      fireEvent.click(screen.queryAllByTestId('treeview-parent')[0]);
+
+      expect(result.onChangeMock).toHaveBeenCalledWith(['Vegetables', 'Fruits']);
+    });
+
+    it('should return an empty state when the Vegetables node is clicked on', () => {
+      const vegetableSpanElement = screen.getByText('Vegetables');
+      screen.getAllByRole('treeitem', { expanded: true }).forEach(e => {
+        if (e.contains(vegetableSpanElement)) {
+          fireEvent.click(vegetableSpanElement);
+        }
+      });
+
+      expect(result.onChangeMock).toHaveBeenCalledWith([]);
+    });
+
+    it('should not open any node by itself', () => {
+      fireEvent.click(screen.queryAllByTestId('treeview-parent')[0]);
+
+      expect(screen.getAllByRole('treeitem', { expanded: true })).toHaveLength(1);
+    });
+  });
+
   describe('Mouse controls', () => {
     describe('when a parent node is clicked on', () => {
       let result: IContainerTestResult;
       beforeEach(() => {
-        result = renderContainerTestCase({ data: TEST_DATA });
+        result = renderContainerTestCase();
         fireEvent.click(screen.queryAllByTestId('treeview-parent')[0]);
       });
 
@@ -186,7 +224,7 @@ describe('TreeviewContainer', () => {
     describe('when an end node is clicked on', () => {
       let result: IContainerTestResult;
       beforeEach(() => {
-        result = renderContainerTestCase({ data: TEST_DATA });
+        result = renderContainerTestCase();
         fireEvent.click(screen.queryAllByTestId('treeview-end')[0]);
       });
 

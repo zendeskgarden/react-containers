@@ -38,30 +38,30 @@ export function useTreeview({
   openNodes,
   onChange = () => undefined
 }: IUseTreeviewProps = {}): IUseTreeviewReturnValue {
-  const isControlled = openNodes !== null && openNodes !== undefined;
-
   const [openNodesState, setOpenNodes] = useState<string[]>([]);
-
-  const controlledExpandedState = getControlledValue<string[] | undefined>(
+  const controlledOpenedState = getControlledValue<string[] | undefined>(
     openNodes,
     Array.from(openNodesState)
   )!;
 
+  const isControlled = openNodes !== null && openNodes !== undefined;
   const isNodeExpanded = (index: string | undefined): boolean => {
     if (!index) {
       return false;
     }
 
-    return isControlled ? controlledExpandedState.includes(index) : openNodesState.includes(index);
+    return controlledOpenedState.includes(index);
   };
 
   const toggleParent = (index: string) => {
-    const newValue = openNodesState.includes(index)
-      ? openNodesState.filter(i => i !== index)
-      : [...openNodesState, index];
+    const newValue = controlledOpenedState.includes(index)
+      ? controlledOpenedState.filter(i => i !== index)
+      : [...controlledOpenedState, index];
 
-    setOpenNodes(newValue);
     onChange(newValue);
+    if (!isControlled) {
+      setOpenNodes(newValue);
+    }
   };
 
   const getTreeProps = ({ role = 'tree', ...props }: HTMLProps<any> = {}) => ({
