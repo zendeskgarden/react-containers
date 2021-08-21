@@ -14,6 +14,11 @@ export interface IUseTreeviewProps {
   onChange?: (expandedNodes: string[]) => void;
 }
 
+export interface IGetTreeProps extends HTMLProps<any> {
+  label?: string;
+  labelledBy?: string;
+}
+
 export interface IGetTreeItemProps extends HTMLProps<any> {
   index?: string;
   itemType?: 'parent' | 'end';
@@ -64,12 +69,19 @@ export function useTreeview({
     }
   };
 
-  const getTreeProps = ({ role = 'tree', ...props }: HTMLProps<any> = {}) => ({
-    role: role === null || role === undefined ? role : 'tree',
-    'data-garden-container-id': 'containers.treeview',
-    'data-garden-container-version': PACKAGE_VERSION,
-    ...props
-  });
+  const getTreeProps = ({ label, labelledBy, role = 'tree', ...props }: IGetTreeProps = {}) => {
+    // TODO: Throw error if no label or labelledBy?
+    // TODO: Throw error role is not tree?
+
+    return {
+      role: role === null || role === undefined ? role : 'tree',
+      'aria-label': label,
+      'aria-labelledBy': labelledBy,
+      'data-garden-container-id': 'containers.treeview',
+      'data-garden-container-version': PACKAGE_VERSION,
+      ...props
+    };
+  };
 
   const getTreeItemProps = ({
     index,
@@ -83,6 +95,7 @@ export function useTreeview({
         'Accessibility Error: You must provide an `index` option to `getTreeItemProps()` for parent nodes'
       );
     }
+    // TODO: Throw error role is not treeitem?
 
     const expanded = itemType === 'parent' ? isNodeExpanded(index) : undefined;
 
@@ -102,6 +115,7 @@ export function useTreeview({
   };
 
   const getGroupProps = ({ role = 'group', ...props }: HTMLProps<any> = {}) => {
+    // TODO: Throw error role is not group?
     return {
       role: role === null || role === undefined ? role : 'group',
       'data-garden-container-version': PACKAGE_VERSION,
