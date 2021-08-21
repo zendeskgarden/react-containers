@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React, { createRef, PropsWithChildren } from 'react';
+import React, { createRef, forwardRef, HTMLProps } from 'react';
 import { fireEvent, render, RenderResult, screen } from '@testing-library/react';
 
 import { IUseTreeviewReturnValue } from './useTreeview';
@@ -42,20 +42,29 @@ const TEST_DATA: IFoodNode[] = [
   }
 ];
 
-const EndNode = ({ name, ...props }: PropsWithChildren<{ name: string }>) => (
-  <li role="none">
-    <b data-test-id="treeview-end" {...props}>
-      {name}
-    </b>
-  </li>
-);
+interface INodeProps extends HTMLProps<any> {
+  name?: any;
+  children?: React.ReactNode;
+}
 
-const ParentNode = ({ name, children, ...props }: PropsWithChildren<{ name: string }>) => (
-  <li data-test-id="treeview-parent" key={name} {...props}>
+const EndNode = forwardRef<HTMLLIElement>(({ name, ...props }: INodeProps, ref) => (
+  <li ref={ref} role="none">
+    <a data-test-id="treeview-end" href={`https://en.wikipedia.org/wiki/${name}`} {...props}>
+      {name}
+    </a>
+  </li>
+));
+
+EndNode.displayName = 'EndNode';
+
+const ParentNode = forwardRef<HTMLLIElement>(({ name, children, ...props }: INodeProps, ref) => (
+  <li data-test-id="treeview-parent" ref={ref} {...props}>
     <span>{name}</span>
     {children}
   </li>
-);
+));
+
+ParentNode.displayName = 'ParentNode';
 
 const Group = (
   props: JSX.IntrinsicAttributes &

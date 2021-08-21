@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React, { createRef } from 'react';
+import React, { createRef, forwardRef, HTMLProps } from 'react';
 import { TreeviewContainer, useTreeview } from './src';
 import styled from 'styled-components';
 
@@ -108,36 +108,53 @@ const ARGS = {
   nodes: FOOD
 };
 
-export const Container = ({ nodes, controlled, expandedNodes, onChange }) => {
-  const EndNode = ({ name, ...props }) => (
-    <li role="none">
+interface INodeProps extends HTMLProps<any> {
+  name?: any;
+  children?: React.ReactNode;
+}
+
+export const Container = ({ nodes, controlled, expandedNodes, onChange, onClick }) => {
+  const EndNode = forwardRef<HTMLLIElement>(({ name, ...props }: INodeProps, ref) => (
+    <li ref={ref} role="none">
       <a href={`https://en.wikipedia.org/wiki/${name}`} {...props}>
         {name}
       </a>
     </li>
-  );
+  ));
 
-  const ParentNode = ({ name, children, ...props }) => (
-    <li key={name} {...props}>
+  EndNode.displayName = 'EndNode';
+
+  const ParentNode = forwardRef<HTMLLIElement>(({ name, children, ...props }: INodeProps, ref) => (
+    <li ref={ref} {...props}>
       <span>{name}</span>
       {children}
     </li>
-  );
+  ));
+
+  ParentNode.displayName = 'ParentNode';
 
   const Group = props => <ul {...props} />;
   const Treeview = () => {
+    const tabRefs = [];
+
     return (
       <TreeviewContainer openNodes={controlled ? expandedNodes : undefined} onChange={onChange}>
         {({ getTreeProps, getTreeItemProps, getGroupProps }) => {
-          const renderNode = (node: IFoodNode) =>
-            node.children ? (
+          const renderNode = (node: IFoodNode) => {
+            const newRef = createRef();
+
+            tabRefs.push(newRef);
+
+            return node.children ? (
               <ParentNode
                 key={node.name}
                 {...getTreeItemProps({
+                  nodeType: 'parent',
                   index: node.name,
                   item: node.name,
-                  nodeType: 'parent',
-                  name: node.name
+                  focusRef: newRef,
+                  name: node.name,
+                  onClick
                 })}
               >
                 <Group {...getGroupProps()}>{node.children.map(renderNode)}</Group>
@@ -145,9 +162,16 @@ export const Container = ({ nodes, controlled, expandedNodes, onChange }) => {
             ) : (
               <EndNode
                 key={node.name}
-                {...getTreeItemProps({ nodeType: 'end', name: node.name })}
+                {...getTreeItemProps({
+                  nodeType: 'end',
+                  item: node.name,
+                  focusRef: newRef,
+                  name: node.name,
+                  onClick
+                })}
               />
             );
+          };
 
           return <Tree {...getTreeProps()}>{nodes.map(renderNode)}</Tree>;
         }}
@@ -162,20 +186,24 @@ Container.storyName = 'TreeviewContainer';
 Container.args = ARGS;
 
 export const Hook = ({ nodes, controlled, expandedNodes, onChange, onClick }) => {
-  const EndNode = ({ name, ...props }) => (
-    <li role="none">
+  const EndNode = forwardRef<HTMLLIElement>(({ name, ...props }: INodeProps, ref) => (
+    <li ref={ref} role="none">
       <a href={`https://en.wikipedia.org/wiki/${name}`} {...props}>
         {name}
       </a>
     </li>
-  );
+  ));
 
-  const ParentNode = ({ name, children, ...props }) => (
-    <li key={name} {...props}>
+  EndNode.displayName = 'EndNode';
+
+  const ParentNode = forwardRef<HTMLLIElement>(({ name, children, ...props }: INodeProps, ref) => (
+    <li ref={ref} {...props}>
       <span>{name}</span>
       {children}
     </li>
-  );
+  ));
+
+  ParentNode.displayName = 'ParentNode';
 
   const Group = props => <ul {...props} />;
 
@@ -184,16 +212,21 @@ export const Hook = ({ nodes, controlled, expandedNodes, onChange, onClick }) =>
       openNodes: controlled ? expandedNodes : undefined,
       onChange
     });
+    const tabRefs = [];
 
-    const renderNode = (node: IFoodNode) =>
-      node.children ? (
+    const renderNode = (node: IFoodNode) => {
+      const newRef = createRef();
+
+      tabRefs.push(newRef);
+
+      return node.children ? (
         <ParentNode
           key={node.name}
           {...getTreeItemProps({
             nodeType: 'parent',
             index: node.name,
             item: node.name,
-            focusRef: createRef(),
+            focusRef: newRef,
             name: node.name,
             onClick
           })}
@@ -206,12 +239,13 @@ export const Hook = ({ nodes, controlled, expandedNodes, onChange, onClick }) =>
           {...getTreeItemProps({
             nodeType: 'end',
             item: node.name,
-            focusRef: createRef(),
+            focusRef: newRef,
             name: node.name,
             onClick
           })}
         />
       );
+    };
 
     return <Tree {...getTreeProps()}>{nodes.map(renderNode)}</Tree>;
   };

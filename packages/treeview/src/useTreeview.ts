@@ -97,7 +97,7 @@ export function useTreeview<Item = any>({
     return {
       role: role === null || role === undefined ? role : 'tree',
       'aria-label': label,
-      'aria-labelledBy': labelledBy,
+      'aria-labelledby': labelledBy,
       'data-garden-container-id': 'containers.treeview',
       'data-garden-container-version': PACKAGE_VERSION,
       ...props
