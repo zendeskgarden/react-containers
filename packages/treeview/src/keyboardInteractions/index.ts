@@ -6,7 +6,8 @@
  */
 
 export * from './handleArrowDown';
+export * from './handleArrowLeft';
+export * from './handleArrowRight';
 export * from './handleArrowUp';
-export * from './handleAsterisk';
 export * from './handleEnd';
 export * from './handleHome';

@@ -6,18 +6,30 @@
  */
 
 import { HTMLProps, useState } from 'react';
-import { composeEventHandlers, getControlledValue } from '@zendeskgarden/container-utilities';
+import {
+  composeEventHandlers,
+  getControlledValue,
+  KEY_CODES
+} from '@zendeskgarden/container-utilities';
 import {
   useSelection,
   IGetItemPropsOptions,
   IUseSelectionState,
   IUseSelectionProps
 } from '@zendeskgarden/container-selection';
+import {
+  handleArrowDown,
+  handleArrowLeft,
+  handleArrowRight,
+  handleArrowUp,
+  handleEnd,
+  handleHome
+} from './keyboardInteractions';
 
 export interface IUseTreeviewProps<Item> extends IUseSelectionProps<Item> {
   /** Determines which sections are expanded in a controlled treeview */
-  openNodes?: string[];
-  onChange?: (expandedNodes: string[]) => void;
+  openNodes?: Item[];
+  onChange?: (expandedNodes: Item[]) => void;
 }
 
 export interface IGetTreeProps extends HTMLProps<any> {
@@ -26,13 +38,12 @@ export interface IGetTreeProps extends HTMLProps<any> {
 }
 
 export interface IGetTreeItemProps<Item> extends IGetItemPropsOptions<Item>, HTMLProps<any> {
-  index?: string;
   item: Item;
   nodeType?: 'parent' | 'end';
 }
 
 export interface IUseTreeviewReturnValue<Item> extends IUseSelectionState<Item> {
-  openNodes: string[];
+  openNodes: Item[];
   getTreeProps: <T extends IGetTreeProps>(options?: T) => any;
   getTreeItemProps: <T extends IGetTreeItemProps<Item>>(options?: T) => any;
   getGroupProps: <T>(options?: T & HTMLProps<any>) => any;
@@ -59,30 +70,32 @@ export function useTreeview<Item = any>({
   onChange = () => undefined,
   ...options
 }: IUseTreeviewProps<Item> = {}): IUseTreeviewReturnValue<Item> {
+  const [ownFocusedItem, setFocusedItem] = useState<Item>();
   const { selectedItem, focusedItem, getContainerProps, getItemProps } = useSelection<Item>({
     direction: 'vertical', // TODO: implement direction
     defaultSelectedIndex: 0,
+    focusedItem: ownFocusedItem,
     ...options
   });
-  const [openNodesState, setOpenNodes] = useState<string[]>([]);
-  const controlledOpenedState = getControlledValue<string[] | undefined>(
+  const [openNodesState, setOpenNodes] = useState<Item[]>([]);
+  const controlledOpenedState = getControlledValue<Item[] | undefined>(
     openNodes,
     Array.from(openNodesState)
   )!;
 
   const isControlled = openNodes !== null && openNodes !== undefined;
-  const isNodeExpanded = (index: string | undefined): boolean => {
-    if (!index) {
+  const isNodeExpanded = (item: Item | undefined): boolean => {
+    if (!item) {
       return false;
     }
 
-    return controlledOpenedState.includes(index);
+    return controlledOpenedState.includes(item);
   };
 
-  const toggleParent = (index: string) => {
-    const newValue = controlledOpenedState.includes(index)
-      ? controlledOpenedState.filter(i => i !== index)
-      : [...controlledOpenedState, index];
+  const toggleParent = (item: Item) => {
+    const newValue = controlledOpenedState.includes(item)
+      ? controlledOpenedState.filter(i => i !== item)
+      : [...controlledOpenedState, item];
 
     onChange(newValue);
     if (!isControlled) {
@@ -106,35 +119,73 @@ export function useTreeview<Item = any>({
 
   const getTreeItemProps = (
     {
-      index,
       item,
       role = 'treeitem',
       nodeType = 'end',
       onClick,
+      onFocus,
+      onKeyDown,
+      focusRef,
       ...props
     }: IGetTreeItemProps<Item> = {} as any
   ) => {
     requiredArguments(item, 'item', 'getTreeItemProps');
-    if (nodeType === 'parent' && index === undefined) {
-      throw new Error(
-        'Accessibility Error: You must provide an `index` option to `getTreeItemProps()` for parent nodes'
-      );
-    }
     // TODO: Throw error role is not treeitem?
 
-    const expanded = nodeType === 'parent' ? isNodeExpanded(index) : undefined;
+    const expanded = nodeType === 'parent' ? isNodeExpanded(item) : undefined;
 
     return {
       role: role === null || role === undefined ? role : 'treeitem',
       item,
+      focusRef,
       'aria-expanded': expanded,
+      tabIndex: ownFocusedItem === item ? 0 : -1,
       'data-garden-container-version': PACKAGE_VERSION,
       onClick: composeEventHandlers(onClick, (e: MouseEvent) => {
         if (nodeType !== 'parent') {
           return;
         }
-        e.stopPropagation();
-        toggleParent(index!);
+        e.preventDefault();
+        toggleParent(item!);
+      }),
+      onFocus: composeEventHandlers(onFocus, (event: Event) => {
+        event.stopPropagation();
+        setFocusedItem(item);
+      }),
+      onKeyDown: composeEventHandlers(onKeyDown, (event: KeyboardEvent): void => {
+        const target = focusRef.current as HTMLElement;
+
+        event.stopPropagation();
+        switch (event.keyCode) {
+          case KEY_CODES.UP:
+            handleArrowUp(target);
+            break;
+          case KEY_CODES.DOWN:
+            handleArrowDown(target);
+            break;
+          case KEY_CODES.RIGHT:
+            if (nodeType === 'parent' && expanded) {
+              handleArrowRight(target);
+            } else {
+              toggleParent(item);
+            }
+            break;
+          case KEY_CODES.LEFT:
+            if (nodeType === 'parent' && expanded) {
+              toggleParent(item);
+            } else {
+              handleArrowLeft(target);
+            }
+            break;
+          case KEY_CODES.HOME:
+            handleHome(target);
+            break;
+          case KEY_CODES.END:
+            handleEnd(target);
+            break;
+          default:
+            break;
+        }
       }),
       ...props
     };

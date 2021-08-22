@@ -12,12 +12,32 @@ import styled from 'styled-components';
 const Tree = styled.ul`
   margin: 1em;
 
+  *:focus {
+    outline: 2px blue solid;
+  }
+
   li {
     margin-left: 1em;
   }
 
+  a[role='treeitem']:focus {
+    outline: 2px red solid;
+  }
+
   li[role='treeitem'] {
     cursor: pointer;
+
+    &[aria-selected='true'] > span {
+      font-weight: bold;
+    }
+
+    &:focus {
+      outline: none;
+    }
+
+    &:focus > span {
+      outline: 2px red solid;
+    }
 
     &[aria-expanded='true'] {
       list-style-type: '↓';
@@ -57,20 +77,6 @@ const FOOD: IFoodNode[] = [
             name: 'Fuji'
           }
         ]
-      },
-      {
-        name: 'Bulb and Stem Vegetables',
-        children: [
-          {
-            name: 'Asparagus'
-          },
-          {
-            name: 'Celery'
-          },
-          {
-            name: 'Leek'
-          }
-        ]
       }
     ]
   },
@@ -103,7 +109,7 @@ const FOOD: IFoodNode[] = [
 ];
 
 const ARGS = {
-  controlled: true,
+  controlled: false,
   expandedNodes: ['Grains'],
   nodes: FOOD
 };
@@ -152,6 +158,7 @@ export const Container = ({ nodes, controlled, expandedNodes, onChange, onClick 
                   nodeType: 'parent',
                   index: node.name,
                   item: node.name,
+                  ref: newRef,
                   focusRef: newRef,
                   name: node.name,
                   onClick
@@ -165,6 +172,7 @@ export const Container = ({ nodes, controlled, expandedNodes, onChange, onClick 
                 {...getTreeItemProps({
                   nodeType: 'end',
                   item: node.name,
+                  ref: newRef,
                   focusRef: newRef,
                   name: node.name,
                   onClick

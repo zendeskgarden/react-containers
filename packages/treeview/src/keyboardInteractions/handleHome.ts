@@ -5,27 +5,25 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import { FOCUSABLE_SELECTOR } from './utils';
+import { getParentTree } from './utils';
 
 /**
  * Moves focus to the first node in the tree without opening or closing a node.
  *
  * @param target
  */
-export const handleHome = (target: EventTarget): void => {
-  const treeElement = (target as HTMLElement).closest('[role="tree"]');
+export const handleHome = (target: HTMLElement): void => {
+  const treeElement = getParentTree(target);
 
   if (treeElement === null) {
     return;
   }
 
-  const firstTreeItem = treeElement.querySelector(':scope > [role="treeitem"]:first-of-type');
+  const firstTreeItem = treeElement.querySelector('[role="treeitem"]:first-of-type') as HTMLElement;
 
   if (firstTreeItem === null) {
     return;
   }
 
-  const firstFocusableElement = firstTreeItem.querySelector(FOCUSABLE_SELECTOR);
-
-  firstFocusableElement && (firstFocusableElement as HTMLElement).focus();
+  firstTreeItem.focus();
 };

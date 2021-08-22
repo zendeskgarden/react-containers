@@ -96,7 +96,6 @@ const renderContainerTestCase = ({
               key={node.name}
               {...getTreeItemProps({
                 nodeType: 'parent',
-                index: node.name,
                 item: node.name,
                 focusRef: createRef(),
                 name: node.name,
@@ -253,46 +252,6 @@ describe('TreeviewContainer', () => {
       it('should have called the onClickMock name of the node', () => {
         expect(result.onClickMock).toHaveBeenCalledWith('Oranges');
       });
-    });
-  });
-
-  describe('Error scenarios', () => {
-    it('should throw an error when a parent treeitem is created without an index', () => {
-      const consoleError = console.error;
-
-      console.error = jest.fn();
-
-      expect(() => {
-        render(
-          <TreeviewContainer>
-            {({
-              getTreeProps,
-              getTreeItemProps,
-              getGroupProps
-            }: IUseTreeviewReturnValue<string>) => (
-              <ul data-test-id="treeview-tree" {...getTreeProps()}>
-                <ParentNode
-                  {...getTreeItemProps({
-                    nodeType: 'parent',
-                    index: undefined,
-                    item: 'undefined',
-                    focusRef: createRef(),
-                    name: 'name'
-                  })}
-                >
-                  <Group {...getGroupProps()}>
-                    <span>child</span>
-                  </Group>
-                </ParentNode>
-              </ul>
-            )}
-          </TreeviewContainer>
-        );
-      }).toThrow(
-        'Accessibility Error: You must provide an `index` option to `getTreeItemProps()` for parent nodes'
-      );
-
-      console.error = consoleError;
     });
   });
 });

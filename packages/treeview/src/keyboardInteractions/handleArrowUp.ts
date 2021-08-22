@@ -5,51 +5,8 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import {
-  FOCUSABLE_SELECTOR,
-  focusPrevTreeItem,
-  getParentCollapsible,
-  getTree,
-  isEndNode,
-  isParentNode
-} from './utils';
-
-const handleParentNode = (currentTreeElement: Element): void => {
-  const previousSibling = currentTreeElement.previousElementSibling;
-
-  if (previousSibling === null) {
-    return;
-  }
-
-  if (isParentNode(previousSibling)) {
-    const lastTreeItem = previousSibling.querySelector('[role="treeitem"]:last-of-type');
-
-    lastTreeItem && (lastTreeItem as HTMLElement).focus();
-  } else {
-    focusPrevTreeItem(currentTreeElement);
-  }
-};
-
-const handleEndNode = (currentTreeElement: Element): void => {
-  let previousSibling = currentTreeElement.previousElementSibling;
-
-  while (previousSibling && !isEndNode(previousSibling)) {
-    previousSibling = previousSibling.previousElementSibling;
-  }
-  if (previousSibling === null) {
-    const parentElement = getParentCollapsible(currentTreeElement);
-
-    if (parentElement === null) {
-      return;
-    }
-    const focusableParentElement = parentElement.querySelector(FOCUSABLE_SELECTOR);
-
-    focusableParentElement && (focusableParentElement as HTMLElement).focus();
-
-    return;
-  }
-  (previousSibling as HTMLElement).focus();
-};
+import { getParentNode, getParentTree } from './utils';
+import { DocumentPosition } from '@zendeskgarden/container-utilities';
 
 /**
  * Moves focus to the previous node that is focusable without opening or closing a node.
@@ -57,23 +14,39 @@ const handleEndNode = (currentTreeElement: Element): void => {
  *
  * @param target
  */
-export const handleArrowUp = (target: EventTarget): void => {
-  const treeElement = getTree(target);
+export const handleArrowUp = (target: HTMLElement): void => {
+  const treeElement = getParentTree(target);
 
   if (treeElement === null) {
     return;
   }
 
-  if (treeElement.contains(document.activeElement)) {
-    const currentTreeElement = (document.activeElement as HTMLElement).closest('[role="treeitem"]');
+  const allNodes = treeElement.querySelectorAll('[role="treeitem"]');
 
-    if (currentTreeElement === null) {
-      return;
+  for (let i = allNodes.length - 1, node = allNodes.item(i); i >= 0; i--, node = allNodes.item(i)) {
+    if (!(node instanceof HTMLElement)) {
+      continue;
     }
-    if (isParentNode(currentTreeElement)) {
-      handleParentNode(currentTreeElement);
-    } else {
-      handleEndNode(currentTreeElement);
+    if (target.isSameNode(node)) {
+      continue;
     }
+    const positionHierarchy = target.compareDocumentPosition(node);
+
+    if (positionHierarchy & DocumentPosition.FOLLOWING) {
+      continue;
+    }
+
+    const parentOfNode = getParentNode(node);
+
+    if (parentOfNode && target.isSameNode(parentOfNode)) {
+      continue;
+    }
+
+    if (parentOfNode && parentOfNode.getAttribute('aria-expanded') === 'false') {
+      continue;
+    }
+
+    node.focus();
+    break;
   }
 };

@@ -5,34 +5,8 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import { focusNextTreeItem, getParentCollapsible, getTree, isEndNode, isParentNode } from './utils';
-
-const handleParentNode = (currentTreeElement: Element): void => {
-  if (isParentNode(currentTreeElement)) {
-    const firstChildElement = currentTreeElement.querySelector('[role="treeitem"]');
-
-    firstChildElement && (firstChildElement as HTMLElement).focus();
-  } else {
-    focusNextTreeItem(currentTreeElement);
-  }
-};
-
-const handleEndNode = (currentTreeElement: Element): void => {
-  let nextSibling = currentTreeElement.nextElementSibling;
-
-  while (nextSibling && !isEndNode(nextSibling)) {
-    nextSibling = nextSibling.nextElementSibling;
-  }
-
-  if (nextSibling === null) {
-    const parentElement = getParentCollapsible(currentTreeElement);
-
-    parentElement && focusNextTreeItem(parentElement);
-
-    return;
-  }
-  (nextSibling as HTMLElement).focus();
-};
+import { DocumentPosition } from '@zendeskgarden/container-utilities';
+import { getParentTree, isParentNode } from './utils';
 
 /**
  * Moves focus to the next node that is focusable without opening or closing a node.
@@ -40,24 +14,35 @@ const handleEndNode = (currentTreeElement: Element): void => {
  *
  * @param target
  */
-export const handleArrowDown = (target: EventTarget): void => {
-  const treeElement = getTree(target);
+export const handleArrowDown = (target: HTMLElement): void => {
+  const treeElement = getParentTree(target);
 
   if (treeElement === null) {
     return;
   }
 
-  if (treeElement.contains(document.activeElement)) {
-    const currentTreeElement = (document.activeElement as HTMLElement).closest('[role="treeitem"]');
+  const isTargetOpened = isParentNode(target) && target.getAttribute('aria-expanded') === 'true';
 
-    if (currentTreeElement === null) {
+  const allNodes = treeElement.querySelectorAll('[role="treeitem"]');
+
+  for (const node of allNodes) {
+    if (!(node instanceof HTMLElement)) {
+      continue;
+    }
+    if (node.isSameNode(target)) {
+      continue;
+    }
+    const positionHierarchy = target.compareDocumentPosition(node);
+
+    if (isTargetOpened && positionHierarchy & DocumentPosition.CONTAINED_BY) {
+      node.focus();
+
       return;
     }
+    if (positionHierarchy === DocumentPosition.FOLLOWING) {
+      node.focus();
 
-    if (isParentNode(currentTreeElement)) {
-      handleParentNode(currentTreeElement);
-    } else {
-      handleEndNode(currentTreeElement);
+      return;
     }
   }
 };
