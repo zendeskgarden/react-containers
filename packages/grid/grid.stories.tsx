@@ -10,7 +10,8 @@ import { useGrid, GridContainer, IUseGridReturnValue } from './src';
 
 const ARGS = {
   wrap: true,
-  selection: true
+  selection: true,
+  rtl: false
 };
 
 // Given a column count, converts a flat array into a 2D array
@@ -29,38 +30,36 @@ const convertToMatrix = (array, columnCount) =>
     return acc;
   }, []);
 
-const Grid = ({ matrix, selection, selectedRowIndex, selectedColIndex, getGridCellProps }) => {
-  return (
-    <table role="grid">
-      <tbody>
-        {matrix.map((row, rowIdx) => (
-          <tr key={`rowIdx-${row[0]}`}>
-            {row.map((item, colIdx) => {
-              const selected = rowIdx === selectedRowIndex && colIdx === selectedColIndex;
+const Grid = ({ rtl, matrix, selection, selectedRowIndex, selectedColIndex, getGridCellProps }) => (
+  <table role="grid" style={{ direction: rtl ? 'rtl' : 'ltr' }}>
+    <tbody>
+      {matrix.map((row, rowIdx) => (
+        <tr key={`rowIdx-${row[0]}`}>
+          {row.map((item, colIdx) => {
+            const selected = rowIdx === selectedRowIndex && colIdx === selectedColIndex;
 
-              return (
-                <td role="presentation" key={item}>
-                  <button
-                    {...getGridCellProps({
-                      rowIdx,
-                      colIdx,
-                      'aria-label': `cell ${rowIdx}, ${colIdx}`,
-                      style: { width: 30, height: 30 }
-                    })}
-                  >
-                    {selection && selected ? '✓' : null}
-                  </button>
-                </td>
-              );
-            })}
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  );
-};
+            return (
+              <td role="presentation" key={item}>
+                <button
+                  {...getGridCellProps({
+                    rowIdx,
+                    colIdx,
+                    'aria-label': `cell ${rowIdx}, ${colIdx}`,
+                    style: { width: 30, height: 30 }
+                  })}
+                >
+                  {selection && selected ? '✓' : null}
+                </button>
+              </td>
+            );
+          })}
+        </tr>
+      ))}
+    </tbody>
+  </table>
+);
 
-export const Container = ({ wrap, selection, cellCount }) => {
+export const Container = ({ rtl, wrap, selection, cellCount }) => {
   const items = Array(cellCount)
     .fill(undefined)
     .map((s, i) => i);
@@ -96,6 +95,7 @@ export const Container = ({ wrap, selection, cellCount }) => {
     >
       {({ getGridCellProps }: IUseGridReturnValue) => (
         <Grid
+          rtl={rtl}
           matrix={matrix}
           selection={selection}
           selectedRowIndex={selectedRowIndex}
@@ -127,7 +127,7 @@ Container.argTypes = {
   defaultSelectedColIndex: { control: { disable: true } }
 };
 
-export const Hook = props => {
+export const Hook = ({ rtl, ...other }) => {
   const matrix = [
     [1, 2, 3],
     [4, 5, 6],
@@ -151,7 +151,7 @@ export const Hook = props => {
   };
 
   const { getGridCellProps } = useGrid({
-    ...props,
+    ...other,
     matrix,
     onChange,
     onSelect,
@@ -164,6 +164,7 @@ export const Hook = props => {
 
   return (
     <Grid
+      rtl={rtl}
       selection
       matrix={matrix}
       selectedRowIndex={selectedRowIndex}
