@@ -10,9 +10,9 @@ import PropTypes from 'prop-types';
 import { useGrid, IUseGridProps, IUseGridReturnValue } from './useGrid';
 
 export interface IGridContainerProps extends IUseGridProps {
-  /** Documents the render function */
+  /** A render prop function which receives accordion state and prop getters */
   render?: (options: IUseGridReturnValue) => React.ReactNode;
-  /** Documents the children prop */
+  /** A children render prop function which receives a grid prop getter */
   children?: (options: IUseGridReturnValue) => React.ReactNode;
 }
 
