@@ -8,7 +8,7 @@
 import { useState, HTMLProps, HTMLAttributes, KeyboardEvent } from 'react';
 import { composeEventHandlers } from '@zendeskgarden/container-utilities';
 
-const gridKeys = ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'];
+const GRID_KEYS = ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'];
 
 export interface IUseGridProps {
   /** Enables wrapped keyboard navigation  */
@@ -112,7 +112,7 @@ export function useGrid({
   };
 
   const onNavigate = (e: KeyboardEvent<HTMLElement>) => {
-    if (gridKeys.includes(e.key)) {
+    if (GRID_KEYS.includes(e.key)) {
       e.preventDefault();
     }
 
