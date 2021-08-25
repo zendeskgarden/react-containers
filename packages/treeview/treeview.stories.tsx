@@ -7,13 +7,31 @@
 
 import React, { createRef, forwardRef, HTMLProps } from 'react';
 import { TreeviewContainer, useTreeview } from './src';
-import styled from 'styled-components';
+import styled, { DefaultTheme, css } from 'styled-components';
 
-const Tree = styled.ul`
+interface ITreeProps extends DefaultTheme {
+  horizontal?: boolean;
+  rtl?: boolean;
+}
+
+const directionStyles = css<ITreeProps>`
+  display: flex;
+  flex-direction: ${({ horizontal }) => (horizontal ? 'row' : 'column')};
+  text-align: ${({ rtl }) => (rtl ? 'right' : 'left')};
+`;
+
+const Tree = styled.ul<ITreeProps>`
   margin: 1em;
+
+  ${directionStyles};
 
   *:focus {
     outline: 2px blue solid;
+  }
+
+  li[role='treeitem'],
+  ul[role='group'] {
+    ${directionStyles};
   }
 
   li {
@@ -39,20 +57,20 @@ const Tree = styled.ul`
       outline: 2px red solid;
     }
 
-    &[aria-expanded='true'] {
-      list-style-type: '↓';
-
-      & > [role='group'] {
-        display: initial;
-      }
+    &[aria-expanded='true'] span::before {
+      content: '↓';
     }
 
-    &[aria-expanded='false'] {
-      list-style-type: '→';
+    &[aria-expanded='false'] span::before {
+      content: '→';
+    }
 
-      & > [role='group'] {
-        display: none;
-      }
+    &[aria-expanded='true'] > [role='group'] {
+      display: initial;
+    }
+
+    &[aria-expanded='false'] > [role='group'] {
+      display: none;
     }
   }
 `;
@@ -110,6 +128,8 @@ const FOOD: IFoodNode[] = [
 
 const ARGS = {
   controlled: false,
+  horizontal: false,
+  rtl: false,
   expandedNodes: ['Grains'],
   nodes: FOOD
 };
@@ -119,7 +139,15 @@ interface INodeProps extends HTMLProps<any> {
   children?: React.ReactNode;
 }
 
-export const Container = ({ nodes, controlled, expandedNodes, onChange, onClick }) => {
+export const Container = ({
+  nodes,
+  controlled,
+  horizontal,
+  rtl,
+  expandedNodes,
+  onChange,
+  onClick
+}) => {
   const EndNode = forwardRef<HTMLLIElement>(({ name, ...props }: INodeProps, ref) => (
     <li ref={ref} role="none">
       <a href={`https://en.wikipedia.org/wiki/${name}`} {...props}>
@@ -144,7 +172,12 @@ export const Container = ({ nodes, controlled, expandedNodes, onChange, onClick 
     const tabRefs = [];
 
     return (
-      <TreeviewContainer openNodes={controlled ? expandedNodes : undefined} onChange={onChange}>
+      <TreeviewContainer
+        openNodes={controlled ? expandedNodes : undefined}
+        horizontal={horizontal}
+        rtl={rtl}
+        onChange={onChange}
+      >
         {({ getTreeProps, getTreeItemProps, getGroupProps }) => {
           const renderNode = (node: IFoodNode) => {
             const newRef = createRef();
@@ -181,7 +214,11 @@ export const Container = ({ nodes, controlled, expandedNodes, onChange, onClick 
             );
           };
 
-          return <Tree {...getTreeProps()}>{nodes.map(renderNode)}</Tree>;
+          return (
+            <Tree horizontal={horizontal} {...getTreeProps()}>
+              {nodes.map(renderNode)}
+            </Tree>
+          );
         }}
       </TreeviewContainer>
     );
@@ -193,7 +230,7 @@ export const Container = ({ nodes, controlled, expandedNodes, onChange, onClick 
 Container.storyName = 'TreeviewContainer';
 Container.args = ARGS;
 
-export const Hook = ({ nodes, controlled, expandedNodes, onChange, onClick }) => {
+export const Hook = ({ nodes, controlled, horizontal, rtl, expandedNodes, onChange, onClick }) => {
   const EndNode = forwardRef<HTMLLIElement>(({ name, ...props }: INodeProps, ref) => (
     <li ref={ref} role="none">
       <a href={`https://en.wikipedia.org/wiki/${name}`} {...props}>
@@ -218,6 +255,8 @@ export const Hook = ({ nodes, controlled, expandedNodes, onChange, onClick }) =>
   const Treeview = () => {
     const { getTreeProps, getTreeItemProps, getGroupProps } = useTreeview<string>({
       openNodes: controlled ? expandedNodes : undefined,
+      horizontal,
+      rtl,
       onChange
     });
     const tabRefs = [];
@@ -255,7 +294,11 @@ export const Hook = ({ nodes, controlled, expandedNodes, onChange, onClick }) =>
       );
     };
 
-    return <Tree {...getTreeProps()}>{nodes.map(renderNode)}</Tree>;
+    return (
+      <Tree horizontal={horizontal} {...getTreeProps()}>
+        {nodes.map(renderNode)}
+      </Tree>
+    );
   };
 
   return <Treeview />;

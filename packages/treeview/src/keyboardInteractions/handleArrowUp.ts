@@ -30,10 +30,7 @@ export const handleArrowUp = (target: HTMLElement): void => {
     i >= 0;
     node = eligibleNodes.item(--i)
   ) {
-    if (!(node instanceof HTMLElement)) {
-      continue;
-    }
-    if (target.isSameNode(node)) {
+    if (target.isSameNode(node) || !(node instanceof HTMLElement)) {
       continue;
     }
     const positionHierarchy = target.compareDocumentPosition(node);

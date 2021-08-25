@@ -41,7 +41,7 @@ This package offers a headless implementation to
   user moves focus in or scrolls the tree, each node has `aria-level`, `aria-setsize`,
   and `aria-posinset` specified.
 - ❌ If the `tree` element is horizontally oriented, it has `aria-orientation` set to `horizontal`.
-  The default value of `aria-orientation` for a tree is `vertical`.
+  The default value of `aria-orientation` for a tree is `horizontal`.
 
 ### Implementation questions for reviewers
 

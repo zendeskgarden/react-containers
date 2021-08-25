@@ -29,6 +29,11 @@ import {
 export interface IUseTreeviewProps<Item> extends IUseSelectionProps<Item> {
   /** Determines which sections are expanded in a controlled treeview */
   openNodes?: Item[];
+  /** Determines the orientation of the tree */
+  horizontal?: boolean;
+  /** Determines if selection uses right-to-left writing direction */
+  rtl?: boolean;
+  /** A callback function that receives the new collection of expanded items. */
   onChange?: (expandedNodes: Item[]) => void;
 }
 
@@ -60,22 +65,32 @@ function requiredArguments(arg: any, argStr: string, methodName: string) {
 const hasModifierKeyPressed = (e: KeyboardEvent): boolean =>
   e.ctrlKey || e.metaKey || e.shiftKey || e.altKey;
 
+const SUPPORTED_KEYS = [
+  KEY_CODES.HOME,
+  KEY_CODES.END,
+  KEY_CODES.UP,
+  KEY_CODES.DOWN,
+  KEY_CODES.RIGHT,
+  KEY_CODES.LEFT
+];
+
 /**
  * TODO:
  * - expandable: PropTypes.bool,
  * - collapsible
- * - a11y controls
  * @param expandedNodes
  * @param onChange
  */
 export function useTreeview<Item = any>({
   openNodes,
+  horizontal,
+  rtl,
   onChange = () => undefined,
   ...options
 }: IUseTreeviewProps<Item> = {}): IUseTreeviewReturnValue<Item> {
   const [ownFocusedItem, setFocusedItem] = useState<Item>();
   const { selectedItem, focusedItem, getContainerProps, getItemProps } = useSelection<Item>({
-    direction: 'vertical', // TODO: implement direction
+    direction: horizontal ? 'horizontal' : 'vertical',
     defaultSelectedIndex: 0,
     focusedItem: ownFocusedItem,
     ...options
@@ -158,35 +173,50 @@ export function useTreeview<Item = any>({
       onKeyDown: composeEventHandlers(onKeyDown, (event: KeyboardEvent): void => {
         const target = focusRef.current as HTMLElement;
 
-        if (hasModifierKeyPressed(event)) {
+        if (!SUPPORTED_KEYS.includes(event.keyCode) || hasModifierKeyPressed(event)) {
           return;
         }
 
-        if (KEY_CODES.HOME === event.keyCode) {
-          handleHome(target);
-        } else if (KEY_CODES.END === event.keyCode) {
-          handleEnd(target);
-        } else if (KEY_CODES.UP === event.keyCode) {
-          handleArrowUp(target);
-        } else if (KEY_CODES.DOWN === event.keyCode) {
-          handleArrowDown(target);
-        } else if (KEY_CODES.RIGHT === event.keyCode) {
-          if (nodeType === 'parent' && expanded) {
-            handleArrowRight(target);
-          } else {
-            toggleParent(item);
-          }
-        } else if (KEY_CODES.LEFT === event.keyCode) {
-          if (nodeType === 'parent' && expanded) {
-            toggleParent(item);
-          } else {
-            handleArrowLeft(target);
-          }
-        } else {
-          return;
-        }
+        event.preventDefault();
 
-        event.stopPropagation();
+        const handleRight = () =>
+          nodeType === 'parent' && expanded ? handleArrowRight(target) : toggleParent(item);
+
+        const handleLeft = () =>
+          nodeType === 'parent' && expanded ? toggleParent(item) : handleArrowLeft(target);
+
+        const direction = horizontal ? 'horizontal' : 'vertical';
+        const shortcutMapping = {
+          [KEY_CODES.UP]: {
+            vertical: handleArrowUp,
+            horizontal: rtl ? handleRight : handleLeft
+          },
+          [KEY_CODES.DOWN]: {
+            vertical: handleArrowDown,
+            horizontal: rtl ? handleArrowLeft : handleRight
+          },
+          [KEY_CODES.RIGHT]: {
+            vertical: rtl ? handleLeft : handleRight,
+            horizontal: handleArrowDown
+          },
+          [KEY_CODES.LEFT]: {
+            vertical: rtl ? handleRight : handleLeft,
+            horizontal: handleArrowUp
+          },
+          [KEY_CODES.HOME]: {
+            vertical: handleHome,
+            horizontal: handleHome
+          },
+          [KEY_CODES.END]: {
+            vertical: handleEnd,
+            horizontal: handleEnd
+          }
+        };
+
+        const handler = shortcutMapping[event.keyCode][direction];
+        if (handler) {
+          handler(target);
+        }
       }),
       ...props
     };
