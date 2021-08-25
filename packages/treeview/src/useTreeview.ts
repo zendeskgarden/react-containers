@@ -57,6 +57,9 @@ function requiredArguments(arg: any, argStr: string, methodName: string) {
   }
 }
 
+const hasModifierKeyPressed = (e: KeyboardEvent): boolean =>
+  e.ctrlKey || e.metaKey || e.shiftKey || e.altKey;
+
 /**
  * TODO:
  * - expandable: PropTypes.bool,
@@ -155,37 +158,35 @@ export function useTreeview<Item = any>({
       onKeyDown: composeEventHandlers(onKeyDown, (event: KeyboardEvent): void => {
         const target = focusRef.current as HTMLElement;
 
-        event.stopPropagation();
-        switch (event.keyCode) {
-          case KEY_CODES.UP:
-            handleArrowUp(target);
-            break;
-          case KEY_CODES.DOWN:
-            handleArrowDown(target);
-            break;
-          case KEY_CODES.RIGHT:
-            if (nodeType === 'parent' && expanded) {
-              handleArrowRight(target);
-            } else {
-              toggleParent(item);
-            }
-            break;
-          case KEY_CODES.LEFT:
-            if (nodeType === 'parent' && expanded) {
-              toggleParent(item);
-            } else {
-              handleArrowLeft(target);
-            }
-            break;
-          case KEY_CODES.HOME:
-            handleHome(target);
-            break;
-          case KEY_CODES.END:
-            handleEnd(target);
-            break;
-          default:
-            break;
+        if (hasModifierKeyPressed(event)) {
+          return;
         }
+
+        if (KEY_CODES.HOME === event.keyCode) {
+          handleHome(target);
+        } else if (KEY_CODES.END === event.keyCode) {
+          handleEnd(target);
+        } else if (KEY_CODES.UP === event.keyCode) {
+          handleArrowUp(target);
+        } else if (KEY_CODES.DOWN === event.keyCode) {
+          handleArrowDown(target);
+        } else if (KEY_CODES.RIGHT === event.keyCode) {
+          if (nodeType === 'parent' && expanded) {
+            handleArrowRight(target);
+          } else {
+            toggleParent(item);
+          }
+        } else if (KEY_CODES.LEFT === event.keyCode) {
+          if (nodeType === 'parent' && expanded) {
+            toggleParent(item);
+          } else {
+            handleArrowLeft(target);
+          }
+        } else {
+          return;
+        }
+
+        event.stopPropagation();
       }),
       ...props
     };

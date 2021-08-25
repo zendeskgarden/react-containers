@@ -23,13 +23,12 @@ export const handleArrowDown = (target: HTMLElement): void => {
 
   const isTargetOpened = isParentNode(target) && target.getAttribute('aria-expanded') === 'true';
 
-  const allNodes = treeElement.querySelectorAll('[role="treeitem"]');
+  const eligibleNodes = treeElement.querySelectorAll(
+    '[role="tree"] > [role="treeitem"], [role="treeitem"][aria-expanded="true"] [role="treeitem"]'
+  );
 
-  for (const node of allNodes) {
-    if (!(node instanceof HTMLElement)) {
-      continue;
-    }
-    if (node.isSameNode(target)) {
+  for (const node of eligibleNodes) {
+    if (node.isSameNode(target) || !(node instanceof HTMLElement)) {
       continue;
     }
     const positionHierarchy = target.compareDocumentPosition(node);

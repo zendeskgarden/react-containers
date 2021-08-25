@@ -21,9 +21,15 @@ export const handleArrowUp = (target: HTMLElement): void => {
     return;
   }
 
-  const allNodes = treeElement.querySelectorAll('[role="treeitem"]');
+  const eligibleNodes = treeElement.querySelectorAll(
+    '[role="tree"] > [role="treeitem"], [role="treeitem"][aria-expanded="true"] [role="treeitem"]'
+  );
 
-  for (let i = allNodes.length - 1, node = allNodes.item(i); i >= 0; i--, node = allNodes.item(i)) {
+  for (
+    let i = eligibleNodes.length - 1, node = eligibleNodes.item(i);
+    i >= 0;
+    node = eligibleNodes.item(--i)
+  ) {
     if (!(node instanceof HTMLElement)) {
       continue;
     }

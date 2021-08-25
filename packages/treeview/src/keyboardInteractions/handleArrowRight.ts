@@ -25,9 +25,9 @@ export const handleArrowRight = (target: HTMLElement): void => {
     return;
   }
 
-  const firstTreeItem = target.querySelector('[role="treeitem"]:first-child') as HTMLElement;
+  const firstNode = target.querySelector('[role="treeitem"]:first-child') as HTMLElement;
 
-  if (firstTreeItem !== null) {
-    firstTreeItem.focus();
+  if (firstNode !== null) {
+    firstNode.focus();
   }
 };

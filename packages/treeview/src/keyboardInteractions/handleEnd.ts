@@ -18,27 +18,40 @@ export const handleEnd = (target: HTMLElement): void => {
   if (treeElement === null) {
     return;
   }
-  // TODO fix
-  const allTreeItems = treeElement.querySelectorAll('[role="treeitem"]');
+
+  const eligibleNodes = treeElement.querySelectorAll(
+    '[role="tree"] > [role="treeitem"]:last-of-type, [role="treeitem"][aria-expanded="true"] [role="treeitem"]:last-of-type'
+  );
 
   for (
-    let i = allTreeItems.length - 1, node = allTreeItems.item(i);
+    let i = eligibleNodes.length - 1, node = eligibleNodes.item(i);
     i >= 0;
-    i--, node = allTreeItems.item(i)
+    node = eligibleNodes.item(i--)
   ) {
     if (!(node instanceof HTMLElement)) {
-      continue;
-    }
-    if (target.isSameNode(node)) {
       continue;
     }
 
     const parentOfNode = getParentNode(node);
 
-    if (parentOfNode && parentOfNode.getAttribute('aria-expanded') === 'false') {
+    if (parentOfNode && parentOfNode.isSameNode(node)) {
+      node.focus();
+      return;
+    }
+
+    if (
+      parentOfNode &&
+      !parentOfNode.isSameNode(node) &&
+      parentOfNode.getAttribute('aria-expanded') === 'false'
+    ) {
       continue;
     }
 
+    if (target.isSameNode(node)) {
+      return;
+    }
+
     node.focus();
+    return;
   }
 };

@@ -19,11 +19,13 @@ export const handleHome = (target: HTMLElement): void => {
     return;
   }
 
-  const firstTreeItem = treeElement.querySelector('[role="treeitem"]:first-of-type') as HTMLElement;
+  const firstNode = treeElement.querySelector('[role="treeitem"]:first-of-type') as HTMLElement;
 
-  if (firstTreeItem === null) {
+  if (firstNode === null) {
     return;
   }
 
-  firstTreeItem.focus();
+  firstNode.focus();
 };
+
+// body.sb-show-main.sb-main-centered
