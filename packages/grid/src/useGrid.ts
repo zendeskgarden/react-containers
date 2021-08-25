@@ -185,12 +185,22 @@ export function useGrid({
           }
           break;
         case 'Home':
-          onChange && onChange(rowIndex as number, 0);
-          setFocus(rowIndex as number, 0);
+          if (e.ctrlKey) {
+            onChange && onChange(0, 0);
+            setFocus(0, 0);
+          } else {
+            onChange && onChange(rowIndex as number, 0);
+            setFocus(rowIndex as number, 0);
+          }
           break;
         case 'End':
-          onChange && onChange(rowIndex as number, matrix[rowIndex as number].length - 1);
-          setFocus(rowIndex as number, matrix[rowIndex as number].length - 1);
+          if (e.ctrlKey) {
+            onChange && onChange(rowCount - 1, matrix[rowCount - 1].length - 1);
+            setFocus(rowCount - 1, matrix[rowCount - 1].length - 1);
+          } else {
+            onChange && onChange(rowIndex as number, matrix[rowIndex as number].length - 1);
+            setFocus(rowIndex as number, matrix[rowIndex as number].length - 1);
+          }
           break;
         default:
       }
@@ -279,14 +289,26 @@ export function useGrid({
           }
           break;
         case 'Home':
-          setFocusedCell(uncontrolledRowIndex, 0);
-          setFocus(uncontrolledRowIndex, 0);
-          onChange && onChange(uncontrolledRowIndex, 0);
+          if (e.ctrlKey) {
+            setFocusedCell(0, 0);
+            setFocus(0, 0);
+            onChange && onChange(0, 0);
+          } else {
+            setFocusedCell(uncontrolledRowIndex, 0);
+            setFocus(uncontrolledRowIndex, 0);
+            onChange && onChange(uncontrolledRowIndex, 0);
+          }
           break;
         case 'End':
-          setFocusedCell(uncontrolledRowIndex, matrix[uncontrolledRowIndex].length - 1);
-          setFocus(uncontrolledRowIndex, matrix[uncontrolledRowIndex].length - 1);
-          onChange && onChange(uncontrolledRowIndex, matrix[uncontrolledRowIndex].length - 1);
+          if (e.ctrlKey) {
+            setFocusedCell(rowCount - 1, lastRowLength - 1);
+            setFocus(rowCount - 1, lastRowLength - 1);
+            onChange && onChange(rowCount - 1, lastRowLength - 1);
+          } else {
+            setFocusedCell(uncontrolledRowIndex, matrix[uncontrolledRowIndex].length - 1);
+            setFocus(uncontrolledRowIndex, matrix[uncontrolledRowIndex].length - 1);
+            onChange && onChange(uncontrolledRowIndex, matrix[uncontrolledRowIndex].length - 1);
+          }
           break;
         default:
       }

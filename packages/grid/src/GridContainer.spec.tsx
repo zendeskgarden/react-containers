@@ -279,6 +279,32 @@ describe('useGrid', () => {
       expect(onChange).toHaveBeenCalledWith(1, 2);
     });
 
+    test('focus moves to the first/last cell of the first/last row when control + home/end keys are pressed', () => {
+      const onChange = jest.fn();
+      const matrix = [
+        ['#d1e8df', '#aecfc2', '#5eae91'],
+        ['#f5d5d8', '#f5b5ba', '#e35b66'],
+        ['#cee2f2', '#adcce4']
+      ];
+
+      render(
+        <Example matrix={matrix} onChange={onChange} defaultRowIndex={1} defaultColIndex={1} />
+      );
+
+      userEvent.tab();
+      expect(gridCell('#f5b5ba')).toHaveFocus();
+
+      userEvent.keyboard('{Control>}{home}');
+      expect(gridCell('#d1e8df')).toHaveFocus();
+      expect(onChange).toHaveBeenCalledTimes(1);
+      expect(onChange).toHaveBeenCalledWith(0, 0);
+
+      userEvent.keyboard('{Control>}{end}');
+      expect(gridCell('#adcce4')).toHaveFocus();
+      expect(onChange).toHaveBeenCalledTimes(2);
+      expect(onChange).toHaveBeenCalledWith(2, 1);
+    });
+
     test('focus wraps non-balanced grid when up arrow is pressed', () => {
       const onChange = jest.fn();
       const matrix = [
@@ -545,7 +571,7 @@ describe('useGrid', () => {
       const matrix = [
         ['#d1e8df', '#aecfc2', '#5eae91'],
         ['#f5d5d8', '#f5b5ba', '#e35b66'],
-        ['#cee2f2', '#adcce4', '#5293c7']
+        ['#cee2f2', '#adcce4']
       ];
 
       render(<Controlled wrap rowIndex={1} colIndex={1} matrix={matrix} onChange={onChange} />);
@@ -562,6 +588,30 @@ describe('useGrid', () => {
       expect(gridCell('#e35b66')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(2);
       expect(onChange).toHaveBeenCalledWith(1, 2);
+    });
+
+    test('focus moves to the first/last cell of the first/last row when control + home/end keys are pressed', () => {
+      const onChange = jest.fn();
+      const matrix = [
+        ['#d1e8df', '#aecfc2', '#5eae91'],
+        ['#f5d5d8', '#f5b5ba', '#e35b66'],
+        ['#cee2f2', '#adcce4']
+      ];
+
+      render(<Controlled wrap rowIndex={1} colIndex={1} matrix={matrix} onChange={onChange} />);
+
+      userEvent.tab();
+      expect(gridCell('#f5b5ba')).toHaveFocus();
+
+      userEvent.keyboard('{Control>}{home}');
+      expect(gridCell('#d1e8df')).toHaveFocus();
+      expect(onChange).toHaveBeenCalledTimes(1);
+      expect(onChange).toHaveBeenCalledWith(0, 0);
+
+      userEvent.keyboard('{Control>}{end}');
+      expect(gridCell('#adcce4')).toHaveFocus();
+      expect(onChange).toHaveBeenCalledTimes(2);
+      expect(onChange).toHaveBeenCalledWith(2, 1);
     });
 
     test('focus wraps non-balanced grid when up arrow is pressed', () => {
