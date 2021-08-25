@@ -15,7 +15,7 @@ export interface IUseGridProps {
   wrap?: boolean;
   /** Enables cell selection */
   selection?: boolean;
-  /** A two-dimension array representation of the grid */
+  /** Sets the two-dimension array to render the grid */
   matrix: any[][];
   /** Prefixes IDs for the grid and cells  */
   idPrefix?: string;
