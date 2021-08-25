@@ -8,8 +8,8 @@
 import React, { createRef, forwardRef, HTMLProps } from 'react';
 import { fireEvent, render, RenderResult, screen } from '@testing-library/react';
 
-import { IUseTreeviewReturnValue } from './useTreeview';
 import { TreeviewContainer } from './TreeviewContainer';
+import { IUseTreeviewReturnValue } from './types';
 
 interface IFoodNode {
   name: string;

@@ -6,7 +6,8 @@
  */
 
 /* Hooks */
-export { useTreeview, IUseTreeviewProps, IUseTreeviewReturnValue } from './useTreeview';
+export { useTreeview } from './useTreeview';
 
 /* Render-props */
 export { TreeviewContainer, ITreeviewContainerProps } from './TreeviewContainer';
+export { IUseTreeviewProps, IUseTreeviewReturnValue } from './types';

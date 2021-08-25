@@ -11,12 +11,8 @@ import {
   getControlledValue,
   KEY_CODES
 } from '@zendeskgarden/container-utilities';
-import {
-  useSelection,
-  IGetItemPropsOptions,
-  IUseSelectionState,
-  IUseSelectionProps
-} from '@zendeskgarden/container-selection';
+import { useSelection } from '@zendeskgarden/container-selection';
+
 import {
   handleArrowDown,
   handleArrowLeft,
@@ -25,34 +21,12 @@ import {
   handleEnd,
   handleHome
 } from './keyboardInteractions';
-
-export interface IUseTreeviewProps<Item> extends IUseSelectionProps<Item> {
-  /** Determines which sections are expanded in a controlled treeview */
-  openNodes?: Item[];
-  /** Determines the orientation of the tree */
-  horizontal?: boolean;
-  /** Determines if selection uses right-to-left writing direction */
-  rtl?: boolean;
-  /** A callback function that receives the new collection of expanded items. */
-  onChange?: (expandedNodes: Item[]) => void;
-}
-
-export interface IGetTreeProps extends HTMLProps<any> {
-  label?: string;
-  labelledBy?: string;
-}
-
-export interface IGetTreeItemProps<Item> extends IGetItemPropsOptions<Item>, HTMLProps<any> {
-  item: Item;
-  nodeType?: 'parent' | 'end';
-}
-
-export interface IUseTreeviewReturnValue<Item> extends IUseSelectionState<Item> {
-  openNodes: Item[];
-  getTreeProps: <T extends IGetTreeProps>(options?: T) => any;
-  getTreeItemProps: <T extends IGetTreeItemProps<Item>>(options?: T) => any;
-  getGroupProps: <T>(options?: T & HTMLProps<any>) => any;
-}
+import {
+  IGetTreeItemProps,
+  IGetTreeProps,
+  IUseTreeviewProps,
+  IUseTreeviewReturnValue
+} from './types';
 
 function requiredArguments(arg: any, argStr: string, methodName: string) {
   if (typeof arg === 'undefined' || arg === null) {
@@ -214,6 +188,7 @@ export function useTreeview<Item = any>({
         };
 
         const handler = shortcutMapping[event.keyCode][direction];
+
         if (handler) {
           handler(target);
         }

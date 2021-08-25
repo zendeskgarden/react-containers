@@ -7,7 +7,8 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useTreeview, IUseTreeviewProps, IUseTreeviewReturnValue } from './useTreeview';
+import { useTreeview } from './useTreeview';
+import { IUseTreeviewProps, IUseTreeviewReturnValue } from './types';
 
 export interface ITreeviewContainerProps<Item> extends IUseTreeviewProps<Item> {
   /** Documents the render function */
