@@ -36,6 +36,7 @@ export const handleEnd = (target: HTMLElement): void => {
 
     if (parentOfNode && parentOfNode.isSameNode(node)) {
       node.focus();
+
       return;
     }
 
@@ -52,6 +53,7 @@ export const handleEnd = (target: HTMLElement): void => {
     }
 
     node.focus();
+
     return;
   }
 };
