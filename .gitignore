@@ -4,6 +4,7 @@ demo
 node_modules
 utils/storybook/coverage
 *.log
+.idea
 
 # Package specific
 packages/**/dist
