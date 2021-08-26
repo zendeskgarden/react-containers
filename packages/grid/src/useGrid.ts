@@ -11,6 +11,8 @@ import { composeEventHandlers } from '@zendeskgarden/container-utilities';
 const GRID_KEYS = ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'];
 
 export interface IUseGridProps {
+  /** Determines if navigation uses right-to-left direction */
+  rtl?: boolean;
   /** Enables wrapped keyboard navigation  */
   wrap?: boolean;
   /** Enables cell selection */
@@ -51,6 +53,7 @@ export interface IUseGridReturnValue {
 }
 
 export function useGrid({
+  rtl,
   wrap,
   matrix,
   idPrefix,
@@ -121,28 +124,33 @@ export function useGrid({
       const onLastCol = colIndex === columnCount - 1;
       const rightEnd = onLastRow && colIndex === lastRowLength - 1;
       const downEnd = rowIndex === rowCount - 2 && (colIndex as number) >= lastRowLength;
+      const backward = () => {
+        if ((colIndex as number) > 0) {
+          onChange && onChange(rowIndex as number, (colIndex as number) - 1);
+          setFocus(rowIndex as number, (colIndex as number) - 1);
+        }
+        if (wrap && colIndex === 0 && (rowIndex as number) > 0) {
+          onChange && onChange((rowIndex as number) - 1, columnCount - 1);
+          setFocus((rowIndex as number) - 1, columnCount - 1);
+        }
+      };
+
+      const forward = () => {
+        if ((colIndex as number) < columnCount - 1 && !rightEnd) {
+          onChange && onChange(rowIndex as number, (colIndex as number) + 1);
+          setFocus(rowIndex as number, (colIndex as number) + 1);
+        }
+        if (wrap && onLastCol && !onLastRow) {
+          onChange && onChange((rowIndex as number) + 1, 0);
+          setFocus((rowIndex as number) + 1, 0);
+        }
+      };
 
       switch (e.key) {
         case 'ArrowLeft':
-          if ((colIndex as number) > 0) {
-            onChange && onChange(rowIndex as number, (colIndex as number) - 1);
-            setFocus(rowIndex as number, (colIndex as number) - 1);
-          }
-          if (wrap && colIndex === 0 && (rowIndex as number) > 0) {
-            onChange && onChange((rowIndex as number) - 1, columnCount - 1);
-            setFocus((rowIndex as number) - 1, columnCount - 1);
-          }
-          break;
+          return rtl ? forward() : backward();
         case 'ArrowRight':
-          if ((colIndex as number) < columnCount - 1 && !rightEnd) {
-            onChange && onChange(rowIndex as number, (colIndex as number) + 1);
-            setFocus(rowIndex as number, (colIndex as number) + 1);
-          }
-          if (wrap && onLastCol && !onLastRow) {
-            onChange && onChange((rowIndex as number) + 1, 0);
-            setFocus((rowIndex as number) + 1, 0);
-          }
-          break;
+          return rtl ? backward() : forward();
         case 'ArrowUp':
           if (rowIndex === 0 && colIndex === 0) {
             break;
@@ -211,33 +219,39 @@ export function useGrid({
       const downEnd =
         uncontrolledRowIndex === rowCount - 2 && uncontrolledColIndex >= lastRowLength;
 
+      const forward = () => {
+        if (uncontrolledColIndex < columnCount - 1 && !rightEnd) {
+          setUncontrolledColIndex(uncontrolledColIndex + 1);
+          setFocus(uncontrolledRowIndex, uncontrolledColIndex + 1);
+          onChange && onChange(uncontrolledRowIndex, uncontrolledColIndex + 1);
+        }
+        if (wrap && onLastCol && !onLastRow) {
+          setUncontrolledRowIndex(uncontrolledRowIndex + 1);
+          setUncontrolledColIndex(0);
+          setFocus(uncontrolledRowIndex + 1, 0);
+          onChange && onChange(uncontrolledRowIndex + 1, 0);
+        }
+      };
+
+      const backward = () => {
+        if (uncontrolledColIndex > 0) {
+          setUncontrolledColIndex(uncontrolledColIndex - 1);
+          setFocus(uncontrolledRowIndex, uncontrolledColIndex - 1);
+          onChange && onChange(uncontrolledRowIndex, uncontrolledColIndex - 1);
+        }
+        if (wrap && uncontrolledColIndex === 0 && uncontrolledRowIndex > 0) {
+          setUncontrolledRowIndex(uncontrolledRowIndex - 1);
+          setUncontrolledColIndex(columnCount - 1);
+          setFocus(uncontrolledRowIndex - 1, columnCount - 1);
+          onChange && onChange(uncontrolledRowIndex - 1, columnCount - 1);
+        }
+      };
+
       switch (e.key) {
         case 'ArrowLeft':
-          if (uncontrolledColIndex > 0) {
-            setUncontrolledColIndex(uncontrolledColIndex - 1);
-            setFocus(uncontrolledRowIndex, uncontrolledColIndex - 1);
-            onChange && onChange(uncontrolledRowIndex, uncontrolledColIndex - 1);
-          }
-          if (wrap && uncontrolledColIndex === 0 && uncontrolledRowIndex > 0) {
-            setUncontrolledRowIndex(uncontrolledRowIndex - 1);
-            setUncontrolledColIndex(columnCount - 1);
-            setFocus(uncontrolledRowIndex - 1, columnCount - 1);
-            onChange && onChange(uncontrolledRowIndex - 1, columnCount - 1);
-          }
-          break;
+          return rtl ? forward() : backward();
         case 'ArrowRight':
-          if (uncontrolledColIndex < columnCount - 1 && !rightEnd) {
-            setUncontrolledColIndex(uncontrolledColIndex + 1);
-            setFocus(uncontrolledRowIndex, uncontrolledColIndex + 1);
-            onChange && onChange(uncontrolledRowIndex, uncontrolledColIndex + 1);
-          }
-          if (wrap && onLastCol && !onLastRow) {
-            setUncontrolledRowIndex(uncontrolledRowIndex + 1);
-            setUncontrolledColIndex(0);
-            setFocus(uncontrolledRowIndex + 1, 0);
-            onChange && onChange(uncontrolledRowIndex + 1, 0);
-          }
-          break;
+          return rtl ? backward() : forward();
         case 'ArrowUp':
           if (uncontrolledRowIndex === 0 && uncontrolledColIndex === 0) {
             break;
@@ -313,6 +327,8 @@ export function useGrid({
         default:
       }
     }
+
+    return undefined;
   };
 
   const getTabIndex = (rowIdx: number, colIdx: number) => {

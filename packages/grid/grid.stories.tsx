@@ -82,6 +82,7 @@ export const Container = ({ rtl, wrap, selection, cellCount }) => {
 
   return (
     <GridContainer
+      rtl={rtl}
       wrap={wrap}
       selection={selection}
       matrix={matrix}

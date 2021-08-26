@@ -25,6 +25,7 @@ export const GridContainer: React.FC<IGridContainerProps> = props => {
 GridContainer.propTypes = {
   children: PropTypes.func,
   render: PropTypes.func,
+  rtl: PropTypes.bool,
   wrap: PropTypes.bool,
   selection: PropTypes.bool,
   matrix: PropTypes.any,
