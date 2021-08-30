@@ -58,7 +58,7 @@
     "@zendeskgarden/eslint-config": "20.0.0",
     "@zendeskgarden/react-theming": "8.38.0",
     "@zendeskgarden/scripts": "1.0.1",
-    "acorn-jsx": "5.3.1",
+    "acorn-jsx": "5.3.2",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "10.1.0",
     "babel-jest": "27.0.6",
