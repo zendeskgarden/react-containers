@@ -49,7 +49,7 @@
     "@types/prop-types": "15.7.4",
     "@types/react": "17.0.19",
     "@types/react-color": "3.0.4",
-    "@types/react-dom": "17.0.8",
+    "@types/react-dom": "17.0.9",
     "@types/styled-components": "5.1.11",
     "@types/webpack": "4.41.30",
     "@types/webpack-env": "1.16.2",
