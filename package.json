@@ -78,7 +78,7 @@
     "eslint-plugin-react": "7.24.0",
     "eslint-plugin-react-hooks": "4.2.0",
     "execa": "5.1.1",
-    "husky": "7.0.1",
+    "husky": "7.0.2",
     "jest": "27.0.6",
     "lerna": "4.0.0",
     "lint-staged": "11.0.0",
