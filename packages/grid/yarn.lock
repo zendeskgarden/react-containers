@@ -9,6 +9,13 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
+"@zendeskgarden/container-utilities@^0.5.6":
+  version "0.5.6"
+  resolved "https://registry.yarnpkg.com/@zendeskgarden/container-utilities/-/container-utilities-0.5.6.tgz#f5c27c120e91d0c020773179db605010c11a72b6"
+  integrity sha512-20NH+UceCdjCprCbEVEwxGiD++RSulN5THJ7M0Y36rx7EHkbCZ6fIQwGlbj+PZhLJnH5KX87ZlZM6RwdjxNpXQ==
+  dependencies:
+    "@babel/runtime" "^7.8.4"
+
 regenerator-runtime@^0.13.4:
   version "0.13.9"
   resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.13.9.tgz#8925742a98ffd90814988d7566ad30ca3b263b52"

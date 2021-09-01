@@ -27,6 +27,9 @@
     "react": ">=16.8.0",
     "react-dom": ">=16.8.0"
   },
+  "devDependencies": {
+    "@zendeskgarden/container-utilities": "^0.5.6"
+  },
   "keywords": [
     "a11y",
     "accessible",
