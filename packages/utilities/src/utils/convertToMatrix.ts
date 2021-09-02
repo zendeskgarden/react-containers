@@ -10,7 +10,6 @@
  * @param {Array} array an array of elements
  * @return {columnCount} number of columns in the 2D array
  */
-
 export const convertToMatrix = <T>(array: T[], columnCount: number) => {
   return array.reduce((acc: T[][], curr: T) => {
     if (acc.length === 0) return [[curr]];

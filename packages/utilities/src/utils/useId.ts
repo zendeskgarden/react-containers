@@ -8,5 +8,4 @@
 /**
  * Autogenerate IDs to facilitate WAI-ARIA and server rendering from @reach, https://reach.tech/auto-id.
  */
-
 export * from '@reach/auto-id';
