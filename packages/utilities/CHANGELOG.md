@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-utilities@0.5.6...@zendeskgarden/container-utilities@0.6.0) (2021-09-02)
+
+
+### Features
+
+* **utilities:** add utilities ([#371](https://github.com/zendeskgarden/react-containers/issues/371)) ([d612972](https://github.com/zendeskgarden/react-containers/commit/d6129720a289c29938e560a2a739001ba7d6bda1))
+
+
+
+
+
 ## [0.5.6](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-utilities@0.5.5...@zendeskgarden/container-utilities@0.5.6) (2021-08-16)
 
 **Note:** Version bump only for package @zendeskgarden/container-utilities
