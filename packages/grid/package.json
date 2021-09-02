@@ -1,6 +1,6 @@
 {
   "name": "@zendeskgarden/container-grid",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Containers relating to Grid in the Garden Design System",
   "license": "Apache-2.0",
   "author": "Zendesk Garden <garden@zendesk.com>",

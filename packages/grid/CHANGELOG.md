@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.1](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-grid@0.1.0...@zendeskgarden/container-grid@0.1.1) (2021-09-02)
+
+
+### Bug Fixes
+
+* **grid:** revert updated container-utilities until its published ([#372](https://github.com/zendeskgarden/react-containers/issues/372)) ([2cb926b](https://github.com/zendeskgarden/react-containers/commit/2cb926b290ab2e192c1b6094c957844bbbe285bf))
+
+
+
+
+
 # 0.1.0 (2021-09-02)
 
 
