@@ -6,7 +6,6 @@
  */
 
 import React, { useState } from 'react';
-import { convertToMatrix } from '@zendeskgarden/container-utilities';
 import { useGrid, GridContainer, IUseGridReturnValue } from './src';
 
 const ARGS = {
@@ -14,6 +13,22 @@ const ARGS = {
   selection: true,
   rtl: false
 };
+
+// Given a column count, converts a flat array into a 2D array
+const convertToMatrix = (array, columnCount) =>
+  array.reduce((acc, curr) => {
+    if (acc.length === 0) {
+      return [[curr]];
+    }
+
+    if (acc[acc.length - 1].length < columnCount) {
+      acc[acc.length - 1].push(curr);
+    } else {
+      acc.push([curr]);
+    }
+
+    return acc;
+  }, []);
 
 const Grid = ({ rtl, matrix, selection, selectedRowIndex, selectedColIndex, getGridCellProps }) => (
   <table role="grid" style={{ direction: rtl ? 'rtl' : 'ltr' }}>
