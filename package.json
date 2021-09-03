@@ -18,7 +18,7 @@
     "prepare": "yarn build",
     "start": "start-storybook -p 6006",
     "start:demo": "yarn build:demo && live-server demo",
-    "tag": "lerna version --conventional-commits",
+    "tag": "lerna version --conventional-commits --force-git-tag",
     "test": "yarn test:all --watch",
     "test:all": "jest --config=utils/test/jest.config.js",
     "version": "yarn run build && git add -A"
