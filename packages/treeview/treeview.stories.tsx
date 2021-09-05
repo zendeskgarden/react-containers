@@ -171,7 +171,7 @@ export const Container = ({ nodes, controlled, horizontal, rtl, openNodes, onCha
         rtl={rtl}
         onChange={onChange}
       >
-        {({ getTreeProps, getTreeItemProps, getGroupProps }) => {
+        {({ getTreeProps, getNodeProps, getGroupProps }) => {
           const renderNode = (node: IFoodNode) => {
             const newRef = createRef();
 
@@ -180,7 +180,7 @@ export const Container = ({ nodes, controlled, horizontal, rtl, openNodes, onCha
             return node.children ? (
               <ParentNode
                 key={node.name}
-                {...getTreeItemProps({
+                {...getNodeProps({
                   nodeType: 'parent',
                   index: node.name,
                   item: node.name,
@@ -195,7 +195,7 @@ export const Container = ({ nodes, controlled, horizontal, rtl, openNodes, onCha
             ) : (
               <EndNode
                 key={node.name}
-                {...getTreeItemProps({
+                {...getNodeProps({
                   nodeType: 'end',
                   item: node.name,
                   ref: newRef,
@@ -225,7 +225,7 @@ Container.args = ARGS;
 
 export const Hook = ({ nodes, controlled, horizontal, rtl, openNodes, onChange, onClick }) => {
   const Treeview = () => {
-    const { getTreeProps, getTreeItemProps, getGroupProps } = useTreeview<string>({
+    const { getTreeProps, getNodeProps, getGroupProps } = useTreeview<string>({
       openNodes: controlled ? openNodes : undefined,
       horizontal,
       rtl,
@@ -241,7 +241,7 @@ export const Hook = ({ nodes, controlled, horizontal, rtl, openNodes, onChange, 
       return node.children ? (
         <ParentNode
           key={node.name}
-          {...getTreeItemProps({
+          {...getNodeProps({
             nodeType: 'parent',
             index: node.name,
             item: node.name,
@@ -255,7 +255,7 @@ export const Hook = ({ nodes, controlled, horizontal, rtl, openNodes, onChange, 
       ) : (
         <EndNode
           key={node.name}
-          {...getTreeItemProps({
+          {...getNodeProps({
             nodeType: 'end',
             item: node.name,
             focusRef: newRef,

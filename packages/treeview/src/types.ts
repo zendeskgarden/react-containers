@@ -30,7 +30,7 @@ export interface IGetTreeProps extends HTMLProps<any> {
   labelledBy?: string;
 }
 
-export interface IGetTreeItemProps<Item> extends IGetItemPropsOptions<Item>, HTMLProps<any> {
+export interface IGetNodeProps<Item> extends IGetItemPropsOptions<Item>, HTMLProps<any> {
   item: Item;
   nodeType?: 'parent' | 'end';
 }
@@ -38,6 +38,6 @@ export interface IGetTreeItemProps<Item> extends IGetItemPropsOptions<Item>, HTM
 export interface IUseTreeviewReturnValue<Item> extends IUseSelectionState<Item> {
   openNodes: Item[];
   getTreeProps: <T extends IGetTreeProps>(options?: T) => any;
-  getTreeItemProps: <T extends IGetTreeItemProps<Item>>(options?: T) => any;
+  getNodeProps: <T extends IGetNodeProps<Item>>(options?: T) => any;
   getGroupProps: <T>(options?: T & HTMLProps<any>) => any;
 }

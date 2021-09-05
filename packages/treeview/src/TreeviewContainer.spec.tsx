@@ -89,12 +89,12 @@ const renderContainerTestCase = ({
   const onClickMock = jest.fn();
   const renderResult = render(
     <TreeviewContainer onChange={onChangeMock} openNodes={openNodes}>
-      {({ getTreeProps, getTreeItemProps, getGroupProps }: IUseTreeviewReturnValue<string>) => {
+      {({ getTreeProps, getNodeProps, getGroupProps }: IUseTreeviewReturnValue<string>) => {
         const renderNode = (node: IFoodNode) =>
           node.children ? (
             <ParentNode
               key={node.name}
-              {...getTreeItemProps({
+              {...getNodeProps({
                 nodeType: 'parent',
                 item: node.name,
                 focusRef: createRef(),
@@ -109,7 +109,7 @@ const renderContainerTestCase = ({
           ) : (
             <EndNode
               key={node.name}
-              {...getTreeItemProps({
+              {...getNodeProps({
                 nodeType: 'end',
                 name: node.name,
                 item: node.name,

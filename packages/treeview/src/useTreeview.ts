@@ -21,12 +21,7 @@ import {
   handleEnd,
   handleHome
 } from './keyboardInteractions';
-import {
-  IGetTreeItemProps,
-  IGetTreeProps,
-  IUseTreeviewProps,
-  IUseTreeviewReturnValue
-} from './types';
+import { IGetNodeProps, IGetTreeProps, IUseTreeviewProps, IUseTreeviewReturnValue } from './types';
 
 function requiredArguments(arg: any, argStr: string, methodName: string) {
   if (typeof arg === 'undefined' || arg === null) {
@@ -109,7 +104,7 @@ export function useTreeview<Item = any>({
     };
   };
 
-  const getTreeItemProps = (
+  const getNodeProps = (
     {
       item,
       role = 'treeitem',
@@ -119,9 +114,9 @@ export function useTreeview<Item = any>({
       onKeyDown,
       focusRef,
       ...props
-    }: IGetTreeItemProps<Item> = {} as any
+    }: IGetNodeProps<Item> = {} as any
   ) => {
-    requiredArguments(item, 'item', 'getTreeItemProps');
+    requiredArguments(item, 'item', 'getNodeProps');
     // TODO: Throw error role is not treeitem?
 
     const expanded = nodeType === 'parent' ? isNodeExpanded(item) : undefined;
@@ -211,7 +206,7 @@ export function useTreeview<Item = any>({
     focusedItem,
     openNodes: Array.from(openNodesState),
     getTreeProps: props => getContainerProps(getTreeProps(props) as any),
-    getTreeItemProps: props => getItemProps(getTreeItemProps(props) as any),
+    getNodeProps: props => getItemProps(getNodeProps(props) as any),
     getGroupProps
   };
 }
