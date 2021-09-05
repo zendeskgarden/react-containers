@@ -130,7 +130,7 @@ const ARGS = {
   controlled: false,
   horizontal: false,
   rtl: false,
-  expandedNodes: ['Grains'],
+  openNodes: ['Grains'],
   nodes: FOOD
 };
 
@@ -139,41 +139,34 @@ interface INodeProps extends HTMLProps<any> {
   children?: React.ReactNode;
 }
 
-export const Container = ({
-  nodes,
-  controlled,
-  horizontal,
-  rtl,
-  expandedNodes,
-  onChange,
-  onClick
-}) => {
-  const EndNode = forwardRef<HTMLLIElement>(({ name, ...props }: INodeProps, ref) => (
-    <li ref={ref} role="none">
-      <a href={`https://en.wikipedia.org/wiki/${name}`} {...props}>
-        {name}
-      </a>
-    </li>
-  ));
+const EndNode = forwardRef<HTMLLIElement>(({ name, ...props }: INodeProps, ref) => (
+  <li ref={ref} role="none">
+    <a href={`https://en.wikipedia.org/wiki/${name}`} {...props}>
+      {name}
+    </a>
+  </li>
+));
 
-  EndNode.displayName = 'EndNode';
+EndNode.displayName = 'EndNode';
 
-  const ParentNode = forwardRef<HTMLLIElement>(({ name, children, ...props }: INodeProps, ref) => (
-    <li ref={ref} {...props}>
-      <span>{name}</span>
-      {children}
-    </li>
-  ));
+const ParentNode = forwardRef<HTMLLIElement>(({ name, children, ...props }: INodeProps, ref) => (
+  <li ref={ref} {...props}>
+    <span>{name}</span>
+    {children}
+  </li>
+));
 
-  ParentNode.displayName = 'ParentNode';
+ParentNode.displayName = 'ParentNode';
 
-  const Group = props => <ul {...props} />;
+const Group = props => <ul {...props} />;
+
+export const Container = ({ nodes, controlled, horizontal, rtl, openNodes, onChange, onClick }) => {
   const Treeview = () => {
     const tabRefs = [];
 
     return (
       <TreeviewContainer
-        openNodes={controlled ? expandedNodes : undefined}
+        openNodes={controlled ? openNodes : undefined}
         horizontal={horizontal}
         rtl={rtl}
         onChange={onChange}
@@ -230,31 +223,10 @@ export const Container = ({
 Container.storyName = 'TreeviewContainer';
 Container.args = ARGS;
 
-export const Hook = ({ nodes, controlled, horizontal, rtl, expandedNodes, onChange, onClick }) => {
-  const EndNode = forwardRef<HTMLLIElement>(({ name, ...props }: INodeProps, ref) => (
-    <li ref={ref} role="none">
-      <a href={`https://en.wikipedia.org/wiki/${name}`} {...props}>
-        {name}
-      </a>
-    </li>
-  ));
-
-  EndNode.displayName = 'EndNode';
-
-  const ParentNode = forwardRef<HTMLLIElement>(({ name, children, ...props }: INodeProps, ref) => (
-    <li ref={ref} {...props}>
-      <span>{name}</span>
-      {children}
-    </li>
-  ));
-
-  ParentNode.displayName = 'ParentNode';
-
-  const Group = props => <ul {...props} />;
-
+export const Hook = ({ nodes, controlled, horizontal, rtl, openNodes, onChange, onClick }) => {
   const Treeview = () => {
     const { getTreeProps, getTreeItemProps, getGroupProps } = useTreeview<string>({
-      openNodes: controlled ? expandedNodes : undefined,
+      openNodes: controlled ? openNodes : undefined,
       horizontal,
       rtl,
       onChange

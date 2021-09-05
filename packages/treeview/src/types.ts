@@ -24,7 +24,9 @@ export interface IUseTreeviewProps<Item> extends IUseSelectionProps<Item> {
 }
 
 export interface IGetTreeProps extends HTMLProps<any> {
+  /** See W3 [`aria-label` specification](https://www.w3.org/TR/wai-aria-1.1/#aria-label) **/
   label?: string;
+  /** See W3 [`aria-labelledby` specification](https://www.w3.org/TR/wai-aria-1.1/#aria-labelledby) **/
   labelledBy?: string;
 }
 

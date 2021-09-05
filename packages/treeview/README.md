@@ -10,9 +10,45 @@ This package offers a headless implementation to
 [W3C TreeView Design Pattern](https://www.w3.org/TR/wai-aria-practices-1.1/#TreeView) and offers
 [accessible navigation](https://www.w3.org/TR/wai-aria-practices-1.1/examples/treeview/treeview-2/treeview-2a.html#kbd_label)
 
-## WIP progress
+## WAI-ARIA support
 
-### Support list for [WAI-ARIA Roles, States, and Properties](https://www.w3.org/TR/wai-aria-practices-1.1/#tree_roles_states_props)
+For a vertically oriented tree (horizontal and RTL are supported as well):
+
+### [Keyboard interactions](https://www.w3.org/TR/wai-aria-practices-1.1/#keyboard-interaction-22)
+
+- When a single-select tree receives focus:
+  - If none of the nodes are selected before the tree receives focus, focus is set on the first node.
+  - If a node is selected before the tree receives focus, focus is set on the selected node.
+- ❌ When a multi-select tree receives focus:
+  - If none of the nodes are selected before the tree receives focus, focus is set on the first
+    node.
+  - If one or more nodes are selected before the tree receives focus, focus is set on the first
+    selected node.
+- ✅ `Right arrow`:
+  - When focus is on a closed node, opens the node; focus does not move.
+  - When focus is on a open node, moves focus to the first child node.
+  - When focus is on an end node, does nothing.
+- ✅ `Left arrow`:
+  - When focus is on an open node, closes the node.
+  - When focus is on a child node that is also either an end node or a closed node, moves focus
+    to its parent node.
+  - When focus is on a root node that is also either an end node or a closed node, does nothing.
+- ✅ `Down Arrow`: Moves focus to the next node that is focusable without opening or closing a node.
+- ✅ `Up Arrow`: Moves focus to the previous node that is focusable without opening or closing a
+  node.
+- ✅ `Home`: Moves focus to the first node in the tree without opening or closing a node.
+- ✅ `End`: Moves focus to the last node in the tree that is focusable without opening a node.
+- ✅ `Enter`: activates a node, i.e., performs its default action. For parent nodes, one possible
+  default action is to open or close the node. In single-select trees where selection does not
+  follow focus (see note below), the default action is typically to select the focused node.
+- ❌ Type-ahead is recommended for all trees, especially for trees with more than 7 root nodes:
+  - Type a character: focus moves to the next node with a name that starts with the typed character.
+  - Type multiple characters in rapid succession: focus moves to the next node with a name that
+    starts with the string of characters typed.
+- ❌ `*` (Optional): Expands all siblings that are at the same level as the current node.
+- ❌ **Selection in multi-select trees:**
+
+### [WAI-ARIA Roles, States, and Properties](https://www.w3.org/TR/wai-aria-practices-1.1/#tree_roles_states_props)
 
 - ✅ All tree nodes are contained in or owned by an element with role `tree`.
 - ✅ Each element serving as a `tree` node has role `treeitem`.
@@ -25,6 +61,8 @@ This package offers a headless implementation to
   when the node is in a closed state and set to true when the node is in an open state. End nodes do
   not have the `aria-expanded` attribute because, if they were to have it, they would be incorrectly
   described to assistive technologies as parent nodes.
+- ❌ The `tree` role supports the aria-activedescendant property, which provides an alternative to
+  moving DOM focus among `treeitem` elements when implementing keyboard navigation.
 - ❌ If the `tree` supports selection of more than one node, the element with role `tree`
   has `aria-multiselectable` set to true. Otherwise, `aria-multiselectable` is either set to false
   or the default value of false is implied.
