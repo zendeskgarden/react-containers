@@ -84,7 +84,7 @@
     "lint-staged": "11.1.2",
     "live-server": "1.2.1",
     "markdownlint-cli": "0.28.1",
-    "ora": "6.0.0",
+    "ora": "5.4.1",
     "popper.js": "1.16.1",
     "prettier": "2.3.2",
     "prettier-package-json": "2.6.0",
