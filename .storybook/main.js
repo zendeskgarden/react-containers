@@ -12,5 +12,8 @@ module.exports = {
     '@storybook/addon-a11y',
     '@storybook/addon-storysource',
     '@storybook/addon-postcss'
-  ]
+  ],
+  core: {
+    builder: 'webpack5'
+  }
 };
