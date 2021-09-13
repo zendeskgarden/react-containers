@@ -35,6 +35,7 @@ const hasModifierKeyPressed = (e: KeyboardEvent): boolean =>
   e.ctrlKey || e.metaKey || e.shiftKey || e.altKey;
 
 const SUPPORTED_KEYS = [
+  KEY_CODES.ENTER,
   KEY_CODES.HOME,
   KEY_CODES.END,
   KEY_CODES.UP,
@@ -44,11 +45,10 @@ const SUPPORTED_KEYS = [
 ];
 
 /**
- * TODO:
- * - expandable: PropTypes.bool,
- * - collapsible
- * @param expandedNodes
- * @param onChange
+ * Custom hook to manage a TreeView component.
+ *
+ * https://www.w3.org/TR/wai-aria-practices-1.1/#TreeView
+ *
  */
 export function useTreeview<Item = any>({
   openNodes,
@@ -117,9 +117,16 @@ export function useTreeview<Item = any>({
     }: IGetNodeProps<Item> = {} as any
   ) => {
     requiredArguments(item, 'item', 'getNodeProps');
-    // TODO: Throw error role is not treeitem?
 
     const expanded = nodeType === 'parent' ? isNodeExpanded(item) : undefined;
+
+    const onClickFn = composeEventHandlers(onClick, (e: MouseEvent) => {
+      if (nodeType !== 'parent') {
+        return;
+      }
+      e.preventDefault();
+      toggleParent(item!);
+    });
 
     return {
       role: role === null || role === undefined ? role : 'treeitem',
@@ -128,13 +135,7 @@ export function useTreeview<Item = any>({
       'aria-expanded': expanded,
       tabIndex: ownFocusedItem === item ? 0 : -1,
       'data-garden-container-version': PACKAGE_VERSION,
-      onClick: composeEventHandlers(onClick, (e: MouseEvent) => {
-        if (nodeType !== 'parent') {
-          return;
-        }
-        e.preventDefault();
-        toggleParent(item!);
-      }),
+      onClick: onClickFn,
       onFocus: composeEventHandlers(onFocus, (event: Event) => {
         event.stopPropagation();
         setFocusedItem(item);
@@ -154,7 +155,16 @@ export function useTreeview<Item = any>({
         const handleLeft = () =>
           nodeType === 'parent' && expanded ? toggleParent(item) : handleArrowLeft(target);
 
+        const handleEnter = () => {
+          if (nodeType === 'parent') {
+            toggleParent(item);
+          }
+
+          onClickFn(event);
+        };
+
         const direction = horizontal ? 'horizontal' : 'vertical';
+        // TODO: add Enter
         const shortcutMapping = {
           [KEY_CODES.UP]: {
             vertical: handleArrowUp,
@@ -179,6 +189,10 @@ export function useTreeview<Item = any>({
           [KEY_CODES.END]: {
             vertical: handleEnd,
             horizontal: handleEnd
+          },
+          [KEY_CODES.ENTER]: {
+            vertical: handleEnter,
+            horizontal: handleEnter
           }
         };
 
