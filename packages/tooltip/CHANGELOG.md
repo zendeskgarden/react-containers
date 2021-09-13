@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.12](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-tooltip@0.5.11...@zendeskgarden/container-tooltip@0.5.12) (2021-09-13)
+
+
+### Bug Fixes
+
+* **tooltip:** persist timeout ids ([#375](https://github.com/zendeskgarden/react-containers/issues/375)) ([148e6be](https://github.com/zendeskgarden/react-containers/commit/148e6bed99dd7a9a05d6c4a95273bc765951a643))
+
+
+
+
+
 ## [0.5.11](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-tooltip@0.5.10...@zendeskgarden/container-tooltip@0.5.11) (2021-09-03)
 
 **Note:** Version bump only for package @zendeskgarden/container-tooltip
