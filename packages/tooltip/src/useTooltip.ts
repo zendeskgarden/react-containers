@@ -35,11 +35,11 @@ export const useTooltip = ({
   const [_id] = useState(id || seed(`tooltip_${PACKAGE_VERSION}`));
   const isMounted = useRef(false);
 
-  let openTooltipTimeoutId: number | undefined;
-  let closeTooltipTimeoutId: number | undefined;
+  const openTooltipTimeoutId = useRef<number>();
+  const closeTooltipTimeoutId = useRef<number>();
 
   const openTooltip = (delayMs = delayMilliseconds) => {
-    clearTimeout(closeTooltipTimeoutId);
+    clearTimeout(closeTooltipTimeoutId.current);
 
     const timerId = setTimeout(() => {
       if (isMounted.current) {
@@ -47,11 +47,11 @@ export const useTooltip = ({
       }
     }, delayMs);
 
-    openTooltipTimeoutId = Number(timerId);
+    openTooltipTimeoutId.current = Number(timerId);
   };
 
   const closeTooltip = (delayMs = delayMilliseconds) => {
-    clearTimeout(openTooltipTimeoutId);
+    clearTimeout(openTooltipTimeoutId.current);
 
     const timerId = setTimeout(() => {
       if (isMounted.current) {
@@ -59,7 +59,7 @@ export const useTooltip = ({
       }
     }, delayMs);
 
-    closeTooltipTimeoutId = Number(timerId);
+    closeTooltipTimeoutId.current = Number(timerId);
   };
 
   // Sometimes the timeout will call setVisibility even after un-mount and cleanup.
@@ -76,8 +76,8 @@ export const useTooltip = ({
   // Clean up stray timeouts if tooltip un-mounts
   useEffect(() => {
     return () => {
-      clearTimeout(openTooltipTimeoutId);
-      clearTimeout(closeTooltipTimeoutId);
+      clearTimeout(openTooltipTimeoutId.current);
+      clearTimeout(closeTooltipTimeoutId.current);
     };
   }, [closeTooltipTimeoutId, openTooltipTimeoutId]);
 
