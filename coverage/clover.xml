@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1631196013984" clover="3.2.0">
-  <project timestamp="1631196013984" name="All files">
-    <metrics statements="883" coveredstatements="867" conditionals="676" coveredconditionals="608" methods="202" coveredmethods="181" elements="1761" coveredelements="1656" complexity="0" loc="883" ncloc="883" packages="17" files="53" classes="53"/>
+<coverage generated="1631567506940" clover="3.2.0">
+  <project timestamp="1631567506940" name="All files">
+    <metrics statements="885" coveredstatements="869" conditionals="676" coveredconditionals="607" methods="202" coveredmethods="181" elements="1763" coveredelements="1657" complexity="0" loc="885" ncloc="885" packages="17" files="53" classes="53"/>
     <package name="accordion.src">
       <metrics statements="60" coveredstatements="60" conditionals="45" coveredconditionals="41" methods="11" coveredmethods="10"/>
       <file name="AccordionContainer.tsx" path="/home/circleci/project/packages/accordion/src/AccordionContainer.tsx">
@@ -964,7 +964,7 @@
       </file>
     </package>
     <package name="tooltip.src">
-      <metrics statements="49" coveredstatements="47" conditionals="19" coveredconditionals="16" methods="21" coveredmethods="18"/>
+      <metrics statements="51" coveredstatements="49" conditionals="19" coveredconditionals="15" methods="21" coveredmethods="18"/>
       <file name="TooltipContainer.tsx" path="/home/circleci/project/packages/tooltip/src/TooltipContainer.tsx">
         <metrics statements="6" coveredstatements="6" conditionals="1" coveredconditionals="1" methods="1" coveredmethods="1"/>
         <line num="8" count="1" type="stmt"/>
@@ -980,7 +980,7 @@
         <line num="12" count="16" type="stmt"/>
       </file>
       <file name="useTooltip.ts" path="/home/circleci/project/packages/tooltip/src/useTooltip.ts">
-        <metrics statements="41" coveredstatements="39" conditionals="18" coveredconditionals="15" methods="18" coveredmethods="16"/>
+        <metrics statements="43" coveredstatements="41" conditionals="18" coveredconditionals="14" methods="18" coveredmethods="16"/>
         <line num="8" count="1" type="stmt"/>
         <line num="9" count="1" type="stmt"/>
         <line num="10" count="1" type="stmt"/>
@@ -989,6 +989,8 @@
         <line num="34" count="28" type="stmt"/>
         <line num="35" count="28" type="cond" truecount="1" falsecount="1"/>
         <line num="36" count="28" type="stmt"/>
+        <line num="38" count="28" type="stmt"/>
+        <line num="39" count="28" type="stmt"/>
         <line num="41" count="28" type="cond" truecount="1" falsecount="0"/>
         <line num="42" count="13" type="stmt"/>
         <line num="44" count="13" type="stmt"/>
@@ -998,7 +1000,7 @@
         <line num="53" count="28" type="cond" truecount="1" falsecount="0"/>
         <line num="54" count="6" type="stmt"/>
         <line num="56" count="6" type="stmt"/>
-        <line num="57" count="5" type="cond" truecount="2" falsecount="0"/>
+        <line num="57" count="4" type="cond" truecount="1" falsecount="1"/>
         <line num="58" count="4" type="stmt"/>
         <line num="62" count="6" type="stmt"/>
         <line num="68" count="28" type="stmt"/>
