@@ -57,7 +57,7 @@
     "@typescript-eslint/parser": "4.30.0",
     "@zendeskgarden/eslint-config": "21.0.0",
     "@zendeskgarden/react-theming": "8.39.1",
-    "@zendeskgarden/scripts": "1.0.1",
+    "@zendeskgarden/scripts": "1.2.1",
     "acorn-jsx": "5.3.2",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "10.1.0",

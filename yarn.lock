@@ -6071,10 +6071,10 @@
     polished "^4.0.0"
     prop-types "^15.5.7"
 
-"@zendeskgarden/scripts@1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@zendeskgarden/scripts/-/scripts-1.0.1.tgz#b96bca47731e5afafe72b2413ee21ace5e939cc7"
-  integrity sha512-xJOKDbtKxxjdTEiSERUXNpQMYoPpLnX/uVO9uY1T4k3gpgWfYdqbYt0mM9pqZPS0vpUjQfuTP5Laygtm+9hlug==
+"@zendeskgarden/scripts@1.2.1":
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@zendeskgarden/scripts/-/scripts-1.2.1.tgz#4ba48ee82ffc03c7cc92d25271061f2a9a44e9c8"
+  integrity sha512-ZQclDm3c7H0hxMY+qgFoleFE6SxA1tEyBNVtkiYgYlM34BYeJA/rx53Ld+WlWPR522m1grnp5ZbrPWXElwLmUg==
   dependencies:
     "@octokit/rest" "18.9.1"
     chalk "4.1.2"
@@ -6090,7 +6090,9 @@
     klaw "3.0.0"
     lerna-changelog "2.1.0"
     lodash "4.17.21"
+    netlify "8.0.0"
     netlify-cli "6.5.1"
+    node-fetch "2.6.1"
     ora "5.4.1"
 
 JSONStream@^1.0.4:
@@ -15771,7 +15773,7 @@ netlify-redirector@^0.2.1:
   resolved "https://registry.yarnpkg.com/netlify-redirector/-/netlify-redirector-0.2.1.tgz#efdb761ea2c52edb3ecb5f237db0e10861f2ff0e"
   integrity sha512-17vDR9p1Loanp+vd57y+b6WlKb5X+qb0LZ44oTYsKJbdonz4Md+Ybv1lzH1w1aKm5YWWXHR8LMpWyY9bjlAJKw==
 
-netlify@^8.0.0:
+netlify@8.0.0, netlify@^8.0.0:
   version "8.0.0"
   resolved "https://registry.yarnpkg.com/netlify/-/netlify-8.0.0.tgz#978950affe45e1c513fb8ea89da0bc67ca38939d"
   integrity sha512-BiQblBf85/GmerTZYxVH/1A4/O8qBvg0Qr8QX0MvxjAvO3j+jDUk1PSudMxNgJjU1zFw5pKM2/DBk70hP5gt+Q==
@@ -15803,7 +15805,7 @@ node-dir@^0.1.10:
   dependencies:
     minimatch "^3.0.2"
 
-node-fetch@^2.3.0, node-fetch@^2.6.0, node-fetch@^2.6.1:
+node-fetch@2.6.1, node-fetch@^2.3.0, node-fetch@^2.6.0, node-fetch@^2.6.1:
   version "2.6.1"
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.1.tgz#045bd323631f76ed2e2b55573394416b639a0052"
   integrity sha512-V4aYg89jEoVRxRb2fJdAg8FHvI7cEyYdVAh94HH0UIK8oJxUfkjlDQN9RbMx+bEjP7+ggMiFRprSti032Oipxw==
