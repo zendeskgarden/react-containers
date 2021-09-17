@@ -12,13 +12,6 @@ object-assign
  */
 
 /*!
- * The buffer module from node.js, for the browser.
- *
- * @author   Feross Aboukhadijeh <http://feross.org>
- * @license  MIT
- */
-
-/*!
  * https://github.com/es-shims/es5-shim
  * @license es5-shim Copyright 2009-2015 by contributors, MIT License
  * see https://github.com/es-shims/es5-shim/blob/master/LICENSE
@@ -64,8 +57,6 @@ object-assign
  * distribute or in any file that contains substantial portions of this source
  * code.
  */
-
-/*! safe-buffer. MIT License. Feross Aboukhadijeh <https://feross.org/opensource> */
 
 /** @license React v0.20.2
  * scheduler.production.min.js
