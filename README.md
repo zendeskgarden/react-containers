@@ -34,6 +34,7 @@ to install.
 | [`@zendeskgarden/container-schedule`](packages/schedule)           | [![npm version][schedule npm version]][schedule npm link]           | [![npm version][schedule size bundle]][schedule size link]           | [![Dependency Status][schedule dependency status]][schedule dependency link]           |
 | [`@zendeskgarden/container-scrollregion`](packages/scrollregion)   | [![npm version][scrollregion npm version]][scrollregion npm link]   | [![npm version][scrollregion size bundle]][scrollregion size link]   | [![Dependency Status][scrollregion dependency status]][scrollregion dependency link]   |
 | [`@zendeskgarden/container-selection`](packages/selection)         | [![npm version][selection npm version]][selection npm link]         | [![npm version][selection size bundle]][selection size link]         | [![Dependency Status][selection dependency status]][selection dependency link]         |
+| [`@zendeskgarden/container-splitter`](packages/splitter)           | [![npm version][splitter npm version]][splitter npm link]           | [![npm version][splitter size bundle]][splitter size link]           | [![Dependency Status][splitter dependency status]][splitter dependency link]           |
 | [`@zendeskgarden/container-tabs`](packages/tabs)                   | [![npm version][tabs npm version]][tabs npm link]                   | [![npm version][tabs size bundle]][tabs size link]                   | [![Dependency Status][tabs dependency status]][tabs dependency link]                   |
 | [`@zendeskgarden/container-tooltip`](packages/tooltip)             | [![npm version][tooltip npm version]][tooltip npm link]             | [![npm version][tooltip size bundle]][tooltip size link]             | [![Dependency Status][tooltip dependency status]][tooltip dependency link]             |
 | [`@zendeskgarden/container-utilities`](packages/utilities)         | [![npm version][utilities npm version]][utilities npm link]         | [![npm version][utilities size bundle]][utilities size link]         | [![Dependency Status][utilities dependency status]][utilities dependency link]         |
@@ -116,6 +117,12 @@ to install.
 [selection size link]: https://bundlephobia.com/result?p=@zendeskgarden/container-selection
 [selection dependency status]: https://flat.badgen.net/david/dep/zendeskgarden/react-containers/packages/selection
 [selection dependency link]: https://david-dm.org/zendeskgarden/react-containers?path=packages/selection
+[splitter npm version]: https://flat.badgen.net/npm/v/@zendeskgarden/container-splitter
+[splitter npm link]: https://www.npmjs.com/package/@zendeskgarden/container-splitter
+[splitter size bundle]: https://flat.badgen.net/bundlephobia/minzip/@zendeskgarden/container-splitter
+[splitter size link]: https://bundlephobia.com/result?p=@zendeskgarden/container-splitter
+[splitter dependency status]: https://flat.badgen.net/david/dep/zendeskgarden/react-containers/packages/splitter
+[splitter dependency link]: https://david-dm.org/zendeskgarden/react-containers?path=packages/splitter
 [tabs npm version]: https://flat.badgen.net/npm/v/@zendeskgarden/container-tabs
 [tabs npm link]: https://www.npmjs.com/package/@zendeskgarden/container-tabs
 [tabs size bundle]: https://flat.badgen.net/bundlephobia/minzip/@zendeskgarden/container-tabs
