@@ -22,7 +22,7 @@ describe('useGrid', () => {
   const idPrefix = 'some-id-prefix';
 
   const Example = ({ rtl, matrix, onFocus, onClick, ...props }: IExample) => (
-    <GridContainer rtl={rtl} selection={true} matrix={matrix} idPrefix={idPrefix} {...props}>
+    <GridContainer rtl={rtl} selection matrix={matrix} idPrefix={idPrefix} {...props}>
       {({ getGridCellProps }: IUseGridReturnValue) => (
         <table role="grid">
           <tbody>
