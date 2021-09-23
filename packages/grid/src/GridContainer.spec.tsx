@@ -8,7 +8,7 @@
 import React, { useState } from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { useGrid, IUseGridProps } from './useGrid';
+import { GridContainer, IUseGridProps, IUseGridReturnValue } from './';
 
 const gridCell = (text: string) => screen.getByRole('gridcell', { name: new RegExp(text, 'u') });
 
@@ -21,40 +21,34 @@ interface IExample extends IUseGridProps {
 describe('useGrid', () => {
   const idPrefix = 'some-id-prefix';
 
-  const Example = ({ rtl, matrix, onFocus, onClick, ...props }: IExample) => {
-    const { getGridCellProps } = useGrid({
-      rtl,
-      matrix,
-      idPrefix,
-      selection: true,
-      ...props
-    });
-
-    return (
-      <table role="grid">
-        <tbody>
-          {matrix.map((row: string[], rowIdx: number) => (
-            <tr key={row[0]}>
-              {row.map((rowItem: string, colIdx: number) => (
-                <td role="presentation" key={rowItem}>
-                  <button
-                    {...getGridCellProps({
-                      colIdx,
-                      rowIdx,
-                      onFocus,
-                      onClick
-                    })}
-                  >
-                    {rowItem}
-                  </button>
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    );
-  };
+  const Example = ({ rtl, matrix, onFocus, onClick, ...props }: IExample) => (
+    <GridContainer rtl={rtl} selection={true} matrix={matrix} idPrefix={idPrefix} {...props}>
+      {({ getGridCellProps }: IUseGridReturnValue) => (
+        <table role="grid">
+          <tbody>
+            {matrix.map((row: string[], rowIdx: number) => (
+              <tr key={row[0]}>
+                {row.map((rowItem: string, colIdx: number) => (
+                  <td role="presentation" key={rowItem}>
+                    <button
+                      {...getGridCellProps({
+                        colIdx,
+                        rowIdx,
+                        onFocus,
+                        onClick
+                      })}
+                    >
+                      {rowItem}
+                    </button>
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+    </GridContainer>
+  );
 
   test('composes gridcell onClick handler', () => {
     const onClick = jest.fn();
