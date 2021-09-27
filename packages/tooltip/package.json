@@ -1,6 +1,6 @@
 {
   "name": "@zendeskgarden/container-tooltip",
-  "version": "0.5.12",
+  "version": "0.5.13",
   "description": "Containers relating to tooltip in the Garden Design System",
   "license": "Apache-2.0",
   "author": "Zendesk Garden <garden@zendesk.com>",
@@ -21,7 +21,7 @@
   "types": "dist/typings/index.d.ts",
   "dependencies": {
     "@babel/runtime": "^7.8.4",
-    "@zendeskgarden/container-utilities": "^0.6.1",
+    "@zendeskgarden/container-utilities": "^0.6.2",
     "react-uid": "^2.2.0"
   },
   "peerDependencies": {
