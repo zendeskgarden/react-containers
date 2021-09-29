@@ -6,7 +6,8 @@
  */
 
 import React, { createRef, forwardRef, HTMLProps } from 'react';
-import { fireEvent, render, RenderResult, screen } from '@testing-library/react';
+import { render, RenderResult, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import { TreeviewContainer } from './TreeviewContainer';
 import { IUseTreeviewReturnValue } from './types';
@@ -49,7 +50,7 @@ interface INodeProps extends HTMLProps<any> {
 
 const EndNode = forwardRef<HTMLLIElement>(({ name, ...props }: INodeProps, ref) => (
   <li ref={ref} role="none">
-    <a data-test-id="treeview-end" href={`https://en.wikipedia.org/wiki/${name}`} {...props}>
+    <a data-test-id={name} href={`https://en.wikipedia.org/wiki/${name}`} {...props}>
       {name}
     </a>
   </li>
@@ -58,7 +59,7 @@ const EndNode = forwardRef<HTMLLIElement>(({ name, ...props }: INodeProps, ref) 
 EndNode.displayName = 'EndNode';
 
 const ParentNode = forwardRef<HTMLLIElement>(({ name, children, ...props }: INodeProps, ref) => (
-  <li data-test-id="treeview-parent" ref={ref} {...props}>
+  <li data-test-id={name} ref={ref} {...props}>
     <span>{name}</span>
     {children}
   </li>
@@ -74,21 +75,33 @@ const Group = (
 
 interface IContainerTestResult {
   onChangeMock: jest.Mock;
+  onFocusMock: jest.Mock;
   onClickMock: jest.Mock;
   result: RenderResult;
 }
 
-const renderContainerTestCase = ({
+const renderTestCase = ({
   data = TEST_DATA,
-  openNodes
+  openNodes,
+  horizontal,
+  rtl
 }: {
   data?: IFoodNode[];
   openNodes?: string[];
+  horizontal?: boolean;
+  rtl?: boolean;
 } = {}): IContainerTestResult => {
   const onChangeMock = jest.fn();
+  const onFocusMock = jest.fn();
   const onClickMock = jest.fn();
+
   const renderResult = render(
-    <TreeviewContainer onChange={onChangeMock} openNodes={openNodes}>
+    <TreeviewContainer
+      onChange={onChangeMock}
+      openNodes={openNodes}
+      horizontal={horizontal}
+      rtl={rtl}
+    >
       {({ getTreeProps, getNodeProps, getGroupProps }: IUseTreeviewReturnValue<string>) => {
         const renderNode = (node: IFoodNode) =>
           node.children ? (
@@ -97,8 +110,9 @@ const renderContainerTestCase = ({
               {...getNodeProps({
                 nodeType: 'parent',
                 item: node.name,
-                focusRef: createRef(),
                 name: node.name,
+                focusRef: createRef(),
+                onFocus: onFocusMock,
                 onClick: () => {
                   onClickMock(node.name);
                 }
@@ -114,6 +128,7 @@ const renderContainerTestCase = ({
                 name: node.name,
                 item: node.name,
                 focusRef: createRef(),
+                onFocus: onFocusMock,
                 onClick: e => {
                   onClickMock(node.name);
                   e.stopPropagation();
@@ -134,124 +149,137 @@ const renderContainerTestCase = ({
   return {
     result: renderResult,
     onChangeMock,
+    onFocusMock,
     onClickMock
   };
 };
 
-describe('TreeviewContainer', () => {
-  describe('Tree item', () => {
-    it('applies correct accessibility role', () => {
-      renderContainerTestCase();
-      const element = screen.getByTestId('treeview-tree');
+const getParentNode = screen.getByTestId;
+const getEndNode = getParentNode;
 
-      expect(element).toHaveAttribute('role', 'tree');
+describe('TreeView', () => {
+  describe('shared behaviour', () => {
+    it('should call onClick when a parent item is clicked', () => {
+      const { onClickMock } = renderTestCase();
+      getParentNode('Fruits').click();
+      expect(onClickMock).toHaveBeenCalledTimes(1);
+    });
+
+    it('should call onClick when an end item is clicked', () => {
+      const { onClickMock } = renderTestCase();
+      getEndNode('Leek').click();
+      expect(onClickMock).toHaveBeenCalledTimes(1);
+    });
+
+    it('should call onChange with the new value on focus', () => {
+      const { onFocusMock } = renderTestCase();
+      userEvent.tab();
+
+      expect(onFocusMock).toHaveBeenCalledTimes(1);
     });
   });
+});
 
-  describe('Parent Nodes', () => {
-    it('should nave a parent node with the treeitem role and an aria-expanded and a direct children with the group role', () => {
-      renderContainerTestCase();
-      screen.getAllByTestId('treeview-parent').forEach(element => {
-        expect(element).toHaveAttribute('role', 'treeitem');
-        expect(element).toHaveAttribute('aria-expanded');
-
-        const group = element.querySelector(':scope > [data-test-id="treeview-parent-group"]');
-
-        expect(group).toBeInTheDocument();
-      });
-    });
+describe('uncontrolled usages', () => {
+  it('should focus on the first element by default', () => {
+    renderTestCase();
+    userEvent.tab();
+    expect(getParentNode('Fruits')).toHaveFocus();
   });
 
-  describe('End Nodes', () => {
-    it('should have end nodes with a treeitem role and no aria-expanded attribute.', () => {
-      renderContainerTestCase();
-      screen.getAllByTestId('treeview-end').forEach(element => {
-        expect(element).toHaveAttribute('role', 'treeitem');
-
-        expect(element).not.toHaveAttribute('aria-expanded');
-      });
-    });
+  it('should select the first element by default', () => {
+    renderTestCase();
+    userEvent.tab();
+    expect(getParentNode('Fruits')).toHaveAttribute('aria-selected', 'true');
   });
 
-  describe('Controlled state', () => {
-    let result: IContainerTestResult;
+  it('should change selection and expanded states using keyboard and pointer', () => {
+    renderTestCase();
 
-    beforeEach(() => {
-      result = renderContainerTestCase({ openNodes: ['Vegetables'] });
-    });
+    userEvent.tab();
+    expect(getParentNode('Fruits')).toHaveAttribute('aria-selected', 'true');
 
-    it('should only have the vegetables node opened by default', () => {
-      const vegetableSpanElement = screen.getByText('Vegetables');
+    userEvent.keyboard('{space}');
+    expect(getParentNode('Fruits')).toHaveAttribute('aria-selected', 'true');
+    expect(getParentNode('Fruits')).toHaveAttribute('aria-expanded', 'false');
+    userEvent.keyboard('{enter}');
+    expect(getParentNode('Fruits')).toHaveAttribute('aria-expanded', 'true');
 
-      expect(screen.getByRole('treeitem', { expanded: true })).toContainElement(
-        vegetableSpanElement
-      );
-    });
+    userEvent.keyboard('{end}');
+    userEvent.keyboard('{space}');
+    expect(getParentNode('Fruits')).toHaveAttribute('aria-selected', 'false');
+    expect(getParentNode('Vegetables')).toHaveAttribute('aria-expanded', 'false');
+    userEvent.keyboard('{enter}');
+    expect(getParentNode('Vegetables')).toHaveAttribute('aria-expanded', 'true');
 
-    it('onChange should be called with the new state when another node is opened', () => {
-      fireEvent.click(screen.queryAllByTestId('treeview-parent')[0]);
-
-      expect(result.onChangeMock).toHaveBeenCalledWith(['Vegetables', 'Fruits']);
-    });
-
-    it('should return an empty state when the Vegetables node is clicked on', () => {
-      const vegetableSpanElement = screen.getByText('Vegetables');
-
-      screen.getAllByRole('treeitem', { expanded: true }).forEach(e => {
-        if (e.contains(vegetableSpanElement)) {
-          fireEvent.click(vegetableSpanElement);
-        }
-      });
-
-      expect(result.onChangeMock).toHaveBeenCalledWith([]);
-    });
-
-    it('should not open any node by itself', () => {
-      fireEvent.click(screen.queryAllByTestId('treeview-parent')[0]);
-
-      expect(screen.getAllByRole('treeitem', { expanded: true })).toHaveLength(1);
-    });
+    userEvent.keyboard('{home}');
+    userEvent.keyboard('{space}');
+    expect(getParentNode('Fruits')).toHaveAttribute('aria-selected', 'true');
+    userEvent.click(getParentNode('Apples'));
+    expect(getParentNode('Fruits')).toHaveAttribute('aria-expanded', 'true');
   });
 
-  describe('Mouse controls', () => {
-    describe('when a parent node is clicked on', () => {
-      let result: IContainerTestResult;
+  it.each`
+    direction       | rtl      | up               | down              | right             | left
+    ${'vertical'}   | ${false} | ${'{arrowup}'}   | ${'{arrowdown}'}  | ${'{arrowright}'} | ${'{arrowleft}'}
+    ${'vertical'}   | ${true}  | ${'{arrowup}'}   | ${'{arrowdown}'}  | ${'{arrowleft}'}  | ${'{arrowright}'}
+    ${'horizontal'} | ${false} | ${'{arrowleft}'} | ${'{arrowright}'} | ${'{arrowdown}'}  | ${'{arrowup}'}
+    ${'horizontal'} | ${true}  | ${'{arrowleft}'} | ${'{arrowright}'} | ${'{arrowup}'}    | ${'{arrowdown}'}
+  `(
+    'should change focus using arrow keys with direction:$direction and rtl:$rtl. Keybinding=> up:$up, down:$down, right:$right, left:$left',
+    ({ direction, rtl, up, down, right, left }) => {
+      renderTestCase({ horizontal: direction === 'horizontal', rtl });
 
-      beforeEach(() => {
-        result = renderContainerTestCase();
-        fireEvent.click(screen.queryAllByTestId('treeview-parent')[0]);
-      });
+      userEvent.tab();
+      expect(getParentNode('Fruits')).toHaveAttribute('aria-selected', 'true');
 
-      it('should have called the onChangeMock with the new expanded state', () => {
-        expect(result.onChangeMock).toHaveBeenCalledWith(['Fruits']);
-      });
+      userEvent.keyboard(right);
+      expect(getParentNode('Fruits')).toHaveAttribute('aria-expanded', 'true');
 
-      it('should have called the onClickMock name of the node', () => {
-        expect(result.onClickMock).toHaveBeenCalledWith('Fruits');
-      });
+      userEvent.keyboard(right);
+      userEvent.keyboard('{space}');
+      expect(getParentNode('Oranges')).toHaveAttribute('aria-selected', 'true');
+      userEvent.keyboard(down);
+      userEvent.keyboard('{space}');
+      expect(getParentNode('Apples')).toHaveAttribute('aria-selected', 'true');
+      userEvent.keyboard(right);
+      userEvent.keyboard('{space}');
+      expect(getParentNode('Apples')).toHaveAttribute('aria-expanded', 'true');
 
-      it('should have one tree view parent with the aria-expanded property to true', () => {
-        const fruitSpanElement = screen.getByText('Fruits');
+      userEvent.keyboard(down);
+      userEvent.keyboard(down);
+      userEvent.keyboard(down);
+      userEvent.keyboard('{space}');
+      expect(getParentNode('Vegetables')).toHaveAttribute('aria-selected', 'true');
 
-        expect(screen.getByRole('treeitem', { expanded: true })).toContainElement(fruitSpanElement);
-      });
-    });
+      userEvent.keyboard(right);
+      userEvent.keyboard('{space}');
+      expect(getParentNode('Vegetables')).toHaveAttribute('aria-expanded', 'true');
 
-    describe('when an end node is clicked on', () => {
-      let result: IContainerTestResult;
+      userEvent.keyboard(right);
+      userEvent.keyboard(right);
+      userEvent.keyboard('{space}');
+      expect(getParentNode('Podded Vegetables')).toHaveAttribute('aria-selected', 'true');
+      expect(getParentNode('Podded Vegetables')).toHaveAttribute('aria-expanded', 'true');
 
-      beforeEach(() => {
-        result = renderContainerTestCase();
-        fireEvent.click(screen.queryAllByTestId('treeview-end')[0]);
-      });
+      userEvent.keyboard(right);
+      userEvent.keyboard('{space}');
+      expect(getParentNode('Lentil')).toHaveAttribute('aria-selected', 'true');
 
-      it('should have called the onChangeMock with the new expanded state', () => {
-        expect(result.onChangeMock).not.toHaveBeenCalled();
-      });
+      userEvent.keyboard(left);
+      userEvent.keyboard(left);
+      expect(getParentNode('Podded Vegetables')).toHaveAttribute('aria-expanded', 'false');
 
-      it('should have called the onClickMock name of the node', () => {
-        expect(result.onClickMock).toHaveBeenCalledWith('Oranges');
-      });
-    });
-  });
+      userEvent.keyboard(left);
+      userEvent.keyboard(left);
+      userEvent.keyboard('{space}');
+      expect(getParentNode('Vegetables')).toHaveAttribute('aria-expanded', 'false');
+      expect(getParentNode('Vegetables')).toHaveAttribute('aria-selected', 'true');
+
+      userEvent.keyboard(up);
+      userEvent.keyboard(up);
+      userEvent.keyboard('{space}');
+      expect(getParentNode('Macintosh')).toHaveAttribute('aria-selected', 'true');
+    }
+  );
 });
