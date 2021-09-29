@@ -90,7 +90,13 @@ export function useTreeview<Item = any>({
     }
   };
 
-  const getTreeProps = ({ label, labelledBy, role = 'tree', ...props }: IGetTreeProps = {}) => {
+  const getTreeProps = ({
+    label,
+    labelledBy,
+    role = 'tree',
+    onFocus,
+    ...props
+  }: IGetTreeProps = {}) => {
     // TODO: Throw error if no label or labelledBy?
     // TODO: Throw error role is not tree?
 
@@ -100,6 +106,7 @@ export function useTreeview<Item = any>({
       'aria-labelledby': labelledBy,
       'data-garden-container-id': 'containers.treeview',
       'data-garden-container-version': PACKAGE_VERSION,
+      onFocus,
       ...props
     };
   };
@@ -133,7 +140,7 @@ export function useTreeview<Item = any>({
       item,
       focusRef,
       'aria-expanded': expanded,
-      tabIndex: ownFocusedItem === item ? 0 : -1,
+      tabIndex: ownFocusedItem === undefined || ownFocusedItem === item ? 0 : -1,
       'data-garden-container-version': PACKAGE_VERSION,
       onClick: onClickFn,
       onFocus: composeEventHandlers(onFocus, (event: Event) => {
@@ -164,7 +171,6 @@ export function useTreeview<Item = any>({
         };
 
         const direction = horizontal ? 'horizontal' : 'vertical';
-        // TODO: add Enter
         const shortcutMapping = {
           [KEY_CODES.UP]: {
             vertical: handleArrowUp,
@@ -172,7 +178,7 @@ export function useTreeview<Item = any>({
           },
           [KEY_CODES.DOWN]: {
             vertical: handleArrowDown,
-            horizontal: rtl ? handleArrowLeft : handleRight
+            horizontal: rtl ? handleLeft : handleRight
           },
           [KEY_CODES.RIGHT]: {
             vertical: rtl ? handleLeft : handleRight,
