@@ -161,20 +161,22 @@ describe('TreeView', () => {
   describe('shared behaviour', () => {
     it('should call onClick when a parent item is clicked', () => {
       const { onClickMock } = renderTestCase();
+
       getParentNode('Fruits').click();
       expect(onClickMock).toHaveBeenCalledTimes(1);
     });
 
     it('should call onClick when an end item is clicked', () => {
       const { onClickMock } = renderTestCase();
+
       getEndNode('Leek').click();
       expect(onClickMock).toHaveBeenCalledTimes(1);
     });
 
     it('should call onChange with the new value on focus', () => {
       const { onFocusMock } = renderTestCase();
-      userEvent.tab();
 
+      userEvent.tab();
       expect(onFocusMock).toHaveBeenCalledTimes(1);
     });
   });
@@ -282,4 +284,27 @@ describe('uncontrolled usages', () => {
       expect(getParentNode('Macintosh')).toHaveAttribute('aria-selected', 'true');
     }
   );
+});
+
+describe('controlled usage', () => {
+  it('should have the given nodes opened by default', () => {
+    renderTestCase({ openNodes: ['Fruits', 'Apples'] });
+
+    expect(getParentNode('Fruits')).toHaveAttribute('aria-expanded', 'true');
+    expect(getParentNode('Apples')).toHaveAttribute('aria-expanded', 'true');
+  });
+
+  it('should call onChange with a list of opened nodes including the initial nodes and the new one', () => {
+    const { onChangeMock } = renderTestCase({ openNodes: ['Fruits', 'Apples'] });
+
+    userEvent.click(getParentNode('Vegetables'));
+    expect(onChangeMock).toHaveBeenCalledWith(['Fruits', 'Apples', 'Vegetables']);
+  });
+
+  it('should call onChange with a list of opened nodes without Apples', () => {
+    const { onChangeMock } = renderTestCase({ openNodes: ['Fruits', 'Apples'] });
+
+    userEvent.click(getParentNode('Apples'));
+    expect(onChangeMock).toHaveBeenCalledWith(['Fruits']);
+  });
 });
