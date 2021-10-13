@@ -38,7 +38,7 @@ const Splitter = () => {
 
   return (
     <div id="container" style={{ display: 'flex' }}>
-      <div id="sidepane" style={{ flex: `1 1 ${splitterProps['aria-valuenow']}px` }}>
+      <div id="sidepane" style={{ flex: `0 0 ${splitterProps['aria-valuenow']}px` }}>
         <p>Sidepane</p>
       </div>
       <hr style={{ flex: '0 0 5px' }} {...splitterProps} />
@@ -70,7 +70,7 @@ import { useSplitter, SplitterType, SplitterOrientation } from '@zendeskgarden/c
 
     return (
       <div id="container" style={{ display: 'flex' }}>
-        <div id="sidepane" style={{ flex: `1 1 ${splitterProps['aria-valuenow']}px` }}>
+        <div id="sidepane" style={{ flex: `0 0 ${splitterProps['aria-valuenow']}px` }}>
           <p>Sidepane</p>
         </div>
         <hr style={{ flex: '0 0 5px' }} {...splitterProps} />

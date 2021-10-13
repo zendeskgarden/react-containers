@@ -35,8 +35,8 @@ const separatorStyle: React.CSSProperties = {
 };
 
 const sidePaneStyle: React.CSSProperties = {
-  flexGrow: 1,
-  flexShrink: 1,
+  flexGrow: 0,
+  flexShrink: 0,
   overflow: 'auto',
   padding: '1em'
 };
