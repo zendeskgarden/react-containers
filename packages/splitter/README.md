@@ -14,7 +14,9 @@ npm install @zendeskgarden/container-splitter
 
 ## Usage
 
-Check out [storybook](https://zendeskgarden.github.io/react-containers) for live examples.
+Check out
+[storybook](https://zendeskgarden.github.io/react-containers/?path=/story/splitter-container--container)
+for live examples.
 
 ### useSplitter
 
@@ -26,8 +28,8 @@ import { useSplitter, SplitterType, SplitterOrientation } from '@zendeskgarden/c
 
 const Splitter = () => {
   const { getSplitterProps } = useSplitter({
-    label: 'sidepane',
-    controls: 'sidepane',
+    label: 'primary-pane',
+    controls: 'primary-pane',
     type: SplitterType.VARIABLE,
     orientation: SplitterOrientation.VERTICAL,
     min: 50,
@@ -38,12 +40,12 @@ const Splitter = () => {
 
   return (
     <div id="container" style={{ display: 'flex' }}>
-      <div id="sidepane" style={{ flex: `0 0 ${splitterProps['aria-valuenow']}px` }}>
-        <p>Sidepane</p>
+      <div id="primary-pane" style={{ flex: `0 0 ${splitterProps['aria-valuenow']}px` }}>
+        <p>Primary Pane</p>
       </div>
       <hr style={{ flex: '0 0 5px' }} {...splitterProps} />
-      <div id="pane" style={{ flex: '1 1 auto' }}>
-        <p>Pane</p>
+      <div id="secondary-pane" style={{ flex: '1 1 auto' }}>
+        <p>Secondary Pane</p>
       </div>
     </div>
   );
@@ -55,11 +57,11 @@ const Splitter = () => {
 `SplitterContainer` is a render-prop wrapper for the `useSplitter` hook.
 
 ```jsx static
-import { useSplitter, SplitterType, SplitterOrientation } from '@zendeskgarden/container-splitter';
+import { SplitterContainer, SplitterType, SplitterOrientation } from '@zendeskgarden/container-splitter';
 
 <SplitterContainer
-  label="sidepane"
-  controls="sidepane"
+  label="primary-pane"
+  controls="primary-pane"
   type={SplitterType.VARIABLE}
   orientation={SplitterOrientation.VERTICAL}
   min={50}
@@ -70,12 +72,12 @@ import { useSplitter, SplitterType, SplitterOrientation } from '@zendeskgarden/c
 
     return (
       <div id="container" style={{ display: 'flex' }}>
-        <div id="sidepane" style={{ flex: `0 0 ${splitterProps['aria-valuenow']}px` }}>
-          <p>Sidepane</p>
+        <div id="primary-pane" style={{ flex: `0 0 ${splitterProps['aria-valuenow']}px` }}>
+          <p>Primary Pane</p>
         </div>
         <hr style={{ flex: '0 0 5px' }} {...splitterProps} />
-        <div id="pane" style={{ flex: '1 1 auto' }}>
-          <p>Pane</p>
+        <div id="secondary-pane" style={{ flex: '1 1 auto' }}>
+          <p>Secondary Pane</p>
         </div>
       </div>
     );

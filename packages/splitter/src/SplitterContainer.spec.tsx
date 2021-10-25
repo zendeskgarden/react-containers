@@ -8,7 +8,12 @@
 import React, { useState } from 'react';
 import { render, fireEvent } from '@testing-library/react';
 import { SplitterContainer } from './';
-import { IUseSplitterReturnValue, SplitterOrientation, SplitterType } from './useSplitter';
+import {
+  IUseSplitterReturnValue,
+  SplitterOrientation,
+  SplitterType,
+  calculateOffset
+} from './useSplitter';
 
 const paneStyle: React.CSSProperties = {
   flexGrow: 0,
@@ -26,11 +31,38 @@ const separatorStyle: React.CSSProperties = {
   backgroundColor: 'black',
   height: 'auto',
   cursor: 'col-resize',
-  margin: '20px',
   flexGrow: 0,
   flexShrink: 0,
   flexBasis: '5px'
 };
+
+interface IExtendedMouseEvent extends MouseEventInit {
+  offsetX?: number;
+  offsetY?: number;
+  pageX?: number;
+  pageY?: number;
+  x?: number;
+  y?: number;
+}
+
+// JSDom doesn't support the newer MouseEvent properties such as pageX or pageY
+// Therefore we add ExtendedMouseEvent that extends the base MouseEvent
+class ExtendedMouseEvent extends MouseEvent implements MouseEventInit {
+  constructor(type: string, values: IExtendedMouseEvent) {
+    const { pageX, pageY, offsetX, offsetY, x, y, ...mouseValues } = values;
+
+    super(type, mouseValues);
+
+    Object.assign(this, {
+      offsetX: offsetX || 0,
+      offsetY: offsetY || 0,
+      pageX: pageX || 0,
+      pageY: pageY || 0,
+      x: x || 0,
+      y: y || 0
+    });
+  }
+}
 
 describe('SplitterContainer', () => {
   const UncontrolledTestSplitter = ({
@@ -47,8 +79,7 @@ describe('SplitterContainer', () => {
     defaultValueNow?: number;
   }) => (
     <SplitterContainer
-      label="flex-pane"
-      labelledBy="flex-pane"
+      ariaLabel="flex-pane"
       controls="flex-pane"
       type={type}
       min={min}
@@ -94,8 +125,7 @@ describe('SplitterContainer', () => {
     onChange: (value: number) => void;
   }) => (
     <SplitterContainer
-      label="flex-pane"
-      labelledBy="flex-pane"
+      ariaLabel="flex-pane"
       controls="flex-pane"
       type={type}
       min={min}
@@ -133,8 +163,7 @@ describe('SplitterContainer', () => {
       render(
         <>
           <SplitterContainer
-            label="flex-pane"
-            labelledBy="flex-pane"
+            ariaLabel="flex-pane"
             controls="flex-pane"
             type={SplitterType.VARIABLE}
             min={0}
@@ -153,7 +182,6 @@ describe('SplitterContainer', () => {
         Object {
           "aria-controls": "flex-pane",
           "aria-label": "flex-pane",
-          "aria-labelledby": "flex-pane",
           "aria-orientation": "vertical",
           "aria-valuemax": 100,
           "aria-valuemin": 0,
@@ -176,7 +204,6 @@ describe('SplitterContainer', () => {
       it.each<AccessibilityAttributes>([
         ['role', 'separator'],
         ['aria-controls', 'flex-pane'],
-        ['aria-labelledby', 'flex-pane'],
         ['aria-label', 'flex-pane'],
         ['aria-valuemin', '0'],
         ['aria-valuemax', '100'],
@@ -192,16 +219,16 @@ describe('SplitterContainer', () => {
     });
     describe('mouse', () => {
       describe('variable mode', () => {
-        type MouseDownMatrix = [SplitterOrientation, 'clientX' | 'clientY', number, number, number];
+        type MouseDownMatrix = [SplitterOrientation, 'pageX' | 'pageY', number, number, number];
         it.each<MouseDownMatrix>([
-          [SplitterOrientation.VERTICAL, 'clientX', 30, 20, 50],
-          [SplitterOrientation.VERTICAL, 'clientX', 101, 20, 100],
-          [SplitterOrientation.VERTICAL, 'clientX', -21, 20, 0],
-          [SplitterOrientation.HORIZONTAL, 'clientY', 50, 20, 70],
-          [SplitterOrientation.HORIZONTAL, 'clientY', 101, 20, 100],
-          [SplitterOrientation.HORIZONTAL, 'clientY', -21, 20, 0]
+          [SplitterOrientation.VERTICAL, 'pageX', 30, 20, 30],
+          [SplitterOrientation.VERTICAL, 'pageX', 101, 20, 100],
+          [SplitterOrientation.VERTICAL, 'pageX', -21, 20, 0],
+          [SplitterOrientation.HORIZONTAL, 'pageY', 70, 20, 70],
+          [SplitterOrientation.HORIZONTAL, 'pageY', 101, 20, 100],
+          [SplitterOrientation.HORIZONTAL, 'pageY', -21, 20, 0]
         ])(
-          'should move %s splitter using %s mouse %i distance from %i to %i',
+          'should move %s splitter with %s mouse set to %i from %i to %i',
           (orientation, mouseAxis, mousePosition, start, end) => {
             const { getByTestId } = render(
               <UncontrolledTestSplitter orientation={orientation} defaultValueNow={start} />
@@ -209,7 +236,10 @@ describe('SplitterContainer', () => {
             const element = getByTestId('separator');
 
             fireEvent.mouseDown(element);
-            fireEvent.mouseMove(document, { [mouseAxis]: mousePosition });
+            fireEvent(
+              document,
+              new ExtendedMouseEvent('mousemove', { [mouseAxis]: mousePosition })
+            );
             fireEvent.mouseUp(document);
 
             expect(element).toHaveAttribute('aria-valuenow', String(end));
@@ -246,14 +276,14 @@ describe('SplitterContainer', () => {
       describe('variable mode', () => {
         type TouchMatrix = [SplitterOrientation, 'pageX' | 'pageY', number, number, number];
         it.each<TouchMatrix>([
-          [SplitterOrientation.VERTICAL, 'pageX', 30, 20, 50],
+          [SplitterOrientation.VERTICAL, 'pageX', 50, 20, 50],
           [SplitterOrientation.VERTICAL, 'pageX', 101, 20, 100],
           [SplitterOrientation.VERTICAL, 'pageX', -21, 20, 0],
-          [SplitterOrientation.HORIZONTAL, 'pageY', 50, 20, 70],
+          [SplitterOrientation.HORIZONTAL, 'pageY', 70, 20, 70],
           [SplitterOrientation.HORIZONTAL, 'pageY', 101, 20, 100],
           [SplitterOrientation.HORIZONTAL, 'pageY', -21, 20, 0]
         ])(
-          'should move %s splitter using %s touch %i distance from %i to %i',
+          'should move %s splitter using %s touch set to %i from %i to %i',
           (orientation, touchAxis, touchPosition, start, end) => {
             const { getByTestId } = render(
               <UncontrolledTestSplitter orientation={orientation} defaultValueNow={start} />
@@ -270,6 +300,7 @@ describe('SplitterContainer', () => {
           }
         );
       });
+
       describe('fixed', () => {
         type TouchMatrix = [SplitterOrientation, number, number];
         it.each<TouchMatrix>([
@@ -366,7 +397,7 @@ describe('SplitterContainer', () => {
         const element = getByTestId('separator');
 
         fireEvent.mouseDown(element);
-        fireEvent.mouseMove(document, { clientX: 40 });
+        fireEvent(document, new ExtendedMouseEvent('mousemove', { pageX: 60 }));
         fireEvent.mouseUp(document);
 
         expect(testValues.valueNow).toBe(60);
@@ -400,8 +431,8 @@ describe('SplitterContainer', () => {
 
         fireEvent.touchEnd(document);
 
-        expect(testValues.valueNow).toBe(60);
-        expect(element).toHaveAttribute('aria-valuenow', '60');
+        expect(testValues.valueNow).toBe(40);
+        expect(element).toHaveAttribute('aria-valuenow', '40');
       });
       it('should update onChange with keyboard input', () => {
         const testValues: { valueNow?: number } = {};
@@ -429,6 +460,11 @@ describe('SplitterContainer', () => {
         expect(testValues.valueNow).toBe(0);
         expect(element).toHaveAttribute('aria-valuenow', '0');
       });
+    });
+  });
+  describe('calculateOffset', () => {
+    it('should return a value if paddingOrMarginPosition and or offsetDimension is undefined', () => {
+      expect(calculateOffset(40)).toBe(40);
     });
   });
 });

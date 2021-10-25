@@ -14,8 +14,8 @@ const ARGS = {
   orientation: SplitterOrientation.VERTICAL,
   min: 200,
   max: 700,
-  label: 'sidepane',
-  controls: 'sidepane',
+  ariaLabel: 'primary-pane',
+  controls: 'primary-pane',
   defaultValueNow: 200
 };
 
@@ -34,28 +34,38 @@ const separatorStyle: React.CSSProperties = {
   flexBasis: '5px'
 };
 
-const sidePaneStyle: React.CSSProperties = {
+const primaryPaneStyle: React.CSSProperties = {
   flexGrow: 0,
   flexShrink: 0,
   overflow: 'auto',
   padding: '1em'
 };
 
-const paneStyle: React.CSSProperties = {
+const secondaryPaneStyle: React.CSSProperties = {
   padding: '1em'
 };
 
-export const Container = ({ type, min, max, orientation, label, controls, defaultValueNow }) => {
+export const Container = ({
+  type,
+  min,
+  max,
+  orientation,
+  ariaLabel,
+  controls,
+  defaultValueNow,
+  keyboardStep
+}) => {
   const Splitter = () => {
     return (
       <SplitterContainer
         defaultValueNow={defaultValueNow}
         controls={controls}
-        label={label}
+        ariaLabel={ariaLabel}
         type={type}
         min={min}
         max={max}
         orientation={orientation}
+        keyboardStep={keyboardStep}
       >
         {({ getSeparatorProps }: IUseSplitterReturnValue) => {
           const separatorProps = getSeparatorProps();
@@ -68,14 +78,15 @@ export const Container = ({ type, min, max, orientation, label, controls, defaul
               }}
             >
               <div
-                id="sidepane"
+                id="primary-pane"
                 style={{
-                  ...sidePaneStyle,
+                  ...primaryPaneStyle,
                   flexBasis: `${separatorProps['aria-valuenow']}px`
                 }}
               >
                 Thai tabasco pepper cremini mushrooms crumbled lentils one bowl almonds delightful
-                blueberry scones simmer muffins red pepper jalapeño
+                blueberry scones simmer muffins red pepper jalapeño cherry pasta chocolate
+                bruschetta.
               </div>
               <hr
                 id="separator"
@@ -86,7 +97,7 @@ export const Container = ({ type, min, max, orientation, label, controls, defaul
                     orientation === SplitterOrientation.HORIZONTAL ? 'row-resize' : 'col-resize'
                 }}
               />
-              <div id="pane" style={paneStyle}>
+              <div id="secondary-pane" style={secondaryPaneStyle}>
                 Grains spring soba noodles pomegranate veggie burgers picnic cocoa green tea lime
                 maple orange tempeh ginger tofu leek basmati double dark chocolate figs artichoke
                 hearts raspberry fizz lemon lime minty summertime scotch bonnet pepper banana
@@ -107,16 +118,26 @@ export const Container = ({ type, min, max, orientation, label, controls, defaul
 Container.storyName = 'SplitterContainer';
 Container.args = ARGS;
 
-export const Hook = ({ type, min, max, orientation, label, controls, defaultValueNow }) => {
+export const Hook = ({
+  type,
+  min,
+  max,
+  orientation,
+  ariaLabel,
+  controls,
+  defaultValueNow,
+  keyboardStep
+}) => {
   const Splitter = () => {
     const { getSeparatorProps } = useSplitter({
       type,
       min,
       max,
       orientation,
-      label,
+      ariaLabel,
       controls,
-      defaultValueNow
+      defaultValueNow,
+      keyboardStep
     });
     const separatorProps = getSeparatorProps();
 
@@ -128,8 +149,8 @@ export const Hook = ({ type, min, max, orientation, label, controls, defaultValu
         }}
       >
         <div
-          id="sidepane"
-          style={{ ...sidePaneStyle, flexBasis: `${separatorProps['aria-valuenow']}px` }}
+          id="primary-pane"
+          style={{ ...primaryPaneStyle, flexBasis: `${separatorProps['aria-valuenow']}px` }}
         >
           Thai tabasco pepper cremini mushrooms crumbled lentils one bowl almonds delightful
           blueberry scones simmer muffins red pepper jalapeño cherry pasta chocolate bruschetta.
@@ -142,7 +163,7 @@ export const Hook = ({ type, min, max, orientation, label, controls, defaultValu
             cursor: orientation === SplitterOrientation.HORIZONTAL ? 'row-resize' : 'col-resize'
           }}
         />
-        <div id="pane" style={paneStyle}>
+        <div id="secondary-pane" style={secondaryPaneStyle}>
           Grains spring soba noodles pomegranate veggie burgers picnic cocoa green tea lime maple
           orange tempeh ginger tofu leek basmati double dark chocolate figs artichoke hearts
           raspberry fizz lemon lime minty summertime scotch bonnet pepper banana four-layer pine
@@ -167,7 +188,7 @@ Hook.parameters = {
   }
 };
 
-export const Controlled = ({ type, min, max, orientation, label, controls }) => {
+export const Controlled = ({ type, min, max, orientation, ariaLabel, controls, keyboardStep }) => {
   const Splitter = () => {
     const [valueNow, onChange] = useState<number>(300);
     const { getSeparatorProps } = useSplitter({
@@ -175,9 +196,10 @@ export const Controlled = ({ type, min, max, orientation, label, controls }) => 
       min,
       max,
       orientation,
-      label,
+      ariaLabel,
       controls,
       valueNow,
+      keyboardStep,
       onChange
     });
     const separatorProps = getSeparatorProps();
@@ -190,10 +212,14 @@ export const Controlled = ({ type, min, max, orientation, label, controls }) => 
         }}
       >
         <div
-          id="sidepane"
-          style={{ ...sidePaneStyle, flexBasis: `${separatorProps['aria-valuenow']}px` }}
+          id="primary-pane"
+          style={{ ...primaryPaneStyle, flexBasis: `${separatorProps['aria-valuenow']}px` }}
         >
-          Controlled ValueNow: {valueNow}
+          <p>Controlled ValueNow: {valueNow}</p>
+          <p>
+            Thai tabasco pepper cremini mushrooms crumbled lentils one bowl almonds delightful
+            blueberry scones simmer muffins red pepper jalapeño cherry pasta chocolate bruschetta.
+          </p>
         </div>
         <hr
           id="separator"
@@ -203,9 +229,13 @@ export const Controlled = ({ type, min, max, orientation, label, controls }) => 
             cursor: orientation === SplitterOrientation.HORIZONTAL ? 'row-resize' : 'col-resize'
           }}
         />
-        <div id="pane" style={paneStyle}>
+        <div id="secondary-pane" style={secondaryPaneStyle}>
           Grains spring soba noodles pomegranate veggie burgers picnic cocoa green tea lime maple
           orange tempeh ginger tofu leek basmati double dark chocolate figs artichoke hearts
+          raspberry fizz lemon lime minty summertime scotch bonnet pepper banana four-layer pine
+          nuts Thai sun pepper sesame soba noodles mediterranean vegetables chocolate cookie. Udon
+          noodles toasted hazelnuts peach strawberry mango ginger lemongrass agave green tea
+          homemade balsamic
         </div>
       </div>
     );

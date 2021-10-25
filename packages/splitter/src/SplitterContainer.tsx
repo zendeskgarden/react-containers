@@ -29,8 +29,7 @@ export const SplitterContainer: React.FC<ISplitterContainerProps> = props => {
 };
 
 SplitterContainer.propTypes = {
-  label: PropTypes.string,
-  labelledBy: PropTypes.string,
+  ariaLabel: PropTypes.string,
   controls: PropTypes.string.isRequired,
   children: PropTypes.func,
   render: PropTypes.func,
@@ -40,6 +39,7 @@ SplitterContainer.propTypes = {
   }),
   orientation: PropTypes.oneOf([SplitterOrientation.VERTICAL, SplitterOrientation.HORIZONTAL])
     .isRequired,
+  keyboardStep: PropTypes.number,
   type: PropTypes.oneOf([SplitterType.FIXED, SplitterType.VARIABLE]).isRequired,
   min: PropTypes.number.isRequired,
   max: PropTypes.number.isRequired,

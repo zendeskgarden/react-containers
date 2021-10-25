@@ -6,7 +6,7 @@
  */
 
 import { composeEventHandlers } from '@zendeskgarden/container-utilities';
-import React, { HTMLProps, MouseEvent, useCallback, useEffect, useRef, useState } from 'react';
+import React, { HTMLProps, MouseEvent, useCallback, useRef, useState } from 'react';
 
 export enum SplitterOrientation {
   HORIZONTAL = 'horizontal',
@@ -18,10 +18,8 @@ export enum SplitterType {
   VARIABLE = 'variable'
 }
 export interface IUseSplitterProps extends Omit<HTMLProps<any>, 'onChange' | 'controls'> {
-  /** A label for the separator */
-  label?: string;
-  /** An id identifying the element labeling the separator */
-  labelledBy?: string;
+  /** An aria-label for the separator */
+  ariaLabel?: string;
   /** An id of the element the separator controls */
   controls: string;
   /** A document environment to attach events to */
@@ -36,9 +34,11 @@ export interface IUseSplitterProps extends Omit<HTMLProps<any>, 'onChange' | 'co
   max: number;
   /** Determines whether the separator is vertical or horizontal orientation */
   orientation: SplitterOrientation;
+  /** A number for incrementing the splitter position for keyboard mode */
+  keyboardStep?: number;
   /** Determines current position of a controlled separator */
   valueNow?: number;
-  /** A callback that receives updated valueNow when a controlled separator moves */
+  /** A callback that receives updated valueNow when a separator moves */
   onChange?: (valueNow: number) => void;
 }
 
@@ -46,7 +46,7 @@ export interface IUseSplitterReturnValue {
   getSeparatorProps: <T>(options?: T & HTMLProps<any>) => any;
 }
 
-export interface IUsePrecachedStateProps<T> {
+export interface IUseSplitterStateProps<T> {
   /* A default value for uncontrolled mode starting value */
   defaultValue: T;
   /* A current value for controlled state mode */
@@ -55,98 +55,88 @@ export interface IUsePrecachedStateProps<T> {
   onChange?: (value: T) => void;
 }
 
-// Problem: Generic DOM events fire independently from React state lifecycle.
-// Sometimes this will cause React state changes driven by global events to lag behind the current DOM value
-// usePrecachedState will provide "safe" state handling using a pre-cached Ref when listening to global DOM events to keep up with latest changes.
-// Eventually React State will catch up and the virtual DOM will be consistent with the DOM when using this state hook.
-// TODO Promote to Container Utilities?
-export const usePrecachedState = <T>({
+export const useSplitterState = <T>({
   defaultValue,
   value,
   onChange
-}: IUsePrecachedStateProps<T>): [T, (value: T) => void, React.RefObject<T>] => {
+}: IUseSplitterStateProps<T>): [T, (value: T) => void] => {
   const isControlled = value !== undefined && value !== null && typeof onChange === 'function';
   const defaultStateValue = isControlled ? value : defaultValue;
   const [state, setState] = useState<T>(defaultStateValue);
-  const preCacheRef = useRef<T>(defaultStateValue);
 
-  const makeCachedSetter = useCallback(
+  const makeSetter = useCallback(
     (setterMethod: (value: T) => void) => (nextValue: T) => {
       setterMethod(nextValue);
-      // use a ref to cache the immediate value transitions as React state lags slightly behind the global events
-      preCacheRef.current = nextValue;
     },
-    [preCacheRef]
+    []
   );
 
-  return [
-    isControlled ? value : state,
-    isControlled ? makeCachedSetter(onChange) : makeCachedSetter(setState),
-    preCacheRef
-  ];
+  return [isControlled ? value : state, isControlled ? makeSetter(onChange) : makeSetter(setState)];
 };
 
+// Pointer coordinates do not account padding, margins, or height/width of separator
+// This function takes mouse or touch value minus padding or margin position minus the width or height of the separator divided by 2
+// This aligns the pointer and the separator correctly
+export const calculateOffset = (
+  pointerPosition: number,
+  paddingOrMarginPosition = 0,
+  offsetDimension = 0
+) => pointerPosition - paddingOrMarginPosition - Math.ceil(offsetDimension / 2);
+
 export function useSplitter({
-  label,
-  labelledBy,
+  ariaLabel,
   controls,
   environment = document,
   type,
   min,
   max,
   orientation,
+  keyboardStep = 50,
   defaultValueNow = min,
   valueNow,
   onChange,
   ...props
 }: IUseSplitterProps): IUseSplitterReturnValue {
-  const isControlled = valueNow !== undefined && valueNow !== null;
   const separatorRef = useRef<HTMLElement>(null);
-  const startPosRef = useRef<number>(isControlled ? valueNow : defaultValueNow);
-  const [dimension, setDimensionWithCache, dimensionPreCacheRef] = usePrecachedState<number>({
+  const [dimension, setDimension] = useSplitterState<number>({
     defaultValue: defaultValueNow,
     value: valueNow,
     onChange
   });
 
-  useEffect(() => {
-    let direction: 'left' | 'top' = 'left';
-
-    if (orientation === SplitterOrientation.HORIZONTAL) {
-      direction = 'top';
-    }
-    // getBoundingClientRect is in pixel values not unitless
-    startPosRef.current = Number(separatorRef?.current?.getBoundingClientRect?.()[direction]);
-  }, [startPosRef, separatorRef, dimension, orientation]);
-
-  const addDelta = useCallback(
-    (delta: number) => {
-      // this function runs outside the React update loop inside a global mouse event
-      const nextDimension = dimensionPreCacheRef.current! + delta;
-
+  const setBoundedDimension = useCallback(
+    (nextDimension: number) => {
       if (nextDimension >= max) {
-        setDimensionWithCache(max);
+        setDimension(max);
       } else if (nextDimension <= min) {
-        setDimensionWithCache(min);
+        setDimension(min);
       } else {
-        setDimensionWithCache(nextDimension);
+        setDimension(nextDimension);
       }
     },
-    [dimensionPreCacheRef, setDimensionWithCache, min, max]
+    [setDimension, min, max]
   );
 
   const onSplitterMouseMove = useCallback(
     (event: MouseEvent) => {
       event.preventDefault();
+      const elem = separatorRef.current;
+
       if (orientation === SplitterOrientation.HORIZONTAL) {
-        // event.clientY or X is in pixel values not unitless
-        addDelta(event.clientY - startPosRef.current);
+        // calculateOffset aligns pointer and separator accounting for margin or padding of the parent element
+        setBoundedDimension(
+          // event.pageY is in pixel values not unitless
+          calculateOffset(event.pageY, elem?.parentElement?.offsetTop, elem?.offsetHeight)
+        );
       } else {
-        // event.clientY or X is in pixel values not unitless
-        addDelta(event.clientX - startPosRef.current);
+        // calculateOffset aligns pointer and separator accounting for margin or padding of the parent element
+        setBoundedDimension(
+          // event.pageX is in pixel values not unitless
+          calculateOffset(event.pageX, elem?.parentElement?.offsetLeft, elem?.offsetWidth)
+        );
       }
     },
-    [addDelta, orientation]
+    [setBoundedDimension, orientation]
   );
 
   const onMouseMove = composeEventHandlers(props.onMouseMove, onSplitterMouseMove);
@@ -154,16 +144,23 @@ export function useSplitter({
   const onSplitterTouchMove = useCallback(
     (event: TouchEvent) => {
       const { pageY, pageX } = event.targetTouches[0];
+      const elem = separatorRef.current;
 
       if (orientation === SplitterOrientation.HORIZONTAL) {
-        // event.clientY or X is in pixel values not unitless
-        addDelta(pageY - startPosRef.current);
+        // calculateOffset aligns pointer and separator accounting for margin or padding of the parent element
+        setBoundedDimension(
+          // event.pageY is in pixel values not unitless
+          calculateOffset(pageY, elem?.parentElement?.offsetTop, elem?.offsetHeight)
+        );
       } else {
-        // event.clientY or X is in pixel values not unitless
-        addDelta(pageX - startPosRef.current);
+        // calculateOffset aligns pointer and separator accounting for margin or padding of the parent element
+        setBoundedDimension(
+          // event.pageX is in pixel values not unitless
+          calculateOffset(pageX, elem?.parentElement?.offsetLeft, elem?.offsetWidth)
+        );
       }
     },
-    [addDelta, orientation]
+    [setBoundedDimension, orientation]
   );
 
   const onTouchMove = composeEventHandlers(props.onTouchMove, onSplitterTouchMove);
@@ -185,10 +182,10 @@ export function useSplitter({
     event.preventDefault();
     if (type === SplitterType.FIXED) {
       if (dimension > min) {
-        setDimensionWithCache(min);
+        setDimension(min);
       }
       if (dimension < max) {
-        setDimensionWithCache(max);
+        setDimension(max);
       }
     } else {
       // Must register global events to track mouse move outside the container
@@ -200,10 +197,10 @@ export function useSplitter({
   const onTouchStart = composeEventHandlers(props.onTouchStart, () => {
     if (type === SplitterType.FIXED) {
       if (dimension > min) {
-        setDimensionWithCache(min);
+        setDimension(min);
       }
       if (dimension < max) {
-        setDimensionWithCache(max);
+        setDimension(max);
       }
     } else {
       // Must register global events to track mouse move outside the container
@@ -213,21 +210,21 @@ export function useSplitter({
   });
 
   const toggleMinMax = useCallback(() => {
-    if (dimensionPreCacheRef.current === min) {
-      setDimensionWithCache(max);
+    if (dimension === min) {
+      setDimension(max);
     } else {
-      setDimensionWithCache(min);
+      setDimension(min);
     }
-  }, [dimensionPreCacheRef, setDimensionWithCache, min, max]);
+  }, [dimension, setDimension, min, max]);
 
   const onKeyDown = composeEventHandlers(props.onKeyDown, (event: React.KeyboardEvent) => {
     if (orientation === SplitterOrientation.VERTICAL) {
       switch (event.key) {
         case 'ArrowLeft':
-          type === SplitterType.VARIABLE && addDelta(-50);
+          type === SplitterType.VARIABLE && setBoundedDimension(dimension - keyboardStep);
           break;
         case 'ArrowRight':
-          type === SplitterType.VARIABLE && addDelta(50);
+          type === SplitterType.VARIABLE && setBoundedDimension(dimension + keyboardStep);
           break;
         case 'Enter':
           toggleMinMax();
@@ -236,10 +233,10 @@ export function useSplitter({
     } else {
       switch (event.key) {
         case 'ArrowUp':
-          type === SplitterType.VARIABLE && addDelta(-50);
+          type === SplitterType.VARIABLE && setBoundedDimension(dimension - keyboardStep);
           break;
         case 'ArrowDown':
-          type === SplitterType.VARIABLE && addDelta(50);
+          type === SplitterType.VARIABLE && setBoundedDimension(dimension + keyboardStep);
           break;
         case 'Enter': {
           toggleMinMax();
@@ -257,8 +254,7 @@ export function useSplitter({
     onMouseDown,
     onKeyDown,
     onTouchStart,
-    'aria-label': label,
-    'aria-labelledby': labelledBy,
+    'aria-label': ariaLabel,
     'aria-controls': controls,
     'aria-valuenow': dimension,
     'aria-valuemin': min,
