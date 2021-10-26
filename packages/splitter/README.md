@@ -57,7 +57,11 @@ const Splitter = () => {
 `SplitterContainer` is a render-prop wrapper for the `useSplitter` hook.
 
 ```jsx static
-import { SplitterContainer, SplitterType, SplitterOrientation } from '@zendeskgarden/container-splitter';
+import {
+  SplitterContainer,
+  SplitterType,
+  SplitterOrientation
+} from '@zendeskgarden/container-splitter';
 
 <SplitterContainer
   label="primary-pane"

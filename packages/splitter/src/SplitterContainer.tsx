@@ -33,10 +33,13 @@ SplitterContainer.propTypes = {
   controls: PropTypes.string.isRequired,
   children: PropTypes.func,
   render: PropTypes.func,
-  environment: PropTypes.shape({
-    addEventListener: PropTypes.func,
-    removeEventListener: PropTypes.func
-  }),
+  environment: PropTypes.oneOfType([
+    PropTypes.instanceOf(Document),
+    PropTypes.shape({
+      addEventListener: PropTypes.func.isRequired,
+      removeEventListener: PropTypes.func.isRequired
+    })
+  ]),
   orientation: PropTypes.oneOf([SplitterOrientation.VERTICAL, SplitterOrientation.HORIZONTAL])
     .isRequired,
   keyboardStep: PropTypes.number,

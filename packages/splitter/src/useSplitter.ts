@@ -23,7 +23,12 @@ export interface IUseSplitterProps extends Omit<HTMLProps<any>, 'onChange' | 'co
   /** An id of the element the separator controls */
   controls: string;
   /** A document environment to attach events to */
-  environment?: Pick<Document, 'addEventListener' | 'removeEventListener'>;
+  environment?:
+    | Document
+    | {
+        addEventListener: (...args: any) => any;
+        removeEventListener: (...args: any) => any;
+      };
   /** A default value for starting uncontrolled separator location */
   defaultValueNow?: number;
   /** Determines whether a separator behaves in fixed or variable mode */
@@ -64,14 +69,17 @@ export const useSplitterState = <T>({
   const defaultStateValue = isControlled ? value : defaultValue;
   const [state, setState] = useState<T>(defaultStateValue);
 
-  const makeSetter = useCallback(
+  const makeCachedSetter = useCallback(
     (setterMethod: (value: T) => void) => (nextValue: T) => {
       setterMethod(nextValue);
     },
     []
   );
 
-  return [isControlled ? value : state, isControlled ? makeSetter(onChange) : makeSetter(setState)];
+  return [
+    isControlled ? value : state,
+    isControlled ? makeCachedSetter(onChange) : makeCachedSetter(setState)
+  ];
 };
 
 // Pointer coordinates do not account padding, margins, or height/width of separator
