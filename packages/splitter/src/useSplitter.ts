@@ -51,37 +51,6 @@ export interface IUseSplitterReturnValue {
   getSeparatorProps: <T>(options?: T & HTMLProps<any>) => any;
 }
 
-export interface IUseSplitterStateProps<T> {
-  /* A default value for uncontrolled mode starting value */
-  defaultValue: T;
-  /* A current value for controlled state mode */
-  value?: T;
-  /* A callback that recieves updated value when controlled state changes */
-  onChange?: (value: T) => void;
-}
-
-export const useSplitterState = <T>({
-  defaultValue,
-  value,
-  onChange
-}: IUseSplitterStateProps<T>): [T, (value: T) => void] => {
-  const isControlled = value !== undefined && value !== null && typeof onChange === 'function';
-  const defaultStateValue = isControlled ? value : defaultValue;
-  const [state, setState] = useState<T>(defaultStateValue);
-
-  const makeCachedSetter = useCallback(
-    (setterMethod: (value: T) => void) => (nextValue: T) => {
-      setterMethod(nextValue);
-    },
-    []
-  );
-
-  return [
-    isControlled ? value : state,
-    isControlled ? makeCachedSetter(onChange) : makeCachedSetter(setState)
-  ];
-};
-
 // Pointer coordinates do not account padding, margins, or height/width of separator
 // This function takes mouse or touch value minus padding or margin position minus the width or height of the separator divided by 2
 // This aligns the pointer and the separator correctly
@@ -102,15 +71,14 @@ export function useSplitter({
   keyboardStep = 50,
   defaultValueNow = min,
   valueNow,
-  onChange,
+  onChange = () => undefined,
   ...props
 }: IUseSplitterProps): IUseSplitterReturnValue {
+  const isControlled = valueNow !== undefined && valueNow !== null;
+  const [state, setState] = useState<number>(defaultValueNow);
   const separatorRef = useRef<HTMLElement>(null);
-  const [dimension, setDimension] = useSplitterState<number>({
-    defaultValue: defaultValueNow,
-    value: valueNow,
-    onChange
-  });
+  const dimension = isControlled ? valueNow : state;
+  const setDimension = isControlled ? onChange : setState;
 
   const setBoundedDimension = useCallback(
     (nextDimension: number) => {

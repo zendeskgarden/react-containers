@@ -89,17 +89,13 @@ describe('SplitterContainer', () => {
     >
       {({ getSeparatorProps }: IUseSplitterReturnValue) => {
         const separatorProps = getSeparatorProps({
-          'data-test-id': 'separator',
           style: separatorStyle,
           tabIndex: 0
         });
 
         return (
-          <div data-test-id="flex-container" style={flexContainerStyle}>
-            <div
-              style={{ ...paneStyle, flexBasis: `${separatorProps['aria-valuenow']}px` }}
-              data-test-id="flex-pane"
-            >
+          <div style={flexContainerStyle}>
+            <div style={{ ...paneStyle, flexBasis: `${separatorProps['aria-valuenow']}px` }}>
               Lorem ipsum dolor, sit amet consectetur adipisicing elit.
             </div>
             <hr {...separatorProps} />
@@ -122,7 +118,7 @@ describe('SplitterContainer', () => {
     max?: number;
     orientation?: SplitterOrientation;
     valueNow: number;
-    onChange: (value: number) => void;
+    onChange?: (value: number) => void;
   }) => (
     <SplitterContainer
       ariaLabel="flex-pane"
@@ -136,17 +132,12 @@ describe('SplitterContainer', () => {
     >
       {({ getSeparatorProps }: IUseSplitterReturnValue) => {
         const separatorProps = getSeparatorProps({
-          'data-test-id': 'separator',
           style: separatorStyle
         });
 
         return (
-          <div data-test-id="flex-container" style={flexContainerStyle}>
-            <div
-              style={{ ...paneStyle, flexBasis: `${separatorProps['aria-valuenow']}px` }}
-              id="flex-pane"
-              data-test-id="flex-pane"
-            >
+          <div style={flexContainerStyle}>
+            <div style={{ ...paneStyle, flexBasis: `${separatorProps['aria-valuenow']}px` }}>
               Lorem ipsum dolor, sit amet consectetur adipisicing elit.
             </div>
             <hr {...separatorProps} />
@@ -161,22 +152,20 @@ describe('SplitterContainer', () => {
       let separatorProps;
 
       render(
-        <>
-          <SplitterContainer
-            ariaLabel="flex-pane"
-            controls="flex-pane"
-            type={SplitterType.VARIABLE}
-            min={0}
-            max={100}
-            orientation={SplitterOrientation.VERTICAL}
-          >
-            {({ getSeparatorProps }: IUseSplitterReturnValue) => {
-              separatorProps = getSeparatorProps();
+        <SplitterContainer
+          ariaLabel="flex-pane"
+          controls="flex-pane"
+          type={SplitterType.VARIABLE}
+          min={0}
+          max={100}
+          orientation={SplitterOrientation.VERTICAL}
+        >
+          {({ getSeparatorProps }: IUseSplitterReturnValue) => {
+            separatorProps = getSeparatorProps();
 
-              return null;
-            }}
-          </SplitterContainer>
-        </>
+            return null;
+          }}
+        </SplitterContainer>
       );
       expect(separatorProps).toMatchInlineSnapshot(`
         Object {
@@ -211,8 +200,8 @@ describe('SplitterContainer', () => {
         ['tabindex', '0'],
         ['aria-orientation', SplitterOrientation.VERTICAL]
       ])('should applies correct accessibility %s', (attribute, value) => {
-        const { getByTestId } = render(<UncontrolledTestSplitter />);
-        const element = getByTestId('separator');
+        const { getByRole } = render(<UncontrolledTestSplitter />);
+        const element = getByRole('separator');
 
         expect(element).toHaveAttribute(attribute, value);
       });
@@ -230,10 +219,10 @@ describe('SplitterContainer', () => {
         ])(
           'should move %s splitter with %s mouse set to %i from %i to %i',
           (orientation, mouseAxis, mousePosition, start, end) => {
-            const { getByTestId } = render(
+            const { getByRole } = render(
               <UncontrolledTestSplitter orientation={orientation} defaultValueNow={start} />
             );
-            const element = getByTestId('separator');
+            const element = getByRole('separator');
 
             fireEvent.mouseDown(element);
             fireEvent(
@@ -256,14 +245,14 @@ describe('SplitterContainer', () => {
           [SplitterOrientation.HORIZONTAL, 0, 100],
           [SplitterOrientation.HORIZONTAL, 100, 0]
         ])('should move %s splitter using mouse down from %i to %i', (orientation, start, end) => {
-          const { getByTestId } = render(
+          const { getByRole } = render(
             <UncontrolledTestSplitter
               type={SplitterType.FIXED}
               orientation={orientation}
               defaultValueNow={start}
             />
           );
-          const element = getByTestId('separator');
+          const element = getByRole('separator');
 
           fireEvent.mouseDown(element);
 
@@ -285,10 +274,10 @@ describe('SplitterContainer', () => {
         ])(
           'should move %s splitter using %s touch set to %i from %i to %i',
           (orientation, touchAxis, touchPosition, start, end) => {
-            const { getByTestId } = render(
+            const { getByRole } = render(
               <UncontrolledTestSplitter orientation={orientation} defaultValueNow={start} />
             );
-            const element = getByTestId('separator');
+            const element = getByRole('separator');
 
             fireEvent.touchStart(element);
             fireEvent.touchMove(document, {
@@ -311,14 +300,14 @@ describe('SplitterContainer', () => {
           [SplitterOrientation.HORIZONTAL, 0, 100],
           [SplitterOrientation.HORIZONTAL, 100, 0]
         ])('should move %s splitter using touch from %i to %i', (orientation, start, end) => {
-          const { getByTestId } = render(
+          const { getByRole } = render(
             <UncontrolledTestSplitter
               type={SplitterType.FIXED}
               orientation={orientation}
               defaultValueNow={start}
             />
           );
-          const element = getByTestId('separator');
+          const element = getByRole('separator');
 
           fireEvent.touchStart(element);
 
@@ -341,10 +330,10 @@ describe('SplitterContainer', () => {
           [SplitterOrientation.HORIZONTAL, 'Enter', 20, 0],
           [SplitterOrientation.HORIZONTAL, 'Enter', 0, 100]
         ])('should move %s splitter using %s from %i to %i', (orientation, key, start, end) => {
-          const { getByTestId } = render(
+          const { getByRole } = render(
             <UncontrolledTestSplitter orientation={orientation} defaultValueNow={start} />
           );
-          const element = getByTestId('separator');
+          const element = getByRole('separator');
 
           fireEvent.keyDown(element, { key });
 
@@ -359,14 +348,14 @@ describe('SplitterContainer', () => {
           [SplitterOrientation.HORIZONTAL, 'Enter', 20, 0],
           [SplitterOrientation.HORIZONTAL, 'Enter', 0, 100]
         ])('should move %s splitter using %s from %i to %i', (orientation, key, start, end) => {
-          const { getByTestId } = render(
+          const { getByRole } = render(
             <UncontrolledTestSplitter
               type={SplitterType.FIXED}
               orientation={orientation}
               defaultValueNow={start}
             />
           );
-          const element = getByTestId('separator');
+          const element = getByRole('separator');
 
           fireEvent.keyDown(element, { key });
 
@@ -377,24 +366,22 @@ describe('SplitterContainer', () => {
     describe('controlled mode', () => {
       it('should update onChange with mouse input', () => {
         const testValues: { valueNow?: number } = {};
-        const { getByTestId } = render(
-          <>
-            {React.createElement(() => {
-              const [valueNow, onChange] = useState(20);
+        const { getByRole } = render(
+          React.createElement(() => {
+            const [valueNow, onChange] = useState(20);
 
-              testValues.valueNow = valueNow;
+            testValues.valueNow = valueNow;
 
-              return (
-                <ControlledTestSplitter
-                  orientation={SplitterOrientation.VERTICAL}
-                  valueNow={valueNow}
-                  onChange={onChange}
-                />
-              );
-            })}
-          </>
+            return (
+              <ControlledTestSplitter
+                orientation={SplitterOrientation.VERTICAL}
+                valueNow={valueNow}
+                onChange={onChange}
+              />
+            );
+          })
         );
-        const element = getByTestId('separator');
+        const element = getByRole('separator');
 
         fireEvent.mouseDown(element);
         fireEvent(document, new ExtendedMouseEvent('mousemove', { pageX: 60 }));
@@ -405,24 +392,22 @@ describe('SplitterContainer', () => {
       });
       it('should update onChange with touch input', () => {
         const testValues: { valueNow?: number } = {};
-        const { getByTestId } = render(
-          <>
-            {React.createElement(() => {
-              const [valueNow, onChange] = useState(20);
+        const { getByRole } = render(
+          React.createElement(() => {
+            const [valueNow, onChange] = useState(20);
 
-              testValues.valueNow = valueNow;
+            testValues.valueNow = valueNow;
 
-              return (
-                <ControlledTestSplitter
-                  orientation={SplitterOrientation.VERTICAL}
-                  valueNow={valueNow}
-                  onChange={onChange}
-                />
-              );
-            })}
-          </>
+            return (
+              <ControlledTestSplitter
+                orientation={SplitterOrientation.VERTICAL}
+                valueNow={valueNow}
+                onChange={onChange}
+              />
+            );
+          })
         );
-        const element = getByTestId('separator');
+        const element = getByRole('separator');
 
         fireEvent.touchStart(element);
         fireEvent.touchMove(document, {
@@ -436,10 +421,34 @@ describe('SplitterContainer', () => {
       });
       it('should update onChange with keyboard input', () => {
         const testValues: { valueNow?: number } = {};
-        const { getByTestId } = render(
-          <>
-            {React.createElement(() => {
-              const [valueNow, onChange] = useState(20);
+        const { getByRole } = render(
+          React.createElement(() => {
+            const [valueNow, onChange] = useState(20);
+
+            testValues.valueNow = valueNow;
+
+            return (
+              <ControlledTestSplitter
+                orientation={SplitterOrientation.VERTICAL}
+                valueNow={valueNow}
+                onChange={onChange}
+              />
+            );
+          })
+        );
+        const element = getByRole('separator');
+
+        fireEvent.keyDown(element, { key: 'Enter' });
+
+        expect(testValues.valueNow).toBe(0);
+        expect(element).toHaveAttribute('aria-valuenow', '0');
+      });
+      describe('when setting valueNow prop and supplying no onChange function', () => {
+        it('should not change aria-valuenow with pointer input', () => {
+          const testValues: { valueNow?: number } = {};
+          const { getByRole } = render(
+            React.createElement(() => {
+              const [valueNow] = useState(20);
 
               testValues.valueNow = valueNow;
 
@@ -447,18 +456,22 @@ describe('SplitterContainer', () => {
                 <ControlledTestSplitter
                   orientation={SplitterOrientation.VERTICAL}
                   valueNow={valueNow}
-                  onChange={onChange}
                 />
               );
-            })}
-          </>
-        );
-        const element = getByTestId('separator');
+            })
+          );
+          const element = getByRole('separator');
 
-        fireEvent.keyDown(element, { key: 'Enter' });
+          fireEvent.touchStart(element);
+          fireEvent.touchMove(document, {
+            targetTouches: [{ pageX: 40 }]
+          });
 
-        expect(testValues.valueNow).toBe(0);
-        expect(element).toHaveAttribute('aria-valuenow', '0');
+          fireEvent.touchEnd(document);
+
+          expect(testValues.valueNow).toBe(20);
+          expect(element).toHaveAttribute('aria-valuenow', '20');
+        });
       });
     });
   });

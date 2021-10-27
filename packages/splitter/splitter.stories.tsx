@@ -68,7 +68,12 @@ export const Container = ({
         keyboardStep={keyboardStep}
       >
         {({ getSeparatorProps }: IUseSplitterReturnValue) => {
-          const separatorProps = getSeparatorProps();
+          const separatorProps = getSeparatorProps({
+            style: {
+              ...separatorStyle,
+              cursor: orientation === SplitterOrientation.HORIZONTAL ? 'row-resize' : 'col-resize'
+            }
+          });
 
           return (
             <div
@@ -88,15 +93,7 @@ export const Container = ({
                 blueberry scones simmer muffins red pepper jalapeño cherry pasta chocolate
                 bruschetta.
               </div>
-              <hr
-                id="separator"
-                {...separatorProps}
-                style={{
-                  ...separatorStyle,
-                  cursor:
-                    orientation === SplitterOrientation.HORIZONTAL ? 'row-resize' : 'col-resize'
-                }}
-              />
+              <hr id="separator" {...separatorProps} />
               <div id="secondary-pane" style={secondaryPaneStyle}>
                 Grains spring soba noodles pomegranate veggie burgers picnic cocoa green tea lime
                 maple orange tempeh ginger tofu leek basmati double dark chocolate figs artichoke
@@ -139,7 +136,12 @@ export const Hook = ({
       defaultValueNow,
       keyboardStep
     });
-    const separatorProps = getSeparatorProps();
+    const separatorProps = getSeparatorProps({
+      style: {
+        ...separatorStyle,
+        cursor: orientation === SplitterOrientation.HORIZONTAL ? 'row-resize' : 'col-resize'
+      }
+    });
 
     return (
       <div
@@ -155,14 +157,7 @@ export const Hook = ({
           Thai tabasco pepper cremini mushrooms crumbled lentils one bowl almonds delightful
           blueberry scones simmer muffins red pepper jalapeño cherry pasta chocolate bruschetta.
         </div>
-        <hr
-          id="separator"
-          {...separatorProps}
-          style={{
-            ...separatorStyle,
-            cursor: orientation === SplitterOrientation.HORIZONTAL ? 'row-resize' : 'col-resize'
-          }}
-        />
+        <hr id="separator" {...separatorProps} />
         <div id="secondary-pane" style={secondaryPaneStyle}>
           Grains spring soba noodles pomegranate veggie burgers picnic cocoa green tea lime maple
           orange tempeh ginger tofu leek basmati double dark chocolate figs artichoke hearts
@@ -202,7 +197,12 @@ export const Controlled = ({ type, min, max, orientation, ariaLabel, controls, k
       keyboardStep,
       onChange
     });
-    const separatorProps = getSeparatorProps();
+    const separatorProps = getSeparatorProps({
+      style: {
+        ...separatorStyle,
+        cursor: orientation === SplitterOrientation.HORIZONTAL ? 'row-resize' : 'col-resize'
+      }
+    });
 
     return (
       <div
@@ -221,14 +221,7 @@ export const Controlled = ({ type, min, max, orientation, ariaLabel, controls, k
             blueberry scones simmer muffins red pepper jalapeño cherry pasta chocolate bruschetta.
           </p>
         </div>
-        <hr
-          id="separator"
-          {...separatorProps}
-          style={{
-            ...separatorStyle,
-            cursor: orientation === SplitterOrientation.HORIZONTAL ? 'row-resize' : 'col-resize'
-          }}
-        />
+        <hr id="separator" {...separatorProps} />
         <div id="secondary-pane" style={secondaryPaneStyle}>
           Grains spring soba noodles pomegranate veggie burgers picnic cocoa green tea lime maple
           orange tempeh ginger tofu leek basmati double dark chocolate figs artichoke hearts
