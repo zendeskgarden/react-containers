@@ -27,7 +27,7 @@ accessibility attributes for the window splitting separator.
 import { useSplitter, SplitterType, SplitterOrientation } from '@zendeskgarden/container-splitter';
 
 const Splitter = () => {
-  const { getSplitterProps } = useSplitter({
+  const { getSeparatorProps } = useSplitter({
     label: 'primary-pane',
     primaryPaneId: 'primary-pane',
     type: SplitterType.VARIABLE,
@@ -36,14 +36,14 @@ const Splitter = () => {
     max: 100
   });
 
-  const splitterProps = getSplitterProps();
+  const separatorProps = getSeparatorProps();
 
   return (
     <div style={{ display: 'flex' }}>
-      <div id="primary-pane" style={{ flex: `0 0 ${splitterProps['aria-valuenow']}px` }}>
+      <div id="primary-pane" style={{ flex: `0 0 ${separatorProps['aria-valuenow']}px` }}>
         <p>Primary Pane</p>
       </div>
-      <hr style={{ flex: '0 0 5px' }} {...splitterProps} />
+      <hr style={{ flex: '0 0 5px' }} {...separatorProps} />
       <div style={{ flex: '1 1 auto' }}>
         <p>Secondary Pane</p>
       </div>
@@ -71,15 +71,15 @@ import {
   min={50}
   max={100}
 >
-  {({ getSplitterProps }) => {
-    const splitterProps = getSplitterProps();
+  {({ getSeparatorProps }) => {
+    const separatorProps = getSeparatorProps();
 
     return (
       <div id="container" style={{ display: 'flex' }}>
-        <div id="primary-pane" style={{ flex: `0 0 ${splitterProps['aria-valuenow']}px` }}>
+        <div id="primary-pane" style={{ flex: `0 0 ${separatorProps['aria-valuenow']}px` }}>
           <p>Primary Pane</p>
         </div>
-        <hr style={{ flex: '0 0 5px' }} {...splitterProps} />
+        <hr style={{ flex: '0 0 5px' }} {...separatorProps} />
         <div style={{ flex: '1 1 auto' }}>
           <p>Secondary Pane</p>
         </div>
