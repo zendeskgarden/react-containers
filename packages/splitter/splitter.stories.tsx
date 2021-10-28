@@ -193,7 +193,7 @@ export const Controlled = ({
   keyboardStep
 }) => {
   const Splitter = () => {
-    const [valueNow, onChange] = useState<number>(300);
+    const [valueNow, onChange] = useState(300);
     const { getSeparatorProps } = useSplitter({
       type,
       min,
