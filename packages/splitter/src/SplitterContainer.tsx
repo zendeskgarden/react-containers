@@ -30,7 +30,7 @@ export const SplitterContainer: React.FC<ISplitterContainerProps> = props => {
 
 SplitterContainer.propTypes = {
   ariaLabel: PropTypes.string,
-  controls: PropTypes.string.isRequired,
+  primaryPaneId: PropTypes.string.isRequired,
   children: PropTypes.func,
   render: PropTypes.func,
   environment: PropTypes.oneOfType([

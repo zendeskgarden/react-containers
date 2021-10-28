@@ -17,11 +17,11 @@ export enum SplitterType {
   FIXED = 'fixed',
   VARIABLE = 'variable'
 }
-export interface IUseSplitterProps extends Omit<HTMLProps<any>, 'onChange' | 'controls'> {
+export interface IUseSplitterProps extends Omit<HTMLProps<any>, 'onChange'> {
   /** An aria-label for the separator */
   ariaLabel?: string;
   /** An id of the element the separator controls */
-  controls: string;
+  primaryPaneId: string;
   /** A document environment to attach events to */
   environment?:
     | Document
@@ -62,7 +62,7 @@ export const calculateOffset = (
 
 export function useSplitter({
   ariaLabel,
-  controls,
+  primaryPaneId,
   environment = document,
   type,
   min,
@@ -75,7 +75,7 @@ export function useSplitter({
   ...props
 }: IUseSplitterProps): IUseSplitterReturnValue {
   const isControlled = valueNow !== undefined && valueNow !== null;
-  const [state, setState] = useState<number>(defaultValueNow);
+  const [state, setState] = useState(defaultValueNow);
   const separatorRef = useRef<HTMLElement>(null);
   const dimension = isControlled ? valueNow : state;
   const setDimension = isControlled ? onChange : setState;
@@ -231,7 +231,7 @@ export function useSplitter({
     onKeyDown,
     onTouchStart,
     'aria-label': ariaLabel,
-    'aria-controls': controls,
+    'aria-controls': primaryPaneId,
     'aria-valuenow': dimension,
     'aria-valuemin': min,
     'aria-valuemax': max,

@@ -15,7 +15,7 @@ const ARGS = {
   min: 200,
   max: 700,
   ariaLabel: 'primary-pane',
-  controls: 'primary-pane',
+  primaryPaneId: 'primary-pane',
   defaultValueNow: 200
 };
 
@@ -51,7 +51,7 @@ export const Container = ({
   max,
   orientation,
   ariaLabel,
-  controls,
+  primaryPaneId,
   defaultValueNow,
   keyboardStep
 }) => {
@@ -59,7 +59,7 @@ export const Container = ({
     return (
       <SplitterContainer
         defaultValueNow={defaultValueNow}
-        controls={controls}
+        primaryPaneId={primaryPaneId}
         ariaLabel={ariaLabel}
         type={type}
         min={min}
@@ -93,8 +93,8 @@ export const Container = ({
                 blueberry scones simmer muffins red pepper jalapeño cherry pasta chocolate
                 bruschetta.
               </div>
-              <hr id="separator" {...separatorProps} />
-              <div id="secondary-pane" style={secondaryPaneStyle}>
+              <hr {...separatorProps} />
+              <div style={secondaryPaneStyle}>
                 Grains spring soba noodles pomegranate veggie burgers picnic cocoa green tea lime
                 maple orange tempeh ginger tofu leek basmati double dark chocolate figs artichoke
                 hearts raspberry fizz lemon lime minty summertime scotch bonnet pepper banana
@@ -121,7 +121,7 @@ export const Hook = ({
   max,
   orientation,
   ariaLabel,
-  controls,
+  primaryPaneId,
   defaultValueNow,
   keyboardStep
 }) => {
@@ -132,7 +132,7 @@ export const Hook = ({
       max,
       orientation,
       ariaLabel,
-      controls,
+      primaryPaneId,
       defaultValueNow,
       keyboardStep
     });
@@ -157,8 +157,8 @@ export const Hook = ({
           Thai tabasco pepper cremini mushrooms crumbled lentils one bowl almonds delightful
           blueberry scones simmer muffins red pepper jalapeño cherry pasta chocolate bruschetta.
         </div>
-        <hr id="separator" {...separatorProps} />
-        <div id="secondary-pane" style={secondaryPaneStyle}>
+        <hr {...separatorProps} />
+        <div style={secondaryPaneStyle}>
           Grains spring soba noodles pomegranate veggie burgers picnic cocoa green tea lime maple
           orange tempeh ginger tofu leek basmati double dark chocolate figs artichoke hearts
           raspberry fizz lemon lime minty summertime scotch bonnet pepper banana four-layer pine
@@ -183,7 +183,15 @@ Hook.parameters = {
   }
 };
 
-export const Controlled = ({ type, min, max, orientation, ariaLabel, controls, keyboardStep }) => {
+export const Controlled = ({
+  type,
+  min,
+  max,
+  orientation,
+  ariaLabel,
+  primaryPaneId,
+  keyboardStep
+}) => {
   const Splitter = () => {
     const [valueNow, onChange] = useState<number>(300);
     const { getSeparatorProps } = useSplitter({
@@ -192,7 +200,7 @@ export const Controlled = ({ type, min, max, orientation, ariaLabel, controls, k
       max,
       orientation,
       ariaLabel,
-      controls,
+      primaryPaneId,
       valueNow,
       keyboardStep,
       onChange
@@ -221,8 +229,8 @@ export const Controlled = ({ type, min, max, orientation, ariaLabel, controls, k
             blueberry scones simmer muffins red pepper jalapeño cherry pasta chocolate bruschetta.
           </p>
         </div>
-        <hr id="separator" {...separatorProps} />
-        <div id="secondary-pane" style={secondaryPaneStyle}>
+        <hr {...separatorProps} />
+        <div style={secondaryPaneStyle}>
           Grains spring soba noodles pomegranate veggie burgers picnic cocoa green tea lime maple
           orange tempeh ginger tofu leek basmati double dark chocolate figs artichoke hearts
           raspberry fizz lemon lime minty summertime scotch bonnet pepper banana four-layer pine

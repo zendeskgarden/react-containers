@@ -80,7 +80,7 @@ describe('SplitterContainer', () => {
   }) => (
     <SplitterContainer
       ariaLabel="flex-pane"
-      controls="flex-pane"
+      primaryPaneId="flex-pane"
       type={type}
       min={min}
       max={max}
@@ -122,7 +122,7 @@ describe('SplitterContainer', () => {
   }) => (
     <SplitterContainer
       ariaLabel="flex-pane"
-      controls="flex-pane"
+      primaryPaneId="flex-pane"
       type={type}
       min={min}
       max={max}
@@ -154,7 +154,7 @@ describe('SplitterContainer', () => {
       render(
         <SplitterContainer
           ariaLabel="flex-pane"
-          controls="flex-pane"
+          primaryPaneId="flex-pane"
           type={SplitterType.VARIABLE}
           min={0}
           max={100}
