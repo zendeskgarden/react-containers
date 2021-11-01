@@ -16,7 +16,8 @@ const ARGS = {
   max: 700,
   ariaLabel: 'primary-pane',
   primaryPaneId: 'primary-pane',
-  defaultValueNow: 200
+  defaultValueNow: 200,
+  rtl: false
 };
 
 const flexContainerStyle: React.CSSProperties = {
@@ -53,9 +54,12 @@ export const Container = ({
   ariaLabel,
   primaryPaneId,
   defaultValueNow,
-  keyboardStep
+  keyboardStep,
+  rtl
 }) => {
   const Splitter = () => {
+    const mode = rtl ? 'rtl' : 'ltr';
+
     return (
       <SplitterContainer
         defaultValueNow={defaultValueNow}
@@ -66,6 +70,7 @@ export const Container = ({
         max={max}
         orientation={orientation}
         keyboardStep={keyboardStep}
+        rtl={rtl}
       >
         {({ getSeparatorProps }: IUseSplitterReturnValue) => {
           const separatorProps = getSeparatorProps({
@@ -77,6 +82,7 @@ export const Container = ({
 
           return (
             <div
+              dir={mode}
               style={{
                 ...flexContainerStyle,
                 flexDirection: orientation === SplitterOrientation.HORIZONTAL ? 'column' : 'row'
@@ -123,9 +129,11 @@ export const Hook = ({
   ariaLabel,
   primaryPaneId,
   defaultValueNow,
-  keyboardStep
+  keyboardStep,
+  rtl
 }) => {
   const Splitter = () => {
+    const mode = rtl ? 'rtl' : 'ltr';
     const { getSeparatorProps } = useSplitter({
       type,
       min,
@@ -134,7 +142,8 @@ export const Hook = ({
       ariaLabel,
       primaryPaneId,
       defaultValueNow,
-      keyboardStep
+      keyboardStep,
+      rtl
     });
     const separatorProps = getSeparatorProps({
       style: {
@@ -145,6 +154,7 @@ export const Hook = ({
 
     return (
       <div
+        dir={mode}
         style={{
           ...flexContainerStyle,
           flexDirection: orientation === SplitterOrientation.HORIZONTAL ? 'column' : 'row'
@@ -190,10 +200,12 @@ export const Controlled = ({
   orientation,
   ariaLabel,
   primaryPaneId,
-  keyboardStep
+  keyboardStep,
+  rtl
 }) => {
   const Splitter = () => {
     const [valueNow, onChange] = useState(300);
+    const mode = rtl ? 'rtl' : 'ltr';
     const { getSeparatorProps } = useSplitter({
       type,
       min,
@@ -203,7 +215,8 @@ export const Controlled = ({
       primaryPaneId,
       valueNow,
       keyboardStep,
-      onChange
+      onChange,
+      rtl
     });
     const separatorProps = getSeparatorProps({
       style: {
@@ -214,6 +227,7 @@ export const Controlled = ({
 
     return (
       <div
+        dir={mode}
         style={{
           ...flexContainerStyle,
           flexDirection: orientation === SplitterOrientation.HORIZONTAL ? 'column' : 'row'

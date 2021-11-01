@@ -28,6 +28,9 @@ export interface IUseSplitterProps extends Omit<HTMLProps<any>, 'onChange'> {
     | {
         addEventListener: (...args: any) => any;
         removeEventListener: (...args: any) => any;
+        body: {
+          clientWidth: number;
+        };
       };
   /** A default value for starting uncontrolled separator location */
   defaultValueNow?: number;
@@ -45,6 +48,8 @@ export interface IUseSplitterProps extends Omit<HTMLProps<any>, 'onChange'> {
   valueNow?: number;
   /** A callback that receives updated valueNow when a separator moves */
   onChange?: (valueNow: number) => void;
+  /** A boolean that changes splitter from left-to-right to right-to-left mode */
+  rtl?: boolean;
 }
 
 export interface IUseSplitterReturnValue {
@@ -54,11 +59,30 @@ export interface IUseSplitterReturnValue {
 // Pointer coordinates do not account padding, margins, or height/width of separator
 // This function takes mouse or touch value minus padding or margin position minus the width or height of the separator divided by 2
 // This aligns the pointer and the separator correctly
+// When passed a viewportWidth, subtract pointer position and offsets to invert the calculation for RTL mode.
 export const calculateOffset = (
   pointerPosition: number,
   paddingOrMarginPosition = 0,
-  offsetDimension = 0
-) => pointerPosition - paddingOrMarginPosition - Math.ceil(offsetDimension / 2);
+  offsetDimension = 0,
+  viewportWidth = 0
+) => {
+  if (viewportWidth === 0) {
+    return pointerPosition - paddingOrMarginPosition - Math.ceil(offsetDimension / 2);
+  }
+
+  return viewportWidth - pointerPosition - paddingOrMarginPosition - offsetDimension;
+};
+
+export const verticalArrowKeys = {
+  rtl: {
+    INCREASE: 'ArrowLeft',
+    DECREASE: 'ArrowRight'
+  },
+  ltr: {
+    INCREASE: 'ArrowRight',
+    DECREASE: 'ArrowLeft'
+  }
+};
 
 export function useSplitter({
   ariaLabel,
@@ -72,6 +96,7 @@ export function useSplitter({
   defaultValueNow = min,
   valueNow,
   onChange = () => undefined,
+  rtl = false,
   ...props
 }: IUseSplitterProps): IUseSplitterReturnValue {
   const isControlled = valueNow !== undefined && valueNow !== null;
@@ -97,6 +122,7 @@ export function useSplitter({
     (event: MouseEvent) => {
       event.preventDefault();
       const elem = separatorRef.current;
+      const clientWidth = rtl ? environment.body.clientWidth : undefined;
 
       if (orientation === SplitterOrientation.HORIZONTAL) {
         // calculateOffset aligns pointer and separator accounting for margin or padding of the parent element
@@ -108,11 +134,16 @@ export function useSplitter({
         // calculateOffset aligns pointer and separator accounting for margin or padding of the parent element
         setBoundedDimension(
           // event.pageX is in pixel values not unitless
-          calculateOffset(event.pageX, elem?.parentElement?.offsetLeft, elem?.offsetWidth)
+          calculateOffset(
+            event.pageX,
+            elem?.parentElement?.offsetLeft,
+            elem?.offsetWidth,
+            clientWidth
+          )
         );
       }
     },
-    [setBoundedDimension, orientation]
+    [orientation, setBoundedDimension, rtl, environment]
   );
 
   const onMouseMove = composeEventHandlers(props.onMouseMove, onSplitterMouseMove);
@@ -121,6 +152,7 @@ export function useSplitter({
     (event: TouchEvent) => {
       const { pageY, pageX } = event.targetTouches[0];
       const elem = separatorRef.current;
+      const clientWidth = rtl ? environment.body.clientWidth : undefined;
 
       if (orientation === SplitterOrientation.HORIZONTAL) {
         // calculateOffset aligns pointer and separator accounting for margin or padding of the parent element
@@ -132,11 +164,11 @@ export function useSplitter({
         // calculateOffset aligns pointer and separator accounting for margin or padding of the parent element
         setBoundedDimension(
           // event.pageX is in pixel values not unitless
-          calculateOffset(pageX, elem?.parentElement?.offsetLeft, elem?.offsetWidth)
+          calculateOffset(pageX, elem?.parentElement?.offsetLeft, elem?.offsetWidth, clientWidth)
         );
       }
     },
-    [setBoundedDimension, orientation]
+    [orientation, setBoundedDimension, rtl, environment]
   );
 
   const onTouchMove = composeEventHandlers(props.onTouchMove, onSplitterTouchMove);
@@ -195,11 +227,13 @@ export function useSplitter({
 
   const onKeyDown = composeEventHandlers(props.onKeyDown, (event: React.KeyboardEvent) => {
     if (orientation === SplitterOrientation.VERTICAL) {
+      const mode = rtl ? 'rtl' : 'ltr';
+
       switch (event.key) {
-        case 'ArrowLeft':
+        case verticalArrowKeys[mode].DECREASE:
           type === SplitterType.VARIABLE && setBoundedDimension(dimension - keyboardStep);
           break;
-        case 'ArrowRight':
+        case verticalArrowKeys[mode].INCREASE:
           type === SplitterType.VARIABLE && setBoundedDimension(dimension + keyboardStep);
           break;
         case 'Enter':

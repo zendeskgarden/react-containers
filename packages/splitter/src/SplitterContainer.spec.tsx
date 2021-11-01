@@ -70,13 +70,15 @@ describe('SplitterContainer', () => {
     min = 0,
     max = 100,
     orientation = SplitterOrientation.VERTICAL,
-    defaultValueNow = 20
+    defaultValueNow = 20,
+    rtl = false
   }: {
     type?: SplitterType;
     min?: number;
     max?: number;
     orientation?: SplitterOrientation;
     defaultValueNow?: number;
+    rtl?: boolean;
   }) => (
     <SplitterContainer
       ariaLabel="flex-pane"
@@ -86,15 +88,17 @@ describe('SplitterContainer', () => {
       max={max}
       orientation={orientation}
       defaultValueNow={defaultValueNow}
+      rtl={rtl}
     >
       {({ getSeparatorProps }: IUseSplitterReturnValue) => {
+        const mode = rtl ? 'rtl' : 'ltr';
         const separatorProps = getSeparatorProps({
           style: separatorStyle,
           tabIndex: 0
         });
 
         return (
-          <div style={flexContainerStyle}>
+          <div dir={mode} style={flexContainerStyle}>
             <div style={{ ...paneStyle, flexBasis: `${separatorProps['aria-valuenow']}px` }}>
               Lorem ipsum dolor, sit amet consectetur adipisicing elit.
             </div>
@@ -478,6 +482,66 @@ describe('SplitterContainer', () => {
   describe('calculateOffset', () => {
     it('should return a value if paddingOrMarginPosition and or offsetDimension is undefined', () => {
       expect(calculateOffset(40)).toBe(40);
+    });
+  });
+  describe('rtl mode', () => {
+    beforeAll(() => {
+      // JSDom does not support clientWidth and we must mock it to test the inverted position calculation for RTL mode
+      Object.defineProperty(document.body, 'clientWidth', { value: 300 });
+    });
+    describe('mouse navigation', () => {
+      it('should move vertical splitter with pointer set to 100 from 30 to 100', () => {
+        const { getByRole } = render(
+          <UncontrolledTestSplitter
+            orientation={SplitterOrientation.VERTICAL}
+            defaultValueNow={30}
+            rtl
+          />
+        );
+        const element = getByRole('separator');
+
+        fireEvent.mouseDown(element);
+        fireEvent(document, new ExtendedMouseEvent('mousemove', { pageX: 100 }));
+        fireEvent.mouseUp(document);
+
+        expect(element).toHaveAttribute('aria-valuenow', '100');
+      });
+    });
+    describe('touch navigation', () => {
+      it('should move vertical splitter with pointer set to 100 from 30 to 100', () => {
+        const { getByRole } = render(
+          <UncontrolledTestSplitter
+            orientation={SplitterOrientation.VERTICAL}
+            defaultValueNow={30}
+            rtl
+          />
+        );
+        const element = getByRole('separator');
+
+        fireEvent.touchStart(element);
+        fireEvent.touchMove(document, {
+          targetTouches: [{ pageX: 100 }]
+        });
+        fireEvent.touchEnd(document);
+
+        expect(element).toHaveAttribute('aria-valuenow', '100');
+      });
+    });
+    describe('keyboard navigation', () => {
+      it('should increase vertical splitter when arrow left is pressed from 30 to 80', () => {
+        const { getByRole } = render(
+          <UncontrolledTestSplitter
+            orientation={SplitterOrientation.VERTICAL}
+            defaultValueNow={30}
+            rtl
+          />
+        );
+        const element = getByRole('separator');
+
+        fireEvent.keyDown(element, { key: 'ArrowLeft' });
+
+        expect(element).toHaveAttribute('aria-valuenow', '80');
+      });
     });
   });
 });

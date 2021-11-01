@@ -37,7 +37,10 @@ SplitterContainer.propTypes = {
     PropTypes.instanceOf(Document),
     PropTypes.shape({
       addEventListener: PropTypes.func.isRequired,
-      removeEventListener: PropTypes.func.isRequired
+      removeEventListener: PropTypes.func.isRequired,
+      body: PropTypes.shape({
+        clientWidth: PropTypes.number.isRequired
+      }).isRequired
     })
   ]),
   orientation: PropTypes.oneOf([SplitterOrientation.VERTICAL, SplitterOrientation.HORIZONTAL])
@@ -48,5 +51,6 @@ SplitterContainer.propTypes = {
   max: PropTypes.number.isRequired,
   defaultValueNow: PropTypes.number,
   valueNow: PropTypes.number,
-  onChange: PropTypes.func
+  onChange: PropTypes.func,
+  rtl: PropTypes.bool
 };
