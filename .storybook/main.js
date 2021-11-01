@@ -19,6 +19,7 @@ module.exports = {
   // to support IE11, we need to ensure the manager UI bundle is ES5 compatible
   managerWebpack: config => {
     config.target = ['web', 'es5'];
+
     return config;
   }
 };
