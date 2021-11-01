@@ -10,6 +10,8 @@ const path = require('path');
 const babelOptions = require(path.resolve(__dirname, '../babel.config.js'));
 
 module.exports = ({ config }) => {
+  config.target = ['web', 'es5'];
+
   config.resolve.extensions.push('.ts', '.tsx');
 
   config.module.rules.push({
