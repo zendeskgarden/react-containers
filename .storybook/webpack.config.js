@@ -51,5 +51,9 @@ module.exports = ({ config }) => {
     })
   );
 
+  // TODO: remove after June 15, 2022 for IE 11 EOL
+  // to support IE11, we need to ensure the preview iframe bundle is ES5 compatible
+  config.target = ['web', 'es5'];
+
   return config;
 };
