@@ -20,16 +20,6 @@ module.exports = ({ config }) => {
 
   config.module.rules.push({
     test: /\.tsx?$/u,
-    use: [
-      {
-        loader: 'eslint-loader'
-      }
-    ],
-    enforce: 'pre'
-  });
-
-  config.module.rules.push({
-    test: /\.tsx?$/u,
     exclude: /node_modules/u,
     use: [
       {
