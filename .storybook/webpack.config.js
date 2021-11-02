@@ -10,8 +10,6 @@ const path = require('path');
 const babelOptions = require(path.resolve(__dirname, '../babel.config.js'));
 
 module.exports = ({ config }) => {
-  config.target = ['web', 'es5'];
-
   config.resolve.extensions.push('.ts', '.tsx');
 
   config.module.rules.push({
@@ -52,6 +50,10 @@ module.exports = ({ config }) => {
       PACKAGE_VERSION: JSON.stringify('storybook')
     })
   );
+
+  // TODO: remove after June 15, 2022 for IE 11 EOL
+  // to support IE11, we need to ensure the preview iframe bundle is ES5 compatible
+  config.target = ['web', 'es5'];
 
   return config;
 };

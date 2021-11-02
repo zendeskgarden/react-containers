@@ -16,8 +16,9 @@ module.exports = {
   core: {
     builder: 'webpack5'
   },
-  // to support IE11, we need to ensure the manager UI bundle is ES5 compatible
   managerWebpack: config => {
+    // TODO: remove after June 15, 2022 for IE 11 EOL
+    // to support IE11, we need to ensure the manager UI bundle is ES5 compatible
     config.target = ['web', 'es5'];
 
     return config;
