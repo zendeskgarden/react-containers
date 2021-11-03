@@ -238,6 +238,38 @@ describe('SplitterContainer', () => {
             expect(element).toHaveAttribute('aria-valuenow', String(end));
           }
         );
+        it('should respond to mouse leave and not move if disengaged', () => {
+          const { getByRole } = render(
+            <UncontrolledTestSplitter
+              orientation={SplitterOrientation.VERTICAL}
+              defaultValueNow={20}
+            />
+          );
+          const element = getByRole('separator');
+
+          fireEvent.mouseDown(element);
+          fireEvent(document, new ExtendedMouseEvent('mousemove', { pageX: 50 }));
+          fireEvent.mouseLeave(document);
+          fireEvent(document, new ExtendedMouseEvent('mousemove', { pageX: 70 }));
+
+          expect(element).toHaveAttribute('aria-valuenow', '50');
+        });
+        it('should respond to mouse up and not move if disengaged', () => {
+          const { getByRole } = render(
+            <UncontrolledTestSplitter
+              orientation={SplitterOrientation.VERTICAL}
+              defaultValueNow={20}
+            />
+          );
+          const element = getByRole('separator');
+
+          fireEvent.mouseDown(element);
+          fireEvent(document, new ExtendedMouseEvent('mousemove', { pageX: 50 }));
+          fireEvent.mouseUp(document);
+          fireEvent(document, new ExtendedMouseEvent('mousemove', { pageX: 70 }));
+
+          expect(element).toHaveAttribute('aria-valuenow', '50');
+        });
       });
       describe('fixed', () => {
         type MouseDownMatrix = [SplitterOrientation, number, number];

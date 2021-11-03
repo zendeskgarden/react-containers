@@ -6,7 +6,7 @@
  */
 
 import { composeEventHandlers } from '@zendeskgarden/container-utilities';
-import React, { HTMLProps, MouseEvent, useCallback, useRef, useState } from 'react';
+import React, { HTMLProps, MouseEvent, useCallback, useMemo, useRef, useState } from 'react';
 
 export enum SplitterOrientation {
   HORIZONTAL = 'horizontal',
@@ -146,7 +146,11 @@ export function useSplitter({
     [orientation, setBoundedDimension, rtl, environment]
   );
 
-  const onMouseMove = composeEventHandlers(props.onMouseMove, onSplitterMouseMove);
+  // Any events that are registered globally to the DOM need to conserve their reference for removal to prevent listener leaks
+  const onMouseMove = useMemo(
+    () => composeEventHandlers(props.onMouseMove, onSplitterMouseMove),
+    [props.onMouseMove, onSplitterMouseMove]
+  );
 
   const onSplitterTouchMove = useCallback(
     (event: TouchEvent) => {
@@ -171,20 +175,32 @@ export function useSplitter({
     [orientation, setBoundedDimension, rtl, environment]
   );
 
-  const onTouchMove = composeEventHandlers(props.onTouchMove, onSplitterTouchMove);
+  const onTouchMove = useMemo(
+    () => composeEventHandlers(props.onTouchMove, onSplitterTouchMove),
+    [props.onTouchMove, onSplitterTouchMove]
+  );
 
-  const onMouseUp = composeEventHandlers(props.onMouseUp, (event: MouseEvent) => {
-    event.preventDefault();
-    // must remove global events on transaction finish
-    environment.removeEventListener('mouseup', onMouseUp);
-    environment.removeEventListener('mousemove', onMouseMove);
-  });
+  const onMouseLeaveOrUp = useMemo(
+    () =>
+      composeEventHandlers(props.onMouseUp, props.onMouseLeave, (event: MouseEvent) => {
+        event.preventDefault();
+        // must remove global events on transaction finish
+        environment.removeEventListener('mouseup', onMouseLeaveOrUp);
+        environment.removeEventListener('mouseleave', onMouseLeaveOrUp);
+        environment.removeEventListener('mousemove', onMouseMove);
+      }),
+    [environment, props.onMouseUp, props.onMouseLeave, onMouseMove]
+  );
 
-  const onTouchEnd = composeEventHandlers(props.onTouchEnd, () => {
-    // must remove global events on transaction finish
-    environment.removeEventListener('touchend', onTouchEnd);
-    environment.removeEventListener('touchmove', onTouchMove);
-  });
+  const onTouchEnd = useMemo(
+    () =>
+      composeEventHandlers(props.onTouchEnd, () => {
+        // must remove global events on transaction finish
+        environment.removeEventListener('touchend', onTouchEnd);
+        environment.removeEventListener('touchmove', onTouchMove);
+      }),
+    [environment, props.onTouchEnd, onTouchMove]
+  );
 
   const onMouseDown = composeEventHandlers(props.onMouseDown, (event: React.MouseEvent) => {
     event.preventDefault();
@@ -197,7 +213,8 @@ export function useSplitter({
       }
     } else {
       // Must register global events to track mouse move outside the container
-      environment.addEventListener('mouseup', onMouseUp);
+      environment.addEventListener('mouseup', onMouseLeaveOrUp);
+      environment.addEventListener('mouseleave', onMouseLeaveOrUp);
       environment.addEventListener('mousemove', onMouseMove);
     }
   });
