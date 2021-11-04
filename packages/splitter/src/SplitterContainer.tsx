@@ -39,7 +39,9 @@ SplitterContainer.propTypes = {
       addEventListener: PropTypes.func.isRequired,
       removeEventListener: PropTypes.func.isRequired,
       body: PropTypes.shape({
-        clientWidth: PropTypes.number.isRequired
+        clientWidth: PropTypes.number.isRequired,
+        addEventListener: PropTypes.func.isRequired,
+        removeEventListener: PropTypes.func.isRequired
       }).isRequired
     })
   ]),

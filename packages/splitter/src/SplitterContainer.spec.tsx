@@ -249,7 +249,7 @@ describe('SplitterContainer', () => {
 
           fireEvent.mouseDown(element);
           fireEvent(document, new ExtendedMouseEvent('mousemove', { pageX: 50 }));
-          fireEvent.mouseLeave(document);
+          fireEvent.mouseLeave(document.body);
           fireEvent(document, new ExtendedMouseEvent('mousemove', { pageX: 70 }));
 
           expect(element).toHaveAttribute('aria-valuenow', '50');

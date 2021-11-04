@@ -17,21 +17,26 @@ export enum SplitterType {
   FIXED = 'fixed',
   VARIABLE = 'variable'
 }
+
+interface IEventTargetLike {
+  addEventListener: (...args: any) => any;
+  removeEventListener: (...args: any) => any;
+}
+
+interface IBodyLike extends IEventTargetLike {
+  clientWidth: number;
+}
+
+interface IDocumentLike extends IEventTargetLike {
+  body: IBodyLike;
+}
 export interface IUseSplitterProps extends Omit<HTMLProps<any>, 'onChange'> {
   /** An aria-label for the separator */
   ariaLabel?: string;
   /** An id of the element the separator controls */
   primaryPaneId: string;
   /** A document environment to attach events to */
-  environment?:
-    | Document
-    | {
-        addEventListener: (...args: any) => any;
-        removeEventListener: (...args: any) => any;
-        body: {
-          clientWidth: number;
-        };
-      };
+  environment?: Document | IDocumentLike;
   /** A default value for starting uncontrolled separator location */
   defaultValueNow?: number;
   /** Determines whether a separator behaves in fixed or variable mode */
@@ -186,7 +191,7 @@ export function useSplitter({
         event.preventDefault();
         // must remove global events on transaction finish
         environment.removeEventListener('mouseup', onMouseLeaveOrUp);
-        environment.removeEventListener('mouseleave', onMouseLeaveOrUp);
+        environment.body.removeEventListener('mouseleave', onMouseLeaveOrUp);
         environment.removeEventListener('mousemove', onMouseMove);
       }),
     [environment, props.onMouseUp, props.onMouseLeave, onMouseMove]
@@ -214,7 +219,7 @@ export function useSplitter({
     } else {
       // Must register global events to track mouse move outside the container
       environment.addEventListener('mouseup', onMouseLeaveOrUp);
-      environment.addEventListener('mouseleave', onMouseLeaveOrUp);
+      environment.body.addEventListener('mouseleave', onMouseLeaveOrUp);
       environment.addEventListener('mousemove', onMouseMove);
     }
   });
