@@ -21,7 +21,7 @@
     "tag": "lerna version --conventional-commits --force-git-tag",
     "test": "yarn test:all --watch",
     "test:all": "jest --config=utils/test/jest.config.js",
-    "version": "yarn run build && git add -A"
+    "version": "lerna exec yarn install && yarn build && git add -A"
   },
   "devDependencies": {
     "@babel/cli": "7.16.0",
