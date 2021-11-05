@@ -1,6 +1,12 @@
 {
   "extends": ["config:base"],
   "rebaseStalePrs": true,
+  "schedule": ["on Monday every 9 weeks of the year starting on the 3rd week"],
+  "postUpdateOptions": ["yarnDedupeHighest"],
+  "postUpgradeTasks": {
+    "commands": ["yarn install", "yarn format"],
+    "fileFilters": ["yarn.lock", "**/*.{js,ts,tsx,md,json}"]
+  },
   "packageRules": [
     {
       "matchFiles": ["package.json"],
@@ -22,6 +28,5 @@
       "matchDepTypes": ["peerDependencies"],
       "enabled": false
     }
-  ],
-  "schedule": ["on Monday every 8 weeks of the year starting on the 3rd week"]
+  ]
 }
