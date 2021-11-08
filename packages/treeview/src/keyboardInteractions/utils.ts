@@ -5,6 +5,8 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
+export type HandlerFunction = (target: HTMLElement) => void;
+
 export const isParentNode = (treeItem: Element): boolean =>
   treeItem.getAttribute('role') === 'treeitem' && treeItem.hasAttribute('aria-expanded');
 

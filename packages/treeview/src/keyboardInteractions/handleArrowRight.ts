@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import { isEndNode } from './utils';
+import { HandlerFunction, isEndNode } from './utils';
 
 /**
  * [Done in caller] When focus is on a closed node, opens the node; focus does not move.
@@ -14,7 +14,7 @@ import { isEndNode } from './utils';
  *
  * @param target
  */
-export const handleArrowRight = (target: HTMLElement): void => {
+export const handleArrowRight: HandlerFunction = (target: HTMLElement): void => {
   if (isEndNode(target)) {
     return;
   }

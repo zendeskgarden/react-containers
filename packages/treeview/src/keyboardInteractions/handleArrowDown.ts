@@ -6,7 +6,7 @@
  */
 
 import { DocumentPosition } from '@zendeskgarden/container-utilities';
-import { getParentTree, isParentNode } from './utils';
+import { getParentTree, HandlerFunction, isParentNode } from './utils';
 
 /**
  * Moves focus to the next node that is focusable without opening or closing a node.
@@ -14,7 +14,7 @@ import { getParentTree, isParentNode } from './utils';
  *
  * @param target
  */
-export const handleArrowDown = (target: HTMLElement): void => {
+export const handleArrowDown: HandlerFunction = (target: HTMLElement): void => {
   const treeElement = getParentTree(target);
 
   if (treeElement === null) {

@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import { getParentNode, getParentTree } from './utils';
+import { getParentNode, getParentTree, HandlerFunction } from './utils';
 import { DocumentPosition } from '@zendeskgarden/container-utilities';
 
 /**
@@ -14,7 +14,7 @@ import { DocumentPosition } from '@zendeskgarden/container-utilities';
  *
  * @param target
  */
-export const handleArrowUp = (target: HTMLElement): void => {
+export const handleArrowUp: HandlerFunction = (target: HTMLElement): void => {
   const treeElement = getParentTree(target);
 
   if (treeElement === null) {

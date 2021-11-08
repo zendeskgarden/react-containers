@@ -5,18 +5,20 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
+import { HTMLProps } from 'react';
 import {
   IGetItemPropsOptions,
   IUseSelectionProps,
   IUseSelectionState
 } from '@zendeskgarden/container-selection';
-import { HTMLProps } from 'react';
+import { ContainerOrientation } from '@zendeskgarden/container-utilities';
+import { HandlerFunction } from './keyboardInteractions/utils';
 
 export interface IUseTreeviewProps<Item> extends IUseSelectionProps<Item> {
   /** Determines which sections are expanded in a controlled treeview */
   openNodes?: Item[];
   /** Determines the orientation of the tree */
-  horizontal?: boolean;
+  orientation?: ContainerOrientation;
   /** Determines if selection uses right-to-left writing direction */
   rtl?: boolean;
   /** A callback function that receives the new collection of expanded items. */
@@ -40,4 +42,9 @@ export interface IUseTreeviewReturnValue<Item> extends IUseSelectionState<Item> 
   getTreeProps: <T extends IGetTreeProps>(options?: T) => any;
   getNodeProps: <T extends IGetNodeProps<Item>>(options?: T) => any;
   getGroupProps: <T>(options?: T & HTMLProps<any>) => any;
+}
+
+export interface IShortcutMapping {
+  horizontal: HandlerFunction;
+  vertical: HandlerFunction;
 }

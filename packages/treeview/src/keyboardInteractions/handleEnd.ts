@@ -5,14 +5,14 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import { getParentNode, getParentTree } from './utils';
+import { getParentNode, getParentTree, HandlerFunction } from './utils';
 
 /**
  * Moves focus to the last node that can be focused without expanding any nodes that are closed.
  *
  * @param target
  */
-export const handleEnd = (target: HTMLElement): void => {
+export const handleEnd: HandlerFunction = (target: HTMLElement): void => {
   const treeElement = getParentTree(target);
 
   if (treeElement === null) {

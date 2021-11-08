@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import { getParentNode } from './utils';
+import { getParentNode, HandlerFunction } from './utils';
 
 /**
  * [Handled in caller] When focus is on an open node, closes the node.
@@ -14,7 +14,7 @@ import { getParentNode } from './utils';
  *
  * @param target
  */
-export const handleArrowLeft = (target: HTMLElement): void => {
+export const handleArrowLeft: HandlerFunction = (target: HTMLElement): void => {
   const parentNode = getParentNode(target);
 
   if (parentNode === null || parentNode.isSameNode(target)) {

@@ -11,6 +11,7 @@ import userEvent from '@testing-library/user-event';
 
 import { TreeviewContainer } from './TreeviewContainer';
 import { IUseTreeviewReturnValue } from './types';
+import { ContainerOrientation } from '@zendeskgarden/container-utilities';
 
 interface IFoodNode {
   name: string;
@@ -83,12 +84,12 @@ interface IContainerTestResult {
 const renderTestCase = ({
   data = TEST_DATA,
   openNodes,
-  horizontal,
+  orientation,
   rtl
 }: {
   data?: IFoodNode[];
   openNodes?: string[];
-  horizontal?: boolean;
+  orientation?: ContainerOrientation;
   rtl?: boolean;
 } = {}): IContainerTestResult => {
   const onChangeMock = jest.fn();
@@ -99,7 +100,7 @@ const renderTestCase = ({
     <TreeviewContainer
       onChange={onChangeMock}
       openNodes={openNodes}
-      horizontal={horizontal}
+      orientation={orientation}
       rtl={rtl}
     >
       {({ getTreeProps, getNodeProps, getGroupProps }: IUseTreeviewReturnValue<string>) => {
@@ -222,15 +223,15 @@ describe('uncontrolled usages', () => {
   });
 
   it.each`
-    direction       | rtl      | up               | down              | right             | left
+    orientation     | rtl      | up               | down              | right             | left
     ${'vertical'}   | ${false} | ${'{arrowup}'}   | ${'{arrowdown}'}  | ${'{arrowright}'} | ${'{arrowleft}'}
     ${'vertical'}   | ${true}  | ${'{arrowup}'}   | ${'{arrowdown}'}  | ${'{arrowleft}'}  | ${'{arrowright}'}
     ${'horizontal'} | ${false} | ${'{arrowleft}'} | ${'{arrowright}'} | ${'{arrowdown}'}  | ${'{arrowup}'}
     ${'horizontal'} | ${true}  | ${'{arrowleft}'} | ${'{arrowright}'} | ${'{arrowup}'}    | ${'{arrowdown}'}
   `(
-    'should change focus using arrow keys with direction:$direction and rtl:$rtl. Keybinding=> up:$up, down:$down, right:$right, left:$left',
-    ({ direction, rtl, up, down, right, left }) => {
-      renderTestCase({ horizontal: direction === 'horizontal', rtl });
+    'should change focus using arrow keys with orientation:$orientation and rtl:$rtl. Keybinding=> up:$up, down:$down, right:$right, left:$left',
+    ({ orientation, rtl, up, down, right, left }) => {
+      renderTestCase({ orientation, rtl });
 
       userEvent.tab();
       expect(getParentNode('Fruits')).toHaveAttribute('aria-selected', 'true');

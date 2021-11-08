@@ -8,6 +8,7 @@
 import { HTMLProps, useState } from 'react';
 import {
   composeEventHandlers,
+  ContainerOrientation,
   getControlledValue,
   KEY_CODES
 } from '@zendeskgarden/container-utilities';
@@ -21,7 +22,14 @@ import {
   handleEnd,
   handleHome
 } from './keyboardInteractions';
-import { IGetNodeProps, IGetTreeProps, IUseTreeviewProps, IUseTreeviewReturnValue } from './types';
+import {
+  IGetNodeProps,
+  IGetTreeProps,
+  IShortcutMapping,
+  IUseTreeviewProps,
+  IUseTreeviewReturnValue
+} from './types';
+import { HandlerFunction } from './keyboardInteractions/utils';
 
 function requiredArguments(arg: any, argStr: string, methodName: string) {
   if (typeof arg === 'undefined' || arg === null) {
@@ -52,14 +60,14 @@ const SUPPORTED_KEYS = [
  */
 export function useTreeview<Item = any>({
   openNodes,
-  horizontal,
+  orientation = ContainerOrientation.HORIZONTAL,
   rtl,
   onChange = () => undefined,
   ...options
 }: IUseTreeviewProps<Item> = {}): IUseTreeviewReturnValue<Item> {
   const [ownFocusedItem, setFocusedItem] = useState<Item>();
   const { selectedItem, focusedItem, getContainerProps, getItemProps } = useSelection<Item>({
-    direction: horizontal ? 'horizontal' : 'vertical',
+    direction: orientation,
     defaultSelectedIndex: 0,
     focusedItem: ownFocusedItem,
     ...options
@@ -156,13 +164,13 @@ export function useTreeview<Item = any>({
 
         event.preventDefault();
 
-        const handleRight = () =>
+        const handleRight: HandlerFunction = () =>
           nodeType === 'parent' && expanded ? handleArrowRight(target) : toggleParent(item);
 
-        const handleLeft = () =>
+        const handleLeft: HandlerFunction = () =>
           nodeType === 'parent' && expanded ? toggleParent(item) : handleArrowLeft(target);
 
-        const handleEnter = () => {
+        const handleEnter: HandlerFunction = () => {
           if (nodeType === 'parent') {
             toggleParent(item);
           }
@@ -170,7 +178,6 @@ export function useTreeview<Item = any>({
           onClickFn(event);
         };
 
-        const direction = horizontal ? 'horizontal' : 'vertical';
         const shortcutMapping = {
           [KEY_CODES.UP]: {
             vertical: handleArrowUp,
@@ -202,7 +209,11 @@ export function useTreeview<Item = any>({
           }
         };
 
-        const handler = shortcutMapping[event.keyCode][direction];
+        const shortcutMappingElement: IShortcutMapping = shortcutMapping[event.keyCode];
+        const handler: HandlerFunction =
+          orientation === ContainerOrientation.VERTICAL
+            ? shortcutMappingElement.vertical
+            : shortcutMappingElement.horizontal;
 
         if (handler) {
           handler(target);

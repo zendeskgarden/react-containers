@@ -7,16 +7,18 @@
 
 import React, { createRef, forwardRef, HTMLProps } from 'react';
 import { TreeviewContainer, useTreeview } from './src';
-import styled, { DefaultTheme, css } from 'styled-components';
+import styled, { css, DefaultTheme } from 'styled-components';
+import { ContainerOrientation } from '@zendeskgarden/container-utilities';
 
 interface ITreeProps extends DefaultTheme {
-  horizontal?: boolean;
+  orientation?: ContainerOrientation;
   rtl?: boolean;
 }
 
 const directionStyles = css<ITreeProps>`
   display: flex;
-  flex-direction: ${({ horizontal }) => (horizontal ? 'row' : 'column')};
+  flex-direction: ${({ orientation }) =>
+    orientation === ContainerOrientation.HORIZONTAL ? 'row' : 'column'};
   text-align: ${({ rtl }) => (rtl ? 'right' : 'left')};
 `;
 
@@ -128,7 +130,7 @@ const FOOD: IFoodNode[] = [
 
 const ARGS = {
   controlled: false,
-  horizontal: false,
+  orientation: ContainerOrientation.HORIZONTAL,
   rtl: false,
   openNodes: ['Grains'],
   nodes: FOOD
@@ -160,14 +162,22 @@ ParentNode.displayName = 'ParentNode';
 
 const Group = props => <ul {...props} />;
 
-export const Container = ({ nodes, controlled, horizontal, rtl, openNodes, onChange, onClick }) => {
+export const Container = ({
+  nodes,
+  controlled,
+  orientation,
+  rtl,
+  openNodes,
+  onChange,
+  onClick
+}) => {
   const Treeview = () => {
     const tabRefs = [];
 
     return (
       <TreeviewContainer
         openNodes={controlled ? openNodes : undefined}
-        horizontal={horizontal}
+        orientation={orientation}
         rtl={rtl}
         onChange={onChange}
       >
@@ -208,7 +218,7 @@ export const Container = ({ nodes, controlled, horizontal, rtl, openNodes, onCha
           };
 
           return (
-            <Tree horizontal={horizontal} {...getTreeProps()}>
+            <Tree orientation={orientation} {...getTreeProps()}>
               {nodes.map(renderNode)}
             </Tree>
           );
@@ -223,11 +233,11 @@ export const Container = ({ nodes, controlled, horizontal, rtl, openNodes, onCha
 Container.storyName = 'TreeviewContainer';
 Container.args = ARGS;
 
-export const Hook = ({ nodes, controlled, horizontal, rtl, openNodes, onChange, onClick }) => {
+export const Hook = ({ nodes, controlled, orientation, rtl, openNodes, onChange, onClick }) => {
   const Treeview = () => {
     const { getTreeProps, getNodeProps, getGroupProps } = useTreeview<string>({
       openNodes: controlled ? openNodes : undefined,
-      horizontal,
+      orientation,
       rtl,
       onChange
     });
@@ -267,7 +277,7 @@ export const Hook = ({ nodes, controlled, horizontal, rtl, openNodes, onChange, 
     };
 
     return (
-      <Tree horizontal={horizontal} {...getTreeProps()}>
+      <Tree orientation={orientation} {...getTreeProps()}>
         {nodes.map(renderNode)}
       </Tree>
     );

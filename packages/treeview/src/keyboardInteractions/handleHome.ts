@@ -5,14 +5,14 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import { getParentTree } from './utils';
+import { getParentTree, HandlerFunction } from './utils';
 
 /**
  * Moves focus to the first node in the tree without opening or closing a node.
  *
  * @param target
  */
-export const handleHome = (target: HTMLElement): void => {
+export const handleHome: HandlerFunction = (target: HTMLElement): void => {
   const treeElement = getParentTree(target);
 
   if (treeElement === null) {
