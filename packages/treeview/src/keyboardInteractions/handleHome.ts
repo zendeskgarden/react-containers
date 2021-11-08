@@ -27,5 +27,3 @@ export const handleHome = (target: HTMLElement): void => {
 
   firstNode.focus();
 };
-
-// body.sb-show-main.sb-main-centered
