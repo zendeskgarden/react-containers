@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.13](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-keyboardfocus@0.4.12...@zendeskgarden/container-keyboardfocus@0.4.13) (2021-11-08)
+
+
+### Bug Fixes
+
+* package lock files out of sync ([#396](https://github.com/zendeskgarden/react-containers/issues/396)) ([db47ef7](https://github.com/zendeskgarden/react-containers/commit/db47ef7e099977a015b8d545bff8be74efc027be))
+
+
+
+
+
 ## [0.4.12](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-keyboardfocus@0.4.11...@zendeskgarden/container-keyboardfocus@0.4.12) (2021-09-27)
 
 **Note:** Version bump only for package @zendeskgarden/container-keyboardfocus
