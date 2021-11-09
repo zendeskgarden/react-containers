@@ -7,7 +7,7 @@
 
 import React from 'react';
 import userEvent from '@testing-library/user-event';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, screen } from '@testing-library/react';
 import { KEY_CODES } from '@zendeskgarden/container-utilities';
 import { AccordionContainer, IUseAccordionReturnValue, IUseAccordionProps } from './';
 
@@ -34,19 +34,8 @@ describe('AccordionContainer', () => {
     .map((s, i) => i);
   const CONTAINER_ID_PREFIX = 'test';
 
-  const BasicExample = ({
-    expandedSections,
-    expandable = true,
-    collapsible = true,
-    onChange
-  }: IUseAccordionProps = {}) => (
-    <AccordionContainer
-      idPrefix={CONTAINER_ID_PREFIX}
-      expandedSections={expandedSections}
-      expandable={expandable}
-      collapsible={collapsible}
-      onChange={onChange}
-    >
+  const BasicExample = (props: IUseAccordionProps = {}) => (
+    <AccordionContainer idPrefix={CONTAINER_ID_PREFIX} {...props}>
       {({ getHeaderProps, getTriggerProps, getPanelProps }) => (
         <>
           {sections.map((section, index) => {
@@ -93,6 +82,18 @@ describe('AccordionContainer', () => {
       )}
     </AccordionContainer>
   );
+
+  it('sets default expanded sections in an uncontrolled hook', () => {
+    const defaultExpandedSections = [0, 1, 2];
+
+    render(<BasicExample defaultExpandedSections={defaultExpandedSections} />);
+
+    const triggers = screen.getAllByRole('button');
+    const panels = screen.getAllByLabelText('Trigger');
+
+    triggers.forEach(trigger => expect(trigger).toHaveAttribute('aria-expanded', 'true'));
+    panels.forEach(panel => expect(panel).toBeVisible());
+  });
 
   it('calls onChange with correct sections on section selection', () => {
     const onChangeSpy = jest.fn();
