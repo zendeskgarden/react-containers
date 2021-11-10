@@ -16,8 +16,10 @@ import {
 export interface IUseAccordionProps {
   /** Prefixes IDs for the accordion trigger and panels  */
   idPrefix?: string;
-  /** Determines which sections are expanded in a controlled accordion */
+  /** Sets the expanded sections in a controlled accordion */
   expandedSections?: number[];
+  /** Sets the default expanded sections in a uncontrolled accordion */
+  defaultExpandedSections?: number[];
   onChange?: (expanded: number) => any;
   /** Determines if multiple panels can be expanded at the same time in an uncontrolled accordion */
   expandable?: boolean;
@@ -57,14 +59,15 @@ export function useAccordion({
   expandedSections,
   onChange,
   expandable = true,
-  collapsible = true
+  collapsible = true,
+  defaultExpandedSections
 }: IUseAccordionProps = {}): IUseAccordionReturnValue {
   const isControlled = expandedSections !== null && expandedSections !== undefined;
   const seed = useUIDSeed();
   const [prefix] = useState<string>(idPrefix || seed(`accordion_${PACKAGE_VERSION}`));
   const TRIGGER_ID = `${prefix}--trigger`;
   const PANEL_ID = `${prefix}--panel`;
-  const [expandedState, setExpandedState] = useState<number[]>([0]);
+  const [expandedState, setExpandedState] = useState<number[]>(defaultExpandedSections || [0]);
 
   const controlledExpandedState = getControlledValue(expandedSections, expandedState)!;
 
