@@ -1,6 +1,6 @@
 {
   "name": "@zendeskgarden/container-accordion",
-  "version": "1.0.10",
+  "version": "1.1.0",
   "description": "Containers relating to accordions in the Garden Design System",
   "license": "Apache-2.0",
   "author": "Zendesk Garden <garden@zendesk.com>",

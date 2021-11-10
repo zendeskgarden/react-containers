@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.1.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-accordion@1.0.10...@zendeskgarden/container-accordion@1.1.0) (2021-11-10)
+
+
+### Features
+
+* **accordion:** add default expanded sections prop ([#397](https://github.com/zendeskgarden/react-containers/issues/397)) ([c62aa96](https://github.com/zendeskgarden/react-containers/commit/c62aa96d9988d1037351385e071add2ecffc3a18))
+
+
+
+
+
 ## [1.0.10](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-accordion@1.0.9...@zendeskgarden/container-accordion@1.0.10) (2021-11-08)
 
 
