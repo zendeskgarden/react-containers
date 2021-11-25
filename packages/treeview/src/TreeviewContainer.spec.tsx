@@ -223,11 +223,11 @@ describe('uncontrolled usages', () => {
   });
 
   it.each`
-    orientation     | rtl      | up               | down              | right             | left
-    ${'vertical'}   | ${false} | ${'{arrowup}'}   | ${'{arrowdown}'}  | ${'{arrowright}'} | ${'{arrowleft}'}
-    ${'vertical'}   | ${true}  | ${'{arrowup}'}   | ${'{arrowdown}'}  | ${'{arrowleft}'}  | ${'{arrowright}'}
-    ${'horizontal'} | ${false} | ${'{arrowleft}'} | ${'{arrowright}'} | ${'{arrowdown}'}  | ${'{arrowup}'}
-    ${'horizontal'} | ${true}  | ${'{arrowleft}'} | ${'{arrowright}'} | ${'{arrowup}'}    | ${'{arrowdown}'}
+    orientation     | rtl      | up                | down              | right             | left
+    ${'vertical'}   | ${false} | ${'{arrowup}'}    | ${'{arrowdown}'}  | ${'{arrowright}'} | ${'{arrowleft}'}
+    ${'vertical'}   | ${true}  | ${'{arrowup}'}    | ${'{arrowdown}'}  | ${'{arrowleft}'}  | ${'{arrowright}'}
+    ${'horizontal'} | ${false} | ${'{arrowleft}'}  | ${'{arrowright}'} | ${'{arrowdown}'}  | ${'{arrowup}'}
+    ${'horizontal'} | ${true}  | ${'{arrowright}'} | ${'{arrowleft}'}  | ${'{arrowdown}'}  | ${'{arrowup}'}
   `(
     'should change focus using arrow keys with orientation:$orientation and rtl:$rtl. Keybinding=> up:$up, down:$down, right:$right, left:$left',
     ({ orientation, rtl, up, down, right, left }) => {

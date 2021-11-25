@@ -56,7 +56,6 @@ const SUPPORTED_KEYS = [
  * Custom hook to manage a TreeView component.
  *
  * https://www.w3.org/TR/wai-aria-practices-1.1/#TreeView
- *
  */
 export function useTreeview<Item = any>({
   openNodes,
@@ -181,19 +180,19 @@ export function useTreeview<Item = any>({
         const shortcutMapping = {
           [KEY_CODES.UP]: {
             vertical: handleArrowUp,
-            horizontal: rtl ? handleRight : handleLeft
+            horizontal: handleLeft
           },
           [KEY_CODES.DOWN]: {
             vertical: handleArrowDown,
-            horizontal: rtl ? handleLeft : handleRight
+            horizontal: handleRight
           },
           [KEY_CODES.RIGHT]: {
             vertical: rtl ? handleLeft : handleRight,
-            horizontal: handleArrowDown
+            horizontal: rtl ? handleArrowUp : handleArrowDown
           },
           [KEY_CODES.LEFT]: {
             vertical: rtl ? handleRight : handleLeft,
-            horizontal: handleArrowUp
+            horizontal: rtl ? handleArrowDown : handleArrowUp
           },
           [KEY_CODES.HOME]: {
             vertical: handleHome,
