@@ -29,7 +29,7 @@ import {
   IUseTreeviewProps,
   IUseTreeviewReturnValue
 } from './types';
-import { HandlerFunction } from './keyboardInteractions/utils';
+import { HandlerFunction } from './utils';
 
 function requiredArguments(arg: any, argStr: string, methodName: string) {
   if (typeof arg === 'undefined' || arg === null) {

@@ -12,7 +12,7 @@ import {
   IUseSelectionState
 } from '@zendeskgarden/container-selection';
 import { ContainerOrientation } from '@zendeskgarden/container-utilities';
-import { HandlerFunction } from './keyboardInteractions/utils';
+import { HandlerFunction } from './utils';
 
 export interface IUseTreeviewProps<Item> extends IUseSelectionProps<Item> {
   /** Determines which sections are expanded in a controlled treeview */
