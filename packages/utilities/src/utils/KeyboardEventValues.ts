@@ -38,3 +38,32 @@ export const KEY_CODES = {
   TAB: 9,
   UP: 38
 };
+
+export const KEYS = {
+  ALT: 'Alt',
+  ASTERISK: '*',
+  BACKSPACE: 'Backspace',
+  COMMA: ',',
+  DELETE: 'Delete',
+  DOWN: 'ArrowDown',
+  END: 'End',
+  ENTER: 'Enter',
+  ESCAPE: 'Escape',
+  HOME: 'Home',
+  LEFT: 'ArrowLeft',
+  NUMPAD_ADD: 'Add',
+  NUMPAD_DECIMAL: 'Decimal',
+  NUMPAD_DIVIDE: 'Divide',
+  NUMPAD_ENTER: 'Enter',
+  NUMPAD_MULTIPLY: 'Multiply',
+  NUMPAD_SUBTRACT: 'Subtract',
+  PAGE_DOWN: 'PageDown',
+  PAGE_UP: 'PageUp',
+  PERIOD: '.',
+  RIGHT: 'ArrowRight',
+  SHIFT: 'Shift',
+  SPACE: ' ',
+  TAB: 'Tab',
+  UNIDENTIFIED: 'Unidentified',
+  UP: 'ArrowUp'
+};
