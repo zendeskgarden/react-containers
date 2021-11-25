@@ -97,20 +97,12 @@ export function useTreeview<Item = any>({
     }
   };
 
-  const getTreeProps = ({
-    label,
-    labelledBy,
-    role = 'tree',
-    onFocus,
-    ...props
-  }: IGetTreeProps = {}) => {
-    // TODO: Throw error if no label or labelledBy?
+  const getTreeProps = ({ label, role = 'tree', onFocus, ...props }: IGetTreeProps = {}) => {
     // TODO: Throw error role is not tree?
 
     return {
       role: role === null || role === undefined ? role : 'tree',
       'aria-label': label,
-      'aria-labelledby': labelledBy,
       'data-garden-container-id': 'containers.treeview',
       'data-garden-container-version': PACKAGE_VERSION,
       onFocus,
