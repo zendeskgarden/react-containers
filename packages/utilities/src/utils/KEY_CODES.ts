@@ -13,6 +13,7 @@
  */
 export const KEY_CODES = {
   ALT: 18,
+  ASTERISK: 170,
   BACKSPACE: 8,
   COMMA: 188,
   DELETE: 46,

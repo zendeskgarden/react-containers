@@ -11,4 +11,6 @@ export { getControlledValue } from './utils/getControlledValue';
 export { useCombinedRefs } from './utils/useCombinedRefs';
 export { convertToMatrix } from './utils/convertToMatrix';
 export { KEY_CODES } from './utils/KEY_CODES';
+export { DocumentPosition } from './utils/DocumentPosition';
 export { useId } from './utils/useId';
+export { ContainerOrientation } from './utils/ContainerOrientation';
