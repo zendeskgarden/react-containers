@@ -65,7 +65,7 @@
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "27.3.1",
     "babel-loader": "8.2.3",
-    "babel-plugin-styled-components": "1.13.3",
+    "babel-plugin-styled-components": "2.0.2",
     "commander": "8.3.0",
     "core-js": "3.19.1",
     "coveralls": "3.1.1",
