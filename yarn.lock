@@ -5127,10 +5127,10 @@
     "@babel/runtime" "^7.8.4"
     "@reach/auto-id" "^0.16.0"
 
-"@zendeskgarden/eslint-config@24.0.0":
-  version "24.0.0"
-  resolved "https://registry.yarnpkg.com/@zendeskgarden/eslint-config/-/eslint-config-24.0.0.tgz#6e5d1aa4aac78e9b1bcf6df07a151365a97307a1"
-  integrity sha512-JxpreXdPG3IsoCSHrQknp61lk5Z4Z9s4cr7teK949O45P3aXyqBOe5ezAZ8fDoBOFIuoar8EGN5kSTcFoyM1RA==
+"@zendeskgarden/eslint-config@26.0.0":
+  version "26.0.0"
+  resolved "https://registry.yarnpkg.com/@zendeskgarden/eslint-config/-/eslint-config-26.0.0.tgz#9be1679678e532bc3f3dafecbc4526e15850df28"
+  integrity sha512-0TV7DpIDT6yTqxxjO5juCEpzyCOigeazHVvxIqB9SHA3/1KI8stHU4clWUUn5loDvdqTVvhnNjloBiTuWqXmVA==
 
 "@zendeskgarden/react-theming@8.44.1":
   version "8.44.1"
