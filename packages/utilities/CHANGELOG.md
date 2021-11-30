@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-utilities@0.6.3...@zendeskgarden/container-utilities@0.7.0) (2021-11-30)
+
+
+### Features
+
+* **utilities:** add DocumentPosition, ContainerOrientation, and KEYS ([#398](https://github.com/zendeskgarden/react-containers/issues/398)) ([f778c49](https://github.com/zendeskgarden/react-containers/commit/f778c49967f9437976e5846ff0296b594a1fe465))
+
+
+
+
+
 ## [0.6.3](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-utilities@0.6.2...@zendeskgarden/container-utilities@0.6.3) (2021-11-08)
 
 
