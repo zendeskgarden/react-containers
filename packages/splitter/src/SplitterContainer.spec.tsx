@@ -41,7 +41,6 @@ const flexContainerStyle: React.CSSProperties = {
 const separatorStyle: React.CSSProperties = {
   display: 'block',
   backgroundColor: 'black',
-  // height: 'auto',
   cursor: 'col-resize',
   flexGrow: 0,
   flexShrink: 0,
