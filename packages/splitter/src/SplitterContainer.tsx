@@ -12,7 +12,8 @@ import {
   IUseSplitterProps,
   IUseSplitterReturnValue,
   SplitterOrientation,
-  SplitterType
+  SplitterType,
+  SplitterPlacement
 } from './useSplitter';
 
 export interface ISplitterContainerProps extends IUseSplitterProps {
@@ -30,19 +31,26 @@ export const SplitterContainer: React.FC<ISplitterContainerProps> = props => {
 
 SplitterContainer.propTypes = {
   ariaLabel: PropTypes.string,
-  primaryPaneId: PropTypes.string.isRequired,
   children: PropTypes.func,
   render: PropTypes.func,
   environment: PropTypes.oneOfType([
-    PropTypes.instanceOf(Document),
+    PropTypes.instanceOf(Window),
     PropTypes.shape({
-      addEventListener: PropTypes.func.isRequired,
-      removeEventListener: PropTypes.func.isRequired,
-      body: PropTypes.shape({
-        clientWidth: PropTypes.number.isRequired,
-        addEventListener: PropTypes.func.isRequired,
-        removeEventListener: PropTypes.func.isRequired
-      }).isRequired
+      scrollX: PropTypes.number.isRequired,
+      scrollY: PropTypes.number.isRequired,
+      document: PropTypes.oneOfType([
+        PropTypes.instanceOf(Document),
+        PropTypes.shape({
+          addEventListener: PropTypes.func.isRequired,
+          removeEventListener: PropTypes.func.isRequired,
+          body: PropTypes.shape({
+            clientWidth: PropTypes.number.isRequired,
+            clientHeight: PropTypes.number.isRequired,
+            addEventListener: PropTypes.func.isRequired,
+            removeEventListener: PropTypes.func.isRequired
+          }).isRequired
+        })
+      ]).isRequired
     })
   ]),
   orientation: PropTypes.oneOf([SplitterOrientation.VERTICAL, SplitterOrientation.HORIZONTAL])
@@ -54,5 +62,5 @@ SplitterContainer.propTypes = {
   defaultValueNow: PropTypes.number,
   valueNow: PropTypes.number,
   onChange: PropTypes.func,
-  rtl: PropTypes.bool
+  placement: PropTypes.oneOf([SplitterPlacement.START, SplitterPlacement.END]).isRequired
 };

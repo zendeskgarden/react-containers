@@ -24,23 +24,29 @@ The `useSplitter` hook manages positioning and required
 accessibility attributes for the window splitting separator.
 
 ```jsx static
-import { useSplitter, SplitterType, SplitterOrientation } from '@zendeskgarden/container-splitter';
+import {
+  useSplitter,
+  SplitterType,
+  SplitterOrientation,
+  SplitterPlacement
+} from '@zendeskgarden/container-splitter';
 
 const Splitter = () => {
-  const { getSeparatorProps } = useSplitter({
+  const { getSeparatorProps, getPrimaryPaneProps } = useSplitter({
     label: 'primary-pane',
-    primaryPaneId: 'primary-pane',
     type: SplitterType.VARIABLE,
     orientation: SplitterOrientation.VERTICAL,
     min: 50,
-    max: 100
+    max: 100,
+    placement: SplitterPlacement.END
   });
 
   const separatorProps = getSeparatorProps();
+  const { valueNow, ...primaryPaneProps } = getPrimaryPaneProps();
 
   return (
     <div style={{ display: 'flex' }}>
-      <div id="primary-pane" style={{ flex: `0 0 ${separatorProps['aria-valuenow']}px` }}>
+      <div {...primaryPaneProps} style={{ flex: `0 0 ${valueNow}px` }}>
         <p>Primary Pane</p>
       </div>
       <hr style={{ flex: '0 0 5px' }} {...separatorProps} />
@@ -60,23 +66,25 @@ const Splitter = () => {
 import {
   SplitterContainer,
   SplitterType,
-  SplitterOrientation
+  SplitterOrientation,
+  SplitterPlacement
 } from '@zendeskgarden/container-splitter';
 
 <SplitterContainer
   label="primary-pane"
-  primaryPaneId="primary-pane"
   type={SplitterType.VARIABLE}
   orientation={SplitterOrientation.VERTICAL}
   min={50}
   max={100}
+  placement={SplitterPlacement.END}
 >
   {({ getSeparatorProps }) => {
     const separatorProps = getSeparatorProps();
+    const { valueNow, ...primaryPaneProps } = getPrimaryPaneProps();
 
     return (
       <div id="container" style={{ display: 'flex' }}>
-        <div id="primary-pane" style={{ flex: `0 0 ${separatorProps['aria-valuenow']}px` }}>
+        <div {...primaryPaneProps} style={{ flex: `0 0 ${valueNow}px` }}>
           <p>Primary Pane</p>
         </div>
         <hr style={{ flex: '0 0 5px' }} {...separatorProps} />

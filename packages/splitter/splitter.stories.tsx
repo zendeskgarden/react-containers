@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react';
 import { SplitterContainer, IUseSplitterReturnValue, useSplitter } from './src';
-import { SplitterOrientation, SplitterType } from './src/useSplitter';
+import { SplitterOrientation, SplitterType, SplitterPlacement } from './src/useSplitter';
 
 const ARGS = {
   type: SplitterType.VARIABLE,
@@ -15,9 +15,8 @@ const ARGS = {
   min: 200,
   max: 700,
   ariaLabel: 'primary-pane',
-  primaryPaneId: 'primary-pane',
   defaultValueNow: 200,
-  rtl: false
+  placement: SplitterPlacement.END
 };
 
 const flexContainerStyle: React.CSSProperties = {
@@ -32,7 +31,7 @@ const separatorStyle: React.CSSProperties = {
   cursor: 'col-resize',
   flexGrow: 0,
   flexShrink: 0,
-  flexBasis: '5px'
+  flexBasis: '10px'
 };
 
 const primaryPaneStyle: React.CSSProperties = {
@@ -43,7 +42,10 @@ const primaryPaneStyle: React.CSSProperties = {
 };
 
 const secondaryPaneStyle: React.CSSProperties = {
-  padding: '1em'
+  padding: '1em',
+  flexGrow: 1,
+  flexShrink: 1,
+  flexBasis: 'auto'
 };
 
 export const Container = ({
@@ -52,32 +54,33 @@ export const Container = ({
   max,
   orientation,
   ariaLabel,
-  primaryPaneId,
   defaultValueNow,
   keyboardStep,
-  rtl
+  placement
 }) => {
   const Splitter = () => {
-    const mode = rtl ? 'rtl' : 'ltr';
+    const mode = placement === SplitterPlacement.START ? 'rtl' : 'ltr';
 
     return (
       <SplitterContainer
         defaultValueNow={defaultValueNow}
-        primaryPaneId={primaryPaneId}
         ariaLabel={ariaLabel}
         type={type}
         min={min}
         max={max}
         orientation={orientation}
         keyboardStep={keyboardStep}
-        rtl={rtl}
+        placement={placement}
       >
-        {({ getSeparatorProps }: IUseSplitterReturnValue) => {
+        {({ getSeparatorProps, getPrimaryPaneProps }: IUseSplitterReturnValue) => {
           const separatorProps = getSeparatorProps({
             style: {
               ...separatorStyle,
               cursor: orientation === SplitterOrientation.HORIZONTAL ? 'row-resize' : 'col-resize'
             }
+          });
+          const primaryPaneProps = getPrimaryPaneProps({
+            style: primaryPaneStyle
           });
 
           return (
@@ -89,10 +92,10 @@ export const Container = ({
               }}
             >
               <div
-                id="primary-pane"
+                {...primaryPaneProps}
                 style={{
-                  ...primaryPaneStyle,
-                  flexBasis: `${separatorProps['aria-valuenow']}px`
+                  ...primaryPaneProps.style,
+                  flexBasis: primaryPaneProps.valueNow
                 }}
               >
                 Thai tabasco pepper cremini mushrooms crumbled lentils one bowl almonds delightful
@@ -127,29 +130,30 @@ export const Hook = ({
   max,
   orientation,
   ariaLabel,
-  primaryPaneId,
   defaultValueNow,
   keyboardStep,
-  rtl
+  placement
 }) => {
   const Splitter = () => {
-    const mode = rtl ? 'rtl' : 'ltr';
-    const { getSeparatorProps } = useSplitter({
+    const mode = placement === SplitterPlacement.START ? 'rtl' : 'ltr';
+    const { getSeparatorProps, getPrimaryPaneProps } = useSplitter({
       type,
       min,
       max,
       orientation,
       ariaLabel,
-      primaryPaneId,
       defaultValueNow,
       keyboardStep,
-      rtl
+      placement
     });
     const separatorProps = getSeparatorProps({
       style: {
         ...separatorStyle,
         cursor: orientation === SplitterOrientation.HORIZONTAL ? 'row-resize' : 'col-resize'
       }
+    });
+    const primaryPaneProps = getPrimaryPaneProps({
+      style: primaryPaneStyle
     });
 
     return (
@@ -161,8 +165,11 @@ export const Hook = ({
         }}
       >
         <div
-          id="primary-pane"
-          style={{ ...primaryPaneStyle, flexBasis: `${separatorProps['aria-valuenow']}px` }}
+          {...primaryPaneProps}
+          style={{
+            ...primaryPaneProps.style,
+            flexBasis: primaryPaneProps.valueNow
+          }}
         >
           Thai tabasco pepper cremini mushrooms crumbled lentils one bowl almonds delightful
           blueberry scones simmer muffins red pepper jalapeño cherry pasta chocolate bruschetta.
@@ -193,36 +200,149 @@ Hook.parameters = {
   }
 };
 
-export const Controlled = ({
+export const ManyHooks = ({
   type,
   min,
   max,
   orientation,
   ariaLabel,
-  primaryPaneId,
+  defaultValueNow,
   keyboardStep,
   rtl
 }) => {
   const Splitter = () => {
-    const [valueNow, onChange] = useState(300);
     const mode = rtl ? 'rtl' : 'ltr';
-    const { getSeparatorProps } = useSplitter({
+    const firstSplitterBag = useSplitter({
       type,
       min,
       max,
       orientation,
       ariaLabel,
-      primaryPaneId,
+      defaultValueNow,
+      keyboardStep,
+      placement:
+        mode === 'rtl' && orientation === SplitterOrientation.VERTICAL
+          ? SplitterPlacement.START
+          : SplitterPlacement.END
+    });
+    const secondSplitterBag = useSplitter({
+      type,
+      min,
+      max,
+      orientation,
+      ariaLabel,
+      defaultValueNow,
+      keyboardStep,
+      placement:
+        mode === 'rtl' && orientation === SplitterOrientation.VERTICAL
+          ? SplitterPlacement.END
+          : SplitterPlacement.START
+    });
+    const firstSeparator = firstSplitterBag.getSeparatorProps({
+      style: {
+        ...separatorStyle,
+        cursor: orientation === SplitterOrientation.HORIZONTAL ? 'row-resize' : 'col-resize'
+      }
+    });
+    const firstPrimaryPane = firstSplitterBag.getPrimaryPaneProps({
+      style: primaryPaneStyle
+    });
+
+    const secondSeparator = secondSplitterBag.getSeparatorProps({
+      style: {
+        ...separatorStyle,
+        cursor: orientation === SplitterOrientation.HORIZONTAL ? 'row-resize' : 'col-resize'
+      }
+    });
+
+    const secondPrimaryPane = secondSplitterBag.getPrimaryPaneProps({
+      style: primaryPaneStyle
+    });
+
+    return (
+      <div style={{ paddingRight: '2em', margin: '2em' }}>
+        <div style={{ padding: '2em', margin: '2em' }}>
+          <div
+            dir={mode}
+            style={{
+              ...flexContainerStyle,
+              height: '1000px',
+              flexDirection: orientation === SplitterOrientation.HORIZONTAL ? 'column' : 'row'
+            }}
+          >
+            <div
+              {...firstPrimaryPane}
+              style={{
+                ...firstPrimaryPane.style,
+                flexBasis: firstPrimaryPane.valueNow
+              }}
+            >
+              Thai tabasco pepper cremini mushrooms crumbled lentils one bowl almonds delightful
+              blueberry scones simmer muffins red pepper jalapeño cherry pasta chocolate bruschetta.
+            </div>
+            <hr {...firstSeparator} />
+            <div style={secondaryPaneStyle}>
+              Grains spring soba noodles pomegranate veggie burgers picnic cocoa green tea lime
+              maple orange tempeh ginger tofu leek basmati double dark chocolate figs artichoke
+              hearts raspberry fizz lemon lime minty summertime scotch bonnet pepper banana
+              four-layer pine nuts Thai sun pepper sesame soba noodles mediterranean vegetables
+              chocolate cookie. Udon noodles toasted hazelnuts peach strawberry mango ginger
+              lemongrass agave green tea homemade balsamic
+            </div>
+            <hr {...secondSeparator} />
+            <div
+              {...secondPrimaryPane}
+              style={{
+                ...secondPrimaryPane.style,
+                flexBasis: secondPrimaryPane.valueNow
+              }}
+            >
+              Thai tabasco pepper cremini mushrooms crumbled lentils one bowl almonds delightful
+              blueberry scones simmer muffins red pepper jalapeño cherry pasta chocolate bruschetta.
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  return <Splitter />;
+};
+
+ManyHooks.args = { ...ARGS, rtl: false };
+ManyHooks.storyName = 'multiple useSplitter';
+ManyHooks.parameters = {
+  docs: {
+    description: {
+      story: `The \`useSplitter\` hooks manage positioning and required accessibility attributes for the window splitting separator.`
+    }
+  }
+};
+
+export const Controlled = ({ type, min, max, orientation, ariaLabel, keyboardStep, placement }) => {
+  const Splitter = () => {
+    const [valueNow, onChange] = useState(300);
+    const mode = placement === SplitterPlacement.START ? 'rtl' : 'ltr';
+    const { getSeparatorProps, getPrimaryPaneProps } = useSplitter({
+      type,
+      min,
+      max,
+      orientation,
+      ariaLabel,
       valueNow,
       keyboardStep,
       onChange,
-      rtl
+      placement
     });
     const separatorProps = getSeparatorProps({
       style: {
         ...separatorStyle,
         cursor: orientation === SplitterOrientation.HORIZONTAL ? 'row-resize' : 'col-resize'
       }
+    });
+
+    const primaryPaneProps = getPrimaryPaneProps({
+      style: primaryPaneStyle
     });
 
     return (
@@ -234,8 +354,11 @@ export const Controlled = ({
         }}
       >
         <div
-          id="primary-pane"
-          style={{ ...primaryPaneStyle, flexBasis: `${separatorProps['aria-valuenow']}px` }}
+          {...primaryPaneProps}
+          style={{
+            ...primaryPaneProps.style,
+            flexBasis: primaryPaneProps.valueNow
+          }}
         >
           <p>Controlled ValueNow: {valueNow}</p>
           <p>
