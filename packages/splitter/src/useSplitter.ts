@@ -43,7 +43,7 @@ export interface IWindowLike {
   scrollY: number;
 }
 
-export interface ISplitterGetterProps extends HTMLProps<any> {
+export interface ISplitterGetterReturnProps extends HTMLProps<any> {
   'data-garden-container-id': string;
   'data-garden-container-version': string;
 }
@@ -342,7 +342,7 @@ export function useSplitter({
   });
 
   const getSeparatorProps = useCallback(
-    ({ ...other } = {}): ISplitterGetterProps => ({
+    ({ ...other } = {}): ISplitterGetterReturnProps => ({
       'data-garden-container-id': 'containers.splitter.separator',
       'data-garden-container-version': PACKAGE_VERSION,
       role: 'separator',
@@ -374,7 +374,7 @@ export function useSplitter({
   );
 
   const getPrimaryPaneProps = useCallback(
-    ({ ...other } = {}): ISplitterGetterProps => ({
+    ({ ...other } = {}): ISplitterGetterReturnProps => ({
       'data-garden-container-id': 'containers.splitter.primaryPane',
       'data-garden-container-version': PACKAGE_VERSION,
       id: primaryPaneId,
