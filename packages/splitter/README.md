@@ -32,7 +32,7 @@ import {
 } from '@zendeskgarden/container-splitter';
 
 const Splitter = () => {
-  const { getSeparatorProps, getPrimaryPaneProps } = useSplitter({
+  const { getSeparatorProps, getPrimaryPaneProps, valueNow } = useSplitter({
     label: 'primary-pane',
     type: SplitterType.VARIABLE,
     orientation: SplitterOrientation.VERTICAL,
@@ -42,7 +42,7 @@ const Splitter = () => {
   });
 
   const separatorProps = getSeparatorProps();
-  const { valueNow, ...primaryPaneProps } = getPrimaryPaneProps();
+  const primaryPaneProps = getPrimaryPaneProps();
 
   return (
     <div style={{ display: 'flex' }}>
@@ -78,9 +78,9 @@ import {
   max={100}
   placement={SplitterPlacement.END}
 >
-  {({ getSeparatorProps }) => {
+  {({ getSeparatorProps, getPrimaryPaneProps, valueNow }) => {
     const separatorProps = getSeparatorProps();
-    const { valueNow, ...primaryPaneProps } = getPrimaryPaneProps();
+    const primaryPaneProps = getPrimaryPaneProps();
 
     return (
       <div id="container" style={{ display: 'flex' }}>
