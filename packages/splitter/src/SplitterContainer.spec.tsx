@@ -103,23 +103,21 @@ describe('SplitterContainer', () => {
       defaultValueNow={defaultValueNow}
       placement={placement}
     >
-      {({ getSeparatorProps, getPrimaryPaneProps }: IUseSplitterReturnValue) => {
+      {({ getSeparatorProps, getPrimaryPaneProps, valueNow }: IUseSplitterReturnValue) => {
         const separatorProps = getSeparatorProps({
           style: separatorStyle,
           tabIndex: 0
         });
-        const {
-          valueNow,
-          style: primaryPaneStyle,
-          ...primaryPaneProps
-        } = getPrimaryPaneProps({ style: paneStyle });
+        const { style: primaryPaneStyle, ...primaryPaneProps } = getPrimaryPaneProps({
+          style: paneStyle
+        });
 
         return (
           <div style={flexContainerStyle}>
             <div {...primaryPaneProps} style={{ ...primaryPaneStyle, flexBasis: `${valueNow}px` }}>
               Lorem ipsum dolor, sit amet consectetur adipisicing elit.
             </div>
-            <hr {...separatorProps} />
+            <div {...separatorProps} />
           </div>
         );
       }}
@@ -154,15 +152,17 @@ describe('SplitterContainer', () => {
       onChange={onChange}
       placement={SplitterPlacement.END}
     >
-      {({ getSeparatorProps, getPrimaryPaneProps }: IUseSplitterReturnValue) => {
+      {({
+        getSeparatorProps,
+        getPrimaryPaneProps,
+        valueNow: paneValueNow
+      }: IUseSplitterReturnValue) => {
         const separatorProps = getSeparatorProps({
           style: separatorStyle
         });
-        const {
-          valueNow: paneValueNow,
-          style: primaryPaneStyle,
-          ...primaryPaneProps
-        } = getPrimaryPaneProps({ style: paneStyle });
+        const { style: primaryPaneStyle, ...primaryPaneProps } = getPrimaryPaneProps({
+          style: paneStyle
+        });
 
         return (
           <div style={flexContainerStyle}>
@@ -172,7 +172,7 @@ describe('SplitterContainer', () => {
             >
               Lorem ipsum dolor, sit amet consectetur adipisicing elit.
             </div>
-            <hr {...separatorProps} />
+            <div {...separatorProps} />
           </div>
         );
       }}
@@ -206,7 +206,6 @@ describe('SplitterContainer', () => {
           "data-garden-container-id": "containers.splitter.primaryPane",
           "data-garden-container-version": "version",
           "id": "1",
-          "valueNow": 0,
         }
       `);
       expect(separatorProps).toMatchInlineSnapshot(`

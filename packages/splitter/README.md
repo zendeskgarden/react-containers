@@ -49,7 +49,7 @@ const Splitter = () => {
       <div {...primaryPaneProps} style={{ flex: `0 0 ${valueNow}px` }}>
         <p>Primary Pane</p>
       </div>
-      <hr style={{ flex: '0 0 5px' }} {...separatorProps} />
+      <div style={{ flex: '0 0 5px' }} {...separatorProps} />
       <div style={{ flex: '1 1 auto' }}>
         <p>Secondary Pane</p>
       </div>
@@ -87,7 +87,7 @@ import {
         <div {...primaryPaneProps} style={{ flex: `0 0 ${valueNow}px` }}>
           <p>Primary Pane</p>
         </div>
-        <hr style={{ flex: '0 0 5px' }} {...separatorProps} />
+        <div style={{ flex: '0 0 5px' }} {...separatorProps} />
         <div style={{ flex: '1 1 auto' }}>
           <p>Secondary Pane</p>
         </div>

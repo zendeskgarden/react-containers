@@ -72,7 +72,7 @@ export const Container = ({
         keyboardStep={keyboardStep}
         placement={placement}
       >
-        {({ getSeparatorProps, getPrimaryPaneProps }: IUseSplitterReturnValue) => {
+        {({ getSeparatorProps, getPrimaryPaneProps, valueNow }: IUseSplitterReturnValue) => {
           const separatorProps = getSeparatorProps({
             style: {
               ...separatorStyle,
@@ -95,14 +95,14 @@ export const Container = ({
                 {...primaryPaneProps}
                 style={{
                   ...primaryPaneProps.style,
-                  flexBasis: primaryPaneProps.valueNow
+                  flexBasis: valueNow
                 }}
               >
                 Thai tabasco pepper cremini mushrooms crumbled lentils one bowl almonds delightful
                 blueberry scones simmer muffins red pepper jalapeño cherry pasta chocolate
                 bruschetta.
               </div>
-              <hr {...separatorProps} />
+              <div {...separatorProps} />
               <div style={secondaryPaneStyle}>
                 Grains spring soba noodles pomegranate veggie burgers picnic cocoa green tea lime
                 maple orange tempeh ginger tofu leek basmati double dark chocolate figs artichoke
@@ -136,7 +136,7 @@ export const Hook = ({
 }) => {
   const Splitter = () => {
     const mode = placement === SplitterPlacement.START ? 'rtl' : 'ltr';
-    const { getSeparatorProps, getPrimaryPaneProps } = useSplitter({
+    const { getSeparatorProps, getPrimaryPaneProps, valueNow } = useSplitter({
       type,
       min,
       max,
@@ -168,13 +168,13 @@ export const Hook = ({
           {...primaryPaneProps}
           style={{
             ...primaryPaneProps.style,
-            flexBasis: primaryPaneProps.valueNow
+            flexBasis: valueNow
           }}
         >
           Thai tabasco pepper cremini mushrooms crumbled lentils one bowl almonds delightful
           blueberry scones simmer muffins red pepper jalapeño cherry pasta chocolate bruschetta.
         </div>
-        <hr {...separatorProps} />
+        <div {...separatorProps} />
         <div style={secondaryPaneStyle}>
           Grains spring soba noodles pomegranate veggie burgers picnic cocoa green tea lime maple
           orange tempeh ginger tofu leek basmati double dark chocolate figs artichoke hearts
@@ -274,13 +274,13 @@ export const ManyHooks = ({
               {...firstPrimaryPane}
               style={{
                 ...firstPrimaryPane.style,
-                flexBasis: firstPrimaryPane.valueNow
+                flexBasis: firstSplitterBag.valueNow
               }}
             >
               Thai tabasco pepper cremini mushrooms crumbled lentils one bowl almonds delightful
               blueberry scones simmer muffins red pepper jalapeño cherry pasta chocolate bruschetta.
             </div>
-            <hr {...firstSeparator} />
+            <div {...firstSeparator} />
             <div style={secondaryPaneStyle}>
               Grains spring soba noodles pomegranate veggie burgers picnic cocoa green tea lime
               maple orange tempeh ginger tofu leek basmati double dark chocolate figs artichoke
@@ -289,12 +289,12 @@ export const ManyHooks = ({
               chocolate cookie. Udon noodles toasted hazelnuts peach strawberry mango ginger
               lemongrass agave green tea homemade balsamic
             </div>
-            <hr {...secondSeparator} />
+            <div {...secondSeparator} />
             <div
               {...secondPrimaryPane}
               style={{
                 ...secondPrimaryPane.style,
-                flexBasis: secondPrimaryPane.valueNow
+                flexBasis: secondSplitterBag.valueNow
               }}
             >
               Thai tabasco pepper cremini mushrooms crumbled lentils one bowl almonds delightful
@@ -321,15 +321,15 @@ ManyHooks.parameters = {
 
 export const Controlled = ({ type, min, max, orientation, ariaLabel, keyboardStep, placement }) => {
   const Splitter = () => {
-    const [valueNow, onChange] = useState(300);
+    const [value, onChange] = useState(300);
     const mode = placement === SplitterPlacement.START ? 'rtl' : 'ltr';
-    const { getSeparatorProps, getPrimaryPaneProps } = useSplitter({
+    const { getSeparatorProps, getPrimaryPaneProps, valueNow } = useSplitter({
       type,
       min,
       max,
       orientation,
       ariaLabel,
-      valueNow,
+      valueNow: value,
       keyboardStep,
       onChange,
       placement
@@ -357,16 +357,16 @@ export const Controlled = ({ type, min, max, orientation, ariaLabel, keyboardSte
           {...primaryPaneProps}
           style={{
             ...primaryPaneProps.style,
-            flexBasis: primaryPaneProps.valueNow
+            flexBasis: valueNow
           }}
         >
-          <p>Controlled ValueNow: {valueNow}</p>
+          <p>Controlled ValueNow: {value}</p>
           <p>
             Thai tabasco pepper cremini mushrooms crumbled lentils one bowl almonds delightful
             blueberry scones simmer muffins red pepper jalapeño cherry pasta chocolate bruschetta.
           </p>
         </div>
-        <hr {...separatorProps} />
+        <div {...separatorProps} />
         <div style={secondaryPaneStyle}>
           Grains spring soba noodles pomegranate veggie burgers picnic cocoa green tea lime maple
           orange tempeh ginger tofu leek basmati double dark chocolate figs artichoke hearts

@@ -43,6 +43,11 @@ export interface IWindowLike {
   scrollY: number;
 }
 
+export interface ISplitterGetterProps extends HTMLProps<any> {
+  'data-garden-container-id': string;
+  'data-garden-container-version': string;
+}
+
 export interface IUseSplitterProps extends Omit<HTMLProps<any>, 'onChange'> {
   /** An aria-label for the separator */
   ariaLabel?: string;
@@ -71,6 +76,7 @@ export interface IUseSplitterProps extends Omit<HTMLProps<any>, 'onChange'> {
 export interface IUseSplitterReturnValue {
   getSeparatorProps: <T>(options?: T & HTMLProps<any>) => any;
   getPrimaryPaneProps: <T>(options?: T & HTMLProps<any>) => any;
+  valueNow: number;
 }
 
 // takes pointer distance from edge of viewport to the pointer
@@ -335,34 +341,54 @@ export function useSplitter({
     }
   });
 
-  const getSeparatorProps = ({ ...other } = {}) => ({
-    'data-garden-container-id': 'containers.splitter.separator',
-    'data-garden-container-version': PACKAGE_VERSION,
-    role: 'separator',
-    ref: separatorRef,
-    onMouseDown,
-    onKeyDown,
-    onTouchStart,
-    'aria-label': ariaLabel,
-    'aria-controls': primaryPaneId,
-    'aria-valuenow': separatorPosition,
-    'aria-valuemin': min,
-    'aria-valuemax': max,
-    'aria-orientation': orientation,
-    tabIndex: 0,
-    ...other
-  });
+  const getSeparatorProps = useCallback(
+    ({ ...other } = {}): ISplitterGetterProps => ({
+      'data-garden-container-id': 'containers.splitter.separator',
+      'data-garden-container-version': PACKAGE_VERSION,
+      role: 'separator',
+      ref: separatorRef,
+      onMouseDown,
+      onKeyDown,
+      onTouchStart,
+      'aria-label': ariaLabel,
+      'aria-controls': primaryPaneId,
+      'aria-valuenow': separatorPosition,
+      'aria-valuemin': min,
+      'aria-valuemax': max,
+      'aria-orientation': orientation,
+      tabIndex: 0,
+      ...other
+    }),
+    [
+      separatorRef,
+      onMouseDown,
+      onKeyDown,
+      onTouchStart,
+      ariaLabel,
+      primaryPaneId,
+      separatorPosition,
+      min,
+      max,
+      orientation
+    ]
+  );
 
-  const getPrimaryPaneProps = ({ ...other } = {}) => ({
-    'data-garden-container-id': 'containers.splitter.primaryPane',
-    'data-garden-container-version': PACKAGE_VERSION,
-    id: primaryPaneId,
-    valueNow: separatorPosition,
-    ...other
-  });
+  const getPrimaryPaneProps = useCallback(
+    ({ ...other } = {}): ISplitterGetterProps => ({
+      'data-garden-container-id': 'containers.splitter.primaryPane',
+      'data-garden-container-version': PACKAGE_VERSION,
+      id: primaryPaneId,
+      ...other
+    }),
+    [primaryPaneId]
+  );
 
-  return {
-    getSeparatorProps,
-    getPrimaryPaneProps
-  };
+  return useMemo(
+    () => ({
+      getSeparatorProps,
+      getPrimaryPaneProps,
+      valueNow: separatorPosition
+    }),
+    [separatorPosition, getSeparatorProps, getPrimaryPaneProps]
+  );
 }
