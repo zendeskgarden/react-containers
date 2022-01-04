@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react';
 import { SplitterContainer, IUseSplitterReturnValue, useSplitter } from './src';
-import { SplitterOrientation, SplitterType, SplitterPlacement } from './src/useSplitter';
+import { SplitterOrientation, SplitterType, SplitterPosition } from './src/useSplitter';
 
 const ARGS = {
   type: SplitterType.VARIABLE,
@@ -16,7 +16,7 @@ const ARGS = {
   max: 700,
   ariaLabel: 'primary-pane',
   defaultValueNow: 200,
-  placement: SplitterPlacement.END
+  placement: SplitterPosition.TRAILS
 };
 
 const flexContainerStyle: React.CSSProperties = {
@@ -59,7 +59,7 @@ export const Container = ({
   placement
 }) => {
   const Splitter = () => {
-    const mode = placement === SplitterPlacement.START ? 'rtl' : 'ltr';
+    const mode = placement === SplitterPosition.LEADS ? 'rtl' : 'ltr';
 
     return (
       <SplitterContainer
@@ -70,7 +70,7 @@ export const Container = ({
         max={max}
         orientation={orientation}
         keyboardStep={keyboardStep}
-        placement={placement}
+        position={placement}
       >
         {({ getSeparatorProps, getPrimaryPaneProps, valueNow }: IUseSplitterReturnValue) => {
           const separatorProps = getSeparatorProps({
@@ -135,7 +135,7 @@ export const Hook = ({
   placement
 }) => {
   const Splitter = () => {
-    const mode = placement === SplitterPlacement.START ? 'rtl' : 'ltr';
+    const mode = placement === SplitterPosition.LEADS ? 'rtl' : 'ltr';
     const { getSeparatorProps, getPrimaryPaneProps, valueNow } = useSplitter({
       type,
       min,
@@ -144,7 +144,7 @@ export const Hook = ({
       ariaLabel,
       defaultValueNow,
       keyboardStep,
-      placement
+      position: placement
     });
     const separatorProps = getSeparatorProps({
       style: {
@@ -220,10 +220,10 @@ export const ManyHooks = ({
       ariaLabel,
       defaultValueNow,
       keyboardStep,
-      placement:
+      position:
         mode === 'rtl' && orientation === SplitterOrientation.VERTICAL
-          ? SplitterPlacement.START
-          : SplitterPlacement.END
+          ? SplitterPosition.LEADS
+          : SplitterPosition.TRAILS
     });
     const secondSplitterBag = useSplitter({
       type,
@@ -233,10 +233,10 @@ export const ManyHooks = ({
       ariaLabel,
       defaultValueNow,
       keyboardStep,
-      placement:
+      position:
         mode === 'rtl' && orientation === SplitterOrientation.VERTICAL
-          ? SplitterPlacement.END
-          : SplitterPlacement.START
+          ? SplitterPosition.TRAILS
+          : SplitterPosition.LEADS
     });
     const firstSeparator = firstSplitterBag.getSeparatorProps({
       style: {
@@ -322,7 +322,7 @@ ManyHooks.parameters = {
 export const Controlled = ({ type, min, max, orientation, ariaLabel, keyboardStep, placement }) => {
   const Splitter = () => {
     const [value, onChange] = useState(300);
-    const mode = placement === SplitterPlacement.START ? 'rtl' : 'ltr';
+    const mode = placement === SplitterPosition.LEADS ? 'rtl' : 'ltr';
     const { getSeparatorProps, getPrimaryPaneProps, valueNow } = useSplitter({
       type,
       min,
@@ -332,7 +332,7 @@ export const Controlled = ({ type, min, max, orientation, ariaLabel, keyboardSte
       valueNow: value,
       keyboardStep,
       onChange,
-      placement
+      position: placement
     });
     const separatorProps = getSeparatorProps({
       style: {

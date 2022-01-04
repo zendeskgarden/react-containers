@@ -13,7 +13,7 @@ import {
   IUseSplitterReturnValue,
   SplitterOrientation,
   SplitterType,
-  SplitterPlacement
+  SplitterPosition
 } from './useSplitter';
 
 export interface ISplitterContainerProps extends IUseSplitterProps {
@@ -62,5 +62,5 @@ SplitterContainer.propTypes = {
   defaultValueNow: PropTypes.number,
   valueNow: PropTypes.number,
   onChange: PropTypes.func,
-  placement: PropTypes.oneOf([SplitterPlacement.START, SplitterPlacement.END]).isRequired
+  position: PropTypes.oneOf([SplitterPosition.LEADS, SplitterPosition.TRAILS]).isRequired
 };

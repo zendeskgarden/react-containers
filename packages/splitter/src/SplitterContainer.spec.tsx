@@ -13,7 +13,7 @@ import {
   IWindowLike,
   SplitterOrientation,
   SplitterType,
-  SplitterPlacement,
+  SplitterPosition,
   normalizePointerToSeparator
 } from './useSplitter';
 
@@ -82,7 +82,7 @@ describe('SplitterContainer', () => {
     max = 100,
     orientation = SplitterOrientation.VERTICAL,
     defaultValueNow = 20,
-    placement = SplitterPlacement.END,
+    placement = SplitterPosition.TRAILS,
     environment = window
   }: {
     type?: SplitterType;
@@ -90,7 +90,7 @@ describe('SplitterContainer', () => {
     max?: number;
     orientation?: SplitterOrientation;
     defaultValueNow?: number;
-    placement?: SplitterPlacement;
+    placement?: SplitterPosition;
     environment?: Window | IWindowLike;
   }) => (
     <SplitterContainer
@@ -101,7 +101,7 @@ describe('SplitterContainer', () => {
       max={max}
       orientation={orientation}
       defaultValueNow={defaultValueNow}
-      placement={placement}
+      position={placement}
     >
       {({ getSeparatorProps, getPrimaryPaneProps, valueNow }: IUseSplitterReturnValue) => {
         const separatorProps = getSeparatorProps({
@@ -150,7 +150,7 @@ describe('SplitterContainer', () => {
       orientation={orientation}
       valueNow={valueNow}
       onChange={onChange}
-      placement={SplitterPlacement.END}
+      position={SplitterPosition.TRAILS}
     >
       {({
         getSeparatorProps,
@@ -191,7 +191,7 @@ describe('SplitterContainer', () => {
           min={0}
           max={100}
           orientation={SplitterOrientation.VERTICAL}
-          placement={SplitterPlacement.END}
+          position={SplitterPosition.TRAILS}
         >
           {({ getSeparatorProps, getPrimaryPaneProps }: IUseSplitterReturnValue) => {
             separatorProps = getSeparatorProps();
@@ -648,7 +648,7 @@ describe('SplitterContainer', () => {
             environment={environmentMock}
             orientation={SplitterOrientation.VERTICAL}
             defaultValueNow={defaultValueNow}
-            placement={SplitterPlacement.START}
+            placement={SplitterPosition.LEADS}
           />
         );
         const element = getByRole('separator');
@@ -681,7 +681,7 @@ describe('SplitterContainer', () => {
             environment={environmentMock}
             orientation={SplitterOrientation.HORIZONTAL}
             defaultValueNow={defaultValueNow}
-            placement={SplitterPlacement.START}
+            placement={SplitterPosition.LEADS}
           />
         );
         const element = getByRole('separator');
@@ -716,7 +716,7 @@ describe('SplitterContainer', () => {
             environment={environmentMock}
             orientation={SplitterOrientation.VERTICAL}
             defaultValueNow={defaultValueNow}
-            placement={SplitterPlacement.START}
+            placement={SplitterPosition.LEADS}
           />
         );
         const element = getByRole('separator');
@@ -751,7 +751,7 @@ describe('SplitterContainer', () => {
             environment={environmentMock}
             orientation={SplitterOrientation.HORIZONTAL}
             defaultValueNow={defaultValueNow}
-            placement={SplitterPlacement.START}
+            placement={SplitterPosition.LEADS}
           />
         );
         const element = getByRole('separator');
@@ -787,7 +787,7 @@ describe('SplitterContainer', () => {
             environment={environmentMock}
             orientation={SplitterOrientation.VERTICAL}
             defaultValueNow={30}
-            placement={SplitterPlacement.START}
+            placement={SplitterPosition.LEADS}
           />
         );
         const element = getByRole('separator');
