@@ -102,15 +102,35 @@ export const normalizePointerToSeparator = (
 };
 
 export const verticalArrowKeys = {
-  [SplitterPosition.LEADS]: {
-    INCREASE: 'ArrowLeft',
-    DECREASE: 'ArrowRight'
+  rtl: {
+    [SplitterPosition.TRAILS]: {
+      INCREASE: 'ArrowLeft',
+      DECREASE: 'ArrowRight'
+    },
+    [SplitterPosition.LEADS]: {
+      INCREASE: 'ArrowRight',
+      DECREASE: 'ArrowLeft'
+    }
   },
-  [SplitterPosition.TRAILS]: {
-    INCREASE: 'ArrowRight',
-    DECREASE: 'ArrowLeft'
+  ltr: {
+    [SplitterPosition.LEADS]: {
+      INCREASE: 'ArrowLeft',
+      DECREASE: 'ArrowRight'
+    },
+    [SplitterPosition.TRAILS]: {
+      INCREASE: 'ArrowRight',
+      DECREASE: 'ArrowLeft'
+    }
   }
 };
+
+const xor = (a: boolean | undefined, b: boolean | undefined) => {
+  if (a && b) {
+    return false;
+  }
+
+  return a || b;
+}
 
 export function useSplitter({
   ariaLabel,
@@ -175,7 +195,7 @@ export function useSplitter({
       event.preventDefault();
       const elem = separatorRef.current;
       const clientWidth =
-        position === SplitterPosition.LEADS ? environment.document.body.clientWidth : undefined;
+        xor(rtl, position === SplitterPosition.LEADS) ? environment.document.body.clientWidth : undefined;
       const clientHeight =
         position === SplitterPosition.LEADS ? environment.document.body.clientHeight : undefined;
 
@@ -190,7 +210,7 @@ export function useSplitter({
         );
       } else {
         const offset =
-          position === SplitterPosition.LEADS ? offsetRef.current.right : offsetRef.current.left;
+          xor(rtl, position === SplitterPosition.LEADS) ? offsetRef.current.right : offsetRef.current.left;
 
         // normalizePointerToSeparator aligns pointer true pixel coordinates and to the separator accounting for relative DOM positioning
         setRangedSeparatorPosition(
@@ -199,7 +219,7 @@ export function useSplitter({
         );
       }
     },
-    [orientation, setRangedSeparatorPosition, position, environment]
+    [orientation, setRangedSeparatorPosition, position, environment, rtl]
   );
 
   // Any events that are registered globally to the DOM need to conserve their reference for removal to prevent listener leaks
@@ -213,7 +233,7 @@ export function useSplitter({
       const { pageY, pageX } = event.targetTouches[0];
       const elem = separatorRef.current;
       const clientWidth =
-        position === SplitterPosition.LEADS ? environment.document.body.clientWidth : undefined;
+        xor(rtl, position === SplitterPosition.LEADS) ? environment.document.body.clientWidth : undefined;
       const clientHeight =
         position === SplitterPosition.LEADS ? environment.document.body.clientHeight : undefined;
 
@@ -228,7 +248,7 @@ export function useSplitter({
         );
       } else {
         const offset =
-          position === SplitterPosition.LEADS ? offsetRef.current.right : offsetRef.current.left;
+          xor(rtl, position === SplitterPosition.LEADS) ? offsetRef.current.right : offsetRef.current.left;
 
         // normalizePointerToSeparator aligns pointer true pixel coordinates and to the separator accounting for relative DOM positioning
         setRangedSeparatorPosition(
@@ -237,7 +257,7 @@ export function useSplitter({
         );
       }
     },
-    [orientation, setRangedSeparatorPosition, position, environment]
+    [orientation, setRangedSeparatorPosition, position, environment, rtl]
   );
 
   const onTouchMove = useMemo(
@@ -312,13 +332,15 @@ export function useSplitter({
   }, [separatorPosition, setSeparatorPosition, min, max]);
 
   const onKeyDown = composeEventHandlers(props.onKeyDown, (event: React.KeyboardEvent) => {
+    const rtlKey = rtl ? 'rtl' : 'ltr';
+
     if (orientation === SplitterOrientation.VERTICAL) {
       switch (event.key) {
-        case verticalArrowKeys[position].DECREASE:
+        case verticalArrowKeys[rtlKey][position].DECREASE:
           type === SplitterType.VARIABLE &&
             setRangedSeparatorPosition(separatorPosition - keyboardStep);
           break;
-        case verticalArrowKeys[position].INCREASE:
+        case verticalArrowKeys[rtlKey][position].INCREASE:
           type === SplitterType.VARIABLE &&
             setRangedSeparatorPosition(separatorPosition + keyboardStep);
           break;

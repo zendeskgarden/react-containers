@@ -220,10 +220,8 @@ export const ManyHooks = ({
       ariaLabel,
       defaultValueNow,
       keyboardStep,
-      position:
-        mode === 'rtl' && orientation === SplitterOrientation.VERTICAL
-          ? SplitterPosition.LEADS
-          : SplitterPosition.TRAILS
+      position: SplitterPosition.TRAILS,
+      rtl
     });
     const secondSplitterBag = useSplitter({
       type,
@@ -233,10 +231,8 @@ export const ManyHooks = ({
       ariaLabel,
       defaultValueNow,
       keyboardStep,
-      position:
-        mode === 'rtl' && orientation === SplitterOrientation.VERTICAL
-          ? SplitterPosition.TRAILS
-          : SplitterPosition.LEADS
+      position: SplitterPosition.LEADS,
+      rtl
     });
     const firstSeparator = firstSplitterBag.getSeparatorProps({
       style: {
