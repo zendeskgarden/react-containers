@@ -51,8 +51,8 @@ export interface ISplitterGetterReturnProps extends HTMLProps<any> {
 export interface IUseSplitterProps extends Omit<HTMLProps<any>, 'onChange'> {
   /** An aria-label for the separator */
   ariaLabel?: string;
-  /** A window environment to attach events to */
-  environment?: Window | IWindowLike;
+  /** A browser window object to attach events to */
+  windowObject?: Window | IWindowLike;
   /** A default value for starting uncontrolled separator location */
   defaultValueNow?: number;
   /** Determines whether a separator behaves in fixed or variable mode */
@@ -134,7 +134,7 @@ const xor = (a: boolean | undefined, b: boolean | undefined) => {
 
 export function useSplitter({
   ariaLabel,
-  environment = window,
+  windowObject = window,
   type,
   min,
   max,
@@ -177,27 +177,27 @@ export function useSplitter({
   // see https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect
   const updateOffsets = useCallback(() => {
     const rect = separatorRef.current!.getBoundingClientRect();
-    const clientWidth = environment.document.body.clientWidth;
-    const clientHeight = environment.document.body.clientHeight;
+    const clientWidth = windowObject.document.body.clientWidth;
+    const clientHeight = windowObject.document.body.clientHeight;
 
     // capture distance from left side of viewport to the separator position offset by horizontal scroll
-    offsetRef.current.left = rect.left - separatorPosition + environment.scrollX;
+    offsetRef.current.left = rect.left - separatorPosition + windowObject.scrollX;
     // capture distance from right side of viewport to the separator position offset by horizontal scroll
-    offsetRef.current.right = clientWidth - rect.right - separatorPosition - environment.scrollX;
+    offsetRef.current.right = clientWidth - rect.right - separatorPosition - windowObject.scrollX;
     // capture distance from top side of viewport to the separator position offset by vertical scroll
-    offsetRef.current.top = rect.top - separatorPosition + environment.scrollY;
+    offsetRef.current.top = rect.top - separatorPosition + windowObject.scrollY;
     // capture distance from bottom side of viewport to the separator position offset by vertical scroll
-    offsetRef.current.bottom = clientHeight - rect.bottom - separatorPosition - environment.scrollY;
-  }, [offsetRef, separatorRef, separatorPosition, environment]);
+    offsetRef.current.bottom = clientHeight - rect.bottom - separatorPosition - windowObject.scrollY;
+  }, [offsetRef, separatorRef, separatorPosition, windowObject]);
 
   const onSplitterMouseMove = useCallback(
     (event: MouseEvent) => {
       event.preventDefault();
       const elem = separatorRef.current;
       const clientWidth =
-        xor(rtl, position === SplitterPosition.LEADS) ? environment.document.body.clientWidth : undefined;
+        xor(rtl, position === SplitterPosition.LEADS) ? windowObject.document.body.clientWidth : undefined;
       const clientHeight =
-        position === SplitterPosition.LEADS ? environment.document.body.clientHeight : undefined;
+        position === SplitterPosition.LEADS ? windowObject.document.body.clientHeight : undefined;
 
       if (orientation === SplitterOrientation.HORIZONTAL) {
         const offset =
@@ -219,7 +219,7 @@ export function useSplitter({
         );
       }
     },
-    [orientation, setRangedSeparatorPosition, position, environment, rtl]
+    [orientation, setRangedSeparatorPosition, position, windowObject, rtl]
   );
 
   // Any events that are registered globally to the DOM need to conserve their reference for removal to prevent listener leaks
@@ -233,9 +233,9 @@ export function useSplitter({
       const { pageY, pageX } = event.targetTouches[0];
       const elem = separatorRef.current;
       const clientWidth =
-        xor(rtl, position === SplitterPosition.LEADS) ? environment.document.body.clientWidth : undefined;
+        xor(rtl, position === SplitterPosition.LEADS) ? windowObject.document.body.clientWidth : undefined;
       const clientHeight =
-        position === SplitterPosition.LEADS ? environment.document.body.clientHeight : undefined;
+        position === SplitterPosition.LEADS ? windowObject.document.body.clientHeight : undefined;
 
       if (orientation === SplitterOrientation.HORIZONTAL) {
         const offset =
@@ -257,7 +257,7 @@ export function useSplitter({
         );
       }
     },
-    [orientation, setRangedSeparatorPosition, position, environment, rtl]
+    [orientation, setRangedSeparatorPosition, position, windowObject, rtl]
   );
 
   const onTouchMove = useMemo(
@@ -270,21 +270,21 @@ export function useSplitter({
       composeEventHandlers(props.onMouseUp, props.onMouseLeave, (event: MouseEvent) => {
         event.preventDefault();
         // must remove global events on transaction finish
-        environment.document.removeEventListener('mouseup', onMouseLeaveOrUp);
-        environment.document.body.removeEventListener('mouseleave', onMouseLeaveOrUp);
-        environment.document.removeEventListener('mousemove', onMouseMove);
+        windowObject.document.removeEventListener('mouseup', onMouseLeaveOrUp);
+        windowObject.document.body.removeEventListener('mouseleave', onMouseLeaveOrUp);
+        windowObject.document.removeEventListener('mousemove', onMouseMove);
       }),
-    [environment, props.onMouseUp, props.onMouseLeave, onMouseMove]
+    [windowObject, props.onMouseUp, props.onMouseLeave, onMouseMove]
   );
 
   const onTouchEnd = useMemo(
     () =>
       composeEventHandlers(props.onTouchEnd, () => {
         // must remove global events on transaction finish
-        environment.document.removeEventListener('touchend', onTouchEnd);
-        environment.document.removeEventListener('touchmove', onTouchMove);
+        windowObject.document.removeEventListener('touchend', onTouchEnd);
+        windowObject.document.removeEventListener('touchmove', onTouchMove);
       }),
-    [environment, props.onTouchEnd, onTouchMove]
+    [windowObject, props.onTouchEnd, onTouchMove]
   );
 
   const onMouseDown = composeEventHandlers(props.onMouseDown, (event: React.MouseEvent) => {
@@ -300,9 +300,9 @@ export function useSplitter({
       updateOffsets();
 
       // Must register global events to track mouse move outside the container
-      environment.document.addEventListener('mouseup', onMouseLeaveOrUp);
-      environment.document.body.addEventListener('mouseleave', onMouseLeaveOrUp);
-      environment.document.addEventListener('mousemove', onMouseMove);
+      windowObject.document.addEventListener('mouseup', onMouseLeaveOrUp);
+      windowObject.document.body.addEventListener('mouseleave', onMouseLeaveOrUp);
+      windowObject.document.addEventListener('mousemove', onMouseMove);
     }
   });
 
@@ -318,8 +318,8 @@ export function useSplitter({
       updateOffsets();
 
       // Must register global events to track mouse move outside the container
-      environment.document.addEventListener('touchend', onTouchEnd);
-      environment.document.addEventListener('touchmove', onTouchMove);
+      windowObject.document.addEventListener('touchend', onTouchEnd);
+      windowObject.document.addEventListener('touchmove', onTouchMove);
     }
   });
 

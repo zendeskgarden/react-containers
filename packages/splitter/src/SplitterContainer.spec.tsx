@@ -83,7 +83,7 @@ describe('SplitterContainer', () => {
     orientation = SplitterOrientation.VERTICAL,
     defaultValueNow = 20,
     position = SplitterPosition.TRAILS,
-    environment = window,
+    windowObject = window,
     rtl
   }: {
     type?: SplitterType;
@@ -92,12 +92,12 @@ describe('SplitterContainer', () => {
     orientation?: SplitterOrientation;
     defaultValueNow?: number;
     position?: SplitterPosition;
-    environment?: Window | IWindowLike;
+    windowObject?: Window | IWindowLike;
     rtl?: boolean;
   }) => (
     <SplitterContainer
       ariaLabel="flex-pane"
-      environment={environment}
+      windowObject={windowObject}
       type={type}
       min={min}
       max={max}
@@ -134,7 +134,7 @@ describe('SplitterContainer', () => {
     orientation = SplitterOrientation.VERTICAL,
     valueNow,
     onChange,
-    environment = window
+    windowObject = window
   }: {
     type?: SplitterType;
     min?: number;
@@ -142,10 +142,10 @@ describe('SplitterContainer', () => {
     orientation?: SplitterOrientation;
     valueNow: number;
     onChange?: (value: number) => void;
-    environment?: Window | IWindowLike;
+    windowObject?: Window | IWindowLike;
   }) => (
     <SplitterContainer
-      environment={environment}
+      windowObject={windowObject}
       ariaLabel="flex-pane"
       type={type}
       min={min}
@@ -628,7 +628,7 @@ describe('SplitterContainer', () => {
   });
   describe('placement start mode', () => {
     // JSDom does not support clientWidth or clientHeight and we must mock it to test the inverted position calculation for placement start mode
-    const environmentMock = {
+    const windowObjectMock = {
       scrollX: window.scrollX,
       scrollY: window.scrollY,
       document: {
@@ -648,7 +648,7 @@ describe('SplitterContainer', () => {
         const defaultValueNow = 30;
         const { getByRole } = render(
           <UncontrolledTestSplitter
-            environment={environmentMock}
+            windowObject={windowObjectMock}
             orientation={SplitterOrientation.VERTICAL}
             defaultValueNow={defaultValueNow}
             position={SplitterPosition.LEADS}
@@ -661,7 +661,7 @@ describe('SplitterContainer', () => {
           bottom: 0,
           height: 0,
           left: 0,
-          right: environmentMock.document.body.clientWidth - defaultValueNow,
+          right: windowObjectMock.document.body.clientWidth - defaultValueNow,
           top: 0,
           width: 0,
           x: 0,
@@ -681,7 +681,7 @@ describe('SplitterContainer', () => {
         const defaultValueNow = 30;
         const { getByRole } = render(
           <UncontrolledTestSplitter
-            environment={environmentMock}
+            windowObject={windowObjectMock}
             orientation={SplitterOrientation.HORIZONTAL}
             defaultValueNow={defaultValueNow}
             position={SplitterPosition.LEADS}
@@ -691,7 +691,7 @@ describe('SplitterContainer', () => {
 
         // must mock bottom position for offset calculation
         element.getBoundingClientRect = () => ({
-          bottom: environmentMock.document.body.clientHeight - defaultValueNow,
+          bottom: windowObjectMock.document.body.clientHeight - defaultValueNow,
           height: 0,
           left: 0,
           right: 0,
@@ -715,7 +715,7 @@ describe('SplitterContainer', () => {
           const defaultValueNow = 30;
           const { getByRole } = render(
             <UncontrolledTestSplitter
-              environment={environmentMock}
+              windowObject={windowObjectMock}
               orientation={SplitterOrientation.VERTICAL}
               defaultValueNow={defaultValueNow}
               position={SplitterPosition.LEADS}
@@ -729,7 +729,7 @@ describe('SplitterContainer', () => {
             bottom: 0,
             height: 0,
             left: defaultValueNow,
-            right: environmentMock.document.body.clientWidth - defaultValueNow,
+            right: windowObjectMock.document.body.clientWidth - defaultValueNow,
             top: 0,
             width: 0,
             x: 0,
@@ -752,7 +752,7 @@ describe('SplitterContainer', () => {
         const defaultValueNow = 30;
         const { getByRole } = render(
           <UncontrolledTestSplitter
-            environment={environmentMock}
+            windowObject={windowObjectMock}
             orientation={SplitterOrientation.VERTICAL}
             defaultValueNow={defaultValueNow}
             position={SplitterPosition.LEADS}
@@ -765,7 +765,7 @@ describe('SplitterContainer', () => {
           bottom: 0,
           height: 0,
           left: 0,
-          right: environmentMock.document.body.clientWidth - defaultValueNow,
+          right: windowObjectMock.document.body.clientWidth - defaultValueNow,
           top: 0,
           width: 0,
           x: 0,
@@ -787,7 +787,7 @@ describe('SplitterContainer', () => {
         const defaultValueNow = 30;
         const { getByRole } = render(
           <UncontrolledTestSplitter
-            environment={environmentMock}
+            windowObject={windowObjectMock}
             orientation={SplitterOrientation.HORIZONTAL}
             defaultValueNow={defaultValueNow}
             position={SplitterPosition.LEADS}
@@ -797,7 +797,7 @@ describe('SplitterContainer', () => {
 
         // must mock bottom position for offset calculation
         element.getBoundingClientRect = () => ({
-          bottom: environmentMock.document.body.clientHeight - defaultValueNow,
+          bottom: windowObjectMock.document.body.clientHeight - defaultValueNow,
           height: 0,
           left: 0,
           right: 0,
@@ -823,7 +823,7 @@ describe('SplitterContainer', () => {
           const defaultValueNow = 30;
           const { getByRole } = render(
             <UncontrolledTestSplitter
-              environment={environmentMock}
+              windowObject={windowObjectMock}
               orientation={SplitterOrientation.VERTICAL}
               defaultValueNow={defaultValueNow}
               position={SplitterPosition.LEADS}
@@ -837,7 +837,7 @@ describe('SplitterContainer', () => {
             bottom: 0,
             height: 0,
             left: defaultValueNow,
-            right: environmentMock.document.body.clientWidth - defaultValueNow,
+            right: windowObjectMock.document.body.clientWidth - defaultValueNow,
             top: 0,
             width: 0,
             x: 0,
@@ -861,7 +861,7 @@ describe('SplitterContainer', () => {
       it('should increase vertical splitter when arrow left is pressed from 30 to 80', () => {
         const { getByRole } = render(
           <UncontrolledTestSplitter
-            environment={environmentMock}
+            windowObject={windowObjectMock}
             orientation={SplitterOrientation.VERTICAL}
             defaultValueNow={30}
             position={SplitterPosition.LEADS}
@@ -877,7 +877,7 @@ describe('SplitterContainer', () => {
         it('should decrease vertical splitter when arrow right is pressed from 80 to 30', () => {
           const { getByRole } = render(
             <UncontrolledTestSplitter
-              environment={environmentMock}
+              windowObject={windowObjectMock}
               orientation={SplitterOrientation.VERTICAL}
               defaultValueNow={80}
               position={SplitterPosition.LEADS}
