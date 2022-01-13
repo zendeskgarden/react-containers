@@ -723,12 +723,12 @@ describe('SplitterContainer', () => {
             />
           );
           const element = getByRole('separator');
-  
+
           // must mock right position for offset calculation
           element.getBoundingClientRect = () => ({
             bottom: 0,
             height: 0,
-            left:  defaultValueNow,
+            left: defaultValueNow,
             right: environmentMock.document.body.clientWidth - defaultValueNow,
             top: 0,
             width: 0,
@@ -738,14 +738,14 @@ describe('SplitterContainer', () => {
           });
           // FYI the width and height of the separator is effectively zero as JSDom does not support offsetHeight or offsetWidth
           // the offset calculation works just as well without a width or height supplied for the separator
-  
+
           fireEvent.mouseDown(element);
           fireEvent(document, new ExtendedMouseEvent('mousemove', { pageX: 30 }));
           fireEvent.mouseUp(document);
-  
+
           expect(element).toHaveAttribute('aria-valuenow', '30');
         });
-      })
+      });
     });
     describe('touch navigation', () => {
       it('should move vertical splitter with pointer set to 30 from 30 to 70', () => {
@@ -831,7 +831,7 @@ describe('SplitterContainer', () => {
             />
           );
           const element = getByRole('separator');
-  
+
           // must mock right position for vertical position for offset calculation
           element.getBoundingClientRect = () => ({
             bottom: 0,
@@ -846,16 +846,16 @@ describe('SplitterContainer', () => {
           });
           // FYI the width and height of the separator is effectively zero as JSDom does not support offsetHeight or offsetWidth
           // the offset calculation works just as well without a width or height supplied for the separator
-  
+
           fireEvent.touchStart(element);
           fireEvent.touchMove(document, {
             targetTouches: [{ pageX: 30 }]
           });
           fireEvent.touchEnd(document);
-  
+
           expect(element).toHaveAttribute('aria-valuenow', '30');
         });
-      })
+      });
     });
     describe('keyboard navigation', () => {
       it('should increase vertical splitter when arrow left is pressed from 30 to 80', () => {
@@ -874,21 +874,20 @@ describe('SplitterContainer', () => {
         expect(element).toHaveAttribute('aria-valuenow', '80');
       });
       describe('rtl', () => {
-        it('should decrease vertical splitter when arrow right is pressed from 30 to 80', () => {
+        it('should decrease vertical splitter when arrow right is pressed from 80 to 30', () => {
           const { getByRole } = render(
             <UncontrolledTestSplitter
               environment={environmentMock}
               orientation={SplitterOrientation.VERTICAL}
-              defaultValueNow={30}
+              defaultValueNow={80}
               position={SplitterPosition.LEADS}
-              
             />
           );
           const element = getByRole('separator');
-  
+
           fireEvent.keyDown(element, { key: 'ArrowRight' });
-  
-          expect(element).toHaveAttribute('aria-valuenow', '80');
+
+          expect(element).toHaveAttribute('aria-valuenow', '30');
         });
       });
     });
