@@ -16,7 +16,8 @@ const ARGS = {
   max: 700,
   ariaLabel: 'primary-pane',
   defaultValueNow: 200,
-  placement: SplitterPosition.TRAILS
+  position: SplitterPosition.TRAILS,
+  rtl: false
 };
 
 const flexContainerStyle: React.CSSProperties = {
@@ -56,10 +57,11 @@ export const Container = ({
   ariaLabel,
   defaultValueNow,
   keyboardStep,
-  placement
+  position,
+  rtl,
 }) => {
   const Splitter = () => {
-    const mode = placement === SplitterPosition.LEADS ? 'rtl' : 'ltr';
+    const mode = rtl ? 'rtl' : 'ltr';
 
     return (
       <SplitterContainer
@@ -70,7 +72,8 @@ export const Container = ({
         max={max}
         orientation={orientation}
         keyboardStep={keyboardStep}
-        position={placement}
+        position={position}
+        rtl={rtl}
       >
         {({ getSeparatorProps, getPrimaryPaneProps, valueNow }: IUseSplitterReturnValue) => {
           const separatorProps = getSeparatorProps({
@@ -132,10 +135,11 @@ export const Hook = ({
   ariaLabel,
   defaultValueNow,
   keyboardStep,
-  placement
+  position,
+  rtl,
 }) => {
   const Splitter = () => {
-    const mode = placement === SplitterPosition.LEADS ? 'rtl' : 'ltr';
+    const mode = rtl ? 'rtl' : 'ltr';
     const { getSeparatorProps, getPrimaryPaneProps, valueNow } = useSplitter({
       type,
       min,
@@ -144,7 +148,8 @@ export const Hook = ({
       ariaLabel,
       defaultValueNow,
       keyboardStep,
-      position: placement
+      position,
+      rtl,
     });
     const separatorProps = getSeparatorProps({
       style: {
@@ -305,7 +310,14 @@ export const ManyHooks = ({
   return <Splitter />;
 };
 
-ManyHooks.args = { ...ARGS, rtl: false };
+ManyHooks.args = ARGS;
+ManyHooks.argTypes = {
+  position: {
+    table: {
+      disable: true,
+    }
+  }
+}
 ManyHooks.storyName = 'multiple useSplitter';
 ManyHooks.parameters = {
   docs: {
@@ -315,10 +327,10 @@ ManyHooks.parameters = {
   }
 };
 
-export const Controlled = ({ type, min, max, orientation, ariaLabel, keyboardStep, placement }) => {
+export const Controlled = ({ type, min, max, orientation, ariaLabel, keyboardStep, position, rtl }) => {
   const Splitter = () => {
     const [value, onChange] = useState(300);
-    const mode = placement === SplitterPosition.LEADS ? 'rtl' : 'ltr';
+    const mode = rtl ? 'rtl' : 'ltr';
     const { getSeparatorProps, getPrimaryPaneProps, valueNow } = useSplitter({
       type,
       min,
@@ -328,7 +340,8 @@ export const Controlled = ({ type, min, max, orientation, ariaLabel, keyboardSte
       valueNow: value,
       keyboardStep,
       onChange,
-      position: placement
+      position,
+      rtl,
     });
     const separatorProps = getSeparatorProps({
       style: {

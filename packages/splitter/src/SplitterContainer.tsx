@@ -34,7 +34,6 @@ SplitterContainer.propTypes = {
   children: PropTypes.func,
   render: PropTypes.func,
   environment: PropTypes.oneOfType([
-    PropTypes.instanceOf(Window),
     PropTypes.shape({
       scrollX: PropTypes.number.isRequired,
       scrollY: PropTypes.number.isRequired,
