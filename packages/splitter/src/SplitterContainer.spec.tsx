@@ -626,8 +626,8 @@ describe('SplitterContainer', () => {
       expect(normalizePointerToSeparator(0, 50, undefined, 100)).toBe(50);
     });
   });
-  describe('placement start mode', () => {
-    // JSDom does not support clientWidth or clientHeight and we must mock it to test the inverted position calculation for placement start mode
+  describe('position leads mode', () => {
+    // JSDom does not support clientWidth or clientHeight and we must mock it to test the inverted position calculation for position leads mode
     const windowObjectMock = {
       scrollX: window.scrollX,
       scrollY: window.scrollY,
@@ -864,7 +864,8 @@ describe('SplitterContainer', () => {
             windowObject={windowObjectMock}
             orientation={SplitterOrientation.VERTICAL}
             defaultValueNow={30}
-            position={SplitterPosition.LEADS}
+            position={SplitterPosition.TRAILS}
+            rtl
           />
         );
         const element = getByRole('separator');
@@ -880,7 +881,8 @@ describe('SplitterContainer', () => {
               windowObject={windowObjectMock}
               orientation={SplitterOrientation.VERTICAL}
               defaultValueNow={80}
-              position={SplitterPosition.LEADS}
+              position={SplitterPosition.TRAILS}
+              rtl
             />
           );
           const element = getByRole('separator');
