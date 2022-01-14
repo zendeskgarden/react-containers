@@ -62,5 +62,5 @@ SplitterContainer.propTypes = {
   valueNow: PropTypes.number,
   onChange: PropTypes.func,
   position: PropTypes.oneOf([SplitterPosition.LEADS, SplitterPosition.TRAILS]).isRequired,
-  rtl: PropTypes.bool,
+  rtl: PropTypes.bool
 };

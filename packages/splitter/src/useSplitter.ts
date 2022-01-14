@@ -130,7 +130,7 @@ const xor = (a: boolean | undefined, b: boolean | undefined) => {
   }
 
   return a || b;
-}
+};
 
 export function useSplitter({
   ariaLabel,
@@ -187,15 +187,17 @@ export function useSplitter({
     // capture distance from top side of viewport to the separator position offset by vertical scroll
     offsetRef.current.top = rect.top - separatorPosition + windowObject.scrollY;
     // capture distance from bottom side of viewport to the separator position offset by vertical scroll
-    offsetRef.current.bottom = clientHeight - rect.bottom - separatorPosition - windowObject.scrollY;
+    offsetRef.current.bottom =
+      clientHeight - rect.bottom - separatorPosition - windowObject.scrollY;
   }, [offsetRef, separatorRef, separatorPosition, windowObject]);
 
   const onSplitterMouseMove = useCallback(
     (event: MouseEvent) => {
       event.preventDefault();
       const elem = separatorRef.current;
-      const clientWidth =
-        xor(rtl, position === SplitterPosition.LEADS) ? windowObject.document.body.clientWidth : undefined;
+      const clientWidth = xor(rtl, position === SplitterPosition.LEADS)
+        ? windowObject.document.body.clientWidth
+        : undefined;
       const clientHeight =
         position === SplitterPosition.LEADS ? windowObject.document.body.clientHeight : undefined;
 
@@ -209,8 +211,9 @@ export function useSplitter({
           normalizePointerToSeparator(offset, event.pageY, elem?.offsetHeight, clientHeight)
         );
       } else {
-        const offset =
-          xor(rtl, position === SplitterPosition.LEADS) ? offsetRef.current.right : offsetRef.current.left;
+        const offset = xor(rtl, position === SplitterPosition.LEADS)
+          ? offsetRef.current.right
+          : offsetRef.current.left;
 
         // normalizePointerToSeparator aligns pointer true pixel coordinates and to the separator accounting for relative DOM positioning
         setRangedSeparatorPosition(
@@ -232,8 +235,9 @@ export function useSplitter({
     (event: TouchEvent) => {
       const { pageY, pageX } = event.targetTouches[0];
       const elem = separatorRef.current;
-      const clientWidth =
-        xor(rtl, position === SplitterPosition.LEADS) ? windowObject.document.body.clientWidth : undefined;
+      const clientWidth = xor(rtl, position === SplitterPosition.LEADS)
+        ? windowObject.document.body.clientWidth
+        : undefined;
       const clientHeight =
         position === SplitterPosition.LEADS ? windowObject.document.body.clientHeight : undefined;
 
@@ -247,8 +251,9 @@ export function useSplitter({
           normalizePointerToSeparator(offset, pageY, elem?.offsetHeight, clientHeight)
         );
       } else {
-        const offset =
-          xor(rtl, position === SplitterPosition.LEADS) ? offsetRef.current.right : offsetRef.current.left;
+        const offset = xor(rtl, position === SplitterPosition.LEADS)
+          ? offsetRef.current.right
+          : offsetRef.current.left;
 
         // normalizePointerToSeparator aligns pointer true pixel coordinates and to the separator accounting for relative DOM positioning
         setRangedSeparatorPosition(

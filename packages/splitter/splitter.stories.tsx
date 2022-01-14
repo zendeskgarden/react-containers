@@ -58,7 +58,7 @@ export const Container = ({
   defaultValueNow,
   keyboardStep,
   position,
-  rtl,
+  rtl
 }) => {
   const Splitter = () => {
     const mode = rtl ? 'rtl' : 'ltr';
@@ -136,7 +136,7 @@ export const Hook = ({
   defaultValueNow,
   keyboardStep,
   position,
-  rtl,
+  rtl
 }) => {
   const Splitter = () => {
     const mode = rtl ? 'rtl' : 'ltr';
@@ -149,7 +149,7 @@ export const Hook = ({
       defaultValueNow,
       keyboardStep,
       position,
-      rtl,
+      rtl
     });
     const separatorProps = getSeparatorProps({
       style: {
@@ -314,10 +314,10 @@ ManyHooks.args = ARGS;
 ManyHooks.argTypes = {
   position: {
     table: {
-      disable: true,
+      disable: true
     }
   }
-}
+};
 ManyHooks.storyName = 'multiple useSplitter';
 ManyHooks.parameters = {
   docs: {
@@ -327,7 +327,16 @@ ManyHooks.parameters = {
   }
 };
 
-export const Controlled = ({ type, min, max, orientation, ariaLabel, keyboardStep, position, rtl }) => {
+export const Controlled = ({
+  type,
+  min,
+  max,
+  orientation,
+  ariaLabel,
+  keyboardStep,
+  position,
+  rtl
+}) => {
   const Splitter = () => {
     const [value, onChange] = useState(300);
     const mode = rtl ? 'rtl' : 'ltr';
@@ -341,7 +350,7 @@ export const Controlled = ({ type, min, max, orientation, ariaLabel, keyboardSte
       keyboardStep,
       onChange,
       position,
-      rtl,
+      rtl
     });
     const separatorProps = getSeparatorProps({
       style: {
