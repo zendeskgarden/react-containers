@@ -5,8 +5,10 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import { getParentNode, getParentTree, HandlerFunction, isEndNode, isParentNode } from './utils';
 import { DocumentPosition } from '@zendeskgarden/container-utilities';
+
+import { getParentNode, getParentTree, isEndNode, isParentNode } from './utils';
+import { HandlerFunction } from './types';
 
 /**
  * Moves focus to the next node that is focusable without opening or closing a node.

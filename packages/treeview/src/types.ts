@@ -12,7 +12,6 @@ import {
   IUseSelectionState
 } from '@zendeskgarden/container-selection';
 import { ContainerOrientation } from '@zendeskgarden/container-utilities';
-import { HandlerFunction } from './utils';
 
 export interface IUseTreeviewProps<Item> extends IUseSelectionProps<Item> {
   /** Determines which sections are expanded in a controlled treeview */
@@ -42,7 +41,11 @@ export interface IUseTreeviewReturnValue<Item> extends IUseSelectionState<Item> 
   getGroupProps: <T>(options?: T & HTMLProps<any>) => any;
 }
 
+export type HandlerFunction = (target: HTMLElement) => void;
+
 export interface IShortcutMapping {
   horizontal: HandlerFunction;
   vertical: HandlerFunction;
 }
+
+export type ShortcutMappingRecord = Record<string, IShortcutMapping>;

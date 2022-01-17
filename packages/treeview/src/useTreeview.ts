@@ -10,7 +10,7 @@ import {
   composeEventHandlers,
   ContainerOrientation,
   getControlledValue,
-  KEY_CODES
+  KEYS
 } from '@zendeskgarden/container-utilities';
 import { useSelection } from '@zendeskgarden/container-selection';
 
@@ -23,13 +23,14 @@ import {
   handleHome
 } from './keyboardInteractions';
 import {
+  HandlerFunction,
   IGetNodeProps,
   IGetTreeProps,
   IShortcutMapping,
   IUseTreeviewProps,
-  IUseTreeviewReturnValue
+  IUseTreeviewReturnValue,
+  ShortcutMappingRecord
 } from './types';
-import { HandlerFunction } from './utils';
 
 function requiredArguments(arg: any, argStr: string, methodName: string) {
   if (typeof arg === 'undefined' || arg === null) {
@@ -42,15 +43,7 @@ function requiredArguments(arg: any, argStr: string, methodName: string) {
 const hasModifierKeyPressed = (e: KeyboardEvent): boolean =>
   e.ctrlKey || e.metaKey || e.shiftKey || e.altKey;
 
-const SUPPORTED_KEYS = [
-  KEY_CODES.ENTER,
-  KEY_CODES.HOME,
-  KEY_CODES.END,
-  KEY_CODES.UP,
-  KEY_CODES.DOWN,
-  KEY_CODES.RIGHT,
-  KEY_CODES.LEFT
-];
+const SUPPORTED_KEYS = [KEYS.ENTER, KEYS.HOME, KEYS.END, KEYS.UP, KEYS.DOWN, KEYS.RIGHT, KEYS.LEFT];
 
 /**
  * Custom hook to manage a TreeView component.
@@ -149,7 +142,7 @@ export function useTreeview<Item = any>({
       onKeyDown: composeEventHandlers(onKeyDown, (event: KeyboardEvent): void => {
         const target = focusRef.current as HTMLElement;
 
-        if (!SUPPORTED_KEYS.includes(event.keyCode) || hasModifierKeyPressed(event)) {
+        if (!SUPPORTED_KEYS.includes(event.key) || hasModifierKeyPressed(event)) {
           return;
         }
 
@@ -169,38 +162,38 @@ export function useTreeview<Item = any>({
           onClickFn(event);
         };
 
-        const shortcutMapping = {
-          [KEY_CODES.UP]: {
+        const shortcutMapping: ShortcutMappingRecord = {
+          [KEYS.UP]: {
             vertical: handleArrowUp,
             horizontal: handleLeft
           },
-          [KEY_CODES.DOWN]: {
+          [KEYS.DOWN]: {
             vertical: handleArrowDown,
             horizontal: handleRight
           },
-          [KEY_CODES.RIGHT]: {
+          [KEYS.RIGHT]: {
             vertical: rtl ? handleLeft : handleRight,
             horizontal: rtl ? handleArrowUp : handleArrowDown
           },
-          [KEY_CODES.LEFT]: {
+          [KEYS.LEFT]: {
             vertical: rtl ? handleRight : handleLeft,
             horizontal: rtl ? handleArrowDown : handleArrowUp
           },
-          [KEY_CODES.HOME]: {
+          [KEYS.HOME]: {
             vertical: handleHome,
             horizontal: handleHome
           },
-          [KEY_CODES.END]: {
+          [KEYS.END]: {
             vertical: handleEnd,
             horizontal: handleEnd
           },
-          [KEY_CODES.ENTER]: {
+          [KEYS.ENTER]: {
             vertical: handleEnter,
             horizontal: handleEnter
           }
         };
 
-        const shortcutMappingElement: IShortcutMapping = shortcutMapping[event.keyCode];
+        const shortcutMappingElement: IShortcutMapping = shortcutMapping[event.key];
         const handler: HandlerFunction =
           orientation === ContainerOrientation.VERTICAL
             ? shortcutMappingElement.vertical
