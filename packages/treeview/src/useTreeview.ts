@@ -92,7 +92,9 @@ export function useTreeview<Item = any>({
 
   const getTreeProps = ({ label, role = 'tree', onFocus, ...props }: IGetTreeProps = {}) => {
     if (role !== 'tree') {
-      throw new Error(`Accessibility Error: "role" must have value "tree"`);
+      throw new Error(
+        `Accessibility Error: "role" prop must have value "tree" in "getTreeProps()"`
+      );
     }
 
     return {
@@ -121,11 +123,15 @@ export function useTreeview<Item = any>({
     requiredArguments(focusRef, 'focusRef', 'getNodeProps');
 
     if (role !== 'treeitem') {
-      throw new Error(`Accessibility Error: "role" must have value "treeitem"`);
+      throw new Error(
+        `Accessibility Error: "role" prop must have value "treeitem" in "getNodeProps()"`
+      );
     }
 
     if (nodeType !== 'end' && nodeType !== 'parent') {
-      throw new Error(`Accessibility Error: "nodeType" value must be either "parent" or "end"`);
+      throw new Error(
+        `Accessibility Error: "nodeType" prop value must be either "parent" or "end" in "getNodeProps()"`
+      );
     }
 
     const expanded = nodeType === 'parent' ? isNodeExpanded(item) : undefined;
@@ -220,7 +226,9 @@ export function useTreeview<Item = any>({
 
   const getGroupProps = ({ role = 'group', ...props }: HTMLProps<any> = {}) => {
     if (role !== 'group') {
-      throw new Error(`Accessibility Error: "role" must have value "group"`);
+      throw new Error(
+        `Accessibility Error: "role" prop must have value "group" in "getGroupProps()"`
+      );
     }
 
     return {
