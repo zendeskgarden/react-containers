@@ -91,10 +91,12 @@ export function useTreeview<Item = any>({
   };
 
   const getTreeProps = ({ label, role = 'tree', onFocus, ...props }: IGetTreeProps = {}) => {
-    // TODO: Throw error role is not tree?
+    if (role !== 'tree') {
+      throw new Error(`Accessibility Error: "role" must have value "tree"`);
+    }
 
     return {
-      role: role === null || role === undefined ? role : 'tree',
+      role,
       'aria-label': label,
       'data-garden-container-id': 'containers.treeview',
       'data-garden-container-version': PACKAGE_VERSION,
@@ -116,6 +118,15 @@ export function useTreeview<Item = any>({
     }: IGetNodeProps<Item> = {} as any
   ) => {
     requiredArguments(item, 'item', 'getNodeProps');
+    requiredArguments(focusRef, 'focusRef', 'getNodeProps');
+
+    if (role !== 'treeitem') {
+      throw new Error(`Accessibility Error: "role" must have value "treeitem"`);
+    }
+
+    if (nodeType !== 'end' && nodeType !== 'parent') {
+      throw new Error(`Accessibility Error: "nodeType" value must be either "parent" or "end"`);
+    }
 
     const expanded = nodeType === 'parent' ? isNodeExpanded(item) : undefined;
 
@@ -128,7 +139,7 @@ export function useTreeview<Item = any>({
     });
 
     return {
-      role: role === null || role === undefined ? role : 'treeitem',
+      role,
       item,
       focusRef,
       'aria-expanded': expanded,
@@ -208,9 +219,12 @@ export function useTreeview<Item = any>({
   };
 
   const getGroupProps = ({ role = 'group', ...props }: HTMLProps<any> = {}) => {
-    // TODO: Throw error role is not group?
+    if (role !== 'group') {
+      throw new Error(`Accessibility Error: "role" must have value "group"`);
+    }
+
     return {
-      role: role === null || role === undefined ? role : 'group',
+      role,
       'data-garden-container-version': PACKAGE_VERSION,
       ...props
     };
