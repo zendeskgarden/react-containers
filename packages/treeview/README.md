@@ -118,10 +118,3 @@ import { TreeviewContainer } from '@zendeskgarden/container-treeview';
 
 <TreeviewContainer>{({ getTreeviewProps }) => <div {...getTreeviewProps()} />}</TreeviewContainer>;
 ```
-
-<!--
-  TODO:
-
-  * [ ] Add Treeview to root README table.
-  * [ ] Delete this comment block.
--->
