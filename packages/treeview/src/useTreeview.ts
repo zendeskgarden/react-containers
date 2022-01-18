@@ -52,7 +52,7 @@ const SUPPORTED_KEYS = [KEYS.ENTER, KEYS.HOME, KEYS.END, KEYS.UP, KEYS.DOWN, KEY
  */
 export function useTreeview<Item = any>({
   openNodes,
-  orientation = ContainerOrientation.HORIZONTAL,
+  orientation = ContainerOrientation.VERTICAL,
   rtl,
   onChange = () => undefined,
   ...options
