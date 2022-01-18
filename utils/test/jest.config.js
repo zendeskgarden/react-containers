@@ -30,7 +30,7 @@ module.exports = {
   },
   collectCoverageFrom: [
     '<rootDir>/packages/*/src/**/*.{js,jsx,ts,tsx}',
-    '!<rootDir>/packages/*/src/index.js',
+    '!<rootDir>/packages/*/src/index.{js,ts}',
     '!<rootDir>/packages/.template/**',
     '!**/node_modules/**',
     '!**/vendor/**'
