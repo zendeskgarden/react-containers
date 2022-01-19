@@ -39,7 +39,6 @@ SplitterContainer.propTypes = {
       scrollX: PropTypes.number.isRequired,
       scrollY: PropTypes.number.isRequired,
       document: PropTypes.oneOfType([
-        PropTypes.instanceOf(Document),
         PropTypes.shape({
           addEventListener: PropTypes.func.isRequired,
           removeEventListener: PropTypes.func.isRequired,
