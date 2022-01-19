@@ -30,6 +30,7 @@ export const SplitterContainer: React.FC<ISplitterContainerProps> = props => {
 };
 
 SplitterContainer.propTypes = {
+  idPrefix: PropTypes.string,
   ariaLabel: PropTypes.string,
   children: PropTypes.func,
   render: PropTypes.func,

@@ -17,11 +17,9 @@ import {
   normalizePointerToSeparator
 } from './useSplitter';
 
-// make useId consistent for testing purposes
-jest.mock('@zendeskgarden/container-utilities', () => ({
-  composeEventHandlers: jest.requireActual('@zendeskgarden/container-utilities')
-    .composeEventHandlers,
-  useId: jest.fn(() => '1')
+// make useUIDSeed consistent for testing purposes
+jest.mock('react-uid', () => ({
+  useUIDSeed: jest.fn(() => () => '1')
 }));
 
 const paneStyle: React.CSSProperties = {
@@ -208,12 +206,12 @@ describe('SplitterContainer', () => {
         Object {
           "data-garden-container-id": "containers.splitter.primaryPane",
           "data-garden-container-version": "version",
-          "id": "1",
+          "id": "1--primary-pane",
         }
       `);
       expect(separatorProps).toMatchInlineSnapshot(`
         Object {
-          "aria-controls": "1",
+          "aria-controls": "1--primary-pane",
           "aria-label": "flex-pane",
           "aria-orientation": "vertical",
           "aria-valuemax": 100,
@@ -236,7 +234,7 @@ describe('SplitterContainer', () => {
       type AccessibilityAttributes = [string, string | SplitterOrientation];
       it.each<AccessibilityAttributes>([
         ['role', 'separator'],
-        ['aria-controls', '1'],
+        ['aria-controls', '1--primary-pane'],
         ['aria-label', 'flex-pane'],
         ['aria-valuemin', '0'],
         ['aria-valuemax', '100'],

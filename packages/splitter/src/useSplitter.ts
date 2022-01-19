@@ -5,7 +5,8 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import { composeEventHandlers, useId } from '@zendeskgarden/container-utilities';
+import { useUIDSeed } from 'react-uid';
+import { composeEventHandlers } from '@zendeskgarden/container-utilities';
 import React, { HTMLProps, MouseEvent, useCallback, useMemo, useRef, useState } from 'react';
 
 export enum SplitterOrientation {
@@ -49,6 +50,8 @@ export interface ISplitterGetterReturnProps extends HTMLProps<any> {
 }
 
 export interface IUseSplitterProps extends Omit<HTMLProps<any>, 'onChange'> {
+  /** Prefixes IDs for the separator */
+  idPrefix?: string;
   /** An aria-label for the separator */
   ariaLabel?: string;
   /** A browser window object to attach events to */
@@ -133,6 +136,7 @@ const xor = (a: boolean | undefined, b: boolean | undefined) => {
 };
 
 export function useSplitter({
+  idPrefix,
   ariaLabel,
   windowObject = window,
   type,
@@ -147,7 +151,9 @@ export function useSplitter({
   rtl,
   ...props
 }: IUseSplitterProps): IUseSplitterReturnValue {
-  const primaryPaneId = useId();
+  const seed = useUIDSeed();
+  const [prefix] = useState<string>(idPrefix || seed(`splitter_${PACKAGE_VERSION}`));
+  const PRIMARY_PANE_ID = `${prefix}--primary-pane`;
   const isControlled = valueNow !== undefined && valueNow !== null;
   const [state, setState] = useState(defaultValueNow);
   const offsetRef = useRef<{ left: number; right: number; top: number; bottom: number }>({
@@ -381,7 +387,7 @@ export function useSplitter({
       onKeyDown,
       onTouchStart,
       'aria-label': ariaLabel,
-      'aria-controls': primaryPaneId,
+      'aria-controls': PRIMARY_PANE_ID,
       'aria-valuenow': separatorPosition,
       'aria-valuemin': min,
       'aria-valuemax': max,
@@ -395,7 +401,7 @@ export function useSplitter({
       onKeyDown,
       onTouchStart,
       ariaLabel,
-      primaryPaneId,
+      PRIMARY_PANE_ID,
       separatorPosition,
       min,
       max,
@@ -407,10 +413,10 @@ export function useSplitter({
     ({ ...other } = {}): ISplitterGetterReturnProps => ({
       'data-garden-container-id': 'containers.splitter.primaryPane',
       'data-garden-container-version': PACKAGE_VERSION,
-      id: primaryPaneId,
+      id: PRIMARY_PANE_ID,
       ...other
     }),
-    [primaryPaneId]
+    [PRIMARY_PANE_ID]
   );
 
   return useMemo(
