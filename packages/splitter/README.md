@@ -28,7 +28,7 @@ import {
   useSplitter,
   SplitterType,
   SplitterOrientation,
-  SplitterPlacement
+  SplitterPosition
 } from '@zendeskgarden/container-splitter';
 
 const Splitter = () => {
@@ -67,7 +67,7 @@ import {
   SplitterContainer,
   SplitterType,
   SplitterOrientation,
-  SplitterPlacement
+  SplitterPosition
 } from '@zendeskgarden/container-splitter';
 
 <SplitterContainer
