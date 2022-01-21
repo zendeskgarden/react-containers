@@ -7,8 +7,8 @@
 
 import { useState, useEffect } from 'react';
 
-export const useWindow = (windowObject?: Partial<Window>) => {
-  const [controlledWindow, setControlledWindow] = useState<Partial<Window>>();
+export const useWindow = <T = Window>(windowObject?: T) => {
+  const [controlledWindow, setControlledWindow] = useState<T | Window>();
 
   /**
    * Only reference `window` after initial render to support SSR environments
