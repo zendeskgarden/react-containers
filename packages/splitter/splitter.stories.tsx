@@ -83,7 +83,10 @@ export const Container = ({
             }
           });
           const primaryPaneProps = getPrimaryPaneProps({
-            style: primaryPaneStyle
+            style: {
+              ...primaryPaneStyle,
+              flexBasis: valueNow
+            }
           });
 
           return (
@@ -94,13 +97,7 @@ export const Container = ({
                 flexDirection: orientation === SplitterOrientation.HORIZONTAL ? 'column' : 'row'
               }}
             >
-              <div
-                {...primaryPaneProps}
-                style={{
-                  ...primaryPaneProps.style,
-                  flexBasis: valueNow
-                }}
-              >
+              <div {...primaryPaneProps}>
                 Thai tabasco pepper cremini mushrooms crumbled lentils one bowl almonds delightful
                 blueberry scones simmer muffins red pepper jalapeño cherry pasta chocolate
                 bruschetta.
@@ -158,7 +155,10 @@ export const Hook = ({
       }
     });
     const primaryPaneProps = getPrimaryPaneProps({
-      style: primaryPaneStyle
+      style: {
+        ...primaryPaneStyle,
+        flexBasis: valueNow
+      }
     });
 
     return (
@@ -169,13 +169,7 @@ export const Hook = ({
           flexDirection: orientation === SplitterOrientation.HORIZONTAL ? 'column' : 'row'
         }}
       >
-        <div
-          {...primaryPaneProps}
-          style={{
-            ...primaryPaneProps.style,
-            flexBasis: valueNow
-          }}
-        >
+        <div {...primaryPaneProps}>
           Thai tabasco pepper cremini mushrooms crumbled lentils one bowl almonds delightful
           blueberry scones simmer muffins red pepper jalapeño cherry pasta chocolate bruschetta.
         </div>
@@ -246,7 +240,10 @@ export const ManyHooks = ({
       }
     });
     const firstPrimaryPane = firstSplitterBag.getPrimaryPaneProps({
-      style: primaryPaneStyle
+      style: {
+        ...primaryPaneStyle,
+        flexBasis: firstSplitterBag.valueNow
+      }
     });
 
     const secondSeparator = secondSplitterBag.getSeparatorProps({
@@ -257,7 +254,10 @@ export const ManyHooks = ({
     });
 
     const secondPrimaryPane = secondSplitterBag.getPrimaryPaneProps({
-      style: primaryPaneStyle
+      style: {
+        ...primaryPaneStyle,
+        flexBasis: secondSplitterBag.valueNow
+      }
     });
 
     return (
@@ -271,13 +271,7 @@ export const ManyHooks = ({
               flexDirection: orientation === SplitterOrientation.HORIZONTAL ? 'column' : 'row'
             }}
           >
-            <div
-              {...firstPrimaryPane}
-              style={{
-                ...firstPrimaryPane.style,
-                flexBasis: firstSplitterBag.valueNow
-              }}
-            >
+            <div {...firstPrimaryPane}>
               Thai tabasco pepper cremini mushrooms crumbled lentils one bowl almonds delightful
               blueberry scones simmer muffins red pepper jalapeño cherry pasta chocolate bruschetta.
             </div>
@@ -291,13 +285,7 @@ export const ManyHooks = ({
               lemongrass agave green tea homemade balsamic
             </div>
             <div {...secondSeparator} />
-            <div
-              {...secondPrimaryPane}
-              style={{
-                ...secondPrimaryPane.style,
-                flexBasis: secondSplitterBag.valueNow
-              }}
-            >
+            <div {...secondPrimaryPane}>
               Thai tabasco pepper cremini mushrooms crumbled lentils one bowl almonds delightful
               blueberry scones simmer muffins red pepper jalapeño cherry pasta chocolate bruschetta.
             </div>
@@ -360,7 +348,10 @@ export const Controlled = ({
     });
 
     const primaryPaneProps = getPrimaryPaneProps({
-      style: primaryPaneStyle
+      style: {
+        ...primaryPaneStyle,
+        flexBasis: valueNow
+      }
     });
 
     return (
@@ -371,13 +362,7 @@ export const Controlled = ({
           flexDirection: orientation === SplitterOrientation.HORIZONTAL ? 'column' : 'row'
         }}
       >
-        <div
-          {...primaryPaneProps}
-          style={{
-            ...primaryPaneProps.style,
-            flexBasis: valueNow
-          }}
-        >
+        <div {...primaryPaneProps}>
           <p>Controlled ValueNow: {value}</p>
           <p>
             Thai tabasco pepper cremini mushrooms crumbled lentils one bowl almonds delightful

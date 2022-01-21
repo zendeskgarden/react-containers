@@ -34,7 +34,7 @@ SplitterContainer.propTypes = {
   ariaLabel: PropTypes.string,
   children: PropTypes.func,
   render: PropTypes.func,
-  windowObject: PropTypes.oneOfType([
+  environment: PropTypes.oneOfType([
     PropTypes.shape({
       scrollX: PropTypes.number.isRequired,
       scrollY: PropTypes.number.isRequired,

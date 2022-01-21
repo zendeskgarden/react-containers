@@ -81,7 +81,7 @@ describe('SplitterContainer', () => {
     orientation = SplitterOrientation.VERTICAL,
     defaultValueNow = 20,
     position = SplitterPosition.TRAILS,
-    windowObject = window,
+    environment,
     rtl
   }: {
     type?: SplitterType;
@@ -90,12 +90,12 @@ describe('SplitterContainer', () => {
     orientation?: SplitterOrientation;
     defaultValueNow?: number;
     position?: SplitterPosition;
-    windowObject?: Window | IWindowLike;
+    environment?: Window | IWindowLike;
     rtl?: boolean;
   }) => (
     <SplitterContainer
       ariaLabel="flex-pane"
-      windowObject={windowObject}
+      environment={environment}
       type={type}
       min={min}
       max={max}
@@ -132,7 +132,7 @@ describe('SplitterContainer', () => {
     orientation = SplitterOrientation.VERTICAL,
     valueNow,
     onChange,
-    windowObject = window
+    environment
   }: {
     type?: SplitterType;
     min?: number;
@@ -140,10 +140,10 @@ describe('SplitterContainer', () => {
     orientation?: SplitterOrientation;
     valueNow: number;
     onChange?: (value: number) => void;
-    windowObject?: Window | IWindowLike;
+    environment?: Window | IWindowLike;
   }) => (
     <SplitterContainer
-      windowObject={windowObject}
+      environment={environment}
       ariaLabel="flex-pane"
       type={type}
       min={min}
@@ -646,7 +646,7 @@ describe('SplitterContainer', () => {
         const defaultValueNow = 30;
         const { getByRole } = render(
           <UncontrolledTestSplitter
-            windowObject={windowObjectMock}
+            environment={windowObjectMock}
             orientation={SplitterOrientation.VERTICAL}
             defaultValueNow={defaultValueNow}
             position={SplitterPosition.LEADS}
@@ -679,7 +679,7 @@ describe('SplitterContainer', () => {
         const defaultValueNow = 30;
         const { getByRole } = render(
           <UncontrolledTestSplitter
-            windowObject={windowObjectMock}
+            environment={windowObjectMock}
             orientation={SplitterOrientation.HORIZONTAL}
             defaultValueNow={defaultValueNow}
             position={SplitterPosition.LEADS}
@@ -713,7 +713,7 @@ describe('SplitterContainer', () => {
           const defaultValueNow = 30;
           const { getByRole } = render(
             <UncontrolledTestSplitter
-              windowObject={windowObjectMock}
+              environment={windowObjectMock}
               orientation={SplitterOrientation.VERTICAL}
               defaultValueNow={defaultValueNow}
               position={SplitterPosition.LEADS}
@@ -750,7 +750,7 @@ describe('SplitterContainer', () => {
         const defaultValueNow = 30;
         const { getByRole } = render(
           <UncontrolledTestSplitter
-            windowObject={windowObjectMock}
+            environment={windowObjectMock}
             orientation={SplitterOrientation.VERTICAL}
             defaultValueNow={defaultValueNow}
             position={SplitterPosition.LEADS}
@@ -785,7 +785,7 @@ describe('SplitterContainer', () => {
         const defaultValueNow = 30;
         const { getByRole } = render(
           <UncontrolledTestSplitter
-            windowObject={windowObjectMock}
+            environment={windowObjectMock}
             orientation={SplitterOrientation.HORIZONTAL}
             defaultValueNow={defaultValueNow}
             position={SplitterPosition.LEADS}
@@ -821,7 +821,7 @@ describe('SplitterContainer', () => {
           const defaultValueNow = 30;
           const { getByRole } = render(
             <UncontrolledTestSplitter
-              windowObject={windowObjectMock}
+              environment={windowObjectMock}
               orientation={SplitterOrientation.VERTICAL}
               defaultValueNow={defaultValueNow}
               position={SplitterPosition.LEADS}
@@ -859,7 +859,7 @@ describe('SplitterContainer', () => {
       it('should increase vertical splitter when arrow left is pressed from 30 to 80', () => {
         const { getByRole } = render(
           <UncontrolledTestSplitter
-            windowObject={windowObjectMock}
+            environment={windowObjectMock}
             orientation={SplitterOrientation.VERTICAL}
             defaultValueNow={30}
             position={SplitterPosition.TRAILS}
@@ -876,7 +876,7 @@ describe('SplitterContainer', () => {
         it('should decrease vertical splitter when arrow right is pressed from 80 to 30', () => {
           const { getByRole } = render(
             <UncontrolledTestSplitter
-              windowObject={windowObjectMock}
+              environment={windowObjectMock}
               orientation={SplitterOrientation.VERTICAL}
               defaultValueNow={80}
               position={SplitterPosition.TRAILS}
