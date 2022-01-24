@@ -9,7 +9,7 @@ import { render } from '@testing-library/react';
 import React from 'react';
 import { useWindow } from './useWindow';
 
-describe('useDocument()', () => {
+describe('useWindow()', () => {
   it('returns global window by default', () => {
     let result;
 
