@@ -51,7 +51,7 @@ SplitterContainer.propTypes = {
         })
       ]).isRequired
     })
-  ]),
+  ]).isRequired,
   orientation: PropTypes.oneOf([SplitterOrientation.VERTICAL, SplitterOrientation.HORIZONTAL])
     .isRequired,
   keyboardStep: PropTypes.number,

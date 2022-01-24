@@ -38,7 +38,8 @@ const Splitter = () => {
     orientation: SplitterOrientation.VERTICAL,
     min: 50,
     max: 100,
-    position: SplitterPosition.TRAILS
+    position: SplitterPosition.TRAILS,
+    environment: window
   });
 
   const separatorProps = getSeparatorProps();
@@ -77,6 +78,7 @@ import {
   min={50}
   max={100}
   position={SplitterPosition.TRAILS}
+  environment={window}
 >
   {({ getSeparatorProps, getPrimaryPaneProps, valueNow }) => {
     const separatorProps = getSeparatorProps();

@@ -19,14 +19,14 @@
     }
   },
   "index.cjs.js": {
-    "bundled": 4933,
-    "minified": 3030,
-    "gzipped": 1397
+    "bundled": 4530,
+    "minified": 2881,
+    "gzipped": 1341
   },
   "index.esm.js": {
-    "bundled": 4525,
-    "minified": 2658,
-    "gzipped": 1283,
+    "bundled": 4144,
+    "minified": 2530,
+    "gzipped": 1227,
     "treeshaked": {
       "rollup": {
         "code": 356,

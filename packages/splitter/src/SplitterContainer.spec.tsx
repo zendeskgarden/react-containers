@@ -81,7 +81,7 @@ describe('SplitterContainer', () => {
     orientation = SplitterOrientation.VERTICAL,
     defaultValueNow = 20,
     position = SplitterPosition.TRAILS,
-    environment,
+    environment = window,
     rtl
   }: {
     type?: SplitterType;
@@ -132,7 +132,7 @@ describe('SplitterContainer', () => {
     orientation = SplitterOrientation.VERTICAL,
     valueNow,
     onChange,
-    environment
+    environment = window
   }: {
     type?: SplitterType;
     min?: number;
@@ -193,6 +193,7 @@ describe('SplitterContainer', () => {
           max={100}
           orientation={SplitterOrientation.VERTICAL}
           position={SplitterPosition.TRAILS}
+          environment={window}
         >
           {({ getSeparatorProps, getPrimaryPaneProps }: IUseSplitterReturnValue) => {
             separatorProps = getSeparatorProps();

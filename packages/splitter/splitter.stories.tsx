@@ -66,6 +66,7 @@ export const Container = ({
     return (
       <SplitterContainer
         defaultValueNow={defaultValueNow}
+        environment={window}
         ariaLabel={ariaLabel}
         type={type}
         min={min}
@@ -146,7 +147,8 @@ export const Hook = ({
       defaultValueNow,
       keyboardStep,
       position,
-      rtl
+      rtl,
+      environment: window
     });
     const separatorProps = getSeparatorProps({
       style: {
@@ -220,7 +222,8 @@ export const ManyHooks = ({
       defaultValueNow,
       keyboardStep,
       position: SplitterPosition.TRAILS,
-      rtl
+      rtl,
+      environment: window
     });
     const secondSplitterBag = useSplitter({
       type,
@@ -231,7 +234,8 @@ export const ManyHooks = ({
       defaultValueNow,
       keyboardStep,
       position: SplitterPosition.LEADS,
-      rtl
+      rtl,
+      environment: window
     });
     const firstSeparator = firstSplitterBag.getSeparatorProps({
       style: {
@@ -338,7 +342,8 @@ export const Controlled = ({
       keyboardStep,
       onChange,
       position,
-      rtl
+      rtl,
+      environment: window
     });
     const separatorProps = getSeparatorProps({
       style: {

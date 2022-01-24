@@ -14,4 +14,3 @@ export { KEY_CODES, KEYS } from './utils/KeyboardEventValues';
 export { DocumentPosition } from './utils/DocumentPosition';
 export { useId } from './utils/useId';
 export { ContainerOrientation } from './utils/ContainerOrientation';
-export { useWindow } from './utils/useWindow';
