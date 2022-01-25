@@ -6,13 +6,9 @@
  */
 
 /* Hooks */
-export { useSplitter } from './useSplitter';
-export type {
-  IUseSplitterProps,
-  IUseSplitterReturnValue,
-  SplitterOrientation,
-  SplitterType
-} from './useSplitter';
+export { useSplitter, SplitterOrientation, SplitterType, SplitterPosition } from './useSplitter';
+
+export type { IUseSplitterProps, IUseSplitterReturnValue } from './useSplitter';
 
 /* Render-props */
 export { SplitterContainer } from './SplitterContainer';
