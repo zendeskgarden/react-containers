@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-splitter@0.1.1...@zendeskgarden/container-splitter@0.2.0) (2022-01-25)
+
+
+### Bug Fixes
+
+* **splitter:** fix offset for pointer to separator alignment ([#405](https://github.com/zendeskgarden/react-containers/issues/405)) ([b1383d4](https://github.com/zendeskgarden/react-containers/commit/b1383d4bdeed1fe7b263145052e4621910ef1773))
+
+
+### Features
+
+* **splitter:** v0.2.0 ([2a566e3](https://github.com/zendeskgarden/react-containers/commit/2a566e3f949342b92ae4a42b2c33df6a16032d75))
+
+
+
+
+
 ## [0.1.1](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-splitter@0.1.0...@zendeskgarden/container-splitter@0.1.1) (2021-11-30)
 
 **Note:** Version bump only for package @zendeskgarden/container-splitter
