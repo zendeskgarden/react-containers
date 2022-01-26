@@ -6,9 +6,9 @@
  */
 
 module.exports = {
-  stories: ['../packages/**/*.stories.tsx'],
+  stories: ['../packages/**/*.stories.@(tsx|mdx)'],
   addons: [
-    { name: '@storybook/addon-essentials', options: { actions: false, viewport: false } },
+    { name: '@storybook/addon-essentials', options: { viewport: false } },
     '@storybook/addon-a11y',
     '@storybook/addon-storysource',
     '@storybook/addon-postcss'

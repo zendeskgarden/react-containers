@@ -37,6 +37,7 @@ to install.
 | [`@zendeskgarden/container-splitter`](packages/splitter)           | [![npm version][splitter npm version]][splitter npm link]           | [![npm version][splitter size bundle]][splitter size link]           | [![Dependency Status][splitter dependency status]][splitter dependency link]           |
 | [`@zendeskgarden/container-tabs`](packages/tabs)                   | [![npm version][tabs npm version]][tabs npm link]                   | [![npm version][tabs size bundle]][tabs size link]                   | [![Dependency Status][tabs dependency status]][tabs dependency link]                   |
 | [`@zendeskgarden/container-tooltip`](packages/tooltip)             | [![npm version][tooltip npm version]][tooltip npm link]             | [![npm version][tooltip size bundle]][tooltip size link]             | [![Dependency Status][tooltip dependency status]][tooltip dependency link]             |
+| [`@zendeskgarden/container-treeview`](packages/treeview)           | [![npm version][treeview npm version]][treeview npm link]           | [![npm version][treeview size bundle]][treeview size link]           | [![Dependency Status][treeview dependency status]][treeview dependency link]           |
 | [`@zendeskgarden/container-utilities`](packages/utilities)         | [![npm version][utilities npm version]][utilities npm link]         | [![npm version][utilities size bundle]][utilities size link]         | [![Dependency Status][utilities dependency status]][utilities dependency link]         |
 
 [accordion npm version]: https://flat.badgen.net/npm/v/@zendeskgarden/container-accordion
@@ -135,6 +136,12 @@ to install.
 [tooltip size link]: https://bundlephobia.com/result?p=@zendeskgarden/container-tooltip
 [tooltip dependency status]: https://flat.badgen.net/david/dep/zendeskgarden/react-containers/packages/tooltip
 [tooltip dependency link]: https://david-dm.org/zendeskgarden/react-containers?path=packages/tooltip
+[treeview npm version]: https://flat.badgen.net/npm/v/@zendeskgarden/container-treeview
+[treeview npm link]: https://www.npmjs.com/package/@zendeskgarden/container-treeview
+[treeview size bundle]: https://flat.badgen.net/bundlephobia/minzip/@zendeskgarden/container-treeview
+[treeview size link]: https://bundlephobia.com/result?p=@zendeskgarden/container-treeview
+[treeview dependency status]: https://flat.badgen.net/david/dep/zendeskgarden/react-containers/packages/treeview
+[treeview dependency link]: https://david-dm.org/zendeskgarden/react-containers?path=packages/treeview
 [utilities npm version]: https://flat.badgen.net/npm/v/@zendeskgarden/container-utilities
 [utilities npm link]: https://www.npmjs.com/package/@zendeskgarden/container-utilities
 [utilities size bundle]: https://flat.badgen.net/bundlephobia/minzip/@zendeskgarden/container-utilities
@@ -193,14 +200,14 @@ class App extends Component {
   render() {
     return (
       <ScheduleContainer>
-        {elapsed => (
+        {elapsed => {
           const x = 900;
           const styles = {
-            transform: translateX(`${900*elapsed}`px)
-          }
+            transform: translateX(`${900 * elapsed}px`)
+          };
 
-          return <div style={styles} />
-        )}
+          return <div style={styles} />;
+        }}
       </ScheduleContainer>
     );
   }
