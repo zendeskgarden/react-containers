@@ -5,14 +5,20 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
+const options = {
+  backgrounds: false,
+  docs: process.env.BROWSER ? process.env.BROWSER.toUpperCase() !== 'IE11' : true,
+  measure: false,
+  outline: false,
+  viewport: false
+};
+
 module.exports = {
-  stories: ['../packages/**/*.stories.@(tsx|mdx)'],
-  addons: [
-    { name: '@storybook/addon-essentials', options: { viewport: false } },
-    '@storybook/addon-a11y',
-    '@storybook/addon-storysource',
-    '@storybook/addon-postcss'
+  stories: [
+    '../packages/*/demo/**/*.stories.@(js|jsx|ts|tsx|mdx)',
+    '../packages/*/*.stories.@(tsx|mdx)'
   ],
+  addons: [{ name: '@storybook/addon-essentials', options }, '@storybook/addon-a11y'],
   core: {
     builder: 'webpack5'
   },

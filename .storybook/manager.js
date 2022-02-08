@@ -10,6 +10,7 @@ import { create } from '@storybook/theming';
 import { DEFAULT_THEME } from '@zendeskgarden/react-theming';
 
 addons.setConfig({
+  panelPosition: 'right',
   theme: create({
     brandTitle: 'Zendesk Garden React Containers',
     brandUrl: 'https://github.com/zendeskgarden/react-containers',
