@@ -9,7 +9,25 @@
     "moduleResolution": "node",
     "baseUrl": "./",
     "paths": {
-      "garden-test-utils": ["utils/test/utilities.ts"]
+      "garden-test-utils": ["utils/test/utilities.ts"],
+      "@zendeskgarden/container-accordion": ["./packages/accordion/src/index.ts"],
+      "@zendeskgarden/container-breadcrumb": ["./packages/breadcrumb/src/index.ts"],
+      "@zendeskgarden/container-buttongroup": ["./packages/buttongroup/src/index.ts"],
+      "@zendeskgarden/container-field": ["./packages/field/src/index.ts"],
+      "@zendeskgarden/container-focusjail": ["./packages/focusjail/src/index.ts"],
+      "@zendeskgarden/container-focusvisible": ["./packages/focusvisible/src/index.ts"],
+      "@zendeskgarden/container-grid": ["./packages/grid/src/index.ts"],
+      "@zendeskgarden/container-keyboardfocus": ["./packages/keyboardfocus/src/index.ts"],
+      "@zendeskgarden/container-modal": ["./packages/modal/src/index.ts"],
+      "@zendeskgarden/container-pagination": ["./packages/pagination/src/index.ts"],
+      "@zendeskgarden/container-schedule": ["./packages/schedule/src/index.ts"],
+      "@zendeskgarden/container-scrollregion": ["./packages/scrollregion/src/index.ts"],
+      "@zendeskgarden/container-selection": ["./packages/selection/src/index.ts"],
+      "@zendeskgarden/container-splitter": ["./packages/splitter/src/index.ts"],
+      "@zendeskgarden/container-tabs": ["./packages/tabs/src/index.ts"],
+      "@zendeskgarden/container-tooltip": ["./packages/tooltip/src/index.ts"],
+      "@zendeskgarden/container-treeview": ["./packages/treeview/src/index.ts"],
+      "@zendeskgarden/container-utilities": ["./packages/utilities/src/index.ts"]
     },
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
@@ -17,6 +35,6 @@
     "noEmit": true
   },
   "files": ["utils/build/declarations.d.ts", "utils/test/jest.d.ts"],
-  "include": ["packages/*/src/**/*", "packages/*/stories.tsx"],
+  "include": ["packages/*/src/**/*", "packages/*/demo/**/*"],
   "exclude": ["node_modules", "**/node_modules", "**/dist"]
 }
