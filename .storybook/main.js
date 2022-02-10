@@ -6,8 +6,8 @@
  */
 
 const path = require('path');
-const { readdirSync } = require('fs');
 const { DefinePlugin } = require('webpack');
+const postcss = require('postcss');
 const tailwindcss = require('tailwindcss');
 const autoprefixer = require('autoprefixer');
 
@@ -18,10 +18,6 @@ const options = {
   outline: false,
   viewport: false
 };
-
-const PACKAGE_NAMES = readdirSync(path.resolve(__dirname, '../packages')).filter(
-  name => name !== '.template'
-);
 
 module.exports = {
   stories: [
@@ -34,7 +30,7 @@ module.exports = {
       name: '@storybook/addon-postcss',
       options: {
         postcssLoaderOptions: {
-          implementation: require('postcss'),
+          implementation: postcss,
           postcssOptions: {
             plugins: [tailwindcss(path.resolve(__dirname, 'tailwind.config.js')), autoprefixer()]
           }
