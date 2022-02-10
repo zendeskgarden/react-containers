@@ -8,6 +8,8 @@
 const path = require('path');
 const { readdirSync } = require('fs');
 const { DefinePlugin } = require('webpack');
+const tailwindcss = require('tailwindcss');
+const autoprefixer = require('autoprefixer');
 
 const options = {
   backgrounds: false,
@@ -26,7 +28,21 @@ module.exports = {
     '../packages/*/demo/**/*.stories.@(js|jsx|ts|tsx|mdx)',
     '../packages/*/*.stories.@(tsx|mdx)'
   ],
-  addons: [{ name: '@storybook/addon-essentials', options }, '@storybook/addon-a11y'],
+  addons: [
+    { name: '@storybook/addon-essentials', options },
+    {
+      name: '@storybook/addon-postcss',
+      options: {
+        postcssLoaderOptions: {
+          implementation: require('postcss'),
+          postcssOptions: {
+            plugins: [tailwindcss(path.resolve(__dirname, 'tailwind.config.js')), autoprefixer()]
+          }
+        }
+      }
+    },
+    '@storybook/addon-a11y'
+  ],
   core: {
     builder: 'webpack5'
   },

@@ -7,3 +7,6 @@ utils/storybook/coverage
 # Package specific
 packages/**/dist
 package-lock.json
+
+# Demo specific
+demo/**/*

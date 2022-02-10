@@ -5,8 +5,12 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
+import React from 'react';
+import { createGlobalStyle } from 'styled-components';
 import { create } from '@storybook/theming/create';
-import { DEFAULT_THEME } from '@zendeskgarden/react-theming';
+import { DEFAULT_THEME, getColor } from '@zendeskgarden/react-theming';
+
+import './index.css';
 
 export const parameters = {
   actions: { argTypesRegex: '^on[A-Z].*' },
@@ -25,3 +29,18 @@ export const parameters = {
   },
   layout: 'centered'
 };
+
+const GlobalStyle = createGlobalStyle`
+  :focus {
+    outline-color: ${p => getColor('primaryHue', 600, p.theme)};
+  }
+`;
+
+export const decorators = [
+  Story => (
+    <>
+      <GlobalStyle />
+      <Story />
+    </>
+  )
+];
