@@ -6,37 +6,41 @@
  */
 
 import React from 'react';
+import { createGlobalStyle } from 'styled-components';
 import { create } from '@storybook/theming/create';
-import { DEFAULT_THEME } from '@zendeskgarden/react-theming';
+import { DEFAULT_THEME, getColor } from '@zendeskgarden/react-theming';
 
-/**
- * Center "Docs" previews
- * See: https://github.com/storybookjs/storybook/issues/7227#issuecomment-680332161
- */
-export const decorators = [
-  Story => (
-    <div
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        overflow: 'auto'
-      }}
-    >
-      <div style={{ margin: 'auto', maxHeight: '100%' }}>
-        <Story />
-      </div>
-    </div>
-  )
-];
+import './index.css';
 
 export const parameters = {
+  actions: { argTypesRegex: '^on[A-Z].*' },
   backgrounds: {
     default: DEFAULT_THEME.colors.base,
     grid: { disable: true }
+  },
+  controls: {
+    hideNoControlsWarning: true,
+    sort: 'alpha'
   },
   docs: {
     theme: create({
       base: DEFAULT_THEME.colors.base
     })
-  }
+  },
+  layout: 'centered'
 };
+
+const GlobalStyle = createGlobalStyle`
+  :focus {
+    outline-color: ${p => getColor('primaryHue', 600, p.theme)};
+  }
+`;
+
+export const decorators = [
+  Story => (
+    <>
+      <GlobalStyle />
+      <Story />
+    </>
+  )
+];

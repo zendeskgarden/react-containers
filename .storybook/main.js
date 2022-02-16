@@ -5,13 +5,39 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
+const path = require('path');
+const { DefinePlugin } = require('webpack');
+const postcss = require('postcss');
+const tailwindcss = require('tailwindcss');
+const autoprefixer = require('autoprefixer');
+
+const options = {
+  backgrounds: false,
+  docs: process.env.BROWSER ? process.env.BROWSER.toUpperCase() !== 'IE11' : true,
+  measure: false,
+  outline: false,
+  viewport: false
+};
+
 module.exports = {
-  stories: ['../packages/**/*.stories.@(tsx|mdx)'],
+  stories: [
+    '../packages/*/demo/**/*.stories.@(js|jsx|ts|tsx|mdx)',
+    '../packages/*/*.stories.@(tsx|mdx)'
+  ],
   addons: [
-    { name: '@storybook/addon-essentials', options: { viewport: false } },
-    '@storybook/addon-a11y',
-    '@storybook/addon-storysource',
-    '@storybook/addon-postcss'
+    { name: '@storybook/addon-essentials', options },
+    {
+      name: '@storybook/addon-postcss',
+      options: {
+        postcssLoaderOptions: {
+          implementation: postcss,
+          postcssOptions: {
+            plugins: [tailwindcss(path.resolve(__dirname, 'tailwind.config.js')), autoprefixer()]
+          }
+        }
+      }
+    },
+    '@storybook/addon-a11y'
   ],
   core: {
     builder: 'webpack5'
@@ -20,6 +46,15 @@ module.exports = {
     // TODO: remove after June 15, 2022 for IE 11 EOL
     // to support IE11, we need to ensure the manager UI bundle is ES5 compatible
     config.target = ['web', 'es5'];
+
+    return config;
+  },
+  webpackFinal: config => {
+    config.plugins.push(
+      new DefinePlugin({
+        PACKAGE_VERSION: JSON.stringify('storybook')
+      })
+    );
 
     return config;
   }
