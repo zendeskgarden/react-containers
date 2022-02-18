@@ -39,9 +39,9 @@ const AccordionComponent = ({
                 index,
                 role: null,
                 tabIndex: null,
-                disabled,
-                style: { width: '100%', textAlign: 'inherit' }
+                disabled
               })}
+              className="text-left w-full"
               type="button"
             >
               {`Trigger ${index + 1}`}
@@ -65,24 +65,24 @@ const AccordionComponent = ({
 );
 
 interface IArgs extends IUseAccordionProps {
-  as: 'Hook' | 'Container';
+  as: 'hook' | 'container';
   sections: number;
 }
 
-export const AccordionStory: Story<IArgs> = ({ as, sections, expandable, collapsible }: IArgs) => {
+export const AccordionStory: Story<IArgs> = ({ as, sections, ...props }: IArgs) => {
   const Accordion = () => {
-    const hookProps = useAccordion({ expandable, collapsible });
+    const hookProps = useAccordion(props);
     const _sections = Array.from({ length: sections }, (_, index) => index);
 
     switch (as) {
-      case 'Container':
+      case 'container':
         return (
-          <AccordionContainer expandable={expandable} collapsible={collapsible}>
+          <AccordionContainer {...props}>
             {containerProps => <AccordionComponent sections={_sections} {...containerProps} />}
           </AccordionContainer>
         );
 
-      case 'Hook':
+      case 'hook':
       default:
         return <AccordionComponent sections={_sections} {...hookProps} />;
     }

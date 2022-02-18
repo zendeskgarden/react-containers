@@ -35,5 +35,6 @@ AccordionContainer.propTypes = {
   defaultExpandedSections: PropTypes.array,
   expandable: PropTypes.bool,
   collapsible: PropTypes.bool,
-  idPrefix: PropTypes.string
+  idPrefix: PropTypes.string,
+  onChange: PropTypes.func
 };
