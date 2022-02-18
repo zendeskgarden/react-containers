@@ -22,7 +22,7 @@ For live examples check out our
 The `useAccordion` hook manages toggle state and required accessibility
 attributes for a group of sections.
 
-```jsx static
+```jsx
 import { useAccordion } from '@zendeskgarden/container-accordion';
 
 const Accordion = ({ expandable = true, collapsible = true } = {}) => {
@@ -77,7 +77,7 @@ return <Accordion expandable={true} collapsible={true} />;
 
 `AccordionContainer` is a render-prop wrapper for the `useAccordion` hook.
 
-```jsx static
+```jsx
 import { AccordionContainer } from '@zendeskgarden/container-accordion';
 
 const Accordion = ({ expandable = true, collapsible = true } = {}) => (
