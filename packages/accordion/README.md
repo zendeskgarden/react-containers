@@ -14,8 +14,7 @@ npm install @zendeskgarden/container-accordion
 
 ## Usage
 
-For live examples check out our
-[storybook](https://zendeskgarden.github.io/react-containers/?path=/story/accordion-container--useaccordion).
+Check out [storybook](https://zendeskgarden.github.io/react-containers) for live examples.
 
 ### useAccordion
 
