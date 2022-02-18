@@ -1,0 +1,26 @@
+import { Meta, ArgsTable, Canvas, Story } from '@storybook/addon-docs';
+import { AccordionContainer } from '@zendeskgarden/container-accordion';
+import { AccordionStory } from './stories/AccordionStory';
+
+<Meta title="Packages/Accordion" component={AccordionContainer} />
+
+# API
+
+<ArgsTable />
+
+# Demo
+
+## Hook
+
+<Canvas>
+  <Story
+    name="Accordion"
+    args={{ collapsible: true, expandable: true, sections: 5, as: 'Hook' }}
+    argTypes={{
+      as: { options: ['Container', 'Hook'], control: 'radio', table: { category: 'Story' } },
+      sections: { control: { type: 'range', min: 1, max: 9 }, table: { category: 'Story' } }
+    }}
+  >
+    {args => <AccordionStory {...args} />}
+  </Story>
+</Canvas>
