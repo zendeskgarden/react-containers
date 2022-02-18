@@ -32,6 +32,7 @@ AccordionContainer.propTypes = {
   children: PropTypes.func,
   render: PropTypes.func,
   expandedSections: PropTypes.array,
+  defaultExpandedSections: PropTypes.array,
   expandable: PropTypes.bool,
   collapsible: PropTypes.bool,
   idPrefix: PropTypes.string
