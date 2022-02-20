@@ -7,7 +7,6 @@
     "sourceMap": false,
     "noEmit": false,
     "paths": {}
-
   },
   "include": ["src/**/*"],
   "exclude": ["**/*.spec.tsx", "**/*.spec.ts"]

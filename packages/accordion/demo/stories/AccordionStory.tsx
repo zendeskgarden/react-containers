@@ -14,18 +14,18 @@ import {
   useAccordion
 } from '@zendeskgarden/container-accordion';
 
-interface IProps extends IUseAccordionReturnValue {
+interface IComponentProps extends IUseAccordionReturnValue {
   sections: number[];
 }
 
-const AccordionComponent = ({
+const Component = ({
   sections,
   disabledSections,
   expandedSections,
   getHeaderProps,
   getTriggerProps,
   getPanelProps
-}: IProps) => (
+}: IComponentProps) => (
   <div style={{ width: 300 }}>
     {sections.map((section, index) => {
       const disabled = disabledSections.indexOf(index) !== -1;
@@ -64,6 +64,22 @@ const AccordionComponent = ({
   </div>
 );
 
+interface IProps extends IUseAccordionProps {
+  sections: number[];
+}
+
+const Container = ({ sections, ...props }: IProps) => (
+  <AccordionContainer {...props}>
+    {containerProps => <Component sections={sections} {...containerProps} />}
+  </AccordionContainer>
+);
+
+const Hook = ({ sections, ...props }: IProps) => {
+  const accordionProps = useAccordion(props);
+
+  return <Component sections={sections} {...accordionProps} />;
+};
+
 interface IArgs extends IUseAccordionProps {
   as: 'hook' | 'container';
   sections: number;
@@ -71,20 +87,15 @@ interface IArgs extends IUseAccordionProps {
 
 export const AccordionStory: Story<IArgs> = ({ as, sections, ...props }: IArgs) => {
   const Accordion = () => {
-    const hookProps = useAccordion(props);
     const _sections = Array.from({ length: sections }, (_, index) => index);
 
     switch (as) {
       case 'container':
-        return (
-          <AccordionContainer {...props}>
-            {containerProps => <AccordionComponent sections={_sections} {...containerProps} />}
-          </AccordionContainer>
-        );
+        return <Container sections={_sections} {...props} />;
 
       case 'hook':
       default:
-        return <AccordionComponent sections={_sections} {...hookProps} />;
+        return <Hook sections={_sections} {...props} />;
     }
   };
 
