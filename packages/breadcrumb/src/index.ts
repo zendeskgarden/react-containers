@@ -7,7 +7,9 @@
 
 /* Hooks */
 
-export { useBreadcrumb, IUseBreadcrumbReturnValue } from './useBreadcrumb';
+export { useBreadcrumb } from './useBreadcrumb';
+export type { IUseBreadcrumbReturnValue } from './useBreadcrumb';
 
 /* Render-props */
-export { BreadcrumbContainer, IBreadcrumbContainerProps } from './BreadcrumbContainer';
+export { BreadcrumbContainer } from './BreadcrumbContainer';
+export type { IBreadcrumbContainerProps } from './BreadcrumbContainer';
