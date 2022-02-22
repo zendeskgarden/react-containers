@@ -14,15 +14,17 @@ npm install @zendeskgarden/container-accordion
 
 ## Usage
 
-For live examples check out our
-[storybook](https://zendeskgarden.github.io/react-containers/?path=/story/accordion-container--useaccordion).
+This container implements the
+[accordion](https://www.w3.org/TR/wai-aria-practices-1.1/#accordion) design
+pattern and can be used to build an accordion component. Check out
+[storybook](https://zendeskgarden.github.io/react-containers) for live examples.
 
 ### useAccordion
 
 The `useAccordion` hook manages toggle state and required accessibility
 attributes for a group of sections.
 
-```jsx static
+```jsx
 import { useAccordion } from '@zendeskgarden/container-accordion';
 
 const Accordion = ({ expandable = true, collapsible = true } = {}) => {
@@ -77,7 +79,7 @@ return <Accordion expandable={true} collapsible={true} />;
 
 `AccordionContainer` is a render-prop wrapper for the `useAccordion` hook.
 
-```jsx static
+```jsx
 import { AccordionContainer } from '@zendeskgarden/container-accordion';
 
 const Accordion = ({ expandable = true, collapsible = true } = {}) => (

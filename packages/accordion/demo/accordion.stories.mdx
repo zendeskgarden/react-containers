@@ -1,0 +1,59 @@
+import { Meta, ArgsTable, Canvas, Story } from '@storybook/addon-docs';
+import { useArgs } from '@storybook/client-api';
+import { AccordionContainer } from '@zendeskgarden/container-accordion';
+import { AccordionStory } from './stories/AccordionStory';
+
+<Meta
+  title="Packages/Accordion"
+  component={AccordionContainer}
+  args={{ as: 'hook', sections: 5 }}
+  argTypes={{
+    as: { options: ['container', 'hook'], control: 'radio', table: { category: 'Story' } },
+    sections: { control: { type: 'range', min: 1, max: 9 }, table: { category: 'Story' } }
+  }}
+/>
+
+# API
+
+<ArgsTable />
+
+# Demo
+
+## Uncontrolled
+
+<Canvas>
+  <Story
+    name="Uncontrolled"
+    args={{ collapsible: true, expandable: true }}
+    argTypes={{
+      expandedSections: { control: false }
+    }}
+  >
+    {args => <AccordionStory {...args} />}
+  </Story>
+</Canvas>
+
+## Controlled
+
+<Canvas>
+  <Story
+    name="Controlled"
+    args={{ expandedSections: [0] }}
+    argTypes={{
+      defaultExpandedSections: { control: false },
+      collapsible: { control: false },
+      expandable: { control: false }
+    }}
+  >
+    {args => {
+      const updateArgs = useArgs()[1];
+      const handleChange = index => {
+        const expandedSections = args.expandedSections.includes(index)
+          ? args.expandedSections.filter(section => section !== index)
+          : [...args.expandedSections, index];
+        updateArgs({ expandedSections });
+      };
+      return <AccordionStory {...args} onChange={handleChange} />;
+    }}
+  </Story>
+</Canvas>

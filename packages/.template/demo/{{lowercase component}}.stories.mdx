@@ -1,0 +1,24 @@
+import { Meta, ArgsTable, Canvas, Story } from '@storybook/addon-docs';
+import { {{capitalize component}}Container } from '@zendeskgarden/container-{{lowercase component}}';
+import { {{capitalize component}}Story } from './stories/{{capitalize component}}Story';
+
+<Meta title="Packages/{{capitalize component}}" component={ {{capitalize component}}Container } />
+
+# API
+
+<ArgsTable />
+
+# Demo
+
+export const args = { as: 'hook', text: 'Hello world', label: 'test' };
+
+export const argTypes = {
+  as: { options: ['container', 'hook'], control: 'radio', table: { category: 'Story' } },
+  text: { table: { category: 'Story' } }
+};
+
+<Canvas>
+  <Story name="{{capitalize component}}" args={args} argTypes={argTypes}>
+    {args => <{{capitalize component}}Story {...args} />}
+  </Story>
+</Canvas>

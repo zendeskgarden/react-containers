@@ -18,7 +18,7 @@ Check out [storybook](https://zendeskgarden.github.io/react-containers) for live
 
 ### use{{capitalize component}}
 
-```jsx static
+```jsx
 import { use{{capitalize component}} } from '@zendeskgarden/container-{{lowercase component}}';
 
 const {{capitalize component}} = () => {
@@ -30,7 +30,7 @@ const {{capitalize component}} = () => {
 
 ### {{capitalize component}}Container
 
-```jsx static
+```jsx
 import { {{capitalize component}}Container } from '@zendeskgarden/container-{{lowercase component}}';
 
 <{{capitalize component}}Container>{({ get{{capitalize component}}Props }) => <div {...get{{capitalize component}}Props()} />}</{{capitalize component}}Container>;

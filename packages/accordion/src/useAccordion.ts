@@ -20,6 +20,7 @@ export interface IUseAccordionProps {
   expandedSections?: number[];
   /** Sets the default expanded sections in a uncontrolled accordion */
   defaultExpandedSections?: number[];
+  /** Handles accordion expansion changes */
   onChange?: (expanded: number) => any;
   /** Determines if multiple panels can be expanded at the same time in an uncontrolled accordion */
   expandable?: boolean;
