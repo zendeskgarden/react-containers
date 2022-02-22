@@ -14,11 +14,11 @@ npm install @zendeskgarden/container-breadcrumb
 
 ## Usage
 
-For live examples check out our [storybook](https://zendeskgarden.github.io/react-containers?path=/story/breadcrumb-container--usebreadcrumb).
+Check out [storybook](https://zendeskgarden.github.io/react-containers) for live examples.
 
 ### As a Render Prop Component
 
-```jsx static
+```jsx
 import { BreadcrumbContainer } from '@zendeskgarden/container-breadcrumb';
 
 <BreadcrumbContainer>
@@ -33,7 +33,7 @@ import { BreadcrumbContainer } from '@zendeskgarden/container-breadcrumb';
 
 ### As a hook
 
-```jsx static
+```jsx
 import { useBreadcrumb } from '@zendeskgarden/container-breadcrumb';
 
 const Breadcrumb = () => {
