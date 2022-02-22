@@ -14,7 +14,10 @@ npm install @zendeskgarden/container-accordion
 
 ## Usage
 
-Check out [storybook](https://zendeskgarden.github.io/react-containers) for live examples.
+This container implements the
+[accordion](https://www.w3.org/TR/wai-aria-practices-1.1/#accordion) design
+pattern and can be used to build an accordion component. Check out
+[storybook](https://zendeskgarden.github.io/react-containers) for live examples.
 
 ### useAccordion
 

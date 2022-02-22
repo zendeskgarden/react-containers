@@ -75,9 +75,9 @@ const Container = ({ sections, ...props }: IProps) => (
 );
 
 const Hook = ({ sections, ...props }: IProps) => {
-  const accordionProps = useAccordion(props);
+  const hookProps = useAccordion(props);
 
-  return <Component sections={sections} {...accordionProps} />;
+  return <Component sections={sections} {...hookProps} />;
 };
 
 interface IArgs extends IUseAccordionProps {
