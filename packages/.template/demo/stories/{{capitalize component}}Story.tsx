@@ -42,4 +42,3 @@ export const {{capitalize component}}Story: Story<IArgs> = ({ as, text, ...props
       return <Hook {...props}>{text}</Hook>;
   }
 };
-
