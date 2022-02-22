@@ -14,7 +14,10 @@ npm install @zendeskgarden/container-breadcrumb
 
 ## Usage
 
-Check out [storybook](https://zendeskgarden.github.io/react-containers) for live examples.
+This container implements the
+[breadcrumb](https://www.w3.org/TR/wai-aria-practices-1.1/#breadcrumb) design
+pattern and can be used to build a breadcrumb component. Check out
+[storybook](https://zendeskgarden.github.io/react-containers) for live examples.
 
 ### As a Render Prop Component
 
