@@ -6,12 +6,13 @@
  */
 
 /* Hooks */
-export {
-  useButtonGroup,
+export { useButtonGroup } from './useButtonGroup';
+export type {
   UseButtonGroupReturnValue,
   IUseButtonGroupPropGetters,
   IUseButtonGroupProps
 } from './useButtonGroup';
 
 /* Render-props */
-export { ButtonGroupContainer, IButtonGroupContainerProps } from './ButtonGroupContainer';
+export { ButtonGroupContainer } from './ButtonGroupContainer';
+export type { IButtonGroupContainerProps } from './ButtonGroupContainer';

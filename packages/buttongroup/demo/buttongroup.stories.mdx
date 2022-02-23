@@ -1,0 +1,24 @@
+import { Meta, ArgsTable, Canvas, Story } from '@storybook/addon-docs';
+import { ButtonGroupContainer } from '@zendeskgarden/container-buttongroup';
+import { ButtonGroupStory } from './stories/ButtonGroupStory';
+
+<Meta title="Packages/ButtonGroup" component={ButtonGroupContainer} />
+
+# API
+
+<ArgsTable />
+
+# Demo
+
+<Canvas>
+  <Story
+    name="ButtonGroup"
+    args={{ as: 'hook', buttons: 3 }}
+    argTypes={{
+      as: { options: ['container', 'hook'], control: 'radio', table: { category: 'Story' } },
+      buttons: { control: { type: 'range', min: 1, max: 5 }, table: { category: 'Story' } }
+    }}
+  >
+    {args => <ButtonGroupStory {...args} />}
+  </Story>
+</Canvas>
