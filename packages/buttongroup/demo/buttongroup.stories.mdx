@@ -1,0 +1,44 @@
+import { Meta, ArgsTable, Canvas, Story } from '@storybook/addon-docs';
+import { useArgs } from '@storybook/client-api';
+import { ButtonGroupContainer } from '@zendeskgarden/container-buttongroup';
+import { ButtonGroupStory } from './stories/ButtonGroupStory';
+
+<Meta
+  title="Packages/ButtonGroup"
+  component={ButtonGroupContainer}
+  args={{ as: 'hook', buttons: 3 }}
+  argTypes={{
+    as: { options: ['container', 'hook'], control: 'radio', table: { category: 'Story' } },
+    buttons: { control: { type: 'range', min: 1, max: 5 }, table: { category: 'Story' } }
+  }}
+/>
+
+# API
+
+<ArgsTable />
+
+# Demo
+
+## Uncontrolled
+
+<Canvas>
+  <Story
+    name="Uncontrolled"
+    argTypes={{ selectedItem: { control: false }, focusedItem: { control: false } }}
+  >
+    {args => <ButtonGroupStory {...args} />}
+  </Story>
+</Canvas>
+
+## Controlled
+
+<Canvas>
+  <Story name="Controlled" args={{ selectedItem: '0' }}>
+    {args => {
+      const updateArgs = useArgs()[1];
+      const handleSelect = selectedItem => updateArgs({ selectedItem });
+      const handleFocus = focusedItem => updateArgs({ focusedItem });
+      return <ButtonGroupStory {...args} onSelect={handleSelect} onFocus={handleFocus} />;
+    }}
+  </Story>
+</Canvas>

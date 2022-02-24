@@ -3,8 +3,8 @@
 [npm version badge]: https://flat.badgen.net/npm/v/@zendeskgarden/container-breadcrumb
 [npm version link]: https://www.npmjs.com/package/@zendeskgarden/container-breadcrumb
 
-This package includes containers relating to breadcrumb in the
-[Garden Design System](https://zendeskgarden.github.io/).
+This package includes containers relating to breadcrumbs in the [Garden Design
+System](https://zendeskgarden.github.io/).
 
 ## Installation
 
