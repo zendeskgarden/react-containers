@@ -17,30 +17,30 @@ import {
 } from '@zendeskgarden/container-buttongroup';
 
 interface IComponentProps extends UseButtonGroupReturnValue<any> {
-  buttons: RefObject<any>[];
+  buttons: Record<string, RefObject<any>>;
 }
 
 const Component = ({ getGroupProps, getButtonProps, selectedItem, buttons }: IComponentProps) => (
   <div {...getGroupProps()}>
-    {buttons.map((button, index) => (
+    {Object.keys(buttons).map((key, index) => (
       <button
-        key={button}
+        key={key}
         className={classNames({
-          'bg-blue-300': button === selectedItem,
+          'bg-blue-300': key === selectedItem,
           border: true,
           'px-2': true,
           'py-1': true,
           'rounded-none': true
         })}
         type="button"
-        {...getButtonProps({ item: button, focusRef: button })}
+        {...getButtonProps({ item: key, focusRef: buttons[key] })}
       >{`Button ${index + 1}`}</button>
     ))}
   </div>
 );
 
 interface IProps extends IUseButtonGroupProps<any> {
-  buttons: RefObject<any>[];
+  buttons: Record<string, RefObject<any>>;
 }
 
 const Container = ({ buttons, ...props }: IProps) => (
@@ -61,7 +61,10 @@ interface IArgs extends IButtonGroupContainerProps<any> {
 }
 
 export const ButtonGroupStory: Story<IArgs> = ({ as, buttons, ...props }: IArgs) => {
-  const _buttons = Array.from({ length: buttons }, () => createRef());
+  const _buttons = Array.from({ length: buttons }, (_, index) => index).reduce(
+    (previous, current) => ({ ...previous, [current]: createRef() }),
+    {}
+  );
 
   switch (as) {
     case 'container':

@@ -3,8 +3,8 @@
 [npm version badge]: https://flat.badgen.net/npm/v/@zendeskgarden/container-buttongroup
 [npm version link]: https://www.npmjs.com/package/@zendeskgarden/container-buttongroup
 
-This package includes containers relating to button groups in the
-[Garden Design System](https://zendeskgarden.github.io/).
+This package includes containers relating to buttons groups in the [Garden
+Design System](https://zendeskgarden.github.io/).
 
 ## Installation
 
@@ -14,14 +14,17 @@ npm install @zendeskgarden/container-buttongroup
 
 ## Usage
 
-For live examples check out our [storybook](https://zendeskgarden.github.io/react-containers?path=/story/buttongroup-container--buttongroupcontainer).
+This container implements the
+[breadcrumb](https://www.w3.org/TR/wai-aria-practices-1.1/#breadcrumb) design
+pattern and can be used to build a button group component. Check out
+[storybook](https://zendeskgarden.github.io/react-containers) for live examples.
 
 ### useButtonGroup
 
 The `useButtonGroup` hook manages focus, selection and accessibility attributes
 required for a group of buttons. Garden uses this in react-components for the buttons package.
 
-```jsx static
+```jsx
 import { useButtonGroup } from '@zendeskgarden/container-buttongroup';
 
 const ButtonGroup = () => {
@@ -61,7 +64,7 @@ const ButtonGroup = () => {
 
 `ButtonGroupContainer` is a render-prop wrapper for the `useButtonGroup` hook.
 
-```jsx static
+```jsx
 import { ButtonGroupContainer } from '@zendeskgarden/container-buttongroup';
 
 <ButtonGroupContainer>
