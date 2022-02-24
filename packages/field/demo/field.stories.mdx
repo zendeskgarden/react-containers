@@ -1,0 +1,24 @@
+import { Meta, ArgsTable, Canvas, Story } from '@storybook/addon-docs';
+import { FieldContainer } from '@zendeskgarden/container-field';
+import { FieldStory } from './stories/FieldStory';
+
+<Meta title="Packages/Field" component={FieldContainer} />
+
+# API
+
+<ArgsTable />
+
+# Demo
+
+<Canvas>
+  <Story
+    name="Field"
+    args={{ as: 'hook', isDescribed: true }}
+    argTypes={{
+      as: { options: ['container', 'hook'], control: 'radio', table: { category: 'Story' } },
+      isDescribed: { table: { category: 'Story' } }
+    }}
+  >
+    {args => <FieldStory {...args} />}
+  </Story>
+</Canvas>
