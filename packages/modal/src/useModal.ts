@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import { useRef, useState } from 'react';
+import { useRef, useState, KeyboardEvent, MouseEvent } from 'react';
 import { useUIDSeed } from 'react-uid';
 import { composeEventHandlers, KEY_CODES } from '@zendeskgarden/container-utilities';
 import { useFocusJail } from '@zendeskgarden/container-focusjail';
