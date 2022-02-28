@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.16](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-buttongroup@0.3.15...@zendeskgarden/container-buttongroup@0.3.16) (2022-02-28)
+
+**Note:** Version bump only for package @zendeskgarden/container-buttongroup
+
+
+
+
+
 ## [0.3.15](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-buttongroup@0.3.14...@zendeskgarden/container-buttongroup@0.3.15) (2021-11-30)
 
 **Note:** Version bump only for package @zendeskgarden/container-buttongroup

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.14](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-modal@0.8.13...@zendeskgarden/container-modal@0.8.14) (2022-02-28)
+
+
+### Bug Fixes
+
+* **modals:** use synthetic types for close handler ([#425](https://github.com/zendeskgarden/react-containers/issues/425)) ([26942b5](https://github.com/zendeskgarden/react-containers/commit/26942b501193f441757d41c774420b712b3df878))
+
+
+
+
+
 ## [0.8.13](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-modal@0.8.12...@zendeskgarden/container-modal@0.8.13) (2021-11-30)
 
 **Note:** Version bump only for package @zendeskgarden/container-modal

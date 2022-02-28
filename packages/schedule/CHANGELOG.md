@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.11](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-schedule@1.3.10...@zendeskgarden/container-schedule@1.3.11) (2022-02-28)
+
+**Note:** Version bump only for package @zendeskgarden/container-schedule
+
+
+
+
+
 ## [1.3.10](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-schedule@1.3.9...@zendeskgarden/container-schedule@1.3.10) (2021-11-08)
 
 
