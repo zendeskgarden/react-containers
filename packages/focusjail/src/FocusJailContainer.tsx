@@ -29,7 +29,13 @@ FocusJailContainer.propTypes = {
   children: PropTypes.func,
   render: PropTypes.func,
   focusOnMount: PropTypes.bool,
+  restoreFocus: PropTypes.bool,
   environment: PropTypes.any,
   containerRef: PropTypes.any.isRequired,
   focusElem: PropTypes.func
+};
+
+FocusJailContainer.defaultProps = {
+  focusOnMount: true,
+  restoreFocus: true
 };
