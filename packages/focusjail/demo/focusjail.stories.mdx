@@ -1,0 +1,28 @@
+import { useRef } from 'react';
+import { Meta, ArgsTable, Canvas, Story } from '@storybook/addon-docs';
+import { FocusJailContainer } from '@zendeskgarden/container-focusjail';
+import { FocusJailStory } from './stories/FocusJailStory';
+
+<Meta title="Packages/FocusJail" component={FocusJailContainer} />
+
+# API
+
+<ArgsTable />
+
+# Demo
+
+<Canvas>
+  <Story
+    name="FocusJail"
+    args={{ as: 'hook', focusOnMount: true, restoreFocus: true }}
+    argTypes={{
+      as: { options: ['container', 'hook'], control: 'radio', table: { category: 'Story' } },
+      containerRef: { control: false }
+    }}
+  >
+    {args => {
+      const containerRef = useRef();
+      return <FocusJailStory {...args} containerRef={containerRef} />;
+    }}
+  </Story>
+</Canvas>
