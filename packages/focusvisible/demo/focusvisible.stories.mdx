@@ -15,12 +15,12 @@ import { FocusVisibleStory } from './stories/FocusVisibleStory';
   <Story
     name="FocusVisible"
     args={{
-      as: 'hook',
-      className: FocusVisibleContainer.defaultProps.className,
-      dataAttribute: FocusVisibleContainer.defaultProps.dataAttribute
+      as: 'hook'
     }}
     argTypes={{
-      as: { options: ['container', 'hook'], control: 'radio', table: { category: 'Story' } }
+      as: { options: ['container', 'hook'], control: 'radio', table: { category: 'Story' } },
+      className: { control: false },
+      dataAttribute: { control: false }
     }}
   >
     {args => {

@@ -1,0 +1,14 @@
+import { Meta, Canvas, Story } from '@storybook/addon-docs';
+import { SelectionStory } from './stories/SelectionStory';
+
+<Meta title="Packages/FocusVisible/[patterns]" />
+
+# Patterns
+
+## Selection
+
+Demonstrate `useSelection` working along with `useFocusVisible`.
+
+<Canvas>
+  <Story name="Selection">{args => <SelectionStory {...args} />}</Story>
+</Canvas>
