@@ -3,8 +3,8 @@
 [npm version badge]: https://flat.badgen.net/npm/v/@zendeskgarden/container-focusjail
 [npm version link]: https://www.npmjs.com/package/@zendeskgarden/container-focusjail
 
-This package includes containers relating to focusjail in the
-[Garden Design System](https://zendeskgarden.github.io/).
+This package includes containers relating to focus looping in the [Garden Design
+System](https://zendeskgarden.github.io/).
 
 ## Installation
 
@@ -14,14 +14,17 @@ npm install @zendeskgarden/container-focusjail
 
 ## Usage
 
-For live examples check out our [storybook](https://zendeskgarden.github.io/react-containers?path=/story/focusjail-container--usefocusjail).
+This container implements the [dialog focus
+loop](https://www.w3.org/TR/wai-aria-practices-1.1/#dialog_modal) design pattern
+and can be used to build a modal component. Check out
+[storybook](https://zendeskgarden.github.io/react-containers) for live examples.
 
 ### useFocusJail
 
 The `useFocusJail` hook allows you to trap focus to a container element. Useful
 for modals and widgets. Garden uses this in react-components for the modals package.
 
-```jsx static
+```jsx
 import { useRef } from 'react';
 import { useFocusJail } from '@zendeskgarden/container-focusjail';
 
@@ -50,7 +53,7 @@ const FocusJail = () => {
 
 `FocusJailContainer` is a render-prop wrapper for the `useFocusJail` hook.
 
-```jsx static
+```jsx
 import { createRef } from 'react';
 import { FocusJailContainer } from '@zendeskgarden/container-focusjail';
 
