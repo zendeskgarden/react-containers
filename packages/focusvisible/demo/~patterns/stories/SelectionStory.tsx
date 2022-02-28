@@ -35,9 +35,7 @@ export const SelectionStory: Story = () => {
               'mx-3',
               'px-2',
               'pt-1',
-              {
-                'border-b-3': item === selectedItem
-              }
+              { 'border-b-3': item === selectedItem }
             )}
             {...getItemProps({ item, focusRef })}
           >
