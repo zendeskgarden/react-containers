@@ -1,0 +1,31 @@
+import { useRef } from 'react';
+import { Meta, ArgsTable, Canvas, Story } from '@storybook/addon-docs';
+import { FocusVisibleContainer } from '@zendeskgarden/container-focusvisible';
+import { FocusVisibleStory } from './stories/FocusVisibleStory';
+
+<Meta title="Packages/FocusVisible" component={FocusVisibleContainer} />
+
+# API
+
+<ArgsTable />
+
+# Demo
+
+<Canvas>
+  <Story
+    name="FocusVisible"
+    args={{
+      as: 'hook',
+      className: FocusVisibleContainer.defaultProps.className,
+      dataAttribute: FocusVisibleContainer.defaultProps.dataAttribute
+    }}
+    argTypes={{
+      as: { options: ['container', 'hook'], control: 'radio', table: { category: 'Story' } }
+    }}
+  >
+    {args => {
+      const scope = useRef();
+      return <FocusVisibleStory {...args} scope={scope} />;
+    }}
+  </Story>
+</Canvas>
