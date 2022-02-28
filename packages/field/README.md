@@ -14,14 +14,15 @@ npm install @zendeskgarden/container-field
 
 ## Usage
 
-For live examples check out our [storybook](https://zendeskgarden.github.io/react-containers?path=/story/field-container--usefield).
+Check out [storybook](https://zendeskgarden.github.io/react-containers) for live
+examples.
 
 The `useField` hook will supply the prop getters to handle `aria-labelledby` along
 with for/id mapping and `aria-describedby` mapping when a hint is applied.
 
 ### useField
 
-```jsx static
+```jsx
 import { useField } from '@zendeskgarden/container-field';
 
 const Field = () => {
@@ -41,7 +42,7 @@ const Field = () => {
 
 FieldContainer is a render-prop wrapper for the `useField` hook.
 
-```jsx static
+```jsx
 import { FieldContainer } from '@zendeskgarden/container-field';
 
 <FieldContainer>

@@ -14,10 +14,8 @@ npm install @zendeskgarden/container-buttongroup
 
 ## Usage
 
-This container implements the
-[breadcrumb](https://www.w3.org/TR/wai-aria-practices-1.1/#breadcrumb) design
-pattern and can be used to build a button group component. Check out
-[storybook](https://zendeskgarden.github.io/react-containers) for live examples.
+Check out [storybook](https://zendeskgarden.github.io/react-containers) for live
+examples.
 
 ### useButtonGroup
 
