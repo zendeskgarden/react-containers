@@ -24,15 +24,18 @@
       "files": ["*.spec.*"],
       "extends": "@zendeskgarden/eslint-config/plugins/jest",
       "rules": {
-        "no-console": "off"
-      }
-    },
-    {
-      "files": ["*.spec.*", "*.stories.tsx"],
-      "rules": {
+        "no-console": "off",
         "jsx-a11y/label-has-associated-control": "off",
         "react/button-has-type": "off",
         "react/jsx-key": "off"
+      }
+    },
+    {
+      "files": ["*.stories.tsx", "packages/*/demo/**/*"],
+      "rules": {
+        "react/button-has-type": "off",
+        "react/jsx-key": "off",
+        "react/no-array-index-key": "off"
       }
     }
   ]
