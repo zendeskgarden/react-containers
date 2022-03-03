@@ -14,15 +14,15 @@ npm install @zendeskgarden/container-keyboardfocus
 
 ## Usage
 
-For live examples check out our [storybook](https://zendeskgarden.github.io/react-containers?path=/story/keyboardfocus-container--usekeyboardfocus).
+Check out [storybook](https://zendeskgarden.github.io/react-containers) for live
+examples.
 
 ### useKeyboardFocus
 
 The `useKeyboardFocus` hook supplies state and props that help you to distinguish
-between mouse and keyboard focus. Garden uses this in react-components to know
-when to add the focus ring.
+between mouse and keyboard focus.
 
-```jsx static
+```jsx
 import { useKeyboardFocus } from '@zendeskgarden/container-keyboardfocus';
 
 const KeyboardFocus = () => {
@@ -38,7 +38,7 @@ const KeyboardFocus = () => {
 
 `KeyboardFocsuContainer` is a render-prop wrapper for the `useKeyboardFocus` hook.
 
-```jsx static
+```jsx
 import { KeyoardFocusContainer } from '@zendeskgarden/container-keyboardfocus';
 
 <KeyboardFocusContainer>
