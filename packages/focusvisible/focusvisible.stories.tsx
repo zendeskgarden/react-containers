@@ -50,6 +50,7 @@ export const Hook = () => {
 
   useFocusVisible({ scope: ref });
 
+  /* eslint-disable jsx-a11y/label-has-associated-control */
   return (
     <StyledWrapper ref={ref}>
       <div>
