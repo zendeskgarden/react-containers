@@ -25,12 +25,8 @@ const Component = ({ getGroupProps, getButtonProps, selectedItem, buttons }: ICo
     {Object.keys(buttons).map((key, index) => (
       <button
         key={key}
-        className={classNames({
-          'bg-blue-300': key === selectedItem,
-          border: true,
-          'px-2': true,
-          'py-1': true,
-          'rounded-none': true
+        className={classNames('border', 'px-2', 'py-1', 'rounded-none', {
+          'bg-blue-300': key === selectedItem
         })}
         type="button"
         {...getButtonProps({ item: key, focusRef: buttons[key] })}

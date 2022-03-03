@@ -3,8 +3,9 @@
 [npm version badge]: https://flat.badgen.net/npm/v/@zendeskgarden/container-focusvisible
 [npm version link]: https://www.npmjs.com/package/@zendeskgarden/container-focusvisible
 
-This package includes containers relating to the `:focus-visible`
-polyfill in the [Garden Design System](https://zendeskgarden.github.io/).
+This package includes containers relating to [the `:focus-visible`
+polyfill](https://developer.mozilla.org/en-US/docs/Web/CSS/:focus-visible) in
+the [Garden Design System](https://zendeskgarden.github.io/).
 
 ## Installation
 
@@ -14,11 +15,12 @@ npm install @zendeskgarden/container-focusvisible
 
 ## Usage
 
-For live examples check out our [storybook](https://zendeskgarden.github.io/react-containers).
+Check out [storybook](https://zendeskgarden.github.io/react-containers) for live
+examples.
 
 ### useFocusVisible
 
-```jsx static
+```jsx
 import { useRef } from 'react';
 import styled from 'styled-components';
 import { useFocusVisible } from '@zendeskgarden/container-focusvisible';
@@ -55,7 +57,7 @@ const Example = () => {
 
 ### FocusVisibleContainer
 
-```jsx static
+```jsx
 import { FocusVisibleContainer } from '@zendeskgarden/container-focusvisible';
 
 const Example = () => {
