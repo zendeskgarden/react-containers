@@ -14,14 +14,17 @@ npm install @zendeskgarden/container-grid
 
 ## Usage
 
-Check out [storybook](https://zendeskgarden.github.io/react-containers) for live examples.
+This container implements the
+[grid](https://www.w3.org/TR/wai-aria-practices-1.1/#grid) design pattern. Check
+out [storybook](https://zendeskgarden.github.io/react-containers) for live
+examples.
 
 ### useGrid
 
 The following code demonstrates uncontrolled usage of the `useGrid` hook. Controlled usage examples
 can be found in the stories.
 
-```jsx static
+```jsx
 import { useGrid } from '@zendeskgarden/container-grid';
 
 const matrix = [
@@ -61,7 +64,7 @@ const Grid = () => {
 
 ### GridContainer
 
-```jsx static
+```jsx
 import { GridContainer } from '@zendeskgarden/container-grid';
 
 const matrix = [
