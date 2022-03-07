@@ -6,8 +6,8 @@
  */
 
 /* Hooks */
-export {
-  usePagination,
+export { usePagination } from './usePagination';
+export type {
   IUsePaginationProps,
   IUsePaginationReturnValue,
   IGetContainerProps,
@@ -15,4 +15,5 @@ export {
 } from './usePagination';
 
 /* Render-props */
-export { PaginationContainer, IPaginationContainerProps } from './PaginationContainer';
+export { PaginationContainer } from './PaginationContainer';
+export type { IPaginationContainerProps } from './PaginationContainer';
