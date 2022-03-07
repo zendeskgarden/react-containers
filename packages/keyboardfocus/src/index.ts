@@ -6,7 +6,9 @@
  */
 
 /* Hooks */
-export { useKeyboardFocus, IUseKeyboardFocusReturnValue } from './useKeyboardFocus';
+export { useKeyboardFocus } from './useKeyboardFocus';
+export type { IUseKeyboardFocusReturnValue } from './useKeyboardFocus';
 
 /* Render-props */
-export { KeyboardFocusContainer, IKeyboardFocusProps } from './KeyboardFocusContainer';
+export { KeyboardFocusContainer } from './KeyboardFocusContainer';
+export type { IKeyboardFocusProps } from './KeyboardFocusContainer';
