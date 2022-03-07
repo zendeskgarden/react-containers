@@ -14,11 +14,14 @@ npm install @zendeskgarden/container-modal
 
 ## Usage
 
-For live examples check out our [storybook](https://zendeskgarden.github.io/react-containers?path=/story/modal-container--modalcontainer).
+This container implements the
+[dialog](https://www.w3.org/TR/wai-aria-practices/#dialog_modal) design pattern
+and can be used to build a modal component. Check out
+[storybook](https://zendeskgarden.github.io/react-containers) for live examples.
 
 ### useModal
 
-```jsx static
+```jsx
 import { useRef } from 'react';
 import { useModal } from '@zendeskgarden/container-modal';
 
@@ -83,7 +86,7 @@ const Modal = () => {
 
 ### ModalContainer
 
-```jsx static
+```jsx
 import { useRef } from 'react';
 import { ModalContainer } from '@zendeskgarden/container-modal';
 
