@@ -14,14 +14,15 @@ npm install @zendeskgarden/container-pagination
 
 ## Usage
 
-For live examples check out our [storybook](https://zendeskgarden.github.io/react-containers).
+Check out [storybook](https://zendeskgarden.github.io/react-containers) for live
+examples.
 
 ### usePagination
 
 The `usePagination` hook is wrapper on top of the `useSelection` hook with
 specific prop getters for pagination.
 
-```jsx static
+```jsx
 import { createRef, useRef } from 'react';
 import { usePagination } from '@zendeskgarden/container-pagination';
 
@@ -97,7 +98,7 @@ const Pagination = () => {
 
 ### PaginationContainer
 
-```jsx static
+```jsx
 import { createRef, useRef } from 'react';
 import { PaginationContainer } from '@zendeskgarden/container-pagination';
 
