@@ -14,11 +14,12 @@ npm install @zendeskgarden/container-schedule
 
 ## Usage
 
-For live examples check out our [storybook](https://zendeskgarden.github.io/react-containers?path=/story/schedule-container--useschedule).
+Check out [storybook](https://zendeskgarden.github.io/react-containers) for live
+examples.
 
 ### As a Render Prop Component
 
-```jsx static
+```jsx
 import { ScheduleContainer } from '@zendeskgarden/container-schedule';
 
 <ScheduleContainer duration={1000} delayMS={0}>
@@ -28,7 +29,7 @@ import { ScheduleContainer } from '@zendeskgarden/container-schedule';
 
 ### As a hook
 
-```jsx static
+```jsx
 import { useSchedule } from '@zendeskgarden/container-schedule';
 
 const Animation = () => {

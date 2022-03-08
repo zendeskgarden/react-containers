@@ -5,5 +5,10 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-export { useSchedule, IUseScheduleProps, IUseScheduleReturnValue } from './useSchedule';
-export { ScheduleContainer, IScheduleContainerProps } from './ScheduleContainer';
+/* Hooks */
+export { useSchedule } from './useSchedule';
+export type { IUseScheduleProps, IUseScheduleReturnValue } from './useSchedule';
+
+/* Render-props */
+export { ScheduleContainer } from './ScheduleContainer';
+export type { IScheduleContainerProps } from './ScheduleContainer';
