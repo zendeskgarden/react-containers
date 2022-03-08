@@ -1,0 +1,23 @@
+import { Meta, ArgsTable, Canvas, Story } from '@storybook/addon-docs';
+import { ScheduleContainer } from '@zendeskgarden/container-schedule';
+import { ScheduleStory } from './stories/ScheduleStory';
+
+<Meta title="Packages/Schedule" component={ScheduleContainer} />
+
+# API
+
+<ArgsTable />
+
+# Demo
+
+<Canvas>
+  <Story
+    name="Schedule"
+    args={{ as: 'hook', delayMS: 750, duration: 1250, loop: true }}
+    argTypes={{
+      as: { options: ['container', 'hook'], control: 'radio', table: { category: 'Story' } }
+    }}
+  >
+    {args => <ScheduleStory {...args} />}
+  </Story>
+</Canvas>
