@@ -11,9 +11,9 @@
 import { useState, useMemo, useEffect } from 'react';
 import debounce from 'lodash.debounce';
 
-export interface IUseScrollRegionProps {
+export interface IUseScrollRegionProps<RefType = HTMLElement> {
   /** A [ref](https://reactjs.org/docs/refs-and-the-dom.html) pointing to the scroll region's container element */
-  containerRef: React.RefObject<HTMLElement>;
+  containerRef: React.RefObject<RefType>;
   /** A value that determines if the scroll region tab index should be recalculated */
   dependency?: any;
 }

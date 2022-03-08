@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React, { forwardRef, HTMLAttributes, RefObject } from 'react';
+import React, { forwardRef, HTMLAttributes } from 'react';
 import { Story } from '@storybook/react';
 import {
   IScrollRegionContainerProps,
@@ -20,7 +20,7 @@ interface IComponentProps extends HTMLAttributes<HTMLDivElement> {
   width: number;
 }
 
-const Component = forwardRef<HTMLElement, IComponentProps>(
+const Component = forwardRef<HTMLDivElement, IComponentProps>(
   ({ children, height, width, ...props }, ref) => (
     <div
       className={classNames(
@@ -30,7 +30,7 @@ const Component = forwardRef<HTMLElement, IComponentProps>(
         props.tabIndex === 0 ? 'border-blue-600' : 'border-grey-300'
       )}
       style={{ height, width }}
-      ref={ref as RefObject<HTMLDivElement>}
+      ref={ref}
       {...props}
     >
       <p className="p-2">{children}</p>
@@ -40,7 +40,7 @@ const Component = forwardRef<HTMLElement, IComponentProps>(
 
 Component.displayName = 'Component';
 
-interface IProps extends IUseScrollRegionProps {
+interface IProps extends IUseScrollRegionProps<HTMLDivElement> {
   height: number;
   width: number;
 }
@@ -65,7 +65,7 @@ const Hook = ({ containerRef, height, width, ...props }: IProps) => {
   );
 };
 
-interface IArgs extends IScrollRegionContainerProps {
+interface IArgs extends IScrollRegionContainerProps<HTMLDivElement> {
   as: 'hook' | 'container';
   height: number;
   width: number;
