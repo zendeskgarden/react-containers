@@ -1,0 +1,31 @@
+import { useRef } from 'react';
+import { Meta, ArgsTable, Canvas, Story } from '@storybook/addon-docs';
+import { ScrollRegionContainer } from '@zendeskgarden/container-scrollregion';
+import { ScrollRegionStory } from './stories/ScrollRegionStory';
+import { DEPENDENCY } from './stories/data';
+
+<Meta title="Packages/ScrollRegion" component={ScrollRegionContainer} />
+
+# API
+
+<ArgsTable />
+
+# Demo
+
+<Canvas>
+  <Story
+    name="ScrollRegion"
+    args={{ as: 'hook', height: 100, width: 200, dependency: DEPENDENCY }}
+    argTypes={{
+      containerRef: { control: false },
+      as: { options: ['container', 'hook'], control: 'radio', table: { category: 'Story' } },
+      height: { table: { category: 'Story' } },
+      width: { table: { category: 'Story' } }
+    }}
+  >
+    {args => {
+      const containerRef = useRef();
+      return <ScrollRegionStory {...args} containerRef={containerRef} />;
+    }}
+  </Story>
+</Canvas>
