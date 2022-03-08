@@ -14,21 +14,14 @@ npm install @zendeskgarden/container-schedule
 
 ## Usage
 
-For live examples check out our [storybook](https://zendeskgarden.github.io/react-containers?path=/story/schedule-container--useschedule).
-
-### As a Render Prop Component
-
-```jsx static
-import { ScheduleContainer } from '@zendeskgarden/container-schedule';
-
-<ScheduleContainer duration={1000} delayMS={0}>
-  {elapsed => <p>Percentage: {(elapsed * 100).toFixed(0)}%</p>}
-</ScheduleContainer>;
-```
+Check out [storybook](https://zendeskgarden.github.io/react-containers) for live
+examples.
 
 ### As a hook
 
-```jsx static
+The `useSchedule` hook implements a schedule (timer) and communicates when it has elapsed.
+
+```jsx
 import { useSchedule } from '@zendeskgarden/container-schedule';
 
 const Animation = () => {
@@ -36,6 +29,16 @@ const Animation = () => {
 
   return <p>Percentage: {(elapsed * 100).toFixed(0)}%</p>;
 };
+```
+
+### As a Render Prop Component
+
+```jsx
+import { ScheduleContainer } from '@zendeskgarden/container-schedule';
+
+<ScheduleContainer duration={1000} delayMS={0}>
+  {elapsed => <p>Percentage: {(elapsed * 100).toFixed(0)}%</p>}
+</ScheduleContainer>;
 ```
 
 ## Info
