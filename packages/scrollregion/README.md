@@ -14,19 +14,36 @@ npm install @zendeskgarden/container-scrollregion
 
 ## Usage
 
-For live examples check out [storybook](https://zendeskgarden.github.io/react-containers?path=/story/scrollregion-container--usescrollregion).
+Check out [storybook](https://zendeskgarden.github.io/react-containers) for live
+examples.
 
-A scroll region is an area of the web page that contains scrollable content. The scroll region hook
-allows keyboard users to focus and scroll a scroll region.
+### As a hook
 
-A scroll region with a dynamic layout should use the `dependency` option. The hook re-calculates the
-tab-index when the `dependency` value changes. If there are multiple dependency values, a memoized
-object can be used as the `dependency` value. There is a Storybook demo that shows an example of
-this scenario.
+A scroll region is an area of the web page that contains scrollable content. The
+scroll region hook allows keyboard users to focus and scroll the region. A
+scroll region with a dynamic layout should use the `dependency` option. The hook
+re-calculates the tab-index when the `dependency` value changes. If there are
+multiple dependency values, a memoized object can be used as the `dependency`
+value. There is a Storybook demo that shows an example of this scenario.
+
+```jsx
+import { useScrollRegion } from '@zendeskgarden/container-scrollregion';
+
+const ScrollRegion = () => {
+  const containerRef = useRef();
+  const containerTabIndex = useScrollRegion({ containerRef });
+
+  return (
+    <div ref={containerRef} tabIndex={containerTabIndex}>
+      <p>Turnip greens yarrow ricebean rutabaga endive cauliflower sea.</p>
+    </div>
+  );
+};
+```
 
 ### As a Render Prop Component
 
-```jsx static
+```jsx
 import { ScrollRegionContainer } from '@zendeskgarden/container-scrollregion';
 
 const ScrollRegion = () => {
@@ -42,21 +59,4 @@ const ScrollRegion = () => {
     </ScrollRegionContainer>;
   )
 }
-```
-
-### As a hook
-
-```jsx static
-import { useScrollRegion } from '@zendeskgarden/container-scrollregion';
-
-const ScrollRegion = () => {
-  const containerRef = useRef();
-  const containerTabIndex = useScrollRegion({ containerRef });
-
-  return (
-    <div ref={containerRef} tabIndex={containerTabIndex}>
-      <p>Turnip greens yarrow ricebean rutabaga endive cauliflower sea.</p>
-    </div>
-  );
-};
 ```

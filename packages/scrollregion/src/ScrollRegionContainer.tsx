@@ -7,9 +7,9 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useScrollRegion, IUseScrollRegion } from './useScrollRegion';
+import { useScrollRegion, IUseScrollRegionProps } from './useScrollRegion';
 
-export interface IScrollRegionContainerProps extends IUseScrollRegion {
+export interface IScrollRegionContainerProps extends IUseScrollRegionProps {
   /** A render prop function which receives the tab index */
   render?: (tabIndex: number | undefined) => React.ReactNode;
   /** A children render prop function which receives the tab index */

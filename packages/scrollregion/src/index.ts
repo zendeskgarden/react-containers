@@ -6,4 +6,7 @@
  */
 
 export { useScrollRegion } from './useScrollRegion';
+export type { IUseScrollRegionProps } from './useScrollRegion';
+
 export { ScrollRegionContainer } from './ScrollRegionContainer';
+export type { IScrollRegionContainerProps } from './ScrollRegionContainer';
