@@ -24,7 +24,7 @@ scroll region hook allows keyboard users to focus and scroll the region. A
 scroll region with a dynamic layout should use the `dependency` option. The hook
 re-calculates the tab-index when the `dependency` value changes. If there are
 multiple dependency values, a memoized object can be used as the `dependency`
-value. There is a Storybook demo that shows an example of this scenario.
+value.
 
 ```jsx
 import { useScrollRegion } from '@zendeskgarden/container-scrollregion';
