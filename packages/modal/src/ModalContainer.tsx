@@ -10,7 +10,7 @@ import PropTypes from 'prop-types';
 
 import { useModal, IUseModalProps, IUseModalReturnValue } from './useModal';
 
-export interface IModalContainerProps extends IUseModalProps {
+export interface IModalContainerProps<RefType = HTMLElement> extends IUseModalProps<RefType> {
   /** A render prop function */
   render?: (options: IUseModalReturnValue) => React.ReactNode;
   /** A children render prop function */

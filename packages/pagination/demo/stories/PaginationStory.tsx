@@ -9,14 +9,15 @@ import React, { createRef, RefObject, useRef } from 'react';
 import { Story } from '@storybook/react';
 import {
   IPaginationContainerProps,
+  IUsePaginationProps,
   IUsePaginationReturnValue,
   PaginationContainer,
   usePagination
 } from '@zendeskgarden/container-pagination';
 import classNames from 'classnames';
 
-interface IComponentProps extends IUsePaginationReturnValue<any> {
-  pages: Record<string, RefObject<any>>;
+interface IComponentProps extends IUsePaginationReturnValue<string> {
+  pages: RefObject<HTMLLIElement>[];
 }
 
 const Component = ({
@@ -30,27 +31,26 @@ const Component = ({
   const previousRef = useRef();
   const nextRef = useRef();
   const className = 'border border-solid cursor-pointer px-3 py-1 select-none';
-  const keys = Object.keys(pages);
 
   return (
     <nav aria-label="pagination">
       <ul className="flex" {...getContainerProps()}>
         <li
-          className={classNames(className, { 'text-grey-400': selectedItem === keys[0] })}
+          className={classNames(className, { 'text-grey-400': selectedItem === '0' })}
           {...getPreviousPageProps({ item: 'prev', focusRef: previousRef })}
         >
           &lt;
         </li>
-        {keys.map((key, index) => {
-          const current = key === selectedItem;
+        {pages.map((page, index) => {
+          const current = index.toString() === selectedItem;
 
           return (
             <li
-              key={key}
+              key={index}
               className={classNames(className, { 'bg-blue-300': current })}
               {...getPageProps({
-                item: key,
-                focusRef: pages[key],
+                item: index.toString(),
+                focusRef: page,
                 page: index + 1,
                 current
               })}
@@ -61,7 +61,7 @@ const Component = ({
         })}
         <li
           className={classNames(className, {
-            'text-grey-400': selectedItem === keys[keys.length - 1]
+            'text-grey-400': selectedItem === (pages.length - 1).toString()
           })}
           {...getNextPageProps({ item: 'next', focusRef: nextRef })}
         >
@@ -72,39 +72,36 @@ const Component = ({
   );
 };
 
-interface IProps extends IPaginationContainerProps<any> {
-  pages: Record<string, RefObject<any>>;
+interface IProps extends IUsePaginationProps<string> {
+  pageRefs: RefObject<HTMLLIElement>[];
 }
 
-const Container = ({ pages, ...props }: IProps) => (
+const Container = ({ pageRefs, ...props }: IProps) => (
   <PaginationContainer {...props}>
-    {containerProps => <Component pages={pages} {...containerProps} />}
+    {containerProps => <Component pages={pageRefs} {...containerProps} />}
   </PaginationContainer>
 );
 
-const Hook = ({ pages, ...props }: IProps) => {
+const Hook = ({ pageRefs, ...props }: IProps) => {
   const hookProps = usePagination(props);
 
-  return <Component pages={pages} {...hookProps} />;
+  return <Component pages={pageRefs} {...hookProps} />;
 };
 
-interface IArgs extends IPaginationContainerProps<any> {
+interface IArgs extends IPaginationContainerProps<string> {
   as: 'hook' | 'container';
   pages: number;
 }
 
 export const PaginationStory: Story<IArgs> = ({ as, pages, ...props }) => {
-  const _pages = Array.from({ length: pages }, (_, index) => index).reduce(
-    (previous, current) => ({ ...previous, [current]: createRef() }),
-    {}
-  );
+  const pageRefs = Array.from({ length: pages }, () => createRef<HTMLLIElement>());
 
   switch (as) {
     case 'container':
-      return <Container pages={_pages} {...props} />;
+      return <Container pageRefs={pageRefs} {...props} />;
 
     case 'hook':
     default:
-      return <Hook pages={_pages} {...props} />;
+      return <Hook pageRefs={pageRefs} {...props} />;
   }
 };

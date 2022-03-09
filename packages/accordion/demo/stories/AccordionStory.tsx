@@ -9,6 +9,7 @@ import React from 'react';
 import { Story } from '@storybook/react';
 import {
   AccordionContainer,
+  IAccordionContainerProps,
   IUseAccordionProps,
   IUseAccordionReturnValue,
   useAccordion
@@ -80,7 +81,7 @@ const Hook = ({ sections, ...props }: IProps) => {
   return <Component sections={sections} {...hookProps} />;
 };
 
-interface IArgs extends IUseAccordionProps {
+interface IArgs extends IAccordionContainerProps {
   as: 'hook' | 'container';
   sections: number;
 }

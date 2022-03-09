@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React, { forwardRef, HTMLAttributes, RefObject } from 'react';
+import React, { forwardRef, HTMLAttributes } from 'react';
 import { Story } from '@storybook/react';
 import {
   IModalContainerProps,
@@ -79,20 +79,15 @@ const Component = forwardRef<HTMLDivElement, IComponentProps>(
 
 Component.displayName = 'Component';
 
-interface IProps extends IUseModalProps {
+interface IProps extends IUseModalProps<HTMLDivElement> {
   isOpen: boolean;
-  onOpen: HTMLAttributes<HTMLElement>['onClick'];
+  onOpen: HTMLAttributes<HTMLDivElement>['onClick'];
 }
 
 const Container = ({ isOpen, onOpen, modalRef, ...props }: IProps) => (
   <ModalContainer modalRef={modalRef} {...props}>
     {containerProps => (
-      <Component
-        isOpen={isOpen}
-        onOpen={onOpen}
-        {...containerProps}
-        ref={modalRef as RefObject<HTMLDivElement>}
-      />
+      <Component isOpen={isOpen} onOpen={onOpen} {...containerProps} ref={modalRef} />
     )}
   </ModalContainer>
 );
@@ -100,20 +95,13 @@ const Container = ({ isOpen, onOpen, modalRef, ...props }: IProps) => (
 const Hook = ({ isOpen, onOpen, modalRef, ...props }: IProps) => {
   const hookProps = useModal({ modalRef, ...props });
 
-  return (
-    <Component
-      isOpen={isOpen}
-      onOpen={onOpen}
-      {...hookProps}
-      ref={modalRef as RefObject<HTMLDivElement>}
-    />
-  );
+  return <Component isOpen={isOpen} onOpen={onOpen} {...hookProps} ref={modalRef} />;
 };
 
-interface IArgs extends IModalContainerProps {
+interface IArgs extends IModalContainerProps<HTMLDivElement> {
   as: 'hook' | 'container';
   isOpen: boolean;
-  onOpen: HTMLAttributes<HTMLElement>['onClick'];
+  onOpen: HTMLAttributes<HTMLDivElement>['onClick'];
 }
 
 export const ModalStory: Story<IArgs> = ({ as, ...props }) => {
