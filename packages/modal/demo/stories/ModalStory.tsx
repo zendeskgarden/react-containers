@@ -17,7 +17,7 @@ import {
 
 interface IComponentProps extends IUseModalReturnValue {
   isOpen: boolean;
-  onOpen: HTMLAttributes<HTMLElement>['onClick'];
+  onOpen: HTMLAttributes<HTMLButtonElement>['onClick'];
 }
 
 const Component = forwardRef<HTMLDivElement, IComponentProps>(
@@ -81,7 +81,7 @@ Component.displayName = 'Component';
 
 interface IProps extends IUseModalProps<HTMLDivElement> {
   isOpen: boolean;
-  onOpen: HTMLAttributes<HTMLDivElement>['onClick'];
+  onOpen: HTMLAttributes<HTMLButtonElement>['onClick'];
 }
 
 const Container = ({ isOpen, onOpen, modalRef, ...props }: IProps) => (
@@ -101,7 +101,7 @@ const Hook = ({ isOpen, onOpen, modalRef, ...props }: IProps) => {
 interface IArgs extends IModalContainerProps<HTMLDivElement> {
   as: 'hook' | 'container';
   isOpen: boolean;
-  onOpen: HTMLAttributes<HTMLDivElement>['onClick'];
+  onOpen: HTMLAttributes<HTMLButtonElement>['onClick'];
 }
 
 export const ModalStory: Story<IArgs> = ({ as, ...props }) => {
