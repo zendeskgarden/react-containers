@@ -1,0 +1,36 @@
+import { Meta, ArgsTable, Canvas, Story } from '@storybook/addon-docs';
+import {
+  SplitterContainer,
+  SplitterOrientation,
+  SplitterPosition,
+  SplitterType
+} from '@zendeskgarden/container-splitter';
+import { SplitterStory } from './stories/SplitterStory';
+
+<Meta
+  title="Packages/Splitter"
+  component={SplitterContainer}
+  args={{
+    as: 'hook',
+    max: 700,
+    min: 200,
+    orientation: SplitterOrientation.VERTICAL,
+    position: SplitterPosition.TRAILS,
+    type: SplitterType.VARIABLE
+  }}
+  argTypes={{
+    as: { options: ['container', 'hook'], control: 'radio', table: { category: 'Story' } },
+    environment: { control: false }
+  }}
+  parameters={{ layout: 'padded' }}
+/>
+
+# API
+
+<ArgsTable />
+
+# Demo
+
+<Canvas>
+  <Story name="Splitter">{args => <SplitterStory {...args} environment={window} />}</Story>
+</Canvas>

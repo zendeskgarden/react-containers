@@ -64,3 +64,7 @@ SplitterContainer.propTypes = {
   position: PropTypes.oneOf([SplitterPosition.LEADS, SplitterPosition.TRAILS]).isRequired,
   rtl: PropTypes.bool
 };
+
+SplitterContainer.defaultProps = {
+  keyboardStep: 50
+};
