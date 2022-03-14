@@ -14,7 +14,8 @@ npm install @zendeskgarden/container-selection
 
 ## Usage
 
-For live examples check out our [storybook](https://zendeskgarden.github.io/react-containers?path=/story/selection-containers--useselection).
+Check out [storybook](https://zendeskgarden.github.io/react-containers) for live
+examples.
 
 ### useSelection
 
@@ -22,7 +23,7 @@ The `useSelection` hook which manages an items focus state including keyboard co
 aria attributes and RTL support. It uses the
 [roving tab index strategy](https://www.w3.org/TR/wai-aria-practices/#kbd_roving_tabindex).
 
-```jsx static
+```jsx
 import { useSelection } from '@zendeskgarden/container-selection';
 
 const items = ['Item 1', 'Item 2', 'Item 3'];
@@ -61,7 +62,7 @@ const Selection = ({ direction }) => {
 
 ### SelectionContainer
 
-```jsx static
+```jsx
 import { SelectionContainer } from '@zendeskgarden/container-selection';
 
 const items = ['Item 1', 'Item 2', 'Item 3'];
