@@ -1,0 +1,57 @@
+import { Meta, ArgsTable, Canvas, Story } from '@storybook/addon-docs';
+import { useArgs } from '@storybook/client-api';
+import { SelectionContainer } from '@zendeskgarden/container-selection';
+import { SelectionStory } from './stories/SelectionStory';
+
+<Meta
+  title="Packages/Selection"
+  component={SelectionContainer}
+  args={{
+    as: 'hook',
+    items: 3,
+    direction: 'horizontal'
+  }}
+  argTypes={{
+    as: { options: ['container', 'hook'], control: 'radio', table: { category: 'Story' } },
+    items: { control: { type: 'range', min: 1, max: 5 }, table: { category: 'Story' } }
+  }}
+/>
+
+# API
+
+<ArgsTable />
+
+# Demo
+
+## Uncontrolled
+
+<Canvas>
+  <Story
+    name="Uncontrolled"
+    args={{
+      defaultFocusedIndex: 0
+    }}
+    argTypes={{ selectedItem: { control: false }, focusedItem: { control: false } }}
+  >
+    {args => <SelectionStory {...args} />}
+  </Story>
+</Canvas>
+
+## Controlled
+
+<Canvas>
+  <Story
+    name="Controlled"
+    args={{
+      selectedItem: '0'
+    }}
+    argTypes={{ defaultFocusedIndex: { control: false }, defaultSelectedIndex: { control: false } }}
+  >
+    {args => {
+      const updateArgs = useArgs()[1];
+      const handleSelect = selectedItem => updateArgs({ selectedItem });
+      const handleFocus = focusedItem => updateArgs({ focusedItem });
+      return <SelectionStory {...args} onSelect={handleSelect} onFocus={handleFocus} />;
+    }}
+  </Story>
+</Canvas>
