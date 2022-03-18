@@ -32,5 +32,20 @@ import { SplitterStory } from './stories/SplitterStory';
 # Demo
 
 <Canvas>
-  <Story name="Splitter">{args => <SplitterStory {...args} environment={window} />}</Story>
+  <Story name="Splitter">
+    {({
+      orientation = SplitterOrientation.VERTICAL,
+      position = SplitterPosition.TRAILS,
+      type = SplitterType.VARIABLE,
+      ...args
+    }) => (
+      <SplitterStory
+        orientation={orientation}
+        position={position}
+        type={type}
+        {...args}
+        environment={window}
+      />
+    )}
+  </Story>
 </Canvas>

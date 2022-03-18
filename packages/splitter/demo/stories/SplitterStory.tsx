@@ -14,12 +14,14 @@ import {
   IUseSplitterReturnValue,
   SplitterContainer,
   SplitterOrientation,
+  SplitterPosition,
   SplitterType,
   useSplitter
 } from '@zendeskgarden/container-splitter';
 
 interface IComponentProps extends IUseSplitterReturnValue {
   orientation: IUseSplitterProps['orientation'];
+  position: IUseSplitterProps['position'];
   rtl: IUseSplitterProps['rtl'];
   type: IUseSplitterProps['type'];
 }
@@ -27,10 +29,11 @@ interface IComponentProps extends IUseSplitterReturnValue {
 const Component = ({
   getPrimaryPaneProps,
   getSeparatorProps,
-  valueNow,
   orientation,
+  position,
   rtl,
-  type
+  type,
+  valueNow
 }: IComponentProps) => {
   return (
     <div
@@ -44,18 +47,23 @@ const Component = ({
       }}
     >
       <div
-        className="shrink-0 overflow-auto p-4"
-        {...getPrimaryPaneProps()}
-        style={{ flexBasis: valueNow }}
+        className={classNames('overflow-auto', {
+          'flex-auto': position === SplitterPosition.LEADS,
+          'shrink-0': position === SplitterPosition.TRAILS
+        })}
+        {...(position === SplitterPosition.TRAILS &&
+          getPrimaryPaneProps({ style: { flexBasis: valueNow } }))}
       >
-        <b>Primary</b>
-        <p className="mt-2">
-          Thai tabasco pepper cremini mushrooms crumbled lentils one bowl almonds delightful
-          blueberry scones simmer muffins red pepper jalapeño cherry pasta chocolate bruschetta.
-        </p>
+        <div className="p-4">
+          <b>{position === SplitterPosition.TRAILS ? 'Primary' : 'Secondary'}</b>
+          <p className="mt-2">
+            Thai tabasco pepper cremini mushrooms crumbled lentils one bowl almonds delightful
+            blueberry scones simmer muffins red pepper jalapeño cherry pasta chocolate bruschetta.
+          </p>
+        </div>
       </div>
       <div
-        className={classNames('flex-none', {
+        className={classNames('flex', 'flex-none', {
           'cursor-pointer': type === SplitterType.FIXED,
           'cursor-col-resize w-4': orientation === SplitterOrientation.VERTICAL,
           'cursor-row-resize h-4': orientation === SplitterOrientation.HORIZONTAL
@@ -69,33 +77,57 @@ const Component = ({
           })}
         />
       </div>
-      <div className="flex-auto overflow-auto p-4">
-        <b>Secondary</b>
-        <p className="mt-2">
-          Grains spring soba noodles pomegranate veggie burgers picnic cocoa green tea lime maple
-          orange tempeh ginger tofu leek basmati double dark chocolate figs artichoke hearts
-          raspberry fizz lemon lime minty summertime scotch bonnet pepper banana four-layer pine
-          nuts Thai sun pepper sesame soba noodles mediterranean vegetables chocolate cookie. Udon
-          noodles toasted hazelnuts peach strawberry mango ginger lemongrass agave green tea
-          homemade balsamic.
-        </p>
+      <div
+        className={classNames('overflow-auto', {
+          'flex-auto': position === SplitterPosition.TRAILS,
+          'shrink-0': position === SplitterPosition.LEADS
+        })}
+        {...(position &&
+          SplitterPosition.LEADS &&
+          getPrimaryPaneProps({ style: { flexBasis: valueNow } }))}
+      >
+        <div className="p-4">
+          <b>{position === SplitterPosition.TRAILS ? 'Secondary' : 'Primary'}</b>
+          <p className="mt-2">
+            Grains spring soba noodles pomegranate veggie burgers picnic cocoa green tea lime maple
+            orange tempeh ginger tofu leek basmati double dark chocolate figs artichoke hearts
+            raspberry fizz lemon lime minty summertime scotch bonnet pepper banana four-layer pine
+            nuts Thai sun pepper sesame soba noodles mediterranean vegetables chocolate cookie. Udon
+            noodles toasted hazelnuts peach strawberry mango ginger lemongrass agave green tea
+            homemade balsamic.
+          </p>
+        </div>
       </div>
     </div>
   );
 };
 
-const Container = ({ orientation, rtl, type, ...props }: ISplitterContainerProps) => (
-  <SplitterContainer orientation={orientation} rtl={rtl} type={type} {...props}>
+const Container = ({ ...props }: ISplitterContainerProps) => (
+  <SplitterContainer {...props}>
     {containerProps => (
-      <Component {...containerProps} orientation={orientation} rtl={rtl} type={type} />
+      <Component
+        {...containerProps}
+        orientation={props.orientation}
+        position={props.position}
+        rtl={props.rtl}
+        type={props.type}
+      />
     )}
   </SplitterContainer>
 );
 
-const Hook = ({ orientation, rtl, type, ...props }: IUseSplitterProps) => {
-  const hookProps = useSplitter({ orientation, rtl, type, ...props });
+const Hook = ({ ...props }: IUseSplitterProps) => {
+  const hookProps = useSplitter(props);
 
-  return <Component {...hookProps} orientation={orientation} rtl={rtl} type={type} />;
+  return (
+    <Component
+      {...hookProps}
+      orientation={props.orientation}
+      position={props.position}
+      rtl={props.rtl}
+      type={props.type}
+    />
+  );
 };
 
 interface IArgs extends ISplitterContainerProps {
