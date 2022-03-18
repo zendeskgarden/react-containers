@@ -1,4 +1,5 @@
 import { Meta, ArgsTable, Canvas, Story } from '@storybook/addon-docs';
+import { useArgs } from '@storybook/client-api';
 import {
   SplitterContainer,
   SplitterOrientation,
@@ -31,8 +32,10 @@ import { SplitterStory } from './stories/SplitterStory';
 
 # Demo
 
+## Uncontrolled
+
 <Canvas>
-  <Story name="Splitter">
+  <Story name="Uncontrolled" argTypes={{ valueNow: { control: false } }}>
     {({
       orientation = SplitterOrientation.VERTICAL,
       position = SplitterPosition.TRAILS,
@@ -47,5 +50,35 @@ import { SplitterStory } from './stories/SplitterStory';
         environment={window}
       />
     )}
+  </Story>
+</Canvas>
+
+## Controlled
+
+<Canvas>
+  <Story
+    name="Controlled"
+    args={{ valueNow: 200 }}
+    argTypes={{ defaultValueNow: { control: false } }}
+  >
+    {({
+      orientation = SplitterOrientation.VERTICAL,
+      position = SplitterPosition.TRAILS,
+      type = SplitterType.VARIABLE,
+      ...args
+    }) => {
+      const updateArgs = useArgs()[1];
+      const handleChange = valueNow => updateArgs({ valueNow });
+      return (
+        <SplitterStory
+          orientation={orientation}
+          position={position}
+          type={type}
+          {...args}
+          environment={window}
+          onChange={handleChange}
+        />
+      );
+    }}
   </Story>
 </Canvas>

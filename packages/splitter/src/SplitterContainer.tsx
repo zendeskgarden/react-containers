@@ -13,7 +13,8 @@ import {
   IUseSplitterReturnValue,
   SplitterOrientation,
   SplitterType,
-  SplitterPosition
+  SplitterPosition,
+  KEYBOARD_STEP
 } from './useSplitter';
 
 export interface ISplitterContainerProps extends IUseSplitterProps {
@@ -66,5 +67,5 @@ SplitterContainer.propTypes = {
 };
 
 SplitterContainer.defaultProps = {
-  keyboardStep: 50
+  keyboardStep: KEYBOARD_STEP
 };
