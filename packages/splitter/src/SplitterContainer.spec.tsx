@@ -14,7 +14,8 @@ import {
   SplitterOrientation,
   SplitterType,
   SplitterPosition,
-  normalizePointerToSeparator
+  normalizePointerToSeparator,
+  KEYBOARD_STEP
 } from './useSplitter';
 
 // make useUIDSeed consistent for testing purposes
@@ -422,12 +423,12 @@ describe('SplitterContainer', () => {
 
       describe('variable mode', () => {
         it.each<KeyDownMatrix>([
-          [SplitterOrientation.VERTICAL, 'ArrowRight', 20, 70],
-          [SplitterOrientation.VERTICAL, 'ArrowLeft', 70, 20],
+          [SplitterOrientation.VERTICAL, 'ArrowRight', 20, 20 + KEYBOARD_STEP],
+          [SplitterOrientation.VERTICAL, 'ArrowLeft', 70, 70 - KEYBOARD_STEP],
           [SplitterOrientation.VERTICAL, 'Enter', 20, 0],
           [SplitterOrientation.VERTICAL, 'Enter', 0, 100],
-          [SplitterOrientation.HORIZONTAL, 'ArrowUp', 70, 20],
-          [SplitterOrientation.HORIZONTAL, 'ArrowDown', 20, 70],
+          [SplitterOrientation.HORIZONTAL, 'ArrowUp', 70, 70 - KEYBOARD_STEP],
+          [SplitterOrientation.HORIZONTAL, 'ArrowDown', 20, 20 + KEYBOARD_STEP],
           [SplitterOrientation.HORIZONTAL, 'Enter', 20, 0],
           [SplitterOrientation.HORIZONTAL, 'Enter', 0, 100]
         ])('should move %s splitter using %s from %i to %i', (orientation, key, start, end) => {
@@ -857,7 +858,9 @@ describe('SplitterContainer', () => {
       });
     });
     describe('keyboard navigation', () => {
-      it('should increase vertical splitter when arrow left is pressed from 30 to 80', () => {
+      it(`should increase vertical splitter when arrow left is pressed from 30 to ${
+        30 + KEYBOARD_STEP
+      }`, () => {
         const { getByRole } = render(
           <UncontrolledTestSplitter
             environment={windowObjectMock}
@@ -871,10 +874,12 @@ describe('SplitterContainer', () => {
 
         fireEvent.keyDown(element, { key: 'ArrowLeft' });
 
-        expect(element).toHaveAttribute('aria-valuenow', '80');
+        expect(element).toHaveAttribute('aria-valuenow', `${30 + KEYBOARD_STEP}`);
       });
       describe('rtl', () => {
-        it('should decrease vertical splitter when arrow right is pressed from 80 to 30', () => {
+        it(`should decrease vertical splitter when arrow right is pressed from 80 to ${
+          80 - KEYBOARD_STEP
+        }`, () => {
           const { getByRole } = render(
             <UncontrolledTestSplitter
               environment={windowObjectMock}
@@ -888,7 +893,7 @@ describe('SplitterContainer', () => {
 
           fireEvent.keyDown(element, { key: 'ArrowRight' });
 
-          expect(element).toHaveAttribute('aria-valuenow', '30');
+          expect(element).toHaveAttribute('aria-valuenow', `${80 - KEYBOARD_STEP}`);
         });
       });
     });
