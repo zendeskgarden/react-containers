@@ -14,11 +14,14 @@ npm install @zendeskgarden/container-tooltip
 
 ## Usage
 
-For live examples check out our [storybook](https://zendeskgarden.github.io/react-containers?path=/story/tooltip-container--usetooltip).
+This container implements the
+[tooltip](https://www.w3.org/TR/wai-aria-practices-1.1/#tooltip) design pattern
+and can be used to build a tooltip component. Check out
+[storybook](https://zendeskgarden.github.io/react-containers) for live examples.
 
 ### useTooltip
 
-```jsx static
+```jsx
 import { useTooltip } from '@zendeskgarden/container-tooltip';
 
 const Tooltip = () => {
@@ -46,7 +49,7 @@ const Tooltip = () => {
 
 ### TooltipContainer
 
-```jsx static
+```jsx
 import { TooltipContainer } from '@zendeskgarden/container-tooltip';
 
 const Tooltip = () => {
