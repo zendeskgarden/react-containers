@@ -1,0 +1,26 @@
+import { Meta, ArgsTable, Canvas, Story } from '@storybook/addon-docs';
+import { TooltipContainer } from '@zendeskgarden/container-tooltip';
+import { TooltipStory } from './stories/TooltipStory';
+
+<Meta title="Packages/Tooltip" component={TooltipContainer} />
+
+# API
+
+<ArgsTable />
+
+# Demo
+
+<Canvas>
+  <Story
+    name="Tooltip"
+    args={{
+      as: 'hook',
+      delayMilliseconds: TooltipContainer.defaultProps.delayMilliseconds
+    }}
+    argTypes={{
+      as: { options: ['container', 'hook'], control: 'radio', table: { category: 'Story' } }
+    }}
+  >
+    {args => <TooltipStory {...args} />}
+  </Story>
+</Canvas>
