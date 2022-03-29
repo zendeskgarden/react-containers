@@ -29,7 +29,9 @@ TabsContainer.propTypes = {
   children: PropTypes.func,
   render: PropTypes.func,
   vertical: PropTypes.bool,
+  rtl: PropTypes.bool,
   idPrefix: PropTypes.string,
   defaultSelectedIndex: PropTypes.number,
+  selectedItem: PropTypes.any,
   onSelect: PropTypes.func
 };
