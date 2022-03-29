@@ -6,7 +6,9 @@
  */
 
 /* Hooks */
-export { useTabs, IUseTabsProps, IUseTabsReturnValue } from './useTabs';
+export { useTabs } from './useTabs';
+export type { IUseTabsProps, IUseTabsReturnValue } from './useTabs';
 
 /* Render-props */
-export { TabsContainer, ITabsContainerProps } from './TabsContainer';
+export { TabsContainer } from './TabsContainer';
+export type { ITabsContainerProps } from './TabsContainer';
