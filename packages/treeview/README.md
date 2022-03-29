@@ -101,7 +101,7 @@ Check out [storybook](https://zendeskgarden.github.io/react-containers) for live
 
 ### useTreeview
 
-```jsx static
+```jsx
 import { useTreeview } from '@zendeskgarden/container-treeview';
 
 const Treeview = () => {
@@ -113,7 +113,7 @@ const Treeview = () => {
 
 ### TreeviewContainer
 
-```jsx static
+```jsx
 import { TreeviewContainer } from '@zendeskgarden/container-treeview';
 
 <TreeviewContainer>{({ getTreeviewProps }) => <div {...getTreeviewProps()} />}</TreeviewContainer>;
