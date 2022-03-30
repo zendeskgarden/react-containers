@@ -9,6 +9,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useTreeview } from './useTreeview';
 import { IUseTreeviewProps, IUseTreeviewReturnValue } from './types';
+import { ContainerOrientation } from '@zendeskgarden/container-utilities';
 
 export interface ITreeviewContainerProps<Item> extends IUseTreeviewProps<Item> {
   /** Documents the render function */
@@ -25,5 +26,12 @@ export const TreeviewContainer: React.FC<ITreeviewContainerProps<any>> = props =
 
 TreeviewContainer.propTypes = {
   children: PropTypes.func,
-  render: PropTypes.func
+  render: PropTypes.func,
+  openNodes: PropTypes.array,
+  orientation: PropTypes.oneOf([ContainerOrientation.VERTICAL, ContainerOrientation.HORIZONTAL]),
+  rtl: PropTypes.bool,
+  onChange: PropTypes.func,
+  defaultSelectedIndex: PropTypes.number,
+  selectedItem: PropTypes.any,
+  onSelect: PropTypes.func
 };
