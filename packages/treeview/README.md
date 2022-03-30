@@ -81,14 +81,6 @@ For a vertically oriented tree (horizontal and RTL are supported as well):
 - ❌ If the `tree` element is horizontally oriented, it has `aria-orientation` set to `horizontal`.
   The default value of `aria-orientation` for a tree is `horizontal`.
 
-### Implementation questions for reviewers
-
-1. What should the behaviour be when a different `role` is passed? Nothing, throw error, forces the
-   right role...
-2. For the `tree` element, should I throw an error if both the `label` or `labelledBy` props are
-   nil?
-3. Do I need to implement a `expandable`, `collapsible` logic like in the accordion container?
-
 ## Installation
 
 ```sh
