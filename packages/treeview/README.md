@@ -79,7 +79,7 @@ For a vertically oriented tree (horizontal and RTL are supported as well):
   user moves focus in or scrolls the tree, each node has `aria-level`, `aria-setsize`,
   and `aria-posinset` specified.
 - ❌ If the `tree` element is horizontally oriented, it has `aria-orientation` set to `horizontal`.
-  The default value of `aria-orientation` for a tree is `horizontal`.
+  The default value of `aria-orientation` for a tree is `vertical`.
 
 ## Installation
 
