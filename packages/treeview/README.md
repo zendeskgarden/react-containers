@@ -78,7 +78,7 @@ For a vertically oriented tree (horizontal and RTL are supported as well):
 - ❌ If the complete set of available nodes is not present in the DOM due to dynamic loading as the
   user moves focus in or scrolls the tree, each node has `aria-level`, `aria-setsize`,
   and `aria-posinset` specified.
-- ❌ If the `tree` element is horizontally oriented, it has `aria-orientation` set to `horizontal`.
+- ✅ If the `tree` element is horizontally oriented, it has `aria-orientation` set to `horizontal`.
   The default value of `aria-orientation` for a tree is `vertical`.
 
 ## Installation
