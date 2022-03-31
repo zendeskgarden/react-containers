@@ -14,11 +14,14 @@ npm install @zendeskgarden/container-tabs
 
 ## Usage
 
-For live examples check out our [storybook](https://zendeskgarden.github.io/react-containers?path=/story/tabs-container--usetabs).
+This container implements the
+[tabs](https://www.w3.org/TR/wai-aria-practices/#tabpanel) design pattern and
+can be used to build a tabbed interface. Check out
+[storybook](https://zendeskgarden.github.io/react-containers) for live examples.
 
 ### useTabs
 
-```jsx static
+```jsx
 import { useTabs } from '@zendeskgarden/container-tabs';
 
 const tabs = ['Tab 1', 'Tab 2', 'Tab 3'];
@@ -82,7 +85,7 @@ const Tabs = () => {
 
 ### TabsContainer
 
-```jsx static
+```jsx
 import { TabsContainer } from '@zendeskgarden/container-tabs';
 
 const Tabs = () => {

@@ -24,6 +24,8 @@ export enum SplitterType {
   VARIABLE = 'variable'
 }
 
+export const KEYBOARD_STEP = 48;
+
 interface IEventTargetLike {
   addEventListener: (...args: any) => any;
   removeEventListener: (...args: any) => any;
@@ -143,7 +145,7 @@ export function useSplitter({
   min,
   max,
   orientation,
-  keyboardStep = 50,
+  keyboardStep = KEYBOARD_STEP,
   defaultValueNow = min,
   valueNow,
   onChange = () => undefined,

@@ -6,7 +6,9 @@
  */
 
 /* Hooks */
-export { useTooltip, IUseTooltipProps, IUseTooltipReturnValue } from './useTooltip';
+export { useTooltip } from './useTooltip';
+export type { IUseTooltipProps, IUseTooltipReturnValue } from './useTooltip';
 
 /* Render-props */
-export { TooltipContainer, ITooltipContainerProps } from './TooltipContainer';
+export { TooltipContainer } from './TooltipContainer';
+export type { ITooltipContainerProps } from './TooltipContainer';

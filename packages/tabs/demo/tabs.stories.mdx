@@ -1,0 +1,55 @@
+import { Meta, ArgsTable, Canvas, Story } from '@storybook/addon-docs';
+import { useArgs } from '@storybook/client-api';
+import { TabsContainer } from '@zendeskgarden/container-tabs';
+import { TabsStory } from './stories/TabsStory';
+
+<Meta
+  title="Packages/Tabs"
+  component={TabsContainer}
+  args={{
+    as: 'hook',
+    tabs: 3
+  }}
+  argTypes={{
+    as: { options: ['container', 'hook'], control: 'radio', table: { category: 'Story' } },
+    tabs: { control: { type: 'range', min: 1, max: 5 }, table: { category: 'Story' } }
+  }}
+/>
+
+# API
+
+<ArgsTable />
+
+# Demo
+
+## Uncontrolled
+
+<Canvas>
+  <Story
+    name="Uncontrolled"
+    args={{
+      defaultSelectedIndex: 0
+    }}
+    argTypes={{ selectedItem: { control: false } }}
+  >
+    {args => <TabsStory {...args} />}
+  </Story>
+</Canvas>
+
+## Controlled
+
+<Canvas>
+  <Story
+    name="Controlled"
+    args={{
+      selectedItem: '0'
+    }}
+    argTypes={{ defaultSelectedIndex: { control: false } }}
+  >
+    {args => {
+      const updateArgs = useArgs()[1];
+      const handleSelect = selectedItem => updateArgs({ selectedItem });
+      return <TabsStory {...args} onSelect={handleSelect} />;
+    }}
+  </Story>
+</Canvas>

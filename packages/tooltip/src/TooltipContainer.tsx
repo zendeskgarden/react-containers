@@ -25,6 +25,10 @@ export const TooltipContainer: React.FunctionComponent<ITooltipContainerProps> =
   return <>{render!(useTooltip(options)) as React.ReactElement}</>;
 };
 
+TooltipContainer.defaultProps = {
+  delayMilliseconds: 500
+};
+
 TooltipContainer.propTypes = {
   children: PropTypes.func,
   render: PropTypes.func,

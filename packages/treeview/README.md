@@ -78,16 +78,8 @@ For a vertically oriented tree (horizontal and RTL are supported as well):
 - ❌ If the complete set of available nodes is not present in the DOM due to dynamic loading as the
   user moves focus in or scrolls the tree, each node has `aria-level`, `aria-setsize`,
   and `aria-posinset` specified.
-- ❌ If the `tree` element is horizontally oriented, it has `aria-orientation` set to `horizontal`.
-  The default value of `aria-orientation` for a tree is `horizontal`.
-
-### Implementation questions for reviewers
-
-1. What should the behaviour be when a different `role` is passed? Nothing, throw error, forces the
-   right role...
-2. For the `tree` element, should I throw an error if both the `label` or `labelledBy` props are
-   nil?
-3. Do I need to implement a `expandable`, `collapsible` logic like in the accordion container?
+- ✅ If the `tree` element is horizontally oriented, it has `aria-orientation` set to `horizontal`.
+  The default value of `aria-orientation` for a tree is `vertical`.
 
 ## Installation
 
@@ -101,7 +93,7 @@ Check out [storybook](https://zendeskgarden.github.io/react-containers) for live
 
 ### useTreeview
 
-```jsx static
+```jsx
 import { useTreeview } from '@zendeskgarden/container-treeview';
 
 const Treeview = () => {
@@ -113,7 +105,7 @@ const Treeview = () => {
 
 ### TreeviewContainer
 
-```jsx static
+```jsx
 import { TreeviewContainer } from '@zendeskgarden/container-treeview';
 
 <TreeviewContainer>{({ getTreeviewProps }) => <div {...getTreeviewProps()} />}</TreeviewContainer>;

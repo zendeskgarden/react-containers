@@ -36,6 +36,7 @@ SelectionContainer.propTypes = {
   rtl: PropTypes.bool,
   direction: PropTypes.oneOf(['horizontal', 'vertical', 'both']),
   defaultFocusedIndex: PropTypes.number,
+  defaultSelectedIndex: PropTypes.number,
   focusedItem: PropTypes.any,
   selectedItem: PropTypes.any,
   onSelect: PropTypes.func,

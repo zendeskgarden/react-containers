@@ -1,0 +1,84 @@
+import { Meta, ArgsTable, Canvas, Story } from '@storybook/addon-docs';
+import { useArgs } from '@storybook/client-api';
+import {
+  SplitterContainer,
+  SplitterOrientation,
+  SplitterPosition,
+  SplitterType
+} from '@zendeskgarden/container-splitter';
+import { SplitterStory } from './stories/SplitterStory';
+
+<Meta
+  title="Packages/Splitter"
+  component={SplitterContainer}
+  args={{
+    as: 'hook',
+    max: 700,
+    min: 200,
+    orientation: SplitterOrientation.VERTICAL,
+    position: SplitterPosition.TRAILS,
+    type: SplitterType.VARIABLE
+  }}
+  argTypes={{
+    as: { options: ['container', 'hook'], control: 'radio', table: { category: 'Story' } },
+    environment: { control: false }
+  }}
+  parameters={{ layout: 'padded' }}
+/>
+
+# API
+
+<ArgsTable />
+
+# Demo
+
+## Uncontrolled
+
+<Canvas>
+  <Story name="Uncontrolled" argTypes={{ valueNow: { control: false } }}>
+    {({
+      orientation = SplitterOrientation.VERTICAL,
+      position = SplitterPosition.TRAILS,
+      type = SplitterType.VARIABLE,
+      ...args
+    }) => (
+      <SplitterStory
+        orientation={orientation}
+        position={position}
+        type={type}
+        {...args}
+        environment={window}
+      />
+    )}
+  </Story>
+</Canvas>
+
+## Controlled
+
+<Canvas>
+  <Story
+    name="Controlled"
+    args={{ valueNow: 200 }}
+    argTypes={{ defaultValueNow: { control: false } }}
+  >
+    {({
+      orientation = SplitterOrientation.VERTICAL,
+      position = SplitterPosition.TRAILS,
+      type = SplitterType.VARIABLE,
+      ...args
+    }) => {
+      const updateArgs = useArgs()[1];
+      const handleChange = valueNow => updateArgs({ valueNow });
+      return (
+        <SplitterStory
+          orientation={orientation}
+          position={position}
+          type={type}
+          {...args}
+          environment={window}
+          onChange={handleChange}
+        />
+      );
+    }}
+  </Story>
+</Canvas>

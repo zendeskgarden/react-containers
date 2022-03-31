@@ -6,8 +6,8 @@
  */
 
 /* Hooks */
-export {
-  useSelection,
+export { useSelection } from './useSelection';
+export type {
   UseSelectionReturnValue,
   IUseSelectionProps,
   IGetItemPropsOptions,
@@ -15,4 +15,5 @@ export {
 } from './useSelection';
 
 /* Render-props */
-export { SelectionContainer, ISelectionContainerProps } from './SelectionContainer';
+export { SelectionContainer } from './SelectionContainer';
+export type { ISelectionContainerProps } from './SelectionContainer';
