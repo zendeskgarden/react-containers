@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React, { forwardRef, RefObject } from 'react';
+import React, { forwardRef } from 'react';
 import { Story } from '@storybook/react';
 import { createGlobalStyle } from 'styled-components';
 import { PALETTE } from '@zendeskgarden/react-theming';
@@ -36,7 +36,7 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 /* eslint-disable jsx-a11y/no-noninteractive-tabindex */
-const Component = forwardRef<HTMLDivElement, any>((_, ref) => (
+const Component = forwardRef<HTMLDivElement, unknown>((_, ref) => (
   <>
     <GlobalStyle />
     <div ref={ref}>
@@ -67,21 +67,18 @@ const Component = forwardRef<HTMLDivElement, any>((_, ref) => (
 
 Component.displayName = 'Component';
 
-const Container = () => (
-  <FocusVisibleContainer>{({ ref }) => <Component ref={ref} />}</FocusVisibleContainer>
+const Container = (props: IFocusVisibleContainerProps) => (
+  <FocusVisibleContainer {...props}>{({ ref }) => <Component ref={ref} />}</FocusVisibleContainer>
 );
 
-const Hook = ({ scope, ...props }: IUseFocusVisibleProps) => {
+const Hook = ({ scope, ...props }: IUseFocusVisibleProps<HTMLDivElement>) => {
   useFocusVisible({ scope, ...props });
 
-  const ref = scope as RefObject<HTMLDivElement>;
-
-  return <Component {...props} ref={ref} />;
+  return <Component ref={scope} />;
 };
 
-interface IArgs extends IFocusVisibleContainerProps {
+interface IArgs extends IUseFocusVisibleProps<HTMLDivElement> {
   as: 'hook' | 'container';
-  scope: RefObject<HTMLElement>;
 }
 
 export const FocusVisibleStory: Story<IArgs> = ({ as, ...props }) => {

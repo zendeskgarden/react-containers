@@ -28,9 +28,9 @@ const INPUT_TYPES_WHITE_LIST: Record<string, boolean> = {
   'datetime-local': true
 };
 
-export interface IUseFocusVisibleProps {
+export interface IUseFocusVisibleProps<RefType = HTMLElement> {
   /** A ref pointing to the scope which contains focus visible elements */
-  scope: React.RefObject<HTMLElement | null>;
+  scope: React.RefObject<RefType>;
   /** A relative document */
   relativeDocument?: any;
   /** A class name applied to the element with `:focus-visible` behavior */

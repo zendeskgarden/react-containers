@@ -10,11 +10,11 @@ import { useUIDSeed } from 'react-uid';
 import { composeEventHandlers, KEY_CODES } from '@zendeskgarden/container-utilities';
 import { useFocusJail } from '@zendeskgarden/container-focusjail';
 
-export interface IUseModalProps {
+export interface IUseModalProps<RefType = HTMLElement> {
   /** A callback when a close action has been completed */
   onClose?: (event: KeyboardEvent | MouseEvent) => void;
   /** A ref pointing to a DOM element which contains the modal content */
-  modalRef: React.RefObject<HTMLElement>;
+  modalRef: React.RefObject<RefType>;
   /** An ID that is applied to modal elements */
   id?: string;
   /** Determines if the modal's focus jail container should focus on mount */
