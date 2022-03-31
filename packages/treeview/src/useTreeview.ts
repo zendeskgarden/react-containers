@@ -60,7 +60,6 @@ export function useTreeview<Item = any>({
   const [ownFocusedItem, setFocusedItem] = useState<Item>();
   const { selectedItem, focusedItem, getContainerProps, getItemProps } = useSelection<Item>({
     direction: orientation,
-    defaultSelectedIndex: 0,
     focusedItem: ownFocusedItem,
     ...options
   });
@@ -100,6 +99,7 @@ export function useTreeview<Item = any>({
     return {
       role,
       'aria-label': label,
+      'aria-orientation': orientation,
       'data-garden-container-id': 'containers.treeview',
       'data-garden-container-version': PACKAGE_VERSION,
       onFocus,
@@ -137,11 +137,12 @@ export function useTreeview<Item = any>({
     const expanded = nodeType === 'parent' ? isNodeExpanded(item) : undefined;
 
     const onClickFn = composeEventHandlers(onClick, (e: MouseEvent) => {
-      if (nodeType !== 'parent') {
-        return;
+      if (nodeType === 'parent') {
+        e.preventDefault();
+        toggleParent(item!);
+      } else {
+        e.stopPropagation();
       }
-      e.preventDefault();
-      toggleParent(item!);
     });
 
     return {

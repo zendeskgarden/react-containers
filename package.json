@@ -12,7 +12,7 @@
     "format:package_json": "lerna exec -- prettier-package-json",
     "postinstall": "husky install && lerna bootstrap",
     "lint": "yarn lint:js && yarn lint:md",
-    "lint:js": "eslint packages/*/src/ packages/*/*.stories.tsx utils/ .storybook/**/*.js --ext js,ts,tsx --max-warnings 0",
+    "lint:js": "eslint packages/*/src/ utils/ .storybook/**/*.js --ext js,ts,tsx --max-warnings 0",
     "lint:md": "markdownlint README.md packages/*/src/**/*.md packages/*/src/*.md packages/*/README.md",
     "new": "utils/scripts/new.js",
     "prepare": "yarn build",

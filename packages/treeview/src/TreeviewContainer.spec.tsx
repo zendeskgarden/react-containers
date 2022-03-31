@@ -190,17 +190,17 @@ describe('uncontrolled usages', () => {
     expect(getParentNode('Fruits')).toHaveFocus();
   });
 
-  it('should select the first element by default', () => {
+  it('should not select the first element by default', () => {
     renderTestCase();
     userEvent.tab();
-    expect(getParentNode('Fruits')).toHaveAttribute('aria-selected', 'true');
+    expect(getParentNode('Fruits')).toHaveAttribute('aria-selected', 'false');
   });
 
   it('should change selection and expanded states using keyboard and pointer', () => {
     renderTestCase();
 
     userEvent.tab();
-    expect(getParentNode('Fruits')).toHaveAttribute('aria-selected', 'true');
+    expect(getParentNode('Fruits')).toHaveAttribute('aria-selected', 'false');
 
     userEvent.keyboard('{space}');
     expect(getParentNode('Fruits')).toHaveAttribute('aria-selected', 'true');
@@ -234,7 +234,7 @@ describe('uncontrolled usages', () => {
       renderTestCase({ orientation, rtl });
 
       userEvent.tab();
-      expect(getParentNode('Fruits')).toHaveAttribute('aria-selected', 'true');
+      expect(getParentNode('Fruits')).toHaveAttribute('aria-selected', 'false');
 
       userEvent.keyboard(right);
       expect(getParentNode('Fruits')).toHaveAttribute('aria-expanded', 'true');
