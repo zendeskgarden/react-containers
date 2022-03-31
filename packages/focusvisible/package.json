@@ -1,6 +1,6 @@
 {
   "name": "@zendeskgarden/container-focusvisible",
-  "version": "0.4.9",
+  "version": "0.4.10",
   "description": "Containers relating to the :focus-visible polyfill hook in the Garden Design System",
   "license": "Apache-2.0",
   "author": "Zendesk Garden <garden@zendesk.com>",

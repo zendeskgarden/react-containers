@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.16](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-keyboardfocus@0.4.15...@zendeskgarden/container-keyboardfocus@0.4.16) (2022-03-31)
+
+**Note:** Version bump only for package @zendeskgarden/container-keyboardfocus
+
+
+
+
+
 ## [0.4.15](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-keyboardfocus@0.4.14...@zendeskgarden/container-keyboardfocus@0.4.15) (2022-02-28)
 
 **Note:** Version bump only for package @zendeskgarden/container-keyboardfocus

@@ -1,6 +1,6 @@
 {
   "name": "@zendeskgarden/container-modal",
-  "version": "0.8.14",
+  "version": "0.8.15",
   "description": "Containers relating to modal in the Garden Design System",
   "license": "Apache-2.0",
   "author": "Zendesk Garden <garden@zendesk.com>",
