@@ -263,7 +263,7 @@ export function useSelection<Item = any>({
             (e.keyCode === KEY_CODES.UP && verticalDirection) ||
             (e.keyCode === KEY_CODES.LEFT && horizontalDirection)
           ) {
-            if (rtl && !verticalDirection) {
+            if (rtl && horizontalDirection) {
               onIncrement();
             } else {
               onDecrement();
@@ -274,7 +274,7 @@ export function useSelection<Item = any>({
             (e.keyCode === KEY_CODES.DOWN && verticalDirection) ||
             (e.keyCode === KEY_CODES.RIGHT && horizontalDirection)
           ) {
-            if (rtl && !verticalDirection) {
+            if (rtl && horizontalDirection) {
               onDecrement();
             } else {
               onIncrement();
