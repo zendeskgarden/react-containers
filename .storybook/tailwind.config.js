@@ -19,5 +19,5 @@ module.exports = {
             variants: ['focus', 'hover']
           }
         ]
-      : [{ pattern: /mt-(0|4|8|12|16)/u /* selection demo interpolations */ }]
+      : [{ pattern: /mt-(?:0|4|8|12|16)/u /* selection demo interpolations */ }]
 };

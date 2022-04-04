@@ -1,6 +1,6 @@
 {
   "*.{js,ts,tsx}": [
-    "eslint",
+    "eslint --max-warnings 0",
     "jest --config=utils/test/jest.config.js --findRelatedTests",
     "prettier --write"
   ],
