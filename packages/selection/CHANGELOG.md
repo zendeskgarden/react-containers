@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.18](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-selection@1.3.17...@zendeskgarden/container-selection@1.3.18) (2022-04-25)
+
+
+### Bug Fixes
+
+* **selection:** keyboard action for direction `both` + `rtl` ([#445](https://github.com/zendeskgarden/react-containers/issues/445)) ([ebeb33c](https://github.com/zendeskgarden/react-containers/commit/ebeb33c0745b4a0796929f03a8ce97d96fea87c7))
+
+
+
+
+
 ## [1.3.17](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-selection@1.3.16...@zendeskgarden/container-selection@1.3.17) (2022-03-31)
 
 **Note:** Version bump only for package @zendeskgarden/container-selection
