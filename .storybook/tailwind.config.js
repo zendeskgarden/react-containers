@@ -11,5 +11,13 @@ const gardenTailwindCss = require('@zendeskgarden/tailwindcss');
 module.exports = {
   content: [`${path.resolve(__dirname, '../packages')}/*/demo/**/*.{mdx,tsx}`],
   plugins: [gardenTailwindCss],
-  safelist: process.env.NODE_ENV === 'development' ? [{ pattern: /.*/u }] : []
+  safelist:
+    process.env.NODE_ENV === 'development'
+      ? [
+          {
+            pattern: /.*/u,
+            variants: ['focus', 'hover']
+          }
+        ]
+      : [{ pattern: /mt-(?:0|4|8|12|16)/u /* selection demo interpolations */ }]
 };

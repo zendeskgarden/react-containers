@@ -434,6 +434,180 @@ describe('SelectionContainer', () => {
           });
         });
       });
+
+      describe('while using both direction', () => {
+        describe('LEFT keyCode', () => {
+          describe('when dir is LTR', () => {
+            it('focuses on the first item when triggered from second item', () => {
+              const { getByText } = render(<BasicExample />);
+              const item = getByText('Item-1');
+              const secondItem = getByText('Item-2');
+
+              userEvent.click(secondItem);
+              fireEvent.keyDown(secondItem, { keyCode: KEY_CODES.LEFT });
+
+              expect(document.activeElement).toBe(item);
+              expect(item).toHaveAttribute('aria-selected', 'false');
+            });
+
+            it('focuses on the last item after pressing left arrow key on first item', () => {
+              const { getByText } = render(<BasicExample />);
+              const item = getByText('Item-1');
+              const lastItem = getByText('Item-3');
+
+              userEvent.tab();
+              fireEvent.keyDown(item, { keyCode: KEY_CODES.LEFT });
+
+              expect(document.activeElement).toBe(lastItem);
+              expect(lastItem).toHaveAttribute('aria-selected', 'false');
+            });
+          });
+
+          describe('when dir is RTL', () => {
+            it('focuses on the second item when triggered from first item', () => {
+              const { getByText } = render(<BasicExample rtl />);
+              const item = getByText('Item-1');
+              const secondItem = getByText('Item-2');
+
+              userEvent.tab();
+              fireEvent.keyDown(item, { keyCode: KEY_CODES.LEFT });
+
+              expect(document.activeElement).toBe(secondItem);
+              expect(secondItem).toHaveAttribute('aria-selected', 'false');
+            });
+
+            it('focuses on the first item when triggered from last item', () => {
+              const { getByText } = render(<BasicExample rtl />);
+              const item = getByText('Item-1');
+              const lastItem = getByText('Item-3');
+
+              userEvent.click(lastItem);
+              fireEvent.keyDown(lastItem, { keyCode: KEY_CODES.LEFT });
+
+              expect(document.activeElement).toBe(item);
+              expect(item).toHaveAttribute('aria-selected', 'false');
+            });
+          });
+        });
+
+        describe('RIGHT keyCode', () => {
+          describe('when dir is LTR', () => {
+            it('focuses on the second next item when triggered from first item', () => {
+              const { getByText } = render(<BasicExample />);
+              const item = getByText('Item-1');
+              const secondItem = getByText('Item-2');
+
+              userEvent.click(item);
+              fireEvent.keyDown(item, { keyCode: KEY_CODES.RIGHT });
+              expect(secondItem).toBe(document.activeElement);
+            });
+
+            it('focuses on the first item when triggered from last item', () => {
+              const { getByText } = render(<BasicExample />);
+              const item = getByText('Item-1');
+              const lastItem = getByText('Item-3');
+
+              userEvent.click(lastItem);
+              fireEvent.keyDown(lastItem, { keyCode: KEY_CODES.RIGHT });
+              expect(item).toBe(document.activeElement);
+            });
+          });
+
+          describe('when dir is RTL', () => {
+            it('focuses on the first item when triggered from second item', () => {
+              const { getByText } = render(<BasicExample rtl />);
+              const item = getByText('Item-1');
+              const secondItem = getByText('Item-2');
+
+              userEvent.click(secondItem);
+              fireEvent.keyDown(secondItem, { keyCode: KEY_CODES.RIGHT });
+
+              expect(item).toBe(document.activeElement);
+            });
+
+            it('focuses on the last item when triggered from first item', () => {
+              const { getByText } = render(<BasicExample rtl />);
+              const item = getByText('Item-1');
+              const lastItem = getByText('Item-3');
+
+              userEvent.click(item);
+              fireEvent.keyDown(item, { keyCode: KEY_CODES.RIGHT });
+
+              expect(lastItem).toBe(document.activeElement);
+            });
+          });
+        });
+
+        describe('UP keyCode', () => {
+          it('focuses on the first item when triggered from second item', () => {
+            const { getByText } = render(<BasicExample direction="vertical" />);
+            const item = getByText('Item-1');
+            const secondItem = getByText('Item-2');
+
+            userEvent.click(secondItem);
+            fireEvent.keyDown(secondItem, { keyCode: KEY_CODES.UP });
+
+            expect(item).toBe(document.activeElement);
+          });
+
+          it('focuses on the first item when triggered from second item in RTL', () => {
+            const { getByText } = render(<BasicExample direction="vertical" rtl />);
+            const item = getByText('Item-1');
+            const secondItem = getByText('Item-2');
+
+            userEvent.click(secondItem);
+            fireEvent.keyDown(secondItem, { keyCode: KEY_CODES.UP });
+
+            expect(item).toBe(document.activeElement);
+          });
+
+          it('focuses on the last item when triggered from first item', () => {
+            const { getByText } = render(<BasicExample direction="vertical" />);
+            const item = getByText('Item-1');
+            const lastItem = getByText('Item-3');
+
+            userEvent.click(item);
+            fireEvent.keyDown(item, { keyCode: KEY_CODES.UP });
+
+            expect(lastItem).toBe(document.activeElement);
+          });
+        });
+
+        describe('DOWN keyCode', () => {
+          it('focuses on the second item when triggered from first item', () => {
+            const { getByText } = render(<BasicExample direction="vertical" />);
+            const item = getByText('Item-1');
+            const secondItem = getByText('Item-2');
+
+            userEvent.click(item);
+            fireEvent.keyDown(item, { keyCode: KEY_CODES.DOWN });
+
+            expect(secondItem).toBe(document.activeElement);
+          });
+
+          it('focuses on the second item when triggered from first item in RTL', () => {
+            const { getByText } = render(<BasicExample direction="vertical" rtl />);
+            const item = getByText('Item-1');
+            const secondItem = getByText('Item-2');
+
+            userEvent.click(item);
+            fireEvent.keyDown(item, { keyCode: KEY_CODES.DOWN });
+
+            expect(secondItem).toBe(document.activeElement);
+          });
+
+          it('focuses on the first item when triggered from last item', () => {
+            const { getByText } = render(<BasicExample direction="vertical" />);
+            const item = getByText('Item-1');
+            const lastItem = getByText('Item-3');
+
+            userEvent.click(lastItem);
+            fireEvent.keyDown(lastItem, { keyCode: KEY_CODES.DOWN });
+
+            expect(item).toBe(document.activeElement);
+          });
+        });
+      });
     });
   });
 
