@@ -22,7 +22,7 @@ describe('useGrid', () => {
   const idPrefix = 'some-id-prefix';
 
   const Example = ({ rtl, matrix, onFocus, onClick, ...props }: IExample) => (
-    <GridContainer rtl={rtl} selection matrix={matrix} idPrefix={idPrefix} {...props}>
+    <GridContainer rtl={rtl} matrix={matrix} idPrefix={idPrefix} {...props}>
       {({ getGridCellProps }: IUseGridReturnValue) => (
         <table role="grid">
           <tbody>
@@ -87,49 +87,6 @@ describe('useGrid', () => {
 
       userEvent.tab();
       expect(gridCell('#f5b5ba')).toHaveFocus();
-    });
-
-    test('sets a default selected cell', () => {
-      const matrix = [
-        ['#d1e8df', '#aecfc2'],
-        ['#f5d5d8', '#f5b5ba']
-      ];
-
-      render(
-        <Example
-          selection
-          matrix={matrix}
-          defaultSelectedRowIndex={1}
-          defaultSelectedColIndex={1}
-        />
-      );
-
-      userEvent.tab();
-      expect(gridCell('#f5b5ba')).toHaveAttribute('aria-selected', 'true');
-    });
-
-    test('sets selected cell using keyboard and pointer', () => {
-      const matrix = [
-        ['#d1e8df', '#aecfc2'],
-        ['#f5d5d8', '#f5b5ba']
-      ];
-
-      render(<Example selection matrix={matrix} />);
-
-      userEvent.tab();
-      expect(gridCell('#d1e8df')).toHaveAttribute('aria-selected', 'false');
-
-      userEvent.keyboard('{enter}');
-      expect(gridCell('#d1e8df')).toHaveAttribute('aria-selected', 'true');
-
-      userEvent.keyboard('{end}');
-      userEvent.keyboard('{space}');
-      expect(gridCell('#aecfc2')).toHaveAttribute('aria-selected', 'true');
-      expect(gridCell('#d1e8df')).toHaveAttribute('aria-selected', 'false');
-
-      userEvent.click(gridCell('#f5d5d8'));
-      expect(gridCell('#f5d5d8')).toHaveAttribute('aria-selected', 'true');
-      expect(gridCell('#f5b5ba')).toHaveAttribute('aria-selected', 'false');
     });
 
     test('focus moves when arrow keys are pressed', () => {
@@ -407,33 +364,6 @@ describe('useGrid', () => {
       expect(onChange).toHaveBeenCalledTimes(6);
       expect(onChange).toHaveBeenCalledWith(0, 0);
     });
-
-    test('calls onSelect when a cell is selected', () => {
-      const onSelect = jest.fn();
-      const matrix = [
-        ['#d1e8df', '#aecfc2', '#5eae91'],
-        ['#f5d5d8', '#f5b5ba']
-      ];
-
-      render(<Example selection matrix={matrix} onSelect={onSelect} />);
-
-      userEvent.tab();
-      expect(gridCell('#d1e8df')).toHaveAttribute('aria-selected', 'false');
-      expect(onSelect).toHaveBeenCalledTimes(0);
-
-      userEvent.keyboard('{enter}');
-      expect(onSelect).toHaveBeenCalledTimes(1);
-      expect(onSelect).toHaveBeenCalledWith(0, 0);
-
-      userEvent.keyboard('{end}');
-      userEvent.keyboard('{space}');
-      expect(onSelect).toHaveBeenCalledTimes(2);
-      expect(onSelect).toHaveBeenCalledWith(0, 2);
-
-      userEvent.click(gridCell('#f5d5d8'));
-      expect(onSelect).toHaveBeenCalledTimes(3);
-      expect(onSelect).toHaveBeenCalledWith(1, 0);
-    });
   });
 
   describe('controlled usages', () => {
@@ -442,12 +372,8 @@ describe('useGrid', () => {
       wrap,
       matrix,
       onChange,
-      onSelect,
       rowIndex = 0,
-      colIndex = 0,
-      selectedRowIndex,
-      selectedColIndex,
-      selection
+      colIndex = 0
     }: IUseGridProps) => {
       const [m, setRowIdx] = useState(rowIndex);
       const [n, setColIdx] = useState(colIndex);
@@ -455,14 +381,10 @@ describe('useGrid', () => {
       return (
         <Example
           rtl={rtl}
-          selection={selection}
-          onSelect={onSelect}
           wrap={wrap}
           rowIndex={m}
           colIndex={n}
           matrix={matrix}
-          selectedRowIndex={selectedRowIndex}
-          selectedColIndex={selectedColIndex}
           onChange={(rowIdx: number, colIdx: number) => {
             onChange && onChange(rowIdx, colIdx);
             setRowIdx(rowIdx);
@@ -485,24 +407,13 @@ describe('useGrid', () => {
       expect(gridCell('#aecfc2')).toHaveFocus();
     });
 
-    test('sets the selected cell', () => {
-      const matrix = [
-        ['#d1e8df', '#aecfc2'],
-        ['#f5d5d8', '#f5b5ba']
-      ];
-
-      render(<Controlled selection matrix={matrix} selectedRowIndex={0} selectedColIndex={1} />);
-
-      expect(gridCell('#aecfc2')).toHaveAttribute('aria-selected', 'true');
-    });
-
     test('sets focus to first cell given unset grid', () => {
       const matrix = [
         ['#d1e8df', '#aecfc2'],
         ['#f5d5d8', '#f5b5ba']
       ];
 
-      render(<Example selection rowIndex={-1} colIndex={-1} matrix={matrix} />);
+      render(<Example rowIndex={-1} colIndex={-1} matrix={matrix} />);
 
       expect(gridCell('#d1e8df')).not.toHaveFocus();
       userEvent.tab();
@@ -767,27 +678,6 @@ describe('useGrid', () => {
       expect(gridCell('#d1e8df')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(6);
       expect(onChange).toHaveBeenCalledWith(0, 0);
-    });
-
-    test('calls onSelect when a cell is selected', () => {
-      const onSelect = jest.fn();
-      const matrix = [
-        ['#d1e8df', '#aecfc2', '#5eae91'],
-        ['#f5d5d8', '#f5b5ba']
-      ];
-
-      render(
-        <Controlled selection colIndex={1} rowIndex={1} matrix={matrix} onSelect={onSelect} />
-      );
-
-      userEvent.tab();
-      userEvent.keyboard('{enter}');
-      expect(onSelect).toHaveBeenCalledTimes(1);
-      expect(onSelect).toHaveBeenCalledWith(1, 1);
-
-      userEvent.click(gridCell('#d1e8df'));
-      expect(onSelect).toHaveBeenCalledTimes(2);
-      expect(onSelect).toHaveBeenCalledWith(0, 0);
     });
   });
 });
