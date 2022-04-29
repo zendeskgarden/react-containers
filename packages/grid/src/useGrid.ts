@@ -15,8 +15,6 @@ export interface IUseGridProps {
   rtl?: boolean;
   /** Enables wrapped keyboard navigation  */
   wrap?: boolean;
-  /** Enables cell selection */
-  selection?: boolean;
   /** Sets the two-dimension array to render the grid */
   matrix: any[][];
   /** Prefixes IDs for the grid and cells  */
@@ -25,22 +23,12 @@ export interface IUseGridProps {
   rowIndex?: number;
   /** Sets the focused column index in a controlled grid */
   colIndex?: number;
-  /** Sets the selected row index in a controlled grid */
-  selectedRowIndex?: number;
-  /** Sets the selected column index in a controlled grid */
-  selectedColIndex?: number;
   /** Sets the default focused row index in a uncontrolled grid */
   defaultRowIndex?: number;
   /** Sets the default focused column index in a uncontrolled grid */
   defaultColIndex?: number;
-  /** Sets the default selected row index in a uncontrolled grid */
-  defaultSelectedRowIndex?: number;
-  /** Sets the default selected column index in a uncontrolled grid */
-  defaultSelectedColIndex?: number;
   /** Handles grid change event */
   onChange?: (rowIndex: number, colIndex: number) => void;
-  /** Handles grid select event */
-  onSelect?: (rowIndex: number, colIndex: number) => void;
 }
 
 interface IGetGridCellProps extends HTMLProps<any> {
@@ -57,17 +45,11 @@ export function useGrid({
   wrap,
   matrix,
   idPrefix,
-  selection,
   onChange,
-  onSelect,
   rowIndex,
   colIndex,
-  selectedRowIndex,
-  selectedColIndex,
   defaultRowIndex,
-  defaultColIndex,
-  defaultSelectedRowIndex,
-  defaultSelectedColIndex
+  defaultColIndex
 }: IUseGridProps): IUseGridReturnValue {
   const rowCount = matrix.length;
   const columnCount = matrix[0].length;
@@ -78,33 +60,12 @@ export function useGrid({
   const [uncontrolledColIndex, setUncontrolledColIndex] = useState(
     defaultColIndex !== null && defaultColIndex !== undefined ? defaultColIndex : 0
   );
-  const controlledFocus =
+  const isControlled =
     rowIndex !== null && colIndex !== null && rowIndex !== undefined && colIndex !== undefined;
-  const controlledSelect =
-    selectedRowIndex !== null &&
-    selectedColIndex !== null &&
-    selectedRowIndex !== undefined &&
-    selectedColIndex !== undefined;
-  const [uncontrolledSelectedRowIndex, setUncontrolledSelectedIndex] = useState(
-    defaultSelectedRowIndex !== null && defaultSelectedRowIndex !== undefined
-      ? defaultSelectedRowIndex
-      : -1
-  );
-  const [uncontrolledSelectedColIndex, setUncontrolledSelectedColIndex] = useState(
-    defaultSelectedColIndex !== null && defaultSelectedColIndex !== undefined
-      ? defaultSelectedColIndex
-      : -1
-  );
-  const isControlled = controlledFocus || controlledSelect;
 
   const setFocusedCell = (rowIdx: number, colIdx: number) => {
     setUncontrolledRowIndex(rowIdx);
     setUncontrolledColIndex(colIdx);
-  };
-
-  const setSelectedCell = (rowIdx: number, colIdx: number) => {
-    setUncontrolledSelectedIndex(rowIdx);
-    setUncontrolledSelectedColIndex(colIdx);
   };
 
   const setFocus = (rowIdx: number, colIdx: number) => {
@@ -347,19 +308,6 @@ export function useGrid({
     return uncontrolledRowIndex === rowIdx && uncontrolledColIndex === colIdx ? 0 : -1;
   };
 
-  const getAriaSelected = (rowIdx: number, colIdx: number) => {
-    let ariaSelected;
-
-    if (isControlled) {
-      ariaSelected = selectedRowIndex === rowIdx && selectedColIndex === colIdx;
-    } else {
-      ariaSelected =
-        uncontrolledSelectedRowIndex === rowIdx && uncontrolledSelectedColIndex === colIdx;
-    }
-
-    return ariaSelected;
-  };
-
   const getGridCellProps = ({
     rowIdx,
     colIdx,
@@ -371,15 +319,12 @@ export function useGrid({
     return {
       tabIndex: getTabIndex(rowIdx, colIdx),
       role: 'gridcell',
-      'aria-selected': selection ? getAriaSelected(rowIdx, colIdx) : undefined,
       id: `${idPrefix}-${rowIdx}-${colIdx}`,
       onClick: composeEventHandlers(onClick, () => {
         if (isControlled === false) {
           setFocusedCell(rowIdx, colIdx);
-          selection && setSelectedCell(rowIdx, colIdx);
         }
         onChange && onChange(rowIdx, colIdx);
-        selection && onSelect && onSelect(rowIdx, colIdx);
       }),
       onFocus: composeEventHandlers(onFocus, () => {
         if (isControlled) {
