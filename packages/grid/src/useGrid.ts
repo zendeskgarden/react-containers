@@ -6,9 +6,9 @@
  */
 
 import { useState, HTMLProps, HTMLAttributes, KeyboardEvent } from 'react';
-import { composeEventHandlers } from '@zendeskgarden/container-utilities';
+import { composeEventHandlers, KEYS } from '@zendeskgarden/container-utilities';
 
-const GRID_KEYS = ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'];
+const GRID_KEYS = [KEYS.LEFT, KEYS.RIGHT, KEYS.UP, KEYS.DOWN, KEYS.HOME, KEYS.END];
 
 export interface IUseGridProps {
   /** Determines if navigation uses right-to-left direction */
@@ -108,11 +108,11 @@ export function useGrid({
       };
 
       switch (e.key) {
-        case 'ArrowLeft':
+        case KEYS.LEFT:
           return rtl ? forward() : backward();
-        case 'ArrowRight':
+        case KEYS.RIGHT:
           return rtl ? backward() : forward();
-        case 'ArrowUp':
+        case KEYS.UP:
           if (rowIndex === 0 && colIndex === 0) {
             break;
           }
@@ -131,7 +131,7 @@ export function useGrid({
             }
           }
           break;
-        case 'ArrowDown':
+        case KEYS.DOWN:
           if ((rowIndex as number) < rowCount - 1 && !downEnd) {
             onChange && onChange((rowIndex as number) + 1, colIndex as number);
             setFocus((rowIndex as number) + 1, colIndex as number);
@@ -153,7 +153,7 @@ export function useGrid({
             }
           }
           break;
-        case 'Home':
+        case KEYS.HOME:
           if (e.ctrlKey) {
             onChange && onChange(0, 0);
             setFocus(0, 0);
@@ -162,7 +162,7 @@ export function useGrid({
             setFocus(rowIndex as number, 0);
           }
           break;
-        case 'End':
+        case KEYS.END:
           if (e.ctrlKey) {
             onChange && onChange(rowCount - 1, matrix[rowCount - 1].length - 1);
             setFocus(rowCount - 1, matrix[rowCount - 1].length - 1);
@@ -209,11 +209,11 @@ export function useGrid({
       };
 
       switch (e.key) {
-        case 'ArrowLeft':
+        case KEYS.LEFT:
           return rtl ? forward() : backward();
-        case 'ArrowRight':
+        case KEYS.RIGHT:
           return rtl ? backward() : forward();
-        case 'ArrowUp':
+        case KEYS.UP:
           if (uncontrolledRowIndex === 0 && uncontrolledColIndex === 0) {
             break;
           }
@@ -237,7 +237,7 @@ export function useGrid({
             }
           }
           break;
-        case 'ArrowDown':
+        case KEYS.DOWN:
           if (uncontrolledRowIndex < rowCount - 1 && !downEnd) {
             setUncontrolledRowIndex(uncontrolledRowIndex + 1);
             setFocus(uncontrolledRowIndex + 1, uncontrolledColIndex);
@@ -263,7 +263,7 @@ export function useGrid({
             }
           }
           break;
-        case 'Home':
+        case KEYS.HOME:
           if (e.ctrlKey) {
             setFocusedCell(0, 0);
             setFocus(0, 0);
@@ -274,7 +274,7 @@ export function useGrid({
             onChange && onChange(uncontrolledRowIndex, 0);
           }
           break;
-        case 'End':
+        case KEYS.END:
           if (e.ctrlKey) {
             setFocusedCell(rowCount - 1, lastRowLength - 1);
             setFocus(rowCount - 1, lastRowLength - 1);
