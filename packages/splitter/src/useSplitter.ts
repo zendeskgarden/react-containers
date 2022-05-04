@@ -129,6 +129,17 @@ export const verticalArrowKeys = {
   }
 };
 
+export const horizontalArrowKeys = {
+  [SplitterPosition.LEADS]: {
+    INCREASE: 'ArrowUp',
+    DECREASE: 'ArrowDown'
+  },
+  [SplitterPosition.TRAILS]: {
+    INCREASE: 'ArrowDown',
+    DECREASE: 'ArrowUp'
+  }
+};
+
 const xor = (a: boolean | undefined, b: boolean | undefined) => {
   if (a && b) {
     return false;
@@ -359,11 +370,11 @@ export function useSplitter({
       }
     } else {
       switch (event.key) {
-        case 'ArrowUp':
+        case horizontalArrowKeys[position].DECREASE:
           type === SplitterType.VARIABLE &&
             setRangedSeparatorPosition(separatorPosition - keyboardStep);
           break;
-        case 'ArrowDown':
+        case horizontalArrowKeys[position].INCREASE:
           type === SplitterType.VARIABLE &&
             setRangedSeparatorPosition(separatorPosition + keyboardStep);
           break;
