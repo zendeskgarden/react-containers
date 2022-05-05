@@ -129,6 +129,17 @@ export const verticalArrowKeys = {
   }
 };
 
+export const horizontalArrowKeys = {
+  [SplitterPosition.LEADS]: {
+    INCREASE: 'ArrowUp',
+    DECREASE: 'ArrowDown'
+  },
+  [SplitterPosition.TRAILS]: {
+    INCREASE: 'ArrowDown',
+    DECREASE: 'ArrowUp'
+  }
+};
+
 const xor = (a: boolean | undefined, b: boolean | undefined) => {
   if (a && b) {
     return false;
@@ -200,7 +211,6 @@ export function useSplitter({
 
   const onSplitterMouseMove = useCallback(
     (event: MouseEvent) => {
-      event.preventDefault();
       const elem = separatorRef.current;
       const clientWidth = xor(rtl, position === SplitterPosition.LEADS)
         ? environment.document.body.clientWidth
@@ -279,8 +289,7 @@ export function useSplitter({
 
   const onMouseLeaveOrUp = useMemo(
     () =>
-      composeEventHandlers(props.onMouseUp, props.onMouseLeave, (event: MouseEvent) => {
-        event.preventDefault();
+      composeEventHandlers(props.onMouseUp, props.onMouseLeave, () => {
         // must remove global events on transaction finish
         environment.document.removeEventListener('mouseup', onMouseLeaveOrUp);
         environment.document.body.removeEventListener('mouseleave', onMouseLeaveOrUp);
@@ -299,8 +308,7 @@ export function useSplitter({
     [environment, props.onTouchEnd, onTouchMove]
   );
 
-  const onMouseDown = composeEventHandlers(props.onMouseDown, (event: React.MouseEvent) => {
-    event.preventDefault();
+  const onMouseDown = composeEventHandlers(props.onMouseDown, () => {
     if (type === SplitterType.FIXED) {
       if (separatorPosition > min) {
         setSeparatorPosition(min);
@@ -362,11 +370,11 @@ export function useSplitter({
       }
     } else {
       switch (event.key) {
-        case 'ArrowUp':
+        case horizontalArrowKeys[position].DECREASE:
           type === SplitterType.VARIABLE &&
             setRangedSeparatorPosition(separatorPosition - keyboardStep);
           break;
-        case 'ArrowDown':
+        case horizontalArrowKeys[position].INCREASE:
           type === SplitterType.VARIABLE &&
             setRangedSeparatorPosition(separatorPosition + keyboardStep);
           break;
