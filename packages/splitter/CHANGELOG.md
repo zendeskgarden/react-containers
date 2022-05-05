@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.3](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-splitter@0.2.2...@zendeskgarden/container-splitter@0.2.3) (2022-05-05)
+
+
+### Bug Fixes
+
+* **splitter:** fixes focus on pointer and adds a horizontal keyboard map ([2d27f7d](https://github.com/zendeskgarden/react-containers/commit/2d27f7dd8f780ff5b5844435e8bc4143d244c945))
+
+
+
+
+
 ## [0.2.2](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-splitter@0.2.1...@zendeskgarden/container-splitter@0.2.2) (2022-03-31)
 
 **Note:** Version bump only for package @zendeskgarden/container-splitter
