@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React, { createRef, FocusEventHandler } from 'react';
+import React, { FocusEventHandler } from 'react';
 import { Story } from '@storybook/react';
 import {
   GridContainer,
@@ -36,21 +36,20 @@ const Component = ({ rtl, matrix, layout, getGridCellProps }: IComponent) => (
                 );
 
               case 'radio': {
-                const inputRef = createRef<HTMLInputElement>();
                 const handleBlur: FocusEventHandler<HTMLInputElement> = event => {
                   /**
                    * When the grid loses focus, reset the roving tab index to
                    * the checked input. Otherwise, keyboard access to the native
                    * radio group is lost.
                    */
-                  if (inputRef.current && event.relatedTarget === null) {
+                  if (event.relatedTarget === null) {
                     const selectedInput = document.querySelector(
-                      `input[name='${inputRef.current.name}']:checked`
+                      `input[name='${event.target.name}']:checked`
                     );
 
                     if (selectedInput !== null) {
                       const inputs = document.getElementsByName(
-                        inputRef.current.name
+                        event.target.name
                       ) as NodeListOf<HTMLInputElement>;
 
                       inputs.forEach(input =>
@@ -70,7 +69,6 @@ const Component = ({ rtl, matrix, layout, getGridCellProps }: IComponent) => (
                         type="radio"
                         onBlur={handleBlur}
                         {...props}
-                        ref={inputRef}
                       />
                     </label>
                   </td>
