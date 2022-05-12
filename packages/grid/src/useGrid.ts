@@ -21,11 +21,11 @@ export interface IUseGridProps {
   idPrefix?: string;
   /** Sets the focused row index in a controlled grid */
   rowIndex?: number;
-  /** Sets the focused col index in a controlled grid */
+  /** Sets the focused column index in a controlled grid */
   colIndex?: number;
   /** Sets the default focused row index in a uncontrolled grid */
   defaultRowIndex?: number;
-  /** Sets the default focused col index in a uncontrolled grid */
+  /** Sets the default focused column index in a uncontrolled grid */
   defaultColIndex?: number;
   /** Handles grid change event */
   onChange?: (rowIndex: number, colIndex: number) => void;
