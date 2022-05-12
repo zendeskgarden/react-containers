@@ -100,10 +100,12 @@ describe('useGrid', () => {
 
       userEvent.tab();
       expect(gridCell('#d1e8df')).toHaveFocus();
+      expect(onChange).toHaveBeenCalledTimes(1);
+      expect(onChange).toHaveBeenCalledWith(0, 0);
 
       userEvent.keyboard('{arrowright}');
       expect(gridCell('#aecfc2')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(1);
+      expect(onChange).toHaveBeenCalledTimes(2);
       expect(onChange).toHaveBeenCalledWith(0, 1);
 
       userEvent.keyboard('{arrowright}');
@@ -111,12 +113,12 @@ describe('useGrid', () => {
 
       userEvent.keyboard('{arrowright}');
       expect(gridCell('#5eae91')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(2);
+      expect(onChange).toHaveBeenCalledTimes(3);
       expect(onChange).toHaveBeenCalledWith(0, 2);
 
       userEvent.keyboard('{arrowleft}');
       expect(gridCell('#aecfc2')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(3);
+      expect(onChange).toHaveBeenCalledTimes(4);
       expect(onChange).toHaveBeenCalledWith(0, 1);
 
       userEvent.keyboard('{arrowdown}');
@@ -127,7 +129,7 @@ describe('useGrid', () => {
 
       userEvent.keyboard('{arrowright}');
       expect(gridCell('#f5b5ba')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(4);
+      expect(onChange).toHaveBeenCalledTimes(5);
       expect(onChange).toHaveBeenCalledWith(1, 1);
 
       userEvent.keyboard('{arrowleft}');
@@ -135,7 +137,7 @@ describe('useGrid', () => {
 
       userEvent.keyboard('{arrowleft}');
       expect(gridCell('#f5d5d8')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(5);
+      expect(onChange).toHaveBeenCalledTimes(6);
       expect(onChange).toHaveBeenCalledWith(1, 0);
 
       userEvent.keyboard('{arrowup}');
@@ -143,7 +145,7 @@ describe('useGrid', () => {
 
       userEvent.keyboard('{arrowup}');
       expect(gridCell('#d1e8df')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(6);
+      expect(onChange).toHaveBeenCalledTimes(7);
       expect(onChange).toHaveBeenCalledWith(0, 0);
     });
 
@@ -158,6 +160,8 @@ describe('useGrid', () => {
 
       userEvent.tab();
       expect(gridCell('#d1e8df')).toHaveFocus();
+      expect(onChange).toHaveBeenCalledTimes(1);
+      expect(onChange).toHaveBeenCalledWith(0, 0);
 
       userEvent.keyboard('{arrowup}');
       expect(gridCell('#d1e8df')).toHaveFocus();
@@ -167,42 +171,42 @@ describe('useGrid', () => {
 
       userEvent.keyboard('{arrowright}');
       expect(gridCell('#aecfc2')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(1);
+      expect(onChange).toHaveBeenCalledTimes(2);
       expect(onChange).toHaveBeenCalledWith(0, 1);
 
       userEvent.keyboard('{arrowright}');
       expect(gridCell('#5eae91')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(2);
+      expect(onChange).toHaveBeenCalledTimes(3);
       expect(onChange).toHaveBeenCalledWith(0, 2);
 
       userEvent.keyboard('{arrowdown}');
       expect(gridCell('#228f67')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(3);
+      expect(onChange).toHaveBeenCalledTimes(4);
       expect(onChange).toHaveBeenCalledWith(0, 3);
 
       userEvent.keyboard('{arrowright}');
       expect(gridCell('#f5d5d8')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(4);
+      expect(onChange).toHaveBeenCalledTimes(5);
       expect(onChange).toHaveBeenCalledWith(1, 0);
 
       userEvent.keyboard('{arrowleft}');
       expect(gridCell('#228f67')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(5);
+      expect(onChange).toHaveBeenCalledTimes(6);
       expect(onChange).toHaveBeenCalledWith(0, 3);
 
       userEvent.keyboard('{arrowup}');
       expect(gridCell('#5eae91')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(6);
+      expect(onChange).toHaveBeenCalledTimes(7);
       expect(onChange).toHaveBeenCalledWith(0, 2);
 
       userEvent.keyboard('{arrowup}');
       expect(gridCell('#f5b5ba')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(7);
+      expect(onChange).toHaveBeenCalledTimes(8);
       expect(onChange).toHaveBeenCalledWith(1, 1);
 
       userEvent.keyboard('{arrowdown}');
       expect(gridCell('#5eae91')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(8);
+      expect(onChange).toHaveBeenCalledTimes(9);
       expect(onChange).toHaveBeenCalledWith(0, 2);
     });
 
@@ -219,15 +223,17 @@ describe('useGrid', () => {
 
       userEvent.tab();
       expect(gridCell('#aecfc2')).toHaveFocus();
+      expect(onChange).toHaveBeenCalledTimes(1);
+      expect(onChange).toHaveBeenCalledWith(0, 1);
 
       userEvent.keyboard('{arrowleft}');
       expect(gridCell('#5eae91')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(1);
+      expect(onChange).toHaveBeenCalledTimes(2);
       expect(onChange).toHaveBeenCalledWith(0, 2);
 
       userEvent.keyboard('{arrowright}');
       expect(gridCell('#aecfc2')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(2);
+      expect(onChange).toHaveBeenCalledTimes(3);
       expect(onChange).toHaveBeenCalledWith(0, 1);
     });
 
@@ -251,20 +257,22 @@ describe('useGrid', () => {
 
       userEvent.tab();
       expect(gridCell('#aecfc2')).toHaveFocus();
+      expect(onChange).toHaveBeenCalledTimes(1);
+      expect(onChange).toHaveBeenCalledWith(0, 1);
 
       userEvent.keyboard('{arrowleft}');
       expect(gridCell('#5eae91')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(1);
+      expect(onChange).toHaveBeenCalledTimes(2);
       expect(onChange).toHaveBeenCalledWith(0, 2);
 
       userEvent.keyboard('{arrowleft}');
       expect(gridCell('#f5d5d8')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(2);
+      expect(onChange).toHaveBeenCalledTimes(3);
       expect(onChange).toHaveBeenCalledWith(1, 0);
 
       userEvent.keyboard('{arrowright}');
       expect(gridCell('#5eae91')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(3);
+      expect(onChange).toHaveBeenCalledTimes(4);
       expect(onChange).toHaveBeenCalledWith(0, 2);
     });
 
@@ -282,15 +290,17 @@ describe('useGrid', () => {
 
       userEvent.tab();
       expect(gridCell('#f5b5ba')).toHaveFocus();
+      expect(onChange).toHaveBeenCalledTimes(1);
+      expect(onChange).toHaveBeenCalledWith(1, 1);
 
       userEvent.keyboard('{home}');
       expect(gridCell('#f5d5d8')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(1);
+      expect(onChange).toHaveBeenCalledTimes(2);
       expect(onChange).toHaveBeenCalledWith(1, 0);
 
       userEvent.keyboard('{end}');
       expect(gridCell('#e35b66')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(2);
+      expect(onChange).toHaveBeenCalledTimes(3);
       expect(onChange).toHaveBeenCalledWith(1, 2);
     });
 
@@ -308,15 +318,17 @@ describe('useGrid', () => {
 
       userEvent.tab();
       expect(gridCell('#f5b5ba')).toHaveFocus();
+      expect(onChange).toHaveBeenCalledTimes(1);
+      expect(onChange).toHaveBeenCalledWith(1, 1);
 
       userEvent.keyboard('{Control>}{home}');
       expect(gridCell('#d1e8df')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(1);
+      expect(onChange).toHaveBeenCalledTimes(2);
       expect(onChange).toHaveBeenCalledWith(0, 0);
 
       userEvent.keyboard('{Control>}{end}');
       expect(gridCell('#adcce4')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(2);
+      expect(onChange).toHaveBeenCalledTimes(3);
       expect(onChange).toHaveBeenCalledWith(2, 1);
     });
 
@@ -333,35 +345,37 @@ describe('useGrid', () => {
 
       userEvent.tab();
       expect(gridCell('#0b3b29')).toHaveFocus();
+      expect(onChange).toHaveBeenCalledTimes(1);
+      expect(onChange).toHaveBeenCalledWith(0, 4);
 
       userEvent.keyboard('{arrowup}');
       expect(gridCell('#228f67')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(1);
+      expect(onChange).toHaveBeenCalledTimes(2);
       expect(onChange).toHaveBeenCalledWith(0, 3);
 
       userEvent.keyboard('{arrowup}');
       expect(gridCell('#5eae91')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(2);
+      expect(onChange).toHaveBeenCalledTimes(3);
       expect(onChange).toHaveBeenCalledWith(0, 2);
 
       userEvent.keyboard('{arrowup}');
       expect(gridCell('#f5b5ba')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(3);
+      expect(onChange).toHaveBeenCalledTimes(4);
       expect(onChange).toHaveBeenCalledWith(1, 1);
 
       userEvent.keyboard('{arrowup}');
       expect(gridCell('#aecfc2')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(4);
+      expect(onChange).toHaveBeenCalledTimes(5);
       expect(onChange).toHaveBeenCalledWith(0, 1);
 
       userEvent.keyboard('{arrowup}');
       expect(gridCell('#f5d5d8')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(5);
+      expect(onChange).toHaveBeenCalledTimes(6);
       expect(onChange).toHaveBeenCalledWith(1, 0);
 
       userEvent.keyboard('{arrowup}');
       expect(gridCell('#d1e8df')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(6);
+      expect(onChange).toHaveBeenCalledTimes(7);
       expect(onChange).toHaveBeenCalledWith(0, 0);
     });
   });
@@ -418,10 +432,12 @@ describe('useGrid', () => {
 
       userEvent.tab();
       expect(gridCell('#d1e8df')).toHaveFocus();
+      expect(onChange).toHaveBeenCalledTimes(1);
+      expect(onChange).toHaveBeenCalledWith(0, 0);
 
       userEvent.keyboard('{arrowright}');
       expect(gridCell('#aecfc2')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(1);
+      expect(onChange).toHaveBeenCalledTimes(2);
       expect(onChange).toHaveBeenCalledWith(0, 1);
 
       userEvent.keyboard('{arrowright}');
@@ -429,12 +445,12 @@ describe('useGrid', () => {
 
       userEvent.keyboard('{arrowright}');
       expect(gridCell('#5eae91')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(2);
+      expect(onChange).toHaveBeenCalledTimes(3);
       expect(onChange).toHaveBeenCalledWith(0, 2);
 
       userEvent.keyboard('{arrowleft}');
       expect(gridCell('#aecfc2')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(3);
+      expect(onChange).toHaveBeenCalledTimes(4);
       expect(onChange).toHaveBeenCalledWith(0, 1);
 
       userEvent.keyboard('{arrowdown}');
@@ -445,7 +461,7 @@ describe('useGrid', () => {
 
       userEvent.keyboard('{arrowright}');
       expect(gridCell('#f5b5ba')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(4);
+      expect(onChange).toHaveBeenCalledTimes(5);
       expect(onChange).toHaveBeenCalledWith(1, 1);
 
       userEvent.keyboard('{arrowleft}');
@@ -453,7 +469,7 @@ describe('useGrid', () => {
 
       userEvent.keyboard('{arrowleft}');
       expect(gridCell('#f5d5d8')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(5);
+      expect(onChange).toHaveBeenCalledTimes(6);
       expect(onChange).toHaveBeenCalledWith(1, 0);
 
       userEvent.keyboard('{arrowup}');
@@ -461,7 +477,7 @@ describe('useGrid', () => {
 
       userEvent.keyboard('{arrowup}');
       expect(gridCell('#d1e8df')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(6);
+      expect(onChange).toHaveBeenCalledTimes(7);
       expect(onChange).toHaveBeenCalledWith(0, 0);
     });
 
@@ -476,6 +492,8 @@ describe('useGrid', () => {
 
       userEvent.tab();
       expect(gridCell('#d1e8df')).toHaveFocus();
+      expect(onChange).toHaveBeenCalledTimes(1);
+      expect(onChange).toHaveBeenCalledWith(0, 0);
 
       userEvent.keyboard('{arrowup}');
       expect(gridCell('#d1e8df')).toHaveFocus();
@@ -485,42 +503,42 @@ describe('useGrid', () => {
 
       userEvent.keyboard('{arrowright}');
       expect(gridCell('#aecfc2')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(1);
+      expect(onChange).toHaveBeenCalledTimes(2);
       expect(onChange).toHaveBeenCalledWith(0, 1);
 
       userEvent.keyboard('{arrowright}');
       expect(gridCell('#5eae91')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(2);
+      expect(onChange).toHaveBeenCalledTimes(3);
       expect(onChange).toHaveBeenCalledWith(0, 2);
 
       userEvent.keyboard('{arrowdown}');
       expect(gridCell('#228f67')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(3);
+      expect(onChange).toHaveBeenCalledTimes(4);
       expect(onChange).toHaveBeenCalledWith(0, 3);
 
       userEvent.keyboard('{arrowright}');
       expect(gridCell('#f5d5d8')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(4);
+      expect(onChange).toHaveBeenCalledTimes(5);
       expect(onChange).toHaveBeenCalledWith(1, 0);
 
       userEvent.keyboard('{arrowleft}');
       expect(gridCell('#228f67')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(5);
+      expect(onChange).toHaveBeenCalledTimes(6);
       expect(onChange).toHaveBeenCalledWith(0, 3);
 
       userEvent.keyboard('{arrowup}');
       expect(gridCell('#5eae91')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(6);
+      expect(onChange).toHaveBeenCalledTimes(7);
       expect(onChange).toHaveBeenCalledWith(0, 2);
 
       userEvent.keyboard('{arrowup}');
       expect(gridCell('#f5b5ba')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(7);
+      expect(onChange).toHaveBeenCalledTimes(8);
       expect(onChange).toHaveBeenCalledWith(1, 1);
 
       userEvent.keyboard('{arrowdown}');
       expect(gridCell('#5eae91')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(8);
+      expect(onChange).toHaveBeenCalledTimes(9);
       expect(onChange).toHaveBeenCalledWith(0, 2);
     });
 
@@ -535,15 +553,17 @@ describe('useGrid', () => {
 
       userEvent.tab();
       expect(gridCell('#aecfc2')).toHaveFocus();
+      expect(onChange).toHaveBeenCalledTimes(1);
+      expect(onChange).toHaveBeenCalledWith(0, 1);
 
       userEvent.keyboard('{arrowleft}');
       expect(gridCell('#5eae91')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(1);
+      expect(onChange).toHaveBeenCalledTimes(2);
       expect(onChange).toHaveBeenCalledWith(0, 2);
 
       userEvent.keyboard('{arrowright}');
       expect(gridCell('#aecfc2')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(2);
+      expect(onChange).toHaveBeenCalledTimes(3);
       expect(onChange).toHaveBeenCalledWith(0, 1);
     });
 
@@ -558,20 +578,22 @@ describe('useGrid', () => {
 
       userEvent.tab();
       expect(gridCell('#aecfc2')).toHaveFocus();
+      expect(onChange).toHaveBeenCalledTimes(1);
+      expect(onChange).toHaveBeenCalledWith(0, 1);
 
       userEvent.keyboard('{arrowleft}');
       expect(gridCell('#5eae91')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(1);
+      expect(onChange).toHaveBeenCalledTimes(2);
       expect(onChange).toHaveBeenCalledWith(0, 2);
 
       userEvent.keyboard('{arrowleft}');
       expect(gridCell('#f5d5d8')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(2);
+      expect(onChange).toHaveBeenCalledTimes(3);
       expect(onChange).toHaveBeenCalledWith(1, 0);
 
       userEvent.keyboard('{arrowright}');
       expect(gridCell('#5eae91')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(3);
+      expect(onChange).toHaveBeenCalledTimes(4);
       expect(onChange).toHaveBeenCalledWith(0, 2);
     });
 
@@ -587,15 +609,17 @@ describe('useGrid', () => {
 
       userEvent.tab();
       expect(gridCell('#f5b5ba')).toHaveFocus();
+      expect(onChange).toHaveBeenCalledTimes(1);
+      expect(onChange).toHaveBeenCalledWith(1, 1);
 
       userEvent.keyboard('{home}');
       expect(gridCell('#f5d5d8')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(1);
+      expect(onChange).toHaveBeenCalledTimes(2);
       expect(onChange).toHaveBeenCalledWith(1, 0);
 
       userEvent.keyboard('{end}');
       expect(gridCell('#e35b66')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(2);
+      expect(onChange).toHaveBeenCalledTimes(3);
       expect(onChange).toHaveBeenCalledWith(1, 2);
     });
 
@@ -611,15 +635,17 @@ describe('useGrid', () => {
 
       userEvent.tab();
       expect(gridCell('#f5b5ba')).toHaveFocus();
+      expect(onChange).toHaveBeenCalledTimes(1);
+      expect(onChange).toHaveBeenCalledWith(1, 1);
 
       userEvent.keyboard('{Control>}{home}');
       expect(gridCell('#d1e8df')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(1);
+      expect(onChange).toHaveBeenCalledTimes(2);
       expect(onChange).toHaveBeenCalledWith(0, 0);
 
       userEvent.keyboard('{Control>}{end}');
       expect(gridCell('#adcce4')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(2);
+      expect(onChange).toHaveBeenCalledTimes(3);
       expect(onChange).toHaveBeenCalledWith(2, 1);
     });
 
@@ -634,36 +660,37 @@ describe('useGrid', () => {
 
       userEvent.tab();
       expect(gridCell('#0b3b29')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(0);
+      expect(onChange).toHaveBeenCalledTimes(1);
+      expect(onChange).toHaveBeenCalledWith(0, 4);
 
       userEvent.keyboard('{arrowup}');
       expect(gridCell('#228f67')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(1);
+      expect(onChange).toHaveBeenCalledTimes(2);
       expect(onChange).toHaveBeenCalledWith(0, 3);
 
       userEvent.keyboard('{arrowup}');
       expect(gridCell('#5eae91')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(2);
+      expect(onChange).toHaveBeenCalledTimes(3);
       expect(onChange).toHaveBeenCalledWith(0, 2);
 
       userEvent.keyboard('{arrowup}');
       expect(gridCell('#f5b5ba')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(3);
+      expect(onChange).toHaveBeenCalledTimes(4);
       expect(onChange).toHaveBeenCalledWith(1, 1);
 
       userEvent.keyboard('{arrowup}');
       expect(gridCell('#aecfc2')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(4);
+      expect(onChange).toHaveBeenCalledTimes(5);
       expect(onChange).toHaveBeenCalledWith(0, 1);
 
       userEvent.keyboard('{arrowup}');
       expect(gridCell('#f5d5d8')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(5);
+      expect(onChange).toHaveBeenCalledTimes(6);
       expect(onChange).toHaveBeenCalledWith(1, 0);
 
       userEvent.keyboard('{arrowup}');
       expect(gridCell('#d1e8df')).toHaveFocus();
-      expect(onChange).toHaveBeenCalledTimes(6);
+      expect(onChange).toHaveBeenCalledTimes(7);
       expect(onChange).toHaveBeenCalledWith(0, 0);
     });
   });

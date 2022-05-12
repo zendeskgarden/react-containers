@@ -29,6 +29,8 @@ export interface IUseGridProps {
   defaultColIndex?: number;
   /** Handles grid change event */
   onChange?: (rowIndex: number, colIndex: number) => void;
+  /** The environment where the grid is rendered */
+  environment?: Document;
 }
 
 interface IGetGridCellProps extends HTMLProps<any> {
@@ -46,6 +48,7 @@ export function useGrid({
   matrix,
   idPrefix,
   onChange,
+  environment = document,
   rowIndex: controlledRowIndex,
   colIndex: controlledColIndex,
   defaultRowIndex,
@@ -177,17 +180,9 @@ export function useGrid({
 
       if (row !== rowIndex || col !== colIndex) {
         const id = `${idPrefix}-${row}-${col}`;
-        const element = document.getElementById(id);
+        const element = environment.getElementById(id);
 
-        if (element) {
-          if (!isControlled) {
-            setUncontrolledRowIndex(row);
-            setUncontrolledColIndex(col);
-          }
-
-          element.focus();
-          onChange && onChange(row, col);
-        }
+        element?.focus();
       }
     }
   };
@@ -195,14 +190,14 @@ export function useGrid({
   const getGridCellProps = ({
     rowIdx,
     colIdx,
-    onClick,
+    onFocus,
     onKeyDown,
     ...other
   }: IGetGridCellProps) => ({
     tabIndex: rowIndex === rowIdx && colIndex === colIdx ? 0 : -1,
     role: 'gridcell',
     id: `${idPrefix}-${rowIdx}-${colIdx}`,
-    onClick: composeEventHandlers(onClick, () => {
+    onFocus: composeEventHandlers(onFocus, () => {
       if (!isControlled) {
         setUncontrolledRowIndex(rowIdx);
         setUncontrolledColIndex(colIdx);

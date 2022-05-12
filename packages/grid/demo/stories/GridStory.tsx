@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React from 'react';
+import React, { createRef, FocusEventHandler } from 'react';
 import { Story } from '@storybook/react';
 import {
   GridContainer,
@@ -35,15 +35,47 @@ const Component = ({ rtl, matrix, layout, getGridCellProps }: IComponent) => (
                   </td>
                 );
 
-              case 'radio':
+              case 'radio': {
+                const inputRef = createRef<HTMLInputElement>();
+                const handleBlur: FocusEventHandler<HTMLInputElement> = event => {
+                  /**
+                   * When the grid loses focus, reset the roving tab index to
+                   * the checked input. Otherwise, the native radio group loses
+                   * keyboard access.
+                   */
+                  if (inputRef.current && event.relatedTarget === null) {
+                    const selectedInput = document.querySelector(
+                      `input[name='${inputRef.current.name}']:checked`
+                    );
+
+                    if (selectedInput !== null) {
+                      const inputs = document.getElementsByName(
+                        inputRef.current.name
+                      ) as NodeListOf<HTMLInputElement>;
+
+                      inputs.forEach(input =>
+                        input.setAttribute('tabIndex', input.checked ? '0' : '-1')
+                      );
+                    }
+                  }
+                };
+
                 return (
                   <td key={colIdx} role={role}>
                     <label>
                       <span className="sr-only">{matrix[rowIdx][colIdx]}</span>
-                      <input className="w-5 h-5" name="demo" type="radio" {...props} />
+                      <input
+                        className="w-5 h-5"
+                        name="demo"
+                        type="radio"
+                        onBlur={handleBlur}
+                        {...props}
+                        ref={inputRef}
+                      />
                     </label>
                   </td>
                 );
+              }
 
               case 'button':
               default:

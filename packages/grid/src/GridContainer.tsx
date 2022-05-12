@@ -33,5 +33,6 @@ GridContainer.propTypes = {
   colIndex: PropTypes.number,
   defaultRowIndex: PropTypes.number,
   defaultColIndex: PropTypes.number,
-  onChange: PropTypes.func
+  onChange: PropTypes.func,
+  environment: PropTypes.any
 };
