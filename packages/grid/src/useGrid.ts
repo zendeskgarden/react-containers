@@ -54,9 +54,6 @@ export function useGrid({
   defaultRowIndex,
   defaultColIndex
 }: IUseGridProps): IUseGridReturnValue {
-  const rowCount = matrix.length;
-  const colCount = matrix[0].length;
-  const lastRowLength = matrix[rowCount - 1].length;
   const [uncontrolledRowIndex, setUncontrolledRowIndex] = useState(
     defaultRowIndex !== null && defaultRowIndex !== undefined ? defaultRowIndex : 0
   );
@@ -70,10 +67,14 @@ export function useGrid({
     controlledColIndex !== undefined;
   const rowIndex = isControlled ? controlledRowIndex : uncontrolledRowIndex;
   const colIndex = isControlled ? controlledColIndex : uncontrolledColIndex;
+  const rowCount = matrix.length;
+  const colCount = matrix[0].length;
 
   const getCellRight = () => {
     let retVal: number[] = [];
-    const isLastCellFocused = rowIndex === rowCount - 1 && colIndex === lastRowLength - 1;
+    const lastRowIndex = rowCount - 1;
+    const lastColIndex = matrix[lastRowIndex].length - 1;
+    const isLastCellFocused = rowIndex === lastRowIndex && colIndex === lastColIndex;
 
     if (!isLastCellFocused) {
       if (colIndex === colCount - 1 /* last col is focused */) {
@@ -107,6 +108,7 @@ export function useGrid({
 
   const getCellDown = () => {
     let retVal: number[] = [];
+    const lastRowLength = matrix[rowCount - 1].length;
     const isLastCellFocused =
       rowIndex === rowCount - (colCount > lastRowLength ? 2 : 1) && colIndex === colCount - 1;
 
@@ -130,6 +132,7 @@ export function useGrid({
     if (!isFirstCellFocused) {
       if (rowIndex === 0 /* first row is focused */) {
         if (wrap) {
+          const lastRowLength = matrix[rowCount - 1].length;
           const col = colIndex - 1;
           const row = rowCount - (col >= lastRowLength ? 2 : 1);
 
@@ -172,10 +175,14 @@ export function useGrid({
           col = 0;
           break;
 
-        case KEYS.END:
-          row = event.ctrlKey ? rowCount - 1 : rowIndex;
-          col = event.ctrlKey ? lastRowLength - 1 : matrix[rowIndex].length - 1;
+        case KEYS.END: {
+          const lastRowIndex = rowCount - 1;
+          const lastColIndex = matrix[lastRowIndex].length - 1;
+
+          row = event.ctrlKey ? lastRowIndex : rowIndex;
+          col = event.ctrlKey ? lastColIndex : matrix[rowIndex].length - 1;
           break;
+        }
       }
 
       if (row !== rowIndex || col !== colIndex) {
