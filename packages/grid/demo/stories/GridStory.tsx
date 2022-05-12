@@ -40,8 +40,8 @@ const Component = ({ rtl, matrix, layout, getGridCellProps }: IComponent) => (
                 const handleBlur: FocusEventHandler<HTMLInputElement> = event => {
                   /**
                    * When the grid loses focus, reset the roving tab index to
-                   * the checked input. Otherwise, the native radio group loses
-                   * keyboard access.
+                   * the checked input. Otherwise, keyboard access to the native
+                   * radio group is lost.
                    */
                   if (inputRef.current && event.relatedTarget === null) {
                     const selectedInput = document.querySelector(
