@@ -407,19 +407,6 @@ describe('useGrid', () => {
       expect(gridCell('#aecfc2')).toHaveFocus();
     });
 
-    test('sets focus to first cell given unset grid', () => {
-      const matrix = [
-        ['#d1e8df', '#aecfc2'],
-        ['#f5d5d8', '#f5b5ba']
-      ];
-
-      render(<Example rowIndex={-1} colIndex={-1} matrix={matrix} />);
-
-      expect(gridCell('#d1e8df')).not.toHaveFocus();
-      userEvent.tab();
-      expect(gridCell('#d1e8df')).toHaveFocus();
-    });
-
     test('focus moves when arrow keys are pressed', () => {
       const onChange = jest.fn();
       const matrix = [
