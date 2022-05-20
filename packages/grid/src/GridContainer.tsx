@@ -27,17 +27,12 @@ GridContainer.propTypes = {
   render: PropTypes.func,
   rtl: PropTypes.bool,
   wrap: PropTypes.bool,
-  selection: PropTypes.bool,
   matrix: PropTypes.any,
   idPrefix: PropTypes.string,
   rowIndex: PropTypes.number,
   colIndex: PropTypes.number,
-  selectedRowIndex: PropTypes.number,
-  selectedColIndex: PropTypes.number,
   defaultRowIndex: PropTypes.number,
   defaultColIndex: PropTypes.number,
-  defaultSelectedRowIndex: PropTypes.number,
-  defaultSelectedColIndex: PropTypes.number,
   onChange: PropTypes.func,
-  onSelect: PropTypes.func
+  environment: PropTypes.any
 };

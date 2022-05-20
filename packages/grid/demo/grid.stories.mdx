@@ -7,9 +7,10 @@ import { MATRIX } from './stories/data';
 <Meta
   title="Packages/Grid"
   component={GridContainer}
-  args={{ as: 'hook', matrix: MATRIX }}
+  args={{ as: 'hook', layout: 'button', matrix: MATRIX }}
   argTypes={{
-    as: { options: ['container', 'hook'], control: 'radio', table: { category: 'Story' } }
+    as: { options: ['container', 'hook'], control: 'radio', table: { category: 'Story' } },
+    layout: { options: ['button', 'radio', 'text'], control: 'radio', table: { category: 'Story' } }
   }}
 />
 
@@ -26,9 +27,7 @@ import { MATRIX } from './stories/data';
     name="Uncontrolled"
     argTypes={{
       colIndex: { control: false },
-      rowIndex: { control: false },
-      selectedColIndex: { control: false },
-      selectedRowIndex: { control: false }
+      rowIndex: { control: false }
     }}
   >
     {args => <GridStory {...args} />}
@@ -42,17 +41,13 @@ import { MATRIX } from './stories/data';
     name="Controlled"
     argTypes={{
       defaultColIndex: { control: false },
-      defaultRowIndex: { control: false },
-      defaultSelectedColIndex: { control: false },
-      defaultSelectedRowIndex: { control: false }
+      defaultRowIndex: { control: false }
     }}
   >
     {args => {
       const updateArgs = useArgs()[1];
       const handleChange = (rowIndex, colIndex) => updateArgs({ rowIndex, colIndex });
-      const handleSelect = (selectedRowIndex, selectedColIndex) =>
-        updateArgs({ selectedRowIndex, selectedColIndex });
-      return <GridStory {...args} onChange={handleChange} onSelect={handleSelect} />;
+      return <GridStory {...args} onChange={handleChange} />;
     }}
   </Story>
 </Canvas>

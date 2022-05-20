@@ -3,8 +3,8 @@
 [npm version badge]: https://flat.badgen.net/npm/v/@zendeskgarden/container-grid
 [npm version link]: https://www.npmjs.com/package/@zendeskgarden/container-grid
 
-This package includes containers relating to Grid in the
-[Garden Design System](https://zendeskgarden.github.io/).
+This package provides [Garden Design System](https://zendeskgarden.github.io/)
+grid containers.
 
 ## Installation
 
@@ -14,88 +14,11 @@ npm install @zendeskgarden/container-grid
 
 ## Usage
 
-This container implements the
-[grid](https://www.w3.org/TR/wai-aria-practices-1.1/#grid) design pattern. Check
-out [storybook](https://zendeskgarden.github.io/react-containers) for live
-examples.
-
-### useGrid
-
-The following code demonstrates uncontrolled usage of the `useGrid` hook. Controlled usage examples
-can be found in the stories.
-
-```jsx
-import { useGrid } from '@zendeskgarden/container-grid';
-
-const matrix = [
-  [1, 2, 3],
-  [4, 5, 6],
-  [7, 8, 9]
-];
-
-const Grid = () => {
-  const { getGridCellProps } = useGrid({ matrix });
-
-  return (
-    <table role="grid">
-      <tbody>
-        {matrix.map((row, rowIdx) => (
-          <tr key={`rowIdx-${row[0]}`}>
-            {row.map((item, colIdx) => (
-              <td role="presentation" key={item}>
-                <button
-                  {...getGridCellProps({
-                    rowIdx,
-                    colIdx,
-                    'aria-label': `cell for ${item}}`
-                  })}
-                >
-                  {item}
-                </button>
-              </td>
-            ))}
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  );
-};
-```
-
-### GridContainer
-
-```jsx
-import { GridContainer } from '@zendeskgarden/container-grid';
-
-const matrix = [
-  [1,2,3],
-  [4,5,6],
-  [7,8,9]
-]
-
-<GridContainer>
-  {({ getGridCellProps }) => (
-    <table role="grid">
-      <tbody>
-        {matrix.map((row, rowIdx) => (
-          <tr key={`rowIdx-${row[0]}`}>
-            {row.map((item, colIdx) => (
-              <td role="presentation" key={item}>
-                <button
-                  {...getGridCellProps({
-                    rowIdx,
-                    colIdx,
-                    'aria-label': `cell for ${item}}`
-                  })}
-                >
-                  {item}
-                </button>
-              </td>
-            ))}
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  )}
-</GridContainer>;
-```
+This container is a primitive implementation of the [WAI-ARIA
+grid](https://www.w3.org/TR/wai-aria-practices-1.1/#grid) design pattern
+– currently emphasizing layout row/column navigation. Check out
+[storybook](https://zendeskgarden.github.io/react-containers) for live examples.
+See the backing
+[story](https://github.com/zendeskgarden/react-containers/blob/main/packages/grid/demo/stories/GridStory.tsx)
+for example code that demonstrates accessible layouts for both hook and
+container implementations.
