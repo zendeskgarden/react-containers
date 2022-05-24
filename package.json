@@ -34,7 +34,7 @@
     "@babel/preset-env": "7.18.0",
     "@babel/preset-react": "7.17.12",
     "@babel/runtime": "7.18.0",
-    "@rollup/plugin-commonjs": "21.1.0",
+    "@rollup/plugin-commonjs": "22.0.0",
     "@rollup/plugin-node-resolve": "13.3.0",
     "@rollup/plugin-replace": "4.0.0",
     "@storybook/addon-a11y": "6.5.5",
