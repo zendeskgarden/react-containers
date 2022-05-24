@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React from 'react';
+import React, { StrictMode } from 'react';
 import { createGlobalStyle } from 'styled-components';
 import { create } from '@storybook/theming/create';
 import { DEFAULT_THEME, getColor } from '@zendeskgarden/react-theming';
@@ -36,11 +36,35 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-export const decorators = [
-  Story => (
-    <>
-      <GlobalStyle />
+const withGlobalStyle = Story => (
+  <>
+    <GlobalStyle />
+    <Story />
+  </>
+);
+
+const withStrictMode = (Story, context) =>
+  context.globals.strictMode === 'enabled' ? (
+    <StrictMode>
       <Story />
-    </>
-  )
-];
+    </StrictMode>
+  ) : (
+    <Story />
+  );
+
+export const decorators = [withGlobalStyle, withStrictMode];
+
+export const globalTypes = {
+  strictMode: {
+    name: 'strictMode',
+    description: 'Strict mode',
+    defaultValue: 'disabled',
+    toolbar: {
+      icon: 'alert',
+      items: [
+        { value: 'disabled', title: 'Strict mode disabled' },
+        { value: 'enabled', title: 'Strict mode enabled' }
+      ]
+    }
+  }
+};
