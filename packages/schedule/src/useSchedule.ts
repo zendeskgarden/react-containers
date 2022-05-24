@@ -27,7 +27,7 @@ export const useSchedule = ({
   delayMS = 750,
   loop = true
 }: IUseScheduleProps = {}): IUseScheduleReturnValue => {
-  const [elapsed, setTime] = useState(0);
+  const [elapsed, setElapsed] = useState(0);
   const [delayComplete, setDelayComplete] = useState(false);
 
   useLayoutEffect(() => {
@@ -46,7 +46,7 @@ export const useSchedule = ({
     };
 
     const performAnimationFrame = () => {
-      setTime(Date.now() - start);
+      setElapsed(Date.now() - start);
       tick();
     };
 
@@ -57,7 +57,7 @@ export const useSchedule = ({
 
       loopTimeout = setTimeout(() => {
         cancelAnimationFrame(raf);
-        setTime(Date.now() - start);
+        setElapsed(Date.now() - start);
         if (loop) onStart();
       }, duration);
 

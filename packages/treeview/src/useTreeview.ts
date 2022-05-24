@@ -57,13 +57,13 @@ export function useTreeview<Item = any>({
   onChange = () => undefined,
   ...options
 }: IUseTreeviewProps<Item> = {}): IUseTreeviewReturnValue<Item> {
-  const [ownFocusedItem, setFocusedItem] = useState<Item>();
+  const [ownFocusedItem, setOwnFocusedItem] = useState<Item>();
   const { selectedItem, focusedItem, getContainerProps, getItemProps } = useSelection<Item>({
     direction: orientation,
     focusedItem: ownFocusedItem,
     ...options
   });
-  const [openNodesState, setOpenNodes] = useState<Item[]>([]);
+  const [openNodesState, setOpenNodesState] = useState<Item[]>([]);
   const controlledOpenedState = getControlledValue<Item[] | undefined>(
     openNodes,
     Array.from(openNodesState)
@@ -85,7 +85,7 @@ export function useTreeview<Item = any>({
 
     onChange(newValue);
     if (!isControlled) {
-      setOpenNodes(newValue);
+      setOpenNodesState(newValue);
     }
   };
 
@@ -155,7 +155,7 @@ export function useTreeview<Item = any>({
       onClick: onClickFn,
       onFocus: composeEventHandlers(onFocus, (event: Event) => {
         event.stopPropagation();
-        setFocusedItem(item);
+        setOwnFocusedItem(item);
       }),
       onKeyDown: composeEventHandlers(onKeyDown, (event: KeyboardEvent): void => {
         const target = focusRef.current as HTMLElement;

@@ -471,7 +471,7 @@ describe('SplitterContainer', () => {
         const testValues: { valueNow?: number } = {};
         const { getByRole } = render(
           React.createElement(() => {
-            const [valueNow, onChange] = useState(valueNowStart);
+            const [valueNow, setValueNow] = useState(valueNowStart);
 
             testValues.valueNow = valueNow;
 
@@ -479,7 +479,7 @@ describe('SplitterContainer', () => {
               <ControlledTestSplitter
                 orientation={SplitterOrientation.VERTICAL}
                 valueNow={valueNow}
-                onChange={onChange}
+                onChange={setValueNow}
               />
             );
           })
@@ -511,7 +511,7 @@ describe('SplitterContainer', () => {
         const testValues: { valueNow?: number } = {};
         const { getByRole } = render(
           React.createElement(() => {
-            const [valueNow, onChange] = useState(valueNowStart);
+            const [valueNow, setValueNow] = useState(valueNowStart);
 
             testValues.valueNow = valueNow;
 
@@ -519,7 +519,7 @@ describe('SplitterContainer', () => {
               <ControlledTestSplitter
                 orientation={SplitterOrientation.VERTICAL}
                 valueNow={valueNow}
-                onChange={onChange}
+                onChange={setValueNow}
               />
             );
           })
@@ -553,7 +553,7 @@ describe('SplitterContainer', () => {
         const testValues: { valueNow?: number } = {};
         const { getByRole } = render(
           React.createElement(() => {
-            const [valueNow, onChange] = useState(20);
+            const [valueNow, setValueNow] = useState(20);
 
             testValues.valueNow = valueNow;
 
@@ -561,7 +561,7 @@ describe('SplitterContainer', () => {
               <ControlledTestSplitter
                 orientation={SplitterOrientation.VERTICAL}
                 valueNow={valueNow}
-                onChange={onChange}
+                onChange={setValueNow}
               />
             );
           })
@@ -579,14 +579,12 @@ describe('SplitterContainer', () => {
           const testValues: { valueNow?: number } = {};
           const { getByRole } = render(
             React.createElement(() => {
-              const [valueNow] = useState(valueNowStart);
-
-              testValues.valueNow = valueNow;
+              testValues.valueNow = valueNowStart;
 
               return (
                 <ControlledTestSplitter
                   orientation={SplitterOrientation.VERTICAL}
-                  valueNow={valueNow}
+                  valueNow={testValues.valueNow}
                 />
               );
             })

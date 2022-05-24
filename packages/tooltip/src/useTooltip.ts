@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { useUIDSeed } from 'react-uid';
 import { composeEventHandlers, KEY_CODES } from '@zendeskgarden/container-utilities';
 
@@ -32,7 +32,7 @@ export const useTooltip = ({
 }: IUseTooltipProps = {}): IUseTooltipReturnValue => {
   const [visibility, setVisibility] = useState(isVisible);
   const seed = useUIDSeed();
-  const [_id] = useState(id || seed(`tooltip_${PACKAGE_VERSION}`));
+  const _id = useMemo(() => id || seed(`tooltip_${PACKAGE_VERSION}`), [id, seed]);
   const isMounted = useRef(false);
 
   const openTooltipTimeoutId = useRef<number>();

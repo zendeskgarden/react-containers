@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import { useState } from 'react';
+import { useMemo } from 'react';
 import { useUIDSeed } from 'react-uid';
 
 export interface IUseFieldPropGetters {
@@ -19,7 +19,7 @@ export interface IUseFieldPropGetters {
 
 export function useField(idPrefix?: string): IUseFieldPropGetters {
   const seed = useUIDSeed();
-  const [prefix] = useState(idPrefix || seed(`field_${PACKAGE_VERSION}`));
+  const prefix = useMemo(() => idPrefix || seed(`field_${PACKAGE_VERSION}`), [idPrefix, seed]);
   const inputId = `${prefix}--input`;
   const labelId = `${prefix}--label`;
   const hintId = `${prefix}--hint`;
