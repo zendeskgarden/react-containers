@@ -389,20 +389,20 @@ describe('useGrid', () => {
       rowIndex = 0,
       colIndex = 0
     }: IUseGridProps) => {
-      const [m, setRowIdx] = useState(rowIndex);
-      const [n, setColIdx] = useState(colIndex);
+      const [rowIdx, setRowIdx] = useState(rowIndex);
+      const [colIdx, setColIdx] = useState(colIndex);
 
       return (
         <Example
           rtl={rtl}
           wrap={wrap}
-          rowIndex={m}
-          colIndex={n}
+          rowIndex={rowIdx}
+          colIndex={colIdx}
           matrix={matrix}
-          onChange={(rowIdx: number, colIdx: number) => {
-            onChange && onChange(rowIdx, colIdx);
-            setRowIdx(rowIdx);
-            setColIdx(colIdx);
+          onChange={(_rowIdx: number, _colIdx: number) => {
+            onChange && onChange(_rowIdx, _colIdx);
+            setRowIdx(_rowIdx);
+            setColIdx(_colIdx);
           }}
         />
       );

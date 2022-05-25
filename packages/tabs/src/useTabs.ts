@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import { useState } from 'react';
+import { useMemo } from 'react';
 import { useUIDSeed } from 'react-uid';
 import {
   useSelection,
@@ -55,7 +55,7 @@ export function useTabs<Item = any>({
     ...options
   });
   const seed = useUIDSeed();
-  const [_id] = useState(idPrefix || seed(`tabs_${PACKAGE_VERSION}`));
+  const _id = useMemo(() => idPrefix || seed(`tabs_${PACKAGE_VERSION}`), [idPrefix, seed]);
   const PANEL_ID = `${_id}--panel`;
   const TAB_ID = `${_id}--tab`;
 

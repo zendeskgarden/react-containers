@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import { useRef, useState, KeyboardEvent, MouseEvent } from 'react';
+import { useRef, useMemo, KeyboardEvent, MouseEvent } from 'react';
 import { useUIDSeed } from 'react-uid';
 import { composeEventHandlers, KEY_CODES } from '@zendeskgarden/container-utilities';
 import { useFocusJail } from '@zendeskgarden/container-focusjail';
@@ -45,7 +45,7 @@ export function useModal(
   }: IUseModalProps = {} as any
 ): IUseModalReturnValue {
   const seed = useUIDSeed();
-  const [idPrefix] = useState(_id || seed(`modal_${PACKAGE_VERSION}`));
+  const idPrefix = useMemo(() => _id || seed(`modal_${PACKAGE_VERSION}`), [_id, seed]);
   const titleId = `${idPrefix}--title`;
   const contentId = `${idPrefix}--content`;
   const isModalMousedDownRef = useRef(false);

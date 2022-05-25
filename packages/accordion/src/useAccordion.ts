@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import { useState, HTMLProps } from 'react';
+import { useState, HTMLProps, useMemo } from 'react';
 import { useUIDSeed } from 'react-uid';
 import {
   composeEventHandlers,
@@ -65,7 +65,10 @@ export function useAccordion({
 }: IUseAccordionProps = {}): IUseAccordionReturnValue {
   const isControlled = expandedSections !== null && expandedSections !== undefined;
   const seed = useUIDSeed();
-  const [prefix] = useState<string>(idPrefix || seed(`accordion_${PACKAGE_VERSION}`));
+  const prefix = useMemo<string>(
+    () => idPrefix || seed(`accordion_${PACKAGE_VERSION}`),
+    [idPrefix, seed]
+  );
   const TRIGGER_ID = `${prefix}--trigger`;
   const PANEL_ID = `${prefix}--panel`;
   const [expandedState, setExpandedState] = useState<number[]>(defaultExpandedSections || [0]);

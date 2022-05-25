@@ -165,7 +165,10 @@ export function useSplitter({
   ...props
 }: IUseSplitterProps): IUseSplitterReturnValue {
   const seed = useUIDSeed();
-  const [prefix] = useState<string>(idPrefix || seed(`splitter_${PACKAGE_VERSION}`));
+  const prefix = useMemo<string>(
+    () => idPrefix || seed(`splitter_${PACKAGE_VERSION}`),
+    [idPrefix, seed]
+  );
   const PRIMARY_PANE_ID = `${prefix}--primary-pane`;
   const isControlled = valueNow !== undefined && valueNow !== null;
   const [state, setState] = useState(defaultValueNow);
