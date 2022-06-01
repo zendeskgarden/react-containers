@@ -1,0 +1,12 @@
+import { Meta, Description } from '@storybook/addon-docs';
+import README from '../README.md';
+import useTimingPng from '../useTiming.png';
+
+<Meta title="Packages/Measuretiming/README" />
+
+<Description>
+  {README.replace(
+    '![Understanding useTiming hook](useTiming.png)',
+    `![Understanding useTiming hook](${useTimingPng})`
+  )}
+</Description>

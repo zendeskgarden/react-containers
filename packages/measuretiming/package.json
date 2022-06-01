@@ -1,0 +1,55 @@
+{
+  "name": "@zendeskgarden/container-measuretiming",
+  "version": "0.0.0",
+  "description": "Garden Design System Utility hooks, used to measure the time that a set of React components need, to fully render and become interactive",
+  "license": "Apache-2.0",
+  "author": "Zendesk Garden <garden@zendesk.com>",
+  "homepage": "https://garden.zendesk.com/",
+  "repository": "https://github.com/zendeskgarden/react-containers",
+  "bugs": {
+    "url": "https://github.com/zendeskgarden/react-containers/issues"
+  },
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "../../utils/scripts/build.sh"
+  },
+  "sideEffects": false,
+  "types": "dist/typings/index.d.ts",
+  "dependencies": {
+    "@babel/runtime": "^7.8.4"
+  },
+  "peerDependencies": {
+    "react": ">=16.8.0",
+    "react-dom": ">=16.8.0"
+  },
+  "devDependencies": {
+    "@types/react-test-renderer": "^17.0.2",
+    "react-test-renderer": "^17.0.2"
+  },
+  "keywords": [
+    "a11y",
+    "accessible",
+    "container",
+    "garden",
+    "headless",
+    "hook",
+    "measure",
+    "react",
+    "time-to-interactive",
+    "time-to-render",
+    "timing",
+    "tti",
+    "zendesk"
+  ],
+  "engines": {
+    "node": ">=12.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "zendeskgarden:src": "src/index.ts"
+}

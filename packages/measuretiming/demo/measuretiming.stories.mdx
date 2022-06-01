@@ -1,0 +1,30 @@
+import { Meta, ArgsTable, Canvas, Story } from '@storybook/addon-docs';
+import { MeasuretimingContainer } from '@zendeskgarden/container-measuretiming';
+import { MeasuretimingStory } from './stories/MeasuretimingStory';
+
+<Meta title="Packages/MeasureTiming" component={MeasuretimingContainer} />
+
+# API
+
+<ArgsTable />
+
+# Demo
+
+export const args = { content: 'text', mounted: true, isActive: true };
+
+export const argTypes = {
+  content: {
+    options: ['immediately', 'takes-a-while'],
+    control: 'radio',
+    table: { category: 'Story' }
+  },
+  mounted: { options: [true, false], control: 'radio', table: { category: 'Story' } },
+  isActive: { options: [true, false], control: 'radio', table: { category: 'Story' } },
+  reportFn: { action: 'report' }
+};
+
+<Canvas>
+  <Story name="Measuretiming" args={args} argTypes={argTypes}>
+    {args => <MeasuretimingStory {...args} />}
+  </Story>
+</Canvas>
