@@ -14,15 +14,15 @@ npm install @zendeskgarden/container-splitter
 
 ## Usage
 
-This container implements the [window
-splitter](https://www.w3.org/TR/wai-aria-practices-1.1/#windowsplitter) design
-pattern and can be used to build a splitter component. Check out
+This container implements the
+[window splitter](https://www.w3.org/TR/wai-aria-practices-1.1/#windowsplitter) design pattern and
+can be used to build a splitter component. Check out
 [storybook](https://zendeskgarden.github.io/react-containers) for live examples.
 
 ### useSplitter
 
-The `useSplitter` hook manages positioning and required
-accessibility attributes for the window splitting separator.
+The `useSplitter` hook manages positioning and required accessibility attributes for the window
+splitting separator.
 
 ```jsx
 import {

@@ -14,16 +14,14 @@ npm install @zendeskgarden/container-scrollregion
 
 ## Usage
 
-Check out [storybook](https://zendeskgarden.github.io/react-containers) for live
-examples.
+Check out [storybook](https://zendeskgarden.github.io/react-containers) for live examples.
 
 ### As a hook
 
-A scroll region is an area of the web page that contains scrollable content. The
-scroll region hook allows keyboard users to focus and scroll the region. A
-scroll region with a dynamic layout should use the `dependency` option. The hook
-re-calculates the tab-index when the `dependency` value changes. If there are
-multiple dependency values, a memoized object can be used as the `dependency`
+A scroll region is an area of the web page that contains scrollable content. The scroll region hook
+allows keyboard users to focus and scroll the region. A scroll region with a dynamic layout should
+use the `dependency` option. The hook re-calculates the tab-index when the `dependency` value
+changes. If there are multiple dependency values, a memoized object can be used as the `dependency`
 value.
 
 ```jsx

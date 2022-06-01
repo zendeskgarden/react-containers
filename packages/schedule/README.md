@@ -14,8 +14,7 @@ npm install @zendeskgarden/container-schedule
 
 ## Usage
 
-Check out [storybook](https://zendeskgarden.github.io/react-containers) for live
-examples.
+Check out [storybook](https://zendeskgarden.github.io/react-containers) for live examples.
 
 ### As a hook
 

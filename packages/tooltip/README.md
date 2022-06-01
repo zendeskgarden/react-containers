@@ -14,9 +14,8 @@ npm install @zendeskgarden/container-tooltip
 
 ## Usage
 
-This container implements the
-[tooltip](https://www.w3.org/TR/wai-aria-practices-1.1/#tooltip) design pattern
-and can be used to build a tooltip component. Check out
+This container implements the [tooltip](https://www.w3.org/TR/wai-aria-practices-1.1/#tooltip)
+design pattern and can be used to build a tooltip component. Check out
 [storybook](https://zendeskgarden.github.io/react-containers) for live examples.
 
 ### useTooltip

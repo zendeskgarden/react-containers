@@ -3,8 +3,8 @@
 [npm version badge]: https://flat.badgen.net/npm/v/@zendeskgarden/container-breadcrumb
 [npm version link]: https://www.npmjs.com/package/@zendeskgarden/container-breadcrumb
 
-This package includes containers relating to breadcrumbs in the [Garden Design
-System](https://zendeskgarden.github.io/).
+This package includes containers relating to breadcrumbs in the
+[Garden Design System](https://zendeskgarden.github.io/).
 
 ## Installation
 
@@ -14,9 +14,8 @@ npm install @zendeskgarden/container-breadcrumb
 
 ## Usage
 
-This container implements the
-[breadcrumb](https://www.w3.org/TR/wai-aria-practices-1.1/#breadcrumb) design
-pattern and can be used to build a breadcrumb component. Check out
+This container implements the [breadcrumb](https://www.w3.org/TR/wai-aria-practices-1.1/#breadcrumb)
+design pattern and can be used to build a breadcrumb component. Check out
 [storybook](https://zendeskgarden.github.io/react-containers) for live examples.
 
 ### As a Render Prop Component

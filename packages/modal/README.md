@@ -14,9 +14,8 @@ npm install @zendeskgarden/container-modal
 
 ## Usage
 
-This container implements the
-[dialog](https://www.w3.org/TR/wai-aria-practices/#dialog_modal) design pattern
-and can be used to build a modal component. Check out
+This container implements the [dialog](https://www.w3.org/TR/wai-aria-practices/#dialog_modal)
+design pattern and can be used to build a modal component. Check out
 [storybook](https://zendeskgarden.github.io/react-containers) for live examples.
 
 ### useModal

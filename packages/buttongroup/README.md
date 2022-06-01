@@ -3,8 +3,8 @@
 [npm version badge]: https://flat.badgen.net/npm/v/@zendeskgarden/container-buttongroup
 [npm version link]: https://www.npmjs.com/package/@zendeskgarden/container-buttongroup
 
-This package includes containers relating to buttons groups in the [Garden
-Design System](https://zendeskgarden.github.io/).
+This package includes containers relating to buttons groups in the
+[Garden Design System](https://zendeskgarden.github.io/).
 
 ## Installation
 
@@ -14,13 +14,12 @@ npm install @zendeskgarden/container-buttongroup
 
 ## Usage
 
-Check out [storybook](https://zendeskgarden.github.io/react-containers) for live
-examples.
+Check out [storybook](https://zendeskgarden.github.io/react-containers) for live examples.
 
 ### useButtonGroup
 
-The `useButtonGroup` hook manages focus, selection and accessibility attributes
-required for a group of buttons. Garden uses this in react-components for the buttons package.
+The `useButtonGroup` hook manages focus, selection and accessibility attributes required for a group
+of buttons. Garden uses this in react-components for the buttons package.
 
 ```jsx
 import { useButtonGroup } from '@zendeskgarden/container-buttongroup';
