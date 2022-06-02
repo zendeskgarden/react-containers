@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React, { HTMLAttributes, HTMLProps } from 'react';
+import React, { HTMLProps } from 'react';
 import { Story } from '@storybook/react';
 import {
   BreadcrumbContainer,
@@ -14,11 +14,15 @@ import {
   useBreadcrumb
 } from '@zendeskgarden/container-breadcrumb';
 
-const Component = ({
-  getContainerProps,
-  getCurrentPageProps,
-  ...props
-}: IUseBreadcrumbReturnValue) => (
+interface IProps {
+  'aria-label': NonNullable<HTMLProps<HTMLDivElement>['aria-label']>;
+  role?: HTMLProps<HTMLDivElement>['role'] | null;
+  props?: Omit<HTMLProps<HTMLDivElement>, 'role'>;
+}
+
+interface IComponentProps extends IUseBreadcrumbReturnValue, IProps {}
+
+const Component = ({ getContainerProps, getCurrentPageProps, ...props }: IComponentProps) => (
   <div {...getContainerProps(props)}>
     <a href="#foo">Home</a>
     <span aria-hidden="true" className="mx-2">
@@ -28,29 +32,30 @@ const Component = ({
   </div>
 );
 
-const Container = (props: HTMLProps<HTMLAttributes<HTMLDivElement>>) => (
+const Container = ({ 'aria-label': ariaLabel, ...props }: IProps) => (
   <BreadcrumbContainer>
-    {containerProps => <Component {...containerProps} {...props} />}
+    {containerProps => <Component {...containerProps} {...props} aria-label={ariaLabel} />}
   </BreadcrumbContainer>
 );
 
-const Hook = (props: HTMLProps<HTMLAttributes<HTMLDivElement>>) => {
+const Hook = ({ 'aria-label': ariaLabel, ...props }: IProps) => {
   const hookProps = useBreadcrumb();
 
-  return <Component {...hookProps} {...props} />;
+  return <Component {...hookProps} {...props} aria-label={ariaLabel} />;
 };
 
 interface IArgs extends IBreadcrumbContainerProps {
   as: 'hook' | 'container';
+  'aria-label': IProps['aria-label'];
 }
 
-export const BreadcrumbStory: Story<IArgs> = ({ as, ...props }) => {
+export const BreadcrumbStory: Story<IArgs> = ({ as, 'aria-label': ariaLabel, ...props }) => {
   switch (as) {
     case 'container':
-      return <Container {...props} />;
+      return <Container aria-label={ariaLabel} {...props} />;
 
     case 'hook':
     default:
-      return <Hook {...props} />;
+      return <Hook aria-label={ariaLabel} {...props} />;
   }
 };

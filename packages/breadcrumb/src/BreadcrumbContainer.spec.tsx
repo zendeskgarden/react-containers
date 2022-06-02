@@ -14,8 +14,10 @@ describe('BreadcrumbContainer', () => {
   const BasicExample = () => (
     <BreadcrumbContainer>
       {({ getContainerProps, getCurrentPageProps }) => (
-        <div {...getContainerProps({ 'data-test-id': 'container' })}>
-          <a {...getCurrentPageProps({ 'data-test-id': 'anchor' })}>Test</a>
+        <div data-test-id="container" {...getContainerProps({ 'aria-label': 'test' })}>
+          <a data-test-id="anchor" {...getCurrentPageProps()}>
+            Test
+          </a>
         </div>
       )}
     </BreadcrumbContainer>
@@ -27,7 +29,7 @@ describe('BreadcrumbContainer', () => {
       const container = getByTestId('container');
 
       expect(container).toHaveAttribute('role', 'navigation');
-      expect(container).toHaveAttribute('aria-label', 'Breadcrumb navigation');
+      expect(container).toHaveAttribute('aria-label', 'test');
     });
   });
 
