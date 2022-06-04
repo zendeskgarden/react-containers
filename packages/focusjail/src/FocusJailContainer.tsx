@@ -7,23 +7,14 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useFocusJail } from './useFocusJail';
+import { IFocusJailContainerProps } from './types';
 
-import { useFocusJail, IUseFocusJailProps, IUseFocusJailReturnValue } from './useFocusJail';
-
-export interface IFocusJailContainerProps extends IUseFocusJailProps {
-  /** A render prop function which receives a focus jail prop getter */
-  render?: (options: IUseFocusJailReturnValue) => React.ReactNode;
-  /** A children render prop function which receives a focus jail prop getter */
-  children?: (options: IUseFocusJailReturnValue) => React.ReactNode;
-}
-
-export const FocusJailContainer: React.FunctionComponent<IFocusJailContainerProps> = ({
+export const FocusJailContainer: React.FC<IFocusJailContainerProps> = ({
   children,
   render = children,
   ...options
-}) => {
-  return <>{render!(useFocusJail(options)) as React.ReactElement}</>;
-};
+}) => <>{render!(useFocusJail(options))}</>;
 
 FocusJailContainer.propTypes = {
   children: PropTypes.func,

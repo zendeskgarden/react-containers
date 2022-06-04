@@ -47,12 +47,7 @@ describe('FocusJailContainer', () => {
           containerReference = containerRef;
 
           return (
-            <div
-              {...getContainerProps({
-                'data-test-id': 'container',
-                ref: containerRef
-              })}
-            >
+            <div data-test-id="container" {...getContainerProps()} ref={containerRef}>
               <p>non-focusable test</p>
               {focusJailContainerChildren}
             </div>
@@ -98,7 +93,9 @@ describe('FocusJailContainer', () => {
           // @ts-expect-error
           <FocusJailContainer>
             {({ getContainerProps }) => (
-              <div {...getContainerProps({ 'data-test-id': 'container-no-ref' })}>Test</div>
+              <div data-test-id="container-no-ref" {...getContainerProps()}>
+                Test
+              </div>
             )}
           </FocusJailContainer>
           /* eslint-enable @typescript-eslint/ban-ts-comment */
@@ -213,7 +210,9 @@ describe('FocusJailContainer', () => {
         const { getByTestId } = render(
           <FocusJailContainer containerRef={React.createRef()}>
             {({ getContainerProps }) => (
-              <div {...getContainerProps({ 'data-test-id': 'container-no-ref' })}>Test</div>
+              <div data-test-id="container-no-ref" {...getContainerProps()}>
+                Test
+              </div>
             )}
           </FocusJailContainer>
         );
@@ -240,11 +239,11 @@ describe('FocusJailContainer', () => {
             <FocusJailContainer containerRef={containerRef}>
               {({ getContainerProps }) => (
                 <div
+                  data-test-id="container"
                   {...getContainerProps({
-                    ref: containerRef,
-                    tabIndex: -1,
-                    'data-test-id': 'container'
+                    tabIndex: -1
                   })}
+                  ref={containerRef}
                 >
                   <button onClick={() => setShowFocusJail(false)}>close</button>
                 </div>
