@@ -12,8 +12,8 @@ export interface IUseModalProps<T = Element> {
   onClose?: (event: KeyboardEvent | MouseEvent) => void;
   /** Provides ref access to the underlying dialog element */
   modalRef: RefObject<T>;
-  /** Identifies modal elements */
-  id?: string;
+  /** Prefixes IDs for modal elements */
+  idPrefix?: string;
   /** Directs keyboard focus to the modal on mount */
   focusOnMount?: boolean;
   /** Returns keyboard focus to the element that triggered the modal */

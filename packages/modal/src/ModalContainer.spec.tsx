@@ -17,7 +17,7 @@ describe('FocusJailContainer', () => {
   const modalRef: React.RefObject<HTMLDivElement> = createRef();
 
   const BasicExample = ({ onClose }: { onClose: jest.Mock }) => (
-    <ModalContainer modalRef={modalRef} onClose={onClose} id={MODAL_ID}>
+    <ModalContainer modalRef={modalRef} onClose={onClose} idPrefix={MODAL_ID}>
       {({
         getBackdropProps,
         getModalProps,
@@ -77,8 +77,8 @@ describe('FocusJailContainer', () => {
       expect(modal).toHaveAttribute('role', 'dialog');
       expect(modal).toHaveAttribute('tabIndex', '-1');
       expect(modal).toHaveAttribute('aria-modal', 'true');
-      expect(modal).toHaveAttribute('aria-labelledby', `${MODAL_ID}--title`);
-      expect(modal).toHaveAttribute('aria-describedby', `${MODAL_ID}--content`);
+      expect(modal).toHaveAttribute('aria-labelledby', `${MODAL_ID}__title`);
+      expect(modal).toHaveAttribute('aria-describedby', `${MODAL_ID}__content`);
     });
 
     it('does not trigger onClose when clicked', () => {
@@ -109,7 +109,7 @@ describe('FocusJailContainer', () => {
     it('applies accessibility props', () => {
       const { getByTestId } = render(<BasicExample onClose={onCloseSpy} />);
 
-      expect(getByTestId('title')).toHaveAttribute('id', `${MODAL_ID}--title`);
+      expect(getByTestId('title')).toHaveAttribute('id', `${MODAL_ID}__title`);
     });
   });
 
@@ -117,7 +117,7 @@ describe('FocusJailContainer', () => {
     it('applies accessibility props', () => {
       const { getByTestId } = render(<BasicExample onClose={onCloseSpy} />);
 
-      expect(getByTestId('content')).toHaveAttribute('id', `${MODAL_ID}--content`);
+      expect(getByTestId('content')).toHaveAttribute('id', `${MODAL_ID}__content`);
     });
   });
 

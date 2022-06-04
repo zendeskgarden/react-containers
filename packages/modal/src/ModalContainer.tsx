@@ -21,7 +21,7 @@ ModalContainer.propTypes = {
   render: PropTypes.func,
   onClose: PropTypes.func,
   modalRef: PropTypes.any.isRequired,
-  id: PropTypes.string,
+  idPrefix: PropTypes.string,
   focusOnMount: PropTypes.bool,
   restoreFocus: PropTypes.bool,
   environment: PropTypes.any

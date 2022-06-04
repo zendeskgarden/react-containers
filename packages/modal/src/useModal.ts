@@ -5,24 +5,22 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import { useRef, useMemo, KeyboardEvent, MouseEvent, MouseEventHandler } from 'react';
-import { useUIDSeed } from 'react-uid';
-import { composeEventHandlers, KEYS } from '@zendeskgarden/container-utilities';
+import { useRef, KeyboardEvent, MouseEvent, MouseEventHandler } from 'react';
+import { composeEventHandlers, KEYS, useId } from '@zendeskgarden/container-utilities';
 import { useFocusJail } from '@zendeskgarden/container-focusjail';
 import { IUseModalProps, IUseModalReturnValue } from './types';
 
 export const useModal = <T extends Element = Element>({
   onClose,
   modalRef,
-  id: _id,
+  idPrefix,
   focusOnMount,
   restoreFocus,
   environment
 }: IUseModalProps<T>): IUseModalReturnValue => {
-  const seed = useUIDSeed();
-  const idPrefix = useMemo(() => _id || seed(`modal_${PACKAGE_VERSION}`), [_id, seed]);
-  const titleId = `${idPrefix}--title`;
-  const contentId = `${idPrefix}--content`;
+  const prefix = useId(idPrefix);
+  const titleId = `${prefix}__title`;
+  const contentId = `${prefix}__content`;
   const isModalMousedDownRef = useRef(false);
 
   const closeModal: IUseModalReturnValue['closeModal'] = event => {
