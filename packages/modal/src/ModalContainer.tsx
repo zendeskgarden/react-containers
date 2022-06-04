@@ -7,23 +7,14 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useModal } from './useModal';
+import { IModalContainerProps } from './types';
 
-import { useModal, IUseModalProps, IUseModalReturnValue } from './useModal';
-
-export interface IModalContainerProps<RefType = HTMLElement> extends IUseModalProps<RefType> {
-  /** A render prop function */
-  render?: (options: IUseModalReturnValue) => React.ReactNode;
-  /** A children render prop function */
-  children?: (options: IUseModalReturnValue) => React.ReactNode;
-}
-
-export const ModalContainer: React.FunctionComponent<IModalContainerProps> = ({
+export const ModalContainer: React.FC<IModalContainerProps> = ({
   children,
   render = children,
   ...options
-}) => {
-  return <>{render!(useModal(options)) as React.ReactElement}</>;
-};
+}) => <>{render!(useModal(options))}</>;
 
 ModalContainer.propTypes = {
   children: PropTypes.func,

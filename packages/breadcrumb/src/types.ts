@@ -8,11 +8,12 @@
 import { HTMLProps, ReactNode } from 'react';
 
 export interface IUseBreadcrumbReturnValue {
-  getContainerProps: <T>(props: {
-    'aria-label': NonNullable<HTMLProps<T>['aria-label']>;
-    role?: HTMLProps<T>['role'] | null;
-    props?: Omit<HTMLProps<T>, 'role'>;
-  }) => HTMLProps<T>;
+  getContainerProps: <T>(
+    props: Omit<HTMLProps<T>, 'aria-label' | 'role'> & {
+      'aria-label': NonNullable<HTMLProps<T>['aria-label']>;
+      role?: HTMLProps<T>['role'] | null;
+    }
+  ) => HTMLProps<T>;
   getCurrentPageProps: <T>(props?: HTMLProps<T>) => HTMLProps<T>;
 }
 

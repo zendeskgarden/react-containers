@@ -14,10 +14,8 @@ import {
   useBreadcrumb
 } from '@zendeskgarden/container-breadcrumb';
 
-interface IProps {
+interface IProps extends HTMLProps<HTMLDivElement> {
   'aria-label': NonNullable<HTMLProps<HTMLDivElement>['aria-label']>;
-  role?: HTMLProps<HTMLDivElement>['role'] | null;
-  props?: Omit<HTMLProps<HTMLDivElement>, 'role'>;
 }
 
 interface IComponentProps extends IUseBreadcrumbReturnValue, IProps {}

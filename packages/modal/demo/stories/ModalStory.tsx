@@ -65,7 +65,7 @@ const Component = forwardRef<HTMLDivElement, IComponentProps>(
             </div>
             <button
               className="absolute bg-transparent border-none h-6 w-6 top-4 right-4"
-              {...getCloseProps()}
+              {...getCloseProps({ 'aria-label': 'Close modal' })}
               type="button"
             >
               ❎

@@ -7,24 +7,15 @@
 
 import { IUseBreadcrumbReturnValue } from './types';
 
-export function useBreadcrumb(): IUseBreadcrumbReturnValue {
-  const getContainerProps: IUseBreadcrumbReturnValue['getContainerProps'] = ({
-    role = 'navigation',
-    ...other
-  }) => ({
+export const useBreadcrumb = (): IUseBreadcrumbReturnValue => ({
+  getContainerProps: ({ role = 'navigation', ...other }) => ({
     role: role === null ? undefined : role,
     'data-garden-container-id': 'containers.breadcrumb',
     'data-garden-container-version': PACKAGE_VERSION,
     ...other
-  });
-
-  const getCurrentPageProps: IUseBreadcrumbReturnValue['getCurrentPageProps'] = props => ({
+  }),
+  getCurrentPageProps: props => ({
     'aria-current': 'page',
     ...props
-  });
-
-  return {
-    getContainerProps,
-    getCurrentPageProps
-  };
-}
+  })
+});

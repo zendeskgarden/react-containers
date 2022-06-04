@@ -26,11 +26,19 @@ describe('FocusJailContainer', () => {
         getCloseProps,
         closeModal
       }: IUseModalReturnValue) => (
-        <div {...getBackdropProps({ 'data-test-id': 'backdrop' })}>
-          <div {...getModalProps({ 'data-test-id': 'modal' })} ref={modalRef}>
-            <div {...getTitleProps({ 'data-test-id': 'title' })}>Title</div>
-            <div {...getContentProps({ 'data-test-id': 'content' })}>Modal content</div>
-            <button {...(getCloseProps({ 'data-test-id': 'close' }) as any)} />
+        <div data-test-id="backdrop" {...getBackdropProps()}>
+          <div data-test-id="modal" {...getModalProps()} ref={modalRef}>
+            <div data-test-id="title" {...getTitleProps()}>
+              Title
+            </div>
+            <div data-test-id="content" {...getContentProps()}>
+              Modal content
+            </div>
+            <button
+              data-test-id="close"
+              {...getCloseProps({ 'aria-label': 'Close modal' })}
+              type="button"
+            />
             <button onClick={closeModal} data-test-id="additional-close">
               Additional close option
             </button>
