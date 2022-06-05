@@ -21,7 +21,6 @@ export interface IUseButtonGroupReturnValue<Item>
       focusRef: RefObject<T>;
       refKey?: string;
       role?: 'button' | null;
-      selectedAriaKey?: string;
     }
   ) => HTMLProps<T>;
 }

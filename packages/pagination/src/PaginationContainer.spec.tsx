@@ -5,19 +5,18 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React, { useRef } from 'react';
+import React, { createRef } from 'react';
 import userEvent from '@testing-library/user-event';
 import { render } from '@testing-library/react';
-import { IGetPageProps } from './usePagination';
 import { PaginationContainer } from './';
 
 describe('PaginationContainer', () => {
   const pages = [1, 2, 3, 4, 5];
 
   const BasicExample = () => {
-    const previousPageRef = useRef(null);
-    const nextPageRef = useRef(null);
-    const pageRefs = pages.map(() => React.createRef());
+    const previousPageRef = createRef<HTMLDivElement>();
+    const nextPageRef = createRef<HTMLDivElement>();
+    const pageRefs = pages.map(() => createRef<HTMLDivElement>());
 
     return (
       <PaginationContainer>
@@ -29,41 +28,42 @@ describe('PaginationContainer', () => {
           focusedItem,
           selectedItem
         }) => (
-          <div {...getContainerProps({ 'data-test-id': 'container' })}>
+          <div data-test-id="container" {...getContainerProps()}>
             <div
+              data-test-id="previous"
+              data-focused={focusedItem === 'previous'}
+              data-selected={selectedItem === 'previous'}
               {...getPreviousPageProps({
-                'data-test-id': 'previous',
+                'aria-label': 'Previous page',
                 key: 'previous',
                 item: 'prev',
-                focusRef: previousPageRef,
-                'data-focused': focusedItem === 'previous',
-                'data-selected': selectedItem === 'previous'
+                focusRef: previousPageRef
               })}
             />
-            {pages.map(page => (
+            {pages.map((page, index) => (
               <div
+                data-test-id="page"
+                data-selected={page === selectedItem}
+                data-focused={page === focusedItem}
                 {...getPageProps({
+                  'aria-label': `Page ${index + 1}`,
                   key: page,
                   item: page,
-                  focusRef: pageRefs[page - 1],
-                  page,
-                  current: page === selectedItem ? 'current' : undefined,
-                  'data-test-id': 'page',
-                  'data-selected': page === selectedItem,
-                  'data-focused': page === focusedItem
+                  focusRef: pageRefs[page - 1]
                 })}
               >
                 {page}
               </div>
             ))}
             <div
+              data-test-id="next"
+              data-focused={focusedItem === 'next'}
+              data-selected={selectedItem === 'next'}
               {...getNextPageProps({
-                'data-test-id': 'next',
+                'aria-label': 'Previous page',
                 key: 'next',
                 item: 'next',
-                focusRef: nextPageRef,
-                'data-focused': focusedItem === 'next',
-                'data-selected': selectedItem === 'next'
+                focusRef: nextPageRef
               })}
             />
           </div>
@@ -72,7 +72,7 @@ describe('PaginationContainer', () => {
     );
   };
 
-  const pageProps = (props: IGetPageProps<any>) => {
+  const pageProps = (props: any) => {
     return render(
       <PaginationContainer>
         {({ getPageProps }) => <div {...getPageProps({ 'data-test-id': 'page', ...props })} />}
@@ -80,7 +80,7 @@ describe('PaginationContainer', () => {
     );
   };
 
-  const nextPageProps = (props: IGetPageProps<any>) => {
+  const nextPageProps = (props: any) => {
     return render(
       <PaginationContainer>
         {({ getNextPageProps }) => (
@@ -90,7 +90,7 @@ describe('PaginationContainer', () => {
     );
   };
 
-  const previousPageProps = (props: IGetPageProps<any>) => {
+  const previousPageProps = (props: any) => {
     return render(
       <PaginationContainer>
         {({ getPreviousPageProps }) => {
@@ -110,37 +110,9 @@ describe('PaginationContainer', () => {
   });
 
   describe('getPreviousPageProps()', () => {
-    describe('throws', () => {
-      let ref: React.RefObject<HTMLElement>;
-      const component = (props: IGetPageProps<any>) => {
-        return () => {
-          const { container } = previousPageProps(props);
-
-          return container;
-        };
-      };
-
-      beforeEach(() => {
-        console.error = jest.fn();
-
-        ref = React.createRef();
-      });
-
-      it('if item prop is not provided', () => {
-        expect(component({ focusRef: ref } as any)).toThrow(
-          'Accessibility Error: You must provide an "item" option to "getPreviousPageProps()"'
-        );
-      });
-
-      it('if focusRef prop is not provided', () => {
-        expect(component({ item: 1 } as any)).toThrow(
-          'Accessibility Error: You must provide a "focusRef" option to "getPreviousPageProps()"'
-        );
-      });
-    });
-
     it('applies correct accessibility attributes', () => {
       const { getByTestId } = previousPageProps({
+        'aria-label': 'Previous Page',
         item: 1,
         focusRef: React.createRef()
       });
@@ -151,7 +123,7 @@ describe('PaginationContainer', () => {
     it('applies custom aria-label attribute', () => {
       const ariaLabel = 'Test aria label';
       const { getByTestId } = previousPageProps({
-        ariaLabel,
+        'aria-label': ariaLabel,
         focusRef: React.createRef(),
         item: 1
       });
@@ -161,37 +133,12 @@ describe('PaginationContainer', () => {
   });
 
   describe('getNextPageProps()', () => {
-    describe('throws', () => {
-      let ref: React.RefObject<HTMLElement>;
-      const component = (props: IGetPageProps<any>) => {
-        return () => {
-          const { container } = nextPageProps(props);
-
-          return container;
-        };
-      };
-
-      beforeEach(() => {
-        console.error = jest.fn();
-
-        ref = React.createRef();
-      });
-
-      it('if item prop is not provided', () => {
-        expect(component({ focusRef: ref } as any)).toThrow(
-          'Accessibility Error: You must provide an "item" option to "getNextPageProps()"'
-        );
-      });
-
-      it('if focusRef prop is not provided', () => {
-        expect(component({ item: 1 } as any)).toThrow(
-          'Accessibility Error: You must provide a "focusRef" option to "getNextPageProps()"'
-        );
-      });
-    });
-
     it('applies correct accessibility attributes', () => {
-      const { getByTestId } = nextPageProps({ item: 1, focusRef: React.createRef() });
+      const { getByTestId } = nextPageProps({
+        'aria-label': 'Next Page',
+        item: 1,
+        focusRef: React.createRef()
+      });
 
       expect(getByTestId('next')).toHaveAttribute('aria-label', 'Next Page');
     });
@@ -199,7 +146,7 @@ describe('PaginationContainer', () => {
     it('applies custom aria-label attribute', () => {
       const ariaLabel = 'Test aria label';
       const { getByTestId } = nextPageProps({
-        ariaLabel,
+        'aria-label': ariaLabel,
         focusRef: React.createRef(),
         item: 1
       });
@@ -209,47 +156,22 @@ describe('PaginationContainer', () => {
   });
 
   describe('getPageProps()', () => {
-    describe('throws', () => {
-      let ref: React.RefObject<HTMLElement>;
-      const component = (props: IGetPageProps<any>) => {
-        return () => {
-          const { container } = pageProps(props);
-
-          return container;
-        };
-      };
-
-      beforeEach(() => {
-        console.error = jest.fn();
-
-        ref = React.createRef();
-      });
-
-      it('if item prop is not provided', () => {
-        expect(component({ focusRef: ref } as any)).toThrow(
-          'Accessibility Error: You must provide an "item" option to "getPageProps()"'
-        );
-      });
-
-      it('if focusRef prop is not provided', () => {
-        expect(component({ item: 1 } as any)).toThrow(
-          'Accessibility Error: You must provide a "focusRef" option to "getPageProps()"'
-        );
-      });
-    });
-
     it('applies correct accessibility attributes if not current page', () => {
-      const { getByTestId } = pageProps({ item: 1, focusRef: React.createRef(), page: 1 });
+      const { getByTestId } = pageProps({
+        'aria-label': 'Page 1',
+        item: 1,
+        focusRef: React.createRef(),
+        page: 1
+      });
 
       expect(getByTestId('page')).toHaveAttribute('aria-label', 'Page 1');
     });
 
     it('applies correct accessibility attributes if current page', () => {
       const { getByTestId } = pageProps({
+        'aria-label': 'Current page, Page 1',
         item: 1,
-        focusRef: React.createRef(),
-        page: 1,
-        current: true
+        focusRef: React.createRef()
       });
       const page = getByTestId('page');
 
@@ -260,7 +182,7 @@ describe('PaginationContainer', () => {
     it('applies custom aria-label attribute', () => {
       const ariaLabel = 'Test aria label';
       const { getByTestId } = pageProps({
-        ariaLabel,
+        'aria-label': ariaLabel,
         focusRef: React.createRef(),
         item: 1
       });

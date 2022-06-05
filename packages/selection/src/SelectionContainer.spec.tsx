@@ -62,14 +62,6 @@ describe('SelectionContainer', () => {
     </SelectionContainer>
   );
 
-  const itemProps = (props: any) => {
-    return render(
-      <SelectionContainer>
-        {({ getItemProps }) => <div {...getItemProps(props)}>Example</div>}
-      </SelectionContainer>
-    );
-  };
-
   describe('controlled state', () => {
     describe('onFocus', () => {
       it('should call onFocus callback', () => {
@@ -612,36 +604,6 @@ describe('SelectionContainer', () => {
   });
 
   describe('getItemProps', () => {
-    it('throws if no item is applied', () => {
-      const originalError = console.error;
-
-      console.error = jest.fn();
-
-      expect(() => {
-        (itemProps as any)();
-      }).toThrow('Accessibility Error: You must provide an "item" option to "getItemProps()"');
-
-      console.error = originalError;
-    });
-
-    it('throws if no focusRef prop is applied', () => {
-      const originalError = console.error;
-
-      console.error = jest.fn();
-
-      expect(() => {
-        itemProps({ item: 'example' });
-      }).toThrow('Accessibility Error: You must provide a "focusRef" option to "getItemProps()"');
-
-      console.error = originalError;
-    });
-
-    it('does not throw if item and focusRef props are applied', () => {
-      expect(() => {
-        itemProps({ item: 'example', focusRef: React.createRef() });
-      }).not.toThrow();
-    });
-
     it('applies accessibility role attribute', () => {
       const { getByText } = render(<BasicExample />);
       const item = getByText('Item-1');

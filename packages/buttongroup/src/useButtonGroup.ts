@@ -29,12 +29,10 @@ export const useButtonGroup = <Item>(
 
   const getButtonProps: IUseButtonGroupReturnValue<Item>['getButtonProps'] = ({
     role = 'button',
-    selectedAriaKey = 'aria-pressed',
     ...other
   }) => ({
-    ...getItemProps(other),
-    role: role === null ? undefined : role,
-    selectedAriaKey
+    ...getItemProps({ selectedAriaKey: 'aria-pressed', ...other }),
+    role: role === null ? undefined : role
   });
 
   return {

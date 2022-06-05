@@ -7,23 +7,14 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
+import { usePagination } from './usePagination';
+import { IPaginationContainerProps } from './types';
 
-import { usePagination, IUsePaginationProps, IUsePaginationReturnValue } from './usePagination';
-
-export interface IPaginationContainerProps<Item> extends IUsePaginationProps<Item> {
-  /** A render prop function which receives the newly selected item */
-  render?: (options: IUsePaginationReturnValue<Item>) => React.ReactNode;
-  /** A children render prop function which receives the newly selected item */
-  children?: (options: IUsePaginationReturnValue<Item>) => React.ReactNode;
-}
-
-export const PaginationContainer: React.FunctionComponent<IPaginationContainerProps<any>> = ({
+export const PaginationContainer: React.FC<IPaginationContainerProps<any>> = ({
   children,
   render = children,
   ...options
-}) => {
-  return <>{render!(usePagination(options)) as React.ReactElement}</>;
-};
+}) => <>{render!(usePagination(options))}</>;
 
 PaginationContainer.propTypes = {
   children: PropTypes.func,

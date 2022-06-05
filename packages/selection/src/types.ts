@@ -48,7 +48,7 @@ export interface IUseSelectionReturnValue<Item> {
       focusRef: RefObject<T>;
       refKey?: string;
       role?: 'option' | null;
-      selectedAriaKey?: string;
+      selectedAriaKey?: any;
     }
   ) => HTMLProps<T>;
 }
