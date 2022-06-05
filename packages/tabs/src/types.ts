@@ -8,9 +8,9 @@
 import { IUseSelectionProps, IUseSelectionReturnValue } from '@zendeskgarden/container-selection';
 import { HTMLProps, ReactNode, RefObject } from 'react';
 
-export interface IUseTabsProps<Item> extends IUseSelectionProps<Item> {
+export interface IUseTabsProps<Item> extends Omit<IUseSelectionProps<Item>, 'direction'> {
   /** Determines the orientation of the tabs */
-  vertical?: boolean;
+  orientation?: 'horizontal' | 'vertical';
   /** Prefixes IDs for tab elements */
   idPrefix?: string;
 }

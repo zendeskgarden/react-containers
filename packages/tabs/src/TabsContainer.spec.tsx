@@ -8,7 +8,6 @@
 import React, { createRef } from 'react';
 import userEvent from '@testing-library/user-event';
 import { render } from '@testing-library/react';
-
 import { TabsContainer, ITabsContainerProps } from './';
 
 describe('TabsContainer', () => {
@@ -19,12 +18,12 @@ describe('TabsContainer', () => {
   const getTabId = (index: number) => `${idPrefix}__tab:${index}`;
 
   const BasicExample: React.FunctionComponent<ITabsContainerProps<string>> = ({
-    vertical,
+    orientation,
     onSelect,
     defaultSelectedIndex = 0
   } = {}) => (
     <TabsContainer
-      vertical={vertical}
+      orientation={orientation}
       onSelect={onSelect}
       idPrefix={idPrefix}
       defaultSelectedIndex={defaultSelectedIndex}

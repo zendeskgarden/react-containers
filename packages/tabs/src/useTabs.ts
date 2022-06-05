@@ -10,7 +10,7 @@ import { useSelection } from '@zendeskgarden/container-selection';
 import { IUseTabsProps, IUseTabsReturnValue } from './types';
 
 export const useTabs = <Item>({
-  vertical,
+  orientation = 'horizontal',
   idPrefix,
   ...options
 }: IUseTabsProps<Item> = {}): IUseTabsReturnValue<Item> => {
@@ -18,7 +18,7 @@ export const useTabs = <Item>({
   const PANEL_ID = `${prefix}__panel`;
   const TAB_ID = `${prefix}__tab`;
   const { selectedItem, focusedItem, getContainerProps, getItemProps } = useSelection<Item>({
-    direction: vertical ? 'vertical' : 'horizontal',
+    direction: orientation,
     defaultSelectedIndex: 0,
     ...options
   });
@@ -29,7 +29,7 @@ export const useTabs = <Item>({
   } = {}) => ({
     ...getContainerProps(other),
     role: role === null ? undefined : role,
-    'aria-orientation': vertical ? 'vertical' : 'horizontal',
+    'aria-orientation': orientation,
     'data-garden-container-id': 'containers.tabs',
     'data-garden-container-version': PACKAGE_VERSION
   });
