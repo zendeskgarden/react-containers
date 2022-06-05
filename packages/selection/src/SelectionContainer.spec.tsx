@@ -37,7 +37,7 @@ describe('SelectionContainer', () => {
       onSelect={onSelect ? onSelect : undefined}
     >
       {({ getContainerProps, getItemProps, selectedItem }) => (
-        <div {...getContainerProps({ 'data-test-id': 'container' })}>
+        <div data-test-id="container" {...getContainerProps()}>
           {itemValues.map(item => {
             const ref = React.createRef();
             const isSelected = item === selectedItem;

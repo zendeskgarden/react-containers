@@ -5,105 +5,21 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import { useEffect, useReducer } from 'react';
+import { FocusEventHandler, KeyboardEventHandler, useEffect, useReducer } from 'react';
 import {
   composeEventHandlers,
   getControlledValue,
   KEY_CODES
 } from '@zendeskgarden/container-utilities';
-
-interface IUseSelectionPropGetters<Item> {
-  getContainerProps: <T>(options?: T) => T & React.HTMLProps<any>;
-  getItemProps: <T extends IGetItemPropsOptions<Item>>(options: T, propGetterName?: string) => any;
-}
-
-export interface IUseSelectionState<Item> {
-  focusedItem?: Item;
-  selectedItem?: Item;
-}
-
-export interface IGetItemPropsOptions<Item> extends React.HTMLProps<any> {
-  selectedAriaKey?: string;
-  item: Item;
-  focusRef: React.RefObject<any>;
-  refKey?: string;
-}
-
-export type UseSelectionReturnValue<Item> = IUseSelectionState<Item> &
-  IUseSelectionPropGetters<Item>;
-
-export interface IUseSelectionProps<Item> {
-  /** Determines the orientation of the selection */
-  direction?: 'horizontal' | 'vertical' | 'both';
-  /** Sets the initial focused item */
-  defaultFocusedIndex?: number;
-  /** Sets the initial selected item */
-  defaultSelectedIndex?: number;
-  /** Determines if selection uses right-to-left writing direction */
-  rtl?: boolean;
-  /** Sets the selected item in a controlled selection */
-  selectedItem?: Item;
-  /** Sets the focused item in a controlled selection */
-  focusedItem?: Item;
-  /** A callback function that receives the selected item */
-  onSelect?: (selectedItem: Item) => void;
-  /** A callback function that receives the focused item */
-  onFocus?: (focusedItem?: Item) => void;
-}
-
-export type SELECTION_ACTION =
-  | { type: 'FOCUS'; payload?: any }
-  | {
-      type: 'INCREMENT';
-      payload: any;
-    }
-  | {
-      type: 'DECREMENT';
-      payload: any;
-    }
-  | { type: 'HOME'; payload: any }
-  | { type: 'END'; payload: any }
-  | {
-      type: 'MOUSE_SELECT';
-      payload: any;
-    }
-  | { type: 'KEYBOARD_SELECT'; payload: any }
-  | { type: 'EXIT_WIDGET' };
-
-function stateReducer(state: IUseSelectionState<any>, action: SELECTION_ACTION) {
-  switch (action.type) {
-    case 'END':
-    case 'HOME':
-    case 'FOCUS':
-    case 'INCREMENT':
-    case 'DECREMENT': {
-      return { ...state, focusedItem: action.payload };
-    }
-
-    case 'MOUSE_SELECT': {
-      return {
-        ...state,
-        selectedItem: action.payload,
-        focusedItem: undefined
-      };
-    }
-    case 'KEYBOARD_SELECT': {
-      return { ...state, selectedItem: action.payload };
-    }
-    case 'EXIT_WIDGET': {
-      return { ...state, focusedItem: undefined };
-    }
-    default:
-      return state;
-  }
-}
+import { IUseSelectionProps, IUseSelectionReturnValue } from './types';
+import { stateReducer } from './utils';
 
 /**
  * Custom hook to manage selection using the Roving Tab Index strategy
  *
  * https://www.w3.org/TR/wai-aria-practices/#kbd_roving_tabindex
  */
-export function useSelection<Item = any>({
+export function useSelection<Item>({
   direction = 'horizontal',
   defaultFocusedIndex = 0,
   defaultSelectedIndex,
@@ -112,7 +28,7 @@ export function useSelection<Item = any>({
   focusedItem,
   onSelect,
   onFocus
-}: IUseSelectionProps<Item> = {}): UseSelectionReturnValue<Item> {
+}: IUseSelectionProps<Item> = {}): IUseSelectionReturnValue<Item> {
   const isSelectedItemControlled = selectedItem !== undefined;
   const isFocusedItemControlled = focusedItem !== undefined;
   const refs: React.MutableRefObject<any | null>[] = [];
@@ -137,6 +53,7 @@ export function useSelection<Item = any>({
   useEffect(() => {
     if (selectedItem === undefined && defaultSelectedIndex !== undefined) {
       onSelect && onSelect(items[defaultSelectedIndex]);
+
       if (!isSelectedItemControlled) {
         dispatch({
           type: 'KEYBOARD_SELECT',
@@ -146,15 +63,17 @@ export function useSelection<Item = any>({
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const getContainerProps = ({ role = 'listbox', ...other }: React.HTMLProps<any> = {}) =>
-    ({
-      role,
-      'data-garden-container-id': 'containers.selection',
-      'data-garden-container-version': PACKAGE_VERSION,
-      ...other
-    } as any);
+  const getContainerProps: IUseSelectionReturnValue<Item>['getContainerProps'] = ({
+    role = 'listbox',
+    ...other
+  } = {}) => ({
+    role: role === null ? undefined : role,
+    'data-garden-container-id': 'containers.selection',
+    'data-garden-container-version': PACKAGE_VERSION,
+    ...other
+  });
 
-  const getItemProps = (
+  const getItemProps: IUseSelectionReturnValue<Item>['getItemProps'] = (
     {
       selectedAriaKey = 'aria-selected',
       role = 'option',
@@ -165,7 +84,7 @@ export function useSelection<Item = any>({
       focusRef,
       refKey = 'ref',
       ...other
-    }: IGetItemPropsOptions<Item> = {} as any,
+    },
     propGetterName = 'getItemProps'
   ) => {
     if (item === undefined) {
@@ -196,118 +115,133 @@ export function useSelection<Item = any>({
     const verticalDirection = direction === 'vertical' || direction === 'both';
     const horizontalDirection = direction === 'horizontal' || direction === 'both';
 
+    const handleFocus = () => {
+      onFocus && onFocus(item);
+
+      if (!isFocusedItemControlled) {
+        dispatch({ type: 'FOCUS', payload: item });
+      }
+    };
+
+    const handleClick = () => {
+      onSelect && onSelect(item);
+      onFocus && onFocus();
+
+      if (!isSelectedItemControlled) {
+        dispatch({ type: 'MOUSE_SELECT', payload: item });
+      }
+    };
+
+    const handleKeyDown: KeyboardEventHandler = event => {
+      let nextIndex: number;
+      let currentIndex: number;
+
+      if (isFocusedItemControlled) {
+        currentIndex = items.indexOf(focusedItem as any);
+      } else {
+        currentIndex = items.indexOf(state.focusedItem || state.selectedItem);
+      }
+
+      const onIncrement = () => {
+        nextIndex = currentIndex + 1;
+
+        if (currentIndex === items.length - 1) {
+          nextIndex = 0;
+        }
+
+        !isFocusedItemControlled && dispatch({ type: 'INCREMENT', payload: items[nextIndex] });
+
+        onFocus && onFocus(items[nextIndex]);
+      };
+
+      const onDecrement = () => {
+        nextIndex = currentIndex - 1;
+
+        if (currentIndex === 0) {
+          nextIndex = items.length - 1;
+        }
+
+        !isFocusedItemControlled && dispatch({ type: 'DECREMENT', payload: items[nextIndex] });
+
+        onFocus && onFocus(items[nextIndex]);
+      };
+
+      const hasModifierKeyPressed =
+        event.ctrlKey || event.metaKey || event.shiftKey || event.altKey;
+
+      if (!hasModifierKeyPressed) {
+        if (
+          (event.keyCode === KEY_CODES.UP && verticalDirection) ||
+          (event.keyCode === KEY_CODES.LEFT && horizontalDirection)
+        ) {
+          if (rtl && horizontalDirection) {
+            onIncrement();
+          } else {
+            onDecrement();
+          }
+
+          event.preventDefault();
+        } else if (
+          (event.keyCode === KEY_CODES.DOWN && verticalDirection) ||
+          (event.keyCode === KEY_CODES.RIGHT && horizontalDirection)
+        ) {
+          if (rtl && horizontalDirection) {
+            onDecrement();
+          } else {
+            onIncrement();
+          }
+
+          event.preventDefault();
+        } else if (event.keyCode === KEY_CODES.HOME) {
+          if (!isFocusedItemControlled) {
+            dispatch({ type: 'HOME', payload: items[0] });
+          }
+
+          onFocus && onFocus(items[0]);
+          event.preventDefault();
+        } else if (event.keyCode === KEY_CODES.END) {
+          if (!isFocusedItemControlled) {
+            dispatch({ type: 'END', payload: items[items.length - 1] });
+          }
+
+          onFocus && onFocus(items[items.length - 1]);
+          event.preventDefault();
+        } else if (event.keyCode === KEY_CODES.SPACE || event.keyCode === KEY_CODES.ENTER) {
+          onSelect && onSelect(item);
+
+          if (!isSelectedItemControlled) {
+            dispatch({
+              type: 'KEYBOARD_SELECT',
+              payload: item
+            });
+          }
+
+          event.preventDefault();
+        }
+      }
+    };
+
+    const onBlur: FocusEventHandler = event => {
+      if ((event.target as HTMLElement).tabIndex === 0) {
+        if (!isFocusedItemControlled) {
+          dispatch({ type: 'EXIT_WIDGET' });
+        }
+
+        onFocus && onFocus();
+      }
+    };
+
     return {
-      role,
+      role: role === null ? undefined : role,
       tabIndex,
       [selectedAriaKey]: selectedAriaKey ? isSelected : undefined,
       [refKey]: focusRef,
-      onFocus: composeEventHandlers(onFocusCallback, () => {
-        onFocus && onFocus(item);
-        if (!isFocusedItemControlled) {
-          dispatch({ type: 'FOCUS', payload: item });
-        }
-      }),
-      onBlur: (e: React.FocusEvent<HTMLElement>) => {
-        if (e.target.tabIndex === 0) {
-          if (!isFocusedItemControlled) {
-            dispatch({ type: 'EXIT_WIDGET' });
-          }
-          onFocus && onFocus();
-        }
-      },
-      onClick: composeEventHandlers(onClick, () => {
-        onSelect && onSelect(item);
-        onFocus && onFocus();
-        if (!isSelectedItemControlled) {
-          dispatch({ type: 'MOUSE_SELECT', payload: item });
-        }
-      }),
-      onKeyDown: composeEventHandlers(onKeyDown, (e: React.KeyboardEvent) => {
-        let nextIndex: number;
-        let currentIndex: number;
-
-        if (isFocusedItemControlled) {
-          currentIndex = items.indexOf(focusedItem as any);
-        } else {
-          currentIndex = items.indexOf(state.focusedItem || state.selectedItem);
-        }
-
-        const onIncrement = () => {
-          nextIndex = currentIndex + 1;
-
-          if (currentIndex === items.length - 1) {
-            nextIndex = 0;
-          }
-
-          !isFocusedItemControlled && dispatch({ type: 'INCREMENT', payload: items[nextIndex] });
-
-          onFocus && onFocus(items[nextIndex]);
-        };
-
-        const onDecrement = () => {
-          nextIndex = currentIndex - 1;
-
-          if (currentIndex === 0) {
-            nextIndex = items.length - 1;
-          }
-
-          !isFocusedItemControlled && dispatch({ type: 'DECREMENT', payload: items[nextIndex] });
-
-          onFocus && onFocus(items[nextIndex]);
-        };
-
-        const hasModifierKeyPressed = e.ctrlKey || e.metaKey || e.shiftKey || e.altKey;
-
-        if (!hasModifierKeyPressed) {
-          if (
-            (e.keyCode === KEY_CODES.UP && verticalDirection) ||
-            (e.keyCode === KEY_CODES.LEFT && horizontalDirection)
-          ) {
-            if (rtl && horizontalDirection) {
-              onIncrement();
-            } else {
-              onDecrement();
-            }
-
-            e.preventDefault();
-          } else if (
-            (e.keyCode === KEY_CODES.DOWN && verticalDirection) ||
-            (e.keyCode === KEY_CODES.RIGHT && horizontalDirection)
-          ) {
-            if (rtl && horizontalDirection) {
-              onDecrement();
-            } else {
-              onIncrement();
-            }
-
-            e.preventDefault();
-          } else if (e.keyCode === KEY_CODES.HOME) {
-            if (!isFocusedItemControlled) {
-              dispatch({ type: 'HOME', payload: items[0] });
-            }
-            onFocus && onFocus(items[0]);
-            e.preventDefault();
-          } else if (e.keyCode === KEY_CODES.END) {
-            if (!isFocusedItemControlled) {
-              dispatch({ type: 'END', payload: items[items.length - 1] });
-            }
-            onFocus && onFocus(items[items.length - 1]);
-
-            e.preventDefault();
-          } else if (e.keyCode === KEY_CODES.SPACE || e.keyCode === KEY_CODES.ENTER) {
-            onSelect && onSelect(item);
-            if (!isSelectedItemControlled) {
-              dispatch({
-                type: 'KEYBOARD_SELECT',
-                payload: item
-              });
-            }
-            e.preventDefault();
-          }
-        }
-      }),
+      onFocus: composeEventHandlers(onFocusCallback, handleFocus),
+      onClick: composeEventHandlers(onClick, handleClick),
+      onKeyDown: composeEventHandlers(onKeyDown, handleKeyDown),
+      onBlur,
       ...other
-    } as any;
+    };
   };
 
   return {

@@ -21,7 +21,7 @@ export interface IUseFocusJailProps<T = Element> {
 }
 
 export interface IUseFocusJailReturnValue {
-  getContainerProps: <T>(props?: HTMLProps<T>) => HTMLProps<T>;
+  getContainerProps: <T extends Element>(props?: HTMLProps<T>) => HTMLProps<T>;
   /** @ignore */
   focusElement: <T>(element?: T) => void;
 }

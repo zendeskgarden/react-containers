@@ -23,15 +23,15 @@ export interface IUseModalProps<T = Element> {
 }
 
 export interface IUseModalReturnValue {
-  getBackdropProps: <T>(props?: HTMLProps<T>) => HTMLProps<T>;
-  getModalProps: <T>(
+  getBackdropProps: <T extends Element>(props?: HTMLProps<T>) => HTMLProps<T>;
+  getModalProps: <T extends Element>(
     props?: Omit<HTMLProps<T>, 'role'> & {
       role?: HTMLProps<T>['role'] | null;
     }
   ) => HTMLProps<T>;
-  getTitleProps: <T>(props?: HTMLProps<T>) => HTMLProps<T>;
-  getContentProps: <T>(props?: HTMLProps<T>) => HTMLProps<T>;
-  getCloseProps: <T>(
+  getTitleProps: <T extends Element>(props?: HTMLProps<T>) => HTMLProps<T>;
+  getContentProps: <T extends Element>(props?: HTMLProps<T>) => HTMLProps<T>;
+  getCloseProps: <T extends Element>(
     props: Omit<HTMLProps<T>, 'aria-label'> & {
       'aria-label': NonNullable<HTMLProps<T>['aria-label']>;
     }

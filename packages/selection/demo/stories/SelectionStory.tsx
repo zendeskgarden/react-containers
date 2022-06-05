@@ -11,12 +11,12 @@ import classNames from 'classnames';
 import {
   ISelectionContainerProps,
   IUseSelectionProps,
+  IUseSelectionReturnValue,
   SelectionContainer,
-  useSelection,
-  UseSelectionReturnValue
+  useSelection
 } from '@zendeskgarden/container-selection';
 
-interface IComponentProps extends UseSelectionReturnValue<string> {
+interface IComponentProps extends IUseSelectionReturnValue<string> {
   direction: IUseSelectionProps<any>['direction'];
   rtl: IUseSelectionProps<any>['rtl'];
   items: RefObject<HTMLLIElement>[];

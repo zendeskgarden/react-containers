@@ -7,13 +7,12 @@
 
 /* Hooks */
 export { useSelection } from './useSelection';
-export type {
-  UseSelectionReturnValue,
-  IUseSelectionProps,
-  IGetItemPropsOptions,
-  IUseSelectionState
-} from './useSelection';
 
 /* Render-props */
 export { SelectionContainer } from './SelectionContainer';
-export type { ISelectionContainerProps } from './SelectionContainer';
+
+export type {
+  ISelectionContainerProps,
+  IUseSelectionProps,
+  IUseSelectionReturnValue
+} from './types';

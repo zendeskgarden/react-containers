@@ -7,23 +7,14 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useSelection } from './useSelection';
+import { ISelectionContainerProps } from './types';
 
-import { useSelection, IUseSelectionProps, UseSelectionReturnValue } from './useSelection';
-
-export interface ISelectionContainerProps<Item> extends IUseSelectionProps<Item> {
-  /** A render prop function which receives selection state */
-  render?: (options: UseSelectionReturnValue<Item>) => React.ReactNode;
-  /** A children render prop function which receives selection state */
-  children?: (options: UseSelectionReturnValue<Item>) => React.ReactNode;
-}
-
-export const SelectionContainer: React.FunctionComponent<ISelectionContainerProps<any>> = ({
+export const SelectionContainer: React.FC<ISelectionContainerProps<any>> = ({
   children,
   render = children,
   ...options
-}) => {
-  return <>{render!(useSelection(options)) as React.ReactElement}</>;
-};
+}) => <>{render!(useSelection(options))}</>;
 
 SelectionContainer.defaultProps = {
   direction: 'horizontal',
