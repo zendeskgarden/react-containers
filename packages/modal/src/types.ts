@@ -26,7 +26,7 @@ export interface IUseModalReturnValue {
   getBackdropProps: <T extends Element>(props?: HTMLProps<T>) => HTMLProps<T>;
   getModalProps: <T extends Element>(
     props?: Omit<HTMLProps<T>, 'role'> & {
-      role?: HTMLProps<T>['role'] | null;
+      role?: 'dialog' | null;
     }
   ) => HTMLProps<T>;
   getTitleProps: <T extends Element>(props?: HTMLProps<T>) => HTMLProps<T>;

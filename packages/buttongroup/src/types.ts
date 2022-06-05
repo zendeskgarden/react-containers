@@ -12,7 +12,7 @@ export interface IUseButtonGroupReturnValue<Item>
   extends Pick<IUseSelectionReturnValue<Item>, 'focusedItem' | 'selectedItem'> {
   getGroupProps: <T extends Element>(
     props?: Omit<HTMLProps<T>, 'role'> & {
-      role?: HTMLProps<T>['role'] | null;
+      role?: 'group' | null;
     }
   ) => HTMLProps<T>;
   getButtonProps: <T extends Element>(
@@ -20,7 +20,7 @@ export interface IUseButtonGroupReturnValue<Item>
       item: Item;
       focusRef: RefObject<T>;
       refKey?: string;
-      role?: HTMLProps<T>['role'] | null;
+      role?: 'button' | null;
       selectedAriaKey?: string;
     }
   ) => HTMLProps<T>;

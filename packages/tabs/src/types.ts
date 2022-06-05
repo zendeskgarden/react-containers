@@ -19,7 +19,7 @@ export interface IUseTabsReturnValue<Item>
   extends Pick<IUseSelectionReturnValue<Item>, 'focusedItem' | 'selectedItem'> {
   getTabListProps: <T extends Element>(
     props?: Omit<HTMLProps<T>, 'role'> & {
-      role?: HTMLProps<T>['role'] | null;
+      role?: 'tablist' | null;
     }
   ) => HTMLProps<T>;
   getTabProps: <T extends Element>(
@@ -28,14 +28,14 @@ export interface IUseTabsReturnValue<Item>
       item: Item;
       focusRef: RefObject<T>;
       refKey?: string;
-      role?: HTMLProps<T>['role'] | null;
+      role?: 'tab' | null;
     }
   ) => HTMLProps<T>;
   getTabPanelProps: <T extends Element>(
     props: Omit<HTMLProps<T>, 'role'> & {
       index: number;
       item: Item;
-      role?: HTMLProps<T>['role'] | null;
+      role?: 'tabpanel' | null;
     }
   ) => HTMLProps<T>;
 }

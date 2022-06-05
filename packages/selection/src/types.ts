@@ -39,7 +39,7 @@ export interface IUseSelectionReturnValue<Item> {
   selectedItem?: IUseSelectionProps<Item>['selectedItem'];
   getContainerProps: <T extends Element>(
     props?: Omit<HTMLProps<T>, 'role'> & {
-      role?: HTMLProps<T>['role'] | null;
+      role?: 'listbox' | null;
     }
   ) => HTMLProps<T>;
   getItemProps: <T extends Element>(
@@ -47,7 +47,7 @@ export interface IUseSelectionReturnValue<Item> {
       item: Item;
       focusRef: RefObject<T>;
       refKey?: string;
-      role?: HTMLProps<T>['role'] | null;
+      role?: 'option' | null;
       selectedAriaKey?: string;
     }
   ) => HTMLProps<T>;

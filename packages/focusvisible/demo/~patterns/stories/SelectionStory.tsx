@@ -23,7 +23,7 @@ export const SelectionStory: Story = () => {
   return (
     <ul className="flex" {...getContainerProps()} ref={scope}>
       {items.map(item => {
-        const focusRef = createRef();
+        const focusRef = createRef<HTMLLIElement>();
 
         return (
           <li

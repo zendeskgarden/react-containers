@@ -27,24 +27,23 @@ export const useTabs = <Item>({
     role = 'tablist',
     ...other
   } = {}) => ({
+    ...getContainerProps(other),
     role: role === null ? undefined : role,
     'aria-orientation': vertical ? 'vertical' : 'horizontal',
     'data-garden-container-id': 'containers.tabs',
-    'data-garden-container-version': PACKAGE_VERSION,
-    ...other
+    'data-garden-container-version': PACKAGE_VERSION
   });
 
   const getTabProps: IUseTabsReturnValue<Item>['getTabProps'] = ({
     role = 'tab',
     index,
     ...other
-  }) =>
-    getItemProps({
-      id: `${TAB_ID}:${index}`,
-      'aria-controls': `${PANEL_ID}:${index}`,
-      role: role === null ? undefined : role,
-      ...other
-    });
+  }) => ({
+    ...getItemProps(other),
+    role: role === null ? undefined : role,
+    id: `${TAB_ID}:${index}`,
+    'aria-controls': `${PANEL_ID}:${index}`
+  });
 
   const getTabPanelProps: IUseTabsReturnValue<Item>['getTabPanelProps'] = ({
     role = 'tabpanel',
@@ -62,7 +61,7 @@ export const useTabs = <Item>({
   return {
     selectedItem,
     focusedItem,
-    getTabListProps: props => getContainerProps(getTabListProps(props)),
+    getTabListProps,
     getTabProps,
     getTabPanelProps
   };

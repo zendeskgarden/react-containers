@@ -8,21 +8,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useTreeview } from './useTreeview';
-import { IUseTreeviewProps, IUseTreeviewReturnValue } from './types';
 import { ContainerOrientation } from '@zendeskgarden/container-utilities';
+import { ITreeviewContainerProps } from './types';
 
-export interface ITreeviewContainerProps<Item> extends IUseTreeviewProps<Item> {
-  /** Documents the render function */
-  render?: (options: IUseTreeviewReturnValue<Item>) => React.ReactNode;
-  /** Documents the children prop */
-  children?: (options: IUseTreeviewReturnValue<Item>) => React.ReactNode;
-}
-
-export const TreeviewContainer: React.FC<ITreeviewContainerProps<any>> = props => {
-  const { children, render = children, ...options } = props;
-
-  return <>{render!(useTreeview(options)) as React.ReactElement}</>;
-};
+export const TreeviewContainer: React.FC<ITreeviewContainerProps<any>> = ({
+  children,
+  render = children,
+  ...options
+}) => <>{render!(useTreeview(options))}</>;
 
 TreeviewContainer.propTypes = {
   children: PropTypes.func,

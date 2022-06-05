@@ -20,8 +20,8 @@ interface IProps extends HTMLProps<HTMLDivElement> {
 
 interface IComponentProps extends IUseBreadcrumbReturnValue, IProps {}
 
-const Component = ({ getContainerProps, getCurrentPageProps, ...props }: IComponentProps) => (
-  <div {...getContainerProps(props)}>
+const Component = ({ getContainerProps, getCurrentPageProps, role, ...props }: IComponentProps) => (
+  <div role={role} {...getContainerProps(props)}>
     <a href="#foo">Home</a>
     <span aria-hidden="true" className="mx-2">
       &gt;

@@ -21,27 +21,26 @@ export const useButtonGroup = <Item>(
     role = 'group',
     ...other
   } = {}) => ({
+    ...getContainerProps(other),
     role: role === null ? undefined : role,
     'data-garden-container-id': 'containers.buttongroup',
-    'data-garden-container-version': PACKAGE_VERSION,
-    ...other
+    'data-garden-container-version': PACKAGE_VERSION
   });
 
   const getButtonProps: IUseButtonGroupReturnValue<Item>['getButtonProps'] = ({
     role = 'button',
     selectedAriaKey = 'aria-pressed',
     ...other
-  }) =>
-    getItemProps({
-      role: role === null ? undefined : role,
-      selectedAriaKey,
-      ...other
-    });
+  }) => ({
+    ...getItemProps(other),
+    role: role === null ? undefined : role,
+    selectedAriaKey
+  });
 
   return {
     selectedItem,
     focusedItem,
-    getGroupProps: props => getContainerProps(getGroupProps(props)),
+    getGroupProps,
     getButtonProps
   };
 };

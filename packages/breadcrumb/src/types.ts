@@ -11,7 +11,7 @@ export interface IUseBreadcrumbReturnValue {
   getContainerProps: <T extends Element>(
     props: Omit<HTMLProps<T>, 'aria-label' | 'role'> & {
       'aria-label': NonNullable<HTMLProps<T>['aria-label']>;
-      role?: HTMLProps<T>['role'] | null;
+      role?: 'navigation' | null;
     }
   ) => HTMLProps<T>;
   getCurrentPageProps: <T extends Element>(props?: HTMLProps<T>) => HTMLProps<T>;

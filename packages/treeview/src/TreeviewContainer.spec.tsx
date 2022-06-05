@@ -5,10 +5,9 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React, { createRef, forwardRef, HTMLProps } from 'react';
+import React, { createRef } from 'react';
 import { render, RenderResult, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-
 import { TreeviewContainer } from './TreeviewContainer';
 import { IUseTreeviewReturnValue } from './types';
 import { ContainerOrientation } from '@zendeskgarden/container-utilities';
@@ -43,30 +42,6 @@ const TEST_DATA: IFoodNode[] = [
     ]
   }
 ];
-
-interface INodeProps extends HTMLProps<any> {
-  name?: any;
-  children?: React.ReactNode;
-}
-
-const EndNode = forwardRef<HTMLLIElement>(({ name, ...props }: INodeProps, ref) => (
-  <li ref={ref} role="none">
-    <a data-test-id={name} href={`https://en.wikipedia.org/wiki/${name}`} {...props}>
-      {name}
-    </a>
-  </li>
-));
-
-EndNode.displayName = 'EndNode';
-
-const ParentNode = forwardRef<HTMLLIElement>(({ name, children, ...props }: INodeProps, ref) => (
-  <li data-test-id={name} ref={ref} {...props}>
-    <span>{name}</span>
-    {children}
-  </li>
-));
-
-ParentNode.displayName = 'ParentNode';
 
 const Group = (
   props: JSX.IntrinsicAttributes &
@@ -106,12 +81,12 @@ const renderTestCase = ({
       {({ getTreeProps, getNodeProps, getGroupProps }: IUseTreeviewReturnValue<string>) => {
         const renderNode = (node: IFoodNode) =>
           node.children ? (
-            <ParentNode
+            <li
               key={node.name}
+              data-test-id={node.name}
               {...getNodeProps({
                 nodeType: 'parent',
                 item: node.name,
-                name: node.name,
                 focusRef: createRef(),
                 onFocus: onFocusMock,
                 onClick: () => {
@@ -119,27 +94,32 @@ const renderTestCase = ({
                 }
               })}
             >
+              <span>{node.name}</span>
               <Group {...getGroupProps()}>{node.children.map(renderNode)}</Group>
-            </ParentNode>
+            </li>
           ) : (
-            <EndNode
-              key={node.name}
-              {...getNodeProps({
-                nodeType: 'end',
-                name: node.name,
-                item: node.name,
-                focusRef: createRef(),
-                onFocus: onFocusMock,
-                onClick: e => {
-                  onClickMock(node.name);
-                  e.stopPropagation();
-                }
-              })}
-            />
+            <li role="none" key={node.name}>
+              <a
+                data-test-id={node.name}
+                href={`https://en.wikipedia.org/wiki/${node.name}`}
+                {...getNodeProps({
+                  nodeType: 'end',
+                  item: node.name,
+                  focusRef: createRef(),
+                  onFocus: onFocusMock,
+                  onClick: e => {
+                    onClickMock(node.name);
+                    e.stopPropagation();
+                  }
+                })}
+              >
+                {node.name}
+              </a>
+            </li>
           );
 
         return (
-          <ul data-test-id="treeview-tree" {...getTreeProps()}>
+          <ul data-test-id="treeview-tree" {...getTreeProps({ 'aria-label': 'test' })}>
             {data.map(renderNode)}
           </ul>
         );
@@ -307,147 +287,5 @@ describe('controlled usage', () => {
 
     userEvent.click(getParentNode('Apples'));
     expect(onChangeMock).toHaveBeenCalledWith(['Fruits']);
-  });
-});
-
-describe('failure cases', () => {
-  let consoleLogSpy: jest.SpyInstance;
-
-  beforeAll(() => {
-    consoleLogSpy = jest.spyOn(console, 'error');
-    consoleLogSpy.mockImplementation(jest.fn());
-  });
-
-  afterAll(() => {
-    consoleLogSpy.mockRestore();
-  });
-
-  it('should throw an error when the wrong value is given to getTreeProps "role" props', () => {
-    expect(() =>
-      render(
-        <TreeviewContainer onChange={jest.fn()} openNodes={[]}>
-          {({ getTreeProps }: IUseTreeviewReturnValue<string>) => {
-            return (
-              <ul
-                data-test-id="treeview-tree"
-                {...getTreeProps({
-                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                  // @ts-expect-error
-                  role: 'fakerole'
-                })}
-              />
-            );
-          }}
-        </TreeviewContainer>
-      )
-    ).toThrow(Error('Accessibility Error: "role" prop must have value "tree" in "getTreeProps()"'));
-  });
-
-  it('should throw an error when the wrong value is given to getNodeProps "role" props', () => {
-    expect(() =>
-      render(
-        <TreeviewContainer onChange={jest.fn()} openNodes={[]}>
-          {({ getNodeProps }: IUseTreeviewReturnValue<string>) => {
-            return (
-              <ParentNode
-                {...getNodeProps({
-                  item: 'foobar',
-                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                  // @ts-expect-error
-                  role: 'fakerole',
-                  focusRef: createRef()
-                })}
-              />
-            );
-          }}
-        </TreeviewContainer>
-      )
-    ).toThrow(
-      Error('Accessibility Error: "role" prop must have value "treeitem" in "getNodeProps()"')
-    );
-  });
-
-  it('should throw an error when the wrong value is given to getNodeProps "nodeType" props', () => {
-    expect(() =>
-      render(
-        <TreeviewContainer onChange={jest.fn()} openNodes={[]}>
-          {({ getNodeProps }: IUseTreeviewReturnValue<string>) => {
-            return (
-              <ParentNode
-                {...getNodeProps({
-                  item: 'foobar',
-                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                  // @ts-expect-error
-                  nodeType: 'fakeType',
-                  focusRef: createRef()
-                })}
-              />
-            );
-          }}
-        </TreeviewContainer>
-      )
-    ).toThrow(
-      Error(
-        'Accessibility Error: "nodeType" prop value must be either "parent" or "end" in "getNodeProps()"'
-      )
-    );
-  });
-
-  it('should throw an error when the "item" prop is missing', () => {
-    expect(() =>
-      render(
-        <TreeviewContainer onChange={jest.fn()} openNodes={[]}>
-          {({ getNodeProps }: IUseTreeviewReturnValue<string>) => {
-            return (
-              <ParentNode
-                {...getNodeProps({
-                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                  // @ts-expect-error
-                  item: undefined,
-                  focusRef: createRef()
-                })}
-              />
-            );
-          }}
-        </TreeviewContainer>
-      )
-    ).toThrow(Error('Accessibility Error: You must provide an "item" option to "getNodeProps()"'));
-  });
-
-  it('should throw an error when the "focusRef" prop is missing', () => {
-    expect(() =>
-      render(
-        <TreeviewContainer onChange={jest.fn()} openNodes={[]}>
-          {({ getNodeProps }: IUseTreeviewReturnValue<string>) => {
-            return (
-              <ParentNode
-                {...getNodeProps({
-                  item: 'foobar',
-                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                  // @ts-expect-error
-                  focusRef: undefined
-                })}
-              />
-            );
-          }}
-        </TreeviewContainer>
-      )
-    ).toThrow(
-      Error('Accessibility Error: You must provide an "focusRef" option to "getNodeProps()"')
-    );
-  });
-
-  it('should throw an error when the wrong value is given to getGroupProps "role" props', () => {
-    expect(() =>
-      render(
-        <TreeviewContainer onChange={jest.fn()} openNodes={[]}>
-          {({ getGroupProps }: IUseTreeviewReturnValue<string>) => {
-            return <Group {...getGroupProps({ role: 'wrongRole' })}>foobar</Group>;
-          }}
-        </TreeviewContainer>
-      )
-    ).toThrow(
-      Error('Accessibility Error: "role" prop must have value "group" in "getGroupProps()"')
-    );
   });
 });
