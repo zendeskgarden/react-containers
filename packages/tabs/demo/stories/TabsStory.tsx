@@ -95,24 +95,20 @@ const Hook = ({ tabRefs, ...props }: IProps) => {
   return <Component tabs={tabRefs} vertical={props.vertical} rtl={props.rtl} {...hookProps} />;
 };
 
-interface IArgs extends ITabsContainerProps {
+interface IArgs extends ITabsContainerProps<string> {
   as: 'hook' | 'container';
   tabs: number;
 }
 
 export const TabsStory: Story<IArgs> = ({ as, tabs, ...props }: IArgs) => {
-  const Tabs = () => {
-    const tabRefs = Array.from({ length: tabs }, () => createRef<HTMLLIElement>());
+  const tabRefs = Array.from({ length: tabs }, () => createRef<HTMLLIElement>());
 
-    switch (as) {
-      case 'container':
-        return <Container tabRefs={tabRefs} {...props} />;
+  switch (as) {
+    case 'container':
+      return <Container tabRefs={tabRefs} {...props} />;
 
-      case 'hook':
-      default:
-        return <Hook tabRefs={tabRefs} {...props} />;
-    }
-  };
-
-  return <Tabs />;
+    case 'hook':
+    default:
+      return <Hook tabRefs={tabRefs} {...props} />;
+  }
 };

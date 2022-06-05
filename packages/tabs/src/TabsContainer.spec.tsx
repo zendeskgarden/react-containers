@@ -14,11 +14,11 @@ import { TabsContainer, ITabsContainerProps } from './';
 describe('TabsContainer', () => {
   const idPrefix = 'test_id';
   const tabs = ['tab-1', 'tab-2', 'tab-3'];
-  const tabRefs = tabs.map(() => createRef());
-  const getPanelId = (index: number) => `${idPrefix}--panel:${index}`;
-  const getTabId = (index: number) => `${idPrefix}--tab:${index}`;
+  const tabRefs = tabs.map(() => createRef<HTMLDivElement>());
+  const getPanelId = (index: number) => `${idPrefix}__panel:${index}`;
+  const getTabId = (index: number) => `${idPrefix}__tab:${index}`;
 
-  const BasicExample: React.FunctionComponent<ITabsContainerProps> = ({
+  const BasicExample: React.FunctionComponent<ITabsContainerProps<string>> = ({
     vertical,
     onSelect,
     defaultSelectedIndex = 0
@@ -31,17 +31,17 @@ describe('TabsContainer', () => {
     >
       {({ getTabListProps, getTabProps, getTabPanelProps, selectedItem, focusedItem }) => (
         <div>
-          <div {...getTabListProps({ 'data-test-id': 'tab-list' })}>
+          <div data-test-id="tab-list" {...getTabListProps()}>
             {tabs.map((tab, index) => (
               <div
+                data-test-id="tab"
+                data-selected={tab === selectedItem}
+                data-focused={tab === focusedItem}
                 {...getTabProps({
                   index,
                   key: tab,
                   item: tab,
-                  focusRef: tabRefs[index],
-                  'data-test-id': 'tab',
-                  'data-selected': tab === selectedItem,
-                  'data-focused': tab === focusedItem
+                  focusRef: tabRefs[index]
                 })}
               >
                 {tab}
@@ -49,7 +49,7 @@ describe('TabsContainer', () => {
             ))}
           </div>
           {tabs.map((tab, index) => (
-            <div {...getTabPanelProps({ index, item: tab, key: tab, 'data-test-id': 'tab-panel' })}>
+            <div data-test-id="tab-panel" {...getTabPanelProps({ index, item: tab, key: tab })}>
               {tab} content
             </div>
           ))}
@@ -138,52 +138,6 @@ describe('TabsContainer', () => {
 
         expect(tabPanel).not.toHaveAttribute('hidden');
       });
-    });
-  });
-
-  describe('getTabProps', () => {
-    it('throws if no index prop is applied', () => {
-      const originalError = console.error;
-
-      console.error = jest.fn();
-
-      expect(() => {
-        render(<TabsContainer>{({ getTabProps }) => <div {...getTabProps()} />}</TabsContainer>);
-      }).toThrow('Accessibility Error: You must provide an "index" option to "getTabProps()"');
-
-      console.error = originalError;
-    });
-  });
-
-  describe('getTabPanelProps', () => {
-    it('throws if no index prop is applied', () => {
-      const originalError = console.error;
-
-      console.error = jest.fn();
-
-      expect(() => {
-        render(
-          <TabsContainer>{({ getTabPanelProps }) => <div {...getTabPanelProps()} />}</TabsContainer>
-        );
-      }).toThrow('Accessibility Error: You must provide an "index" option to "getTabPanelProps()"');
-
-      console.error = originalError;
-    });
-
-    it('throws if no item prop is applied', () => {
-      const originalError = console.error;
-
-      console.error = jest.fn();
-
-      expect(() => {
-        render(
-          <TabsContainer>
-            {({ getTabPanelProps }) => <div {...getTabPanelProps({ index: 0 } as any)} />}
-          </TabsContainer>
-        );
-      }).toThrow('Accessibility Error: You must provide an "item" option to "getTabPanelProps()"');
-
-      console.error = originalError;
     });
   });
 });

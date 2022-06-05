@@ -14,15 +14,23 @@ export interface IUseSelectionProps<Item> {
   defaultFocusedIndex?: number;
   /** Sets the initial selected item */
   defaultSelectedIndex?: number;
-  /** Determines if selection uses right-to-left writing direction */
+  /** Determines right-to-left layout */
   rtl?: boolean;
-  /** Sets the selected item in a controlled selection */
+  /** Sets controlled item selection */
   selectedItem?: Item;
-  /** Sets the focused item in a controlled selection */
+  /** Sets controlled item focus */
   focusedItem?: Item;
-  /** A callback function that receives the selected item */
+  /**
+   * Handles controlled item selection
+   *
+   * @param selectedItem The selected item
+   */
   onSelect?: (selectedItem: Item) => void;
-  /** A callback function that receives the focused item */
+  /**
+   * Handles controlled item focus
+   *
+   * @param focusedItem The focused item
+   */
   onFocus?: (focusedItem?: Item) => void;
 }
 
@@ -41,15 +49,16 @@ export interface IUseSelectionReturnValue<Item> {
       refKey?: string;
       role?: HTMLProps<T>['role'] | null;
       selectedAriaKey?: string;
-    },
-    propGetterName?: string
+    }
   ) => HTMLProps<T>;
 }
 
 export interface ISelectionContainerProps<Item> extends IUseSelectionProps<Item> {
   /**
-   * Provides selection render prop functions
+   * Provides selection render prop state and functions
    *
+   * @param {*} [options.focusedItem] Controlled focused item
+   * @param {*} [options.selectedItem] Controlled selected item
    * @param {function} [options.getContainerProps] Container props getter
    * @param {function} [options.getItemProps] Item props getter
    */

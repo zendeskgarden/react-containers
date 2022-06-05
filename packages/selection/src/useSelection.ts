@@ -14,12 +14,7 @@ import {
 import { IUseSelectionProps, IUseSelectionReturnValue } from './types';
 import { stateReducer } from './utils';
 
-/**
- * Custom hook to manage selection using the Roving Tab Index strategy
- *
- * https://www.w3.org/TR/wai-aria-practices/#kbd_roving_tabindex
- */
-export function useSelection<Item>({
+export const useSelection = <Item>({
   direction = 'horizontal',
   defaultFocusedIndex = 0,
   defaultSelectedIndex,
@@ -28,7 +23,7 @@ export function useSelection<Item>({
   focusedItem,
   onSelect,
   onFocus
-}: IUseSelectionProps<Item> = {}): IUseSelectionReturnValue<Item> {
+}: IUseSelectionProps<Item> = {}): IUseSelectionReturnValue<Item> => {
   const isSelectedItemControlled = selectedItem !== undefined;
   const isFocusedItemControlled = focusedItem !== undefined;
   const refs: React.MutableRefObject<any | null>[] = [];
@@ -73,32 +68,17 @@ export function useSelection<Item>({
     ...other
   });
 
-  const getItemProps: IUseSelectionReturnValue<Item>['getItemProps'] = (
-    {
-      selectedAriaKey = 'aria-selected',
-      role = 'option',
-      onFocus: onFocusCallback,
-      onKeyDown,
-      onClick,
-      item,
-      focusRef,
-      refKey = 'ref',
-      ...other
-    },
-    propGetterName = 'getItemProps'
-  ) => {
-    if (item === undefined) {
-      throw new Error(
-        `Accessibility Error: You must provide an "item" option to "${propGetterName}()"`
-      );
-    }
-
-    if (focusRef === undefined) {
-      throw new Error(
-        `Accessibility Error: You must provide a "focusRef" option to "${propGetterName}()"`
-      );
-    }
-
+  const getItemProps: IUseSelectionReturnValue<Item>['getItemProps'] = ({
+    selectedAriaKey = 'aria-selected',
+    role = 'option',
+    onFocus: onFocusCallback,
+    onKeyDown,
+    onClick,
+    item,
+    focusRef,
+    refKey = 'ref',
+    ...other
+  }) => {
     refs.push(focusRef);
     items.push(item);
 
@@ -250,4 +230,4 @@ export function useSelection<Item>({
     getItemProps,
     getContainerProps
   };
-}
+};
