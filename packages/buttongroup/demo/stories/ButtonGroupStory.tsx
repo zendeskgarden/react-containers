@@ -12,11 +12,11 @@ import {
   ButtonGroupContainer,
   IButtonGroupContainerProps,
   IUseButtonGroupProps,
-  useButtonGroup,
-  UseButtonGroupReturnValue
+  IUseButtonGroupReturnValue,
+  useButtonGroup
 } from '@zendeskgarden/container-buttongroup';
 
-interface IComponentProps extends UseButtonGroupReturnValue<string> {
+interface IComponentProps extends IUseButtonGroupReturnValue<string> {
   buttons: RefObject<HTMLButtonElement>[];
 }
 
@@ -28,8 +28,8 @@ const Component = ({ getGroupProps, getButtonProps, selectedItem, buttons }: ICo
         className={classNames('border', 'px-2', 'py-1', 'rounded-none', {
           'bg-blue-300': index.toString() === selectedItem
         })}
-        type="button"
         {...getButtonProps({ item: index.toString(), focusRef: button })}
+        type="button"
       >{`Button ${index + 1}`}</button>
     ))}
   </div>

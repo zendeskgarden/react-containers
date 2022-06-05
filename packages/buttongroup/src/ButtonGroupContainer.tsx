@@ -7,23 +7,14 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-
-import { useButtonGroup, IUseButtonGroupProps, UseButtonGroupReturnValue } from './useButtonGroup';
-
-export interface IButtonGroupContainerProps<Item> extends IUseButtonGroupProps<Item> {
-  /** A render prop function */
-  render?: (options: UseButtonGroupReturnValue<Item>) => React.ReactNode;
-  /** A children render prop function */
-  children?: (options: UseButtonGroupReturnValue<Item>) => React.ReactNode;
-}
+import { useButtonGroup } from './useButtonGroup';
+import { IButtonGroupContainerProps } from './types';
 
 export const ButtonGroupContainer: React.FunctionComponent<IButtonGroupContainerProps<any>> = ({
   children,
   render = children,
   ...options
-}) => {
-  return <>{render!(useButtonGroup(options)) as React.ReactElement}</>;
-};
+}) => <>{render!(useButtonGroup(options))}</>;
 
 ButtonGroupContainer.propTypes = {
   children: PropTypes.func,

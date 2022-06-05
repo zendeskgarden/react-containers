@@ -7,12 +7,9 @@
 
 /* Hooks */
 export { useButtonGroup } from './useButtonGroup';
-export type {
-  UseButtonGroupReturnValue,
-  IUseButtonGroupPropGetters,
-  IUseButtonGroupProps
-} from './useButtonGroup';
 
 /* Render-props */
 export { ButtonGroupContainer } from './ButtonGroupContainer';
-export type { IButtonGroupContainerProps } from './ButtonGroupContainer';
+
+export type { IUseSelectionProps as IUseButtonGroupProps } from '@zendeskgarden/container-selection';
+export type { IButtonGroupContainerProps, IUseButtonGroupReturnValue } from './types';
