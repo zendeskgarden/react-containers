@@ -6,7 +6,7 @@
  */
 
 import { createRef, useRef, useEffect, useState, useCallback } from 'react';
-import { composeEventHandlers, KEY_CODES } from '@zendeskgarden/container-utilities';
+import { composeEventHandlers, KEYS } from '@zendeskgarden/container-utilities';
 import { tabbable } from 'tabbable';
 import activeElement from 'dom-helpers/activeElement';
 import { IUseFocusJailProps, IUseFocusJailReturnValue } from './types';
@@ -77,7 +77,7 @@ export const useFocusJail = <T extends Element = Element>(
   const getContainerProps = ({ onKeyDown, ...other } = {} as any) => {
     return {
       onKeyDown: composeEventHandlers(onKeyDown, (event: KeyboardEvent) => {
-        if (event.keyCode !== KEY_CODES.TAB) {
+        if (event.key !== KEYS.TAB) {
           return;
         }
         validateContainerRef();

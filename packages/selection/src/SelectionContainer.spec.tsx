@@ -6,10 +6,9 @@
  */
 
 import React from 'react';
-import { KEY_CODES } from '@zendeskgarden/container-utilities';
 import userEvent from '@testing-library/user-event';
 import { render, fireEvent } from '@testing-library/react';
-
+import { KEYS } from '@zendeskgarden/container-utilities';
 import { SelectionContainer, ISelectionContainerProps } from './';
 
 describe('SelectionContainer', () => {
@@ -153,7 +152,7 @@ describe('SelectionContainer', () => {
           const { getByText } = render(<BasicExample />);
           const item = getByText('Item-1');
 
-          fireEvent.keyDown(item, { keyCode: KEY_CODES.ENTER });
+          fireEvent.keyDown(item, { key: KEYS.ENTER });
           expect(item).toHaveAttribute('aria-selected', 'true');
         });
       });
@@ -163,7 +162,7 @@ describe('SelectionContainer', () => {
           const { getByText } = render(<BasicExample />);
           const item = getByText('Item-1');
 
-          fireEvent.keyDown(item, { keyCode: KEY_CODES.ENTER, ctrlKey: true });
+          fireEvent.keyDown(item, { key: KEYS.ENTER, ctrlKey: true });
           expect(item).toHaveAttribute('aria-selected', 'false');
         });
       });
@@ -173,7 +172,7 @@ describe('SelectionContainer', () => {
           const { getByText } = render(<BasicExample />);
           const item = getByText('Item-1');
 
-          fireEvent.keyDown(item, { keyCode: KEY_CODES.SPACE });
+          fireEvent.keyDown(item, { key: KEYS.SPACE });
           expect(item).toHaveAttribute('aria-selected', 'true');
         });
       });
@@ -183,7 +182,7 @@ describe('SelectionContainer', () => {
           const { getByText } = render(<BasicExample />);
           const item = getByText('Item-1');
 
-          fireEvent.keyDown(item, { keyCode: KEY_CODES.HOME });
+          fireEvent.keyDown(item, { key: KEYS.HOME });
           expect(document.activeElement).toBe(item);
         });
       });
@@ -194,7 +193,7 @@ describe('SelectionContainer', () => {
           const item = getByText('Item-2');
           const lastItem = getByText('Item-3');
 
-          fireEvent.keyDown(item, { keyCode: KEY_CODES.END });
+          fireEvent.keyDown(item, { key: KEYS.END });
           expect(document.activeElement).toBe(lastItem);
         });
       });
@@ -208,7 +207,7 @@ describe('SelectionContainer', () => {
               const secondItem = getByText('Item-2');
 
               userEvent.click(secondItem);
-              fireEvent.keyDown(secondItem, { keyCode: KEY_CODES.LEFT });
+              fireEvent.keyDown(secondItem, { key: KEYS.LEFT });
 
               expect(document.activeElement).toBe(item);
               expect(item).toHaveAttribute('aria-selected', 'false');
@@ -220,7 +219,7 @@ describe('SelectionContainer', () => {
               const lastItem = getByText('Item-3');
 
               userEvent.tab();
-              fireEvent.keyDown(item, { keyCode: KEY_CODES.LEFT });
+              fireEvent.keyDown(item, { key: KEYS.LEFT });
 
               expect(document.activeElement).toBe(lastItem);
               expect(lastItem).toHaveAttribute('aria-selected', 'false');
@@ -234,7 +233,7 @@ describe('SelectionContainer', () => {
               const secondItem = getByText('Item-2');
 
               userEvent.tab();
-              fireEvent.keyDown(item, { keyCode: KEY_CODES.LEFT });
+              fireEvent.keyDown(item, { key: KEYS.LEFT });
 
               expect(document.activeElement).toBe(secondItem);
               expect(secondItem).toHaveAttribute('aria-selected', 'false');
@@ -246,7 +245,7 @@ describe('SelectionContainer', () => {
               const lastItem = getByText('Item-3');
 
               userEvent.click(lastItem);
-              fireEvent.keyDown(lastItem, { keyCode: KEY_CODES.LEFT });
+              fireEvent.keyDown(lastItem, { key: KEYS.LEFT });
 
               expect(document.activeElement).toBe(item);
               expect(item).toHaveAttribute('aria-selected', 'false');
@@ -262,7 +261,7 @@ describe('SelectionContainer', () => {
               const secondItem = getByText('Item-2');
 
               userEvent.click(item);
-              fireEvent.keyDown(item, { keyCode: KEY_CODES.RIGHT });
+              fireEvent.keyDown(item, { key: KEYS.RIGHT });
               expect(secondItem).toBe(document.activeElement);
             });
 
@@ -272,7 +271,7 @@ describe('SelectionContainer', () => {
               const lastItem = getByText('Item-3');
 
               userEvent.click(lastItem);
-              fireEvent.keyDown(lastItem, { keyCode: KEY_CODES.RIGHT });
+              fireEvent.keyDown(lastItem, { key: KEYS.RIGHT });
               expect(item).toBe(document.activeElement);
             });
           });
@@ -284,7 +283,7 @@ describe('SelectionContainer', () => {
               const secondItem = getByText('Item-2');
 
               userEvent.click(secondItem);
-              fireEvent.keyDown(secondItem, { keyCode: KEY_CODES.RIGHT });
+              fireEvent.keyDown(secondItem, { key: KEYS.RIGHT });
 
               expect(item).toBe(document.activeElement);
             });
@@ -295,7 +294,7 @@ describe('SelectionContainer', () => {
               const lastItem = getByText('Item-3');
 
               userEvent.click(item);
-              fireEvent.keyDown(item, { keyCode: KEY_CODES.RIGHT });
+              fireEvent.keyDown(item, { key: KEYS.RIGHT });
 
               expect(lastItem).toBe(document.activeElement);
             });
@@ -310,7 +309,7 @@ describe('SelectionContainer', () => {
             userEvent.click(item);
             expect(item).toBe(document.activeElement);
 
-            fireEvent.keyDown(item, { keyCode: KEY_CODES.UP });
+            fireEvent.keyDown(item, { key: KEYS.UP });
             expect(item).toBe(document.activeElement);
           });
         });
@@ -323,7 +322,7 @@ describe('SelectionContainer', () => {
             userEvent.click(item);
             expect(item).toBe(document.activeElement);
 
-            fireEvent.keyDown(item, { keyCode: KEY_CODES.DOWN });
+            fireEvent.keyDown(item, { key: KEYS.DOWN });
             expect(item).toBe(document.activeElement);
           });
         });
@@ -337,7 +336,7 @@ describe('SelectionContainer', () => {
             const secondItem = getByText('Item-2');
 
             userEvent.click(secondItem);
-            fireEvent.keyDown(secondItem, { keyCode: KEY_CODES.UP });
+            fireEvent.keyDown(secondItem, { key: KEYS.UP });
 
             expect(item).toBe(document.activeElement);
           });
@@ -348,7 +347,7 @@ describe('SelectionContainer', () => {
             const secondItem = getByText('Item-2');
 
             userEvent.click(secondItem);
-            fireEvent.keyDown(secondItem, { keyCode: KEY_CODES.UP });
+            fireEvent.keyDown(secondItem, { key: KEYS.UP });
 
             expect(item).toBe(document.activeElement);
           });
@@ -359,7 +358,7 @@ describe('SelectionContainer', () => {
             const lastItem = getByText('Item-3');
 
             userEvent.click(item);
-            fireEvent.keyDown(item, { keyCode: KEY_CODES.UP });
+            fireEvent.keyDown(item, { key: KEYS.UP });
 
             expect(lastItem).toBe(document.activeElement);
           });
@@ -372,7 +371,7 @@ describe('SelectionContainer', () => {
             const secondItem = getByText('Item-2');
 
             userEvent.click(item);
-            fireEvent.keyDown(item, { keyCode: KEY_CODES.DOWN });
+            fireEvent.keyDown(item, { key: KEYS.DOWN });
 
             expect(secondItem).toBe(document.activeElement);
           });
@@ -383,7 +382,7 @@ describe('SelectionContainer', () => {
             const secondItem = getByText('Item-2');
 
             userEvent.click(item);
-            fireEvent.keyDown(item, { keyCode: KEY_CODES.DOWN });
+            fireEvent.keyDown(item, { key: KEYS.DOWN });
 
             expect(secondItem).toBe(document.activeElement);
           });
@@ -394,7 +393,7 @@ describe('SelectionContainer', () => {
             const lastItem = getByText('Item-3');
 
             userEvent.click(lastItem);
-            fireEvent.keyDown(lastItem, { keyCode: KEY_CODES.DOWN });
+            fireEvent.keyDown(lastItem, { key: KEYS.DOWN });
 
             expect(item).toBe(document.activeElement);
           });
@@ -408,7 +407,7 @@ describe('SelectionContainer', () => {
             userEvent.click(item);
             expect(item).toBe(document.activeElement);
 
-            fireEvent.keyDown(item, { keyCode: KEY_CODES.LEFT });
+            fireEvent.keyDown(item, { key: KEYS.LEFT });
             expect(item).toBe(document.activeElement);
           });
         });
@@ -421,7 +420,7 @@ describe('SelectionContainer', () => {
             userEvent.click(item);
             expect(item).toBe(document.activeElement);
 
-            fireEvent.keyDown(item, { keyCode: KEY_CODES.RIGHT });
+            fireEvent.keyDown(item, { key: KEYS.RIGHT });
             expect(item).toBe(document.activeElement);
           });
         });
@@ -436,7 +435,7 @@ describe('SelectionContainer', () => {
               const secondItem = getByText('Item-2');
 
               userEvent.click(secondItem);
-              fireEvent.keyDown(secondItem, { keyCode: KEY_CODES.LEFT });
+              fireEvent.keyDown(secondItem, { key: KEYS.LEFT });
 
               expect(document.activeElement).toBe(item);
               expect(item).toHaveAttribute('aria-selected', 'false');
@@ -448,7 +447,7 @@ describe('SelectionContainer', () => {
               const lastItem = getByText('Item-3');
 
               userEvent.tab();
-              fireEvent.keyDown(item, { keyCode: KEY_CODES.LEFT });
+              fireEvent.keyDown(item, { key: KEYS.LEFT });
 
               expect(document.activeElement).toBe(lastItem);
               expect(lastItem).toHaveAttribute('aria-selected', 'false');
@@ -462,7 +461,7 @@ describe('SelectionContainer', () => {
               const secondItem = getByText('Item-2');
 
               userEvent.tab();
-              fireEvent.keyDown(item, { keyCode: KEY_CODES.LEFT });
+              fireEvent.keyDown(item, { key: KEYS.LEFT });
 
               expect(document.activeElement).toBe(secondItem);
               expect(secondItem).toHaveAttribute('aria-selected', 'false');
@@ -474,7 +473,7 @@ describe('SelectionContainer', () => {
               const lastItem = getByText('Item-3');
 
               userEvent.click(lastItem);
-              fireEvent.keyDown(lastItem, { keyCode: KEY_CODES.LEFT });
+              fireEvent.keyDown(lastItem, { key: KEYS.LEFT });
 
               expect(document.activeElement).toBe(item);
               expect(item).toHaveAttribute('aria-selected', 'false');
@@ -490,7 +489,7 @@ describe('SelectionContainer', () => {
               const secondItem = getByText('Item-2');
 
               userEvent.click(item);
-              fireEvent.keyDown(item, { keyCode: KEY_CODES.RIGHT });
+              fireEvent.keyDown(item, { key: KEYS.RIGHT });
               expect(secondItem).toBe(document.activeElement);
             });
 
@@ -500,7 +499,7 @@ describe('SelectionContainer', () => {
               const lastItem = getByText('Item-3');
 
               userEvent.click(lastItem);
-              fireEvent.keyDown(lastItem, { keyCode: KEY_CODES.RIGHT });
+              fireEvent.keyDown(lastItem, { key: KEYS.RIGHT });
               expect(item).toBe(document.activeElement);
             });
           });
@@ -512,7 +511,7 @@ describe('SelectionContainer', () => {
               const secondItem = getByText('Item-2');
 
               userEvent.click(secondItem);
-              fireEvent.keyDown(secondItem, { keyCode: KEY_CODES.RIGHT });
+              fireEvent.keyDown(secondItem, { key: KEYS.RIGHT });
 
               expect(item).toBe(document.activeElement);
             });
@@ -523,7 +522,7 @@ describe('SelectionContainer', () => {
               const lastItem = getByText('Item-3');
 
               userEvent.click(item);
-              fireEvent.keyDown(item, { keyCode: KEY_CODES.RIGHT });
+              fireEvent.keyDown(item, { key: KEYS.RIGHT });
 
               expect(lastItem).toBe(document.activeElement);
             });
@@ -537,7 +536,7 @@ describe('SelectionContainer', () => {
             const secondItem = getByText('Item-2');
 
             userEvent.click(secondItem);
-            fireEvent.keyDown(secondItem, { keyCode: KEY_CODES.UP });
+            fireEvent.keyDown(secondItem, { key: KEYS.UP });
 
             expect(item).toBe(document.activeElement);
           });
@@ -548,7 +547,7 @@ describe('SelectionContainer', () => {
             const secondItem = getByText('Item-2');
 
             userEvent.click(secondItem);
-            fireEvent.keyDown(secondItem, { keyCode: KEY_CODES.UP });
+            fireEvent.keyDown(secondItem, { key: KEYS.UP });
 
             expect(item).toBe(document.activeElement);
           });
@@ -559,7 +558,7 @@ describe('SelectionContainer', () => {
             const lastItem = getByText('Item-3');
 
             userEvent.click(item);
-            fireEvent.keyDown(item, { keyCode: KEY_CODES.UP });
+            fireEvent.keyDown(item, { key: KEYS.UP });
 
             expect(lastItem).toBe(document.activeElement);
           });
@@ -572,7 +571,7 @@ describe('SelectionContainer', () => {
             const secondItem = getByText('Item-2');
 
             userEvent.click(item);
-            fireEvent.keyDown(item, { keyCode: KEY_CODES.DOWN });
+            fireEvent.keyDown(item, { key: KEYS.DOWN });
 
             expect(secondItem).toBe(document.activeElement);
           });
@@ -583,7 +582,7 @@ describe('SelectionContainer', () => {
             const secondItem = getByText('Item-2');
 
             userEvent.click(item);
-            fireEvent.keyDown(item, { keyCode: KEY_CODES.DOWN });
+            fireEvent.keyDown(item, { key: KEYS.DOWN });
 
             expect(secondItem).toBe(document.activeElement);
           });
@@ -594,7 +593,7 @@ describe('SelectionContainer', () => {
             const lastItem = getByText('Item-3');
 
             userEvent.click(lastItem);
-            fireEvent.keyDown(lastItem, { keyCode: KEY_CODES.DOWN });
+            fireEvent.keyDown(lastItem, { key: KEYS.DOWN });
 
             expect(item).toBe(document.activeElement);
           });

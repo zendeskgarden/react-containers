@@ -8,7 +8,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useTreeview } from './useTreeview';
-import { ContainerOrientation } from '@zendeskgarden/container-utilities';
 import { ITreeviewContainerProps } from './types';
 
 export const TreeviewContainer: React.FC<ITreeviewContainerProps<any>> = ({
@@ -17,12 +16,16 @@ export const TreeviewContainer: React.FC<ITreeviewContainerProps<any>> = ({
   ...options
 }) => <>{render!(useTreeview(options))}</>;
 
+TreeviewContainer.defaultProps = {
+  orientation: 'vertical'
+};
+
 TreeviewContainer.propTypes = {
   children: PropTypes.func,
   render: PropTypes.func,
   openNodes: PropTypes.array,
-  orientation: PropTypes.oneOf([ContainerOrientation.VERTICAL, ContainerOrientation.HORIZONTAL]),
   rtl: PropTypes.bool,
+  orientation: PropTypes.oneOf(['horizontal', 'vertical']),
   onChange: PropTypes.func,
   defaultSelectedIndex: PropTypes.number,
   selectedItem: PropTypes.any,

@@ -6,12 +6,7 @@
  */
 
 import { FocusEventHandler, KeyboardEvent, KeyboardEventHandler, useState } from 'react';
-import {
-  composeEventHandlers,
-  ContainerOrientation,
-  getControlledValue,
-  KEYS
-} from '@zendeskgarden/container-utilities';
+import { composeEventHandlers, getControlledValue, KEYS } from '@zendeskgarden/container-utilities';
 import { useSelection } from '@zendeskgarden/container-selection';
 import {
   handleArrowDown,
@@ -37,16 +32,16 @@ const hasModifierKeyPressed = (e: KeyboardEvent): boolean =>
 const SUPPORTED_KEYS = [KEYS.ENTER, KEYS.HOME, KEYS.END, KEYS.UP, KEYS.DOWN, KEYS.RIGHT, KEYS.LEFT];
 
 export const useTreeview = <Item>({
+  orientation = 'vertical',
   openNodes,
-  orientation = ContainerOrientation.VERTICAL,
   rtl,
   onChange = () => undefined,
   ...options
 }: IUseTreeviewProps<Item> = {}): IUseTreeviewReturnValue<Item> => {
   const [ownFocusedItem, setOwnFocusedItem] = useState<Item>();
   const { selectedItem, focusedItem, getContainerProps, getItemProps } = useSelection<Item>({
-    direction: orientation,
     focusedItem: ownFocusedItem,
+    direction: orientation,
     ...options
   });
   const [openNodesState, setOpenNodesState] = useState<Item[]>([]);
@@ -70,6 +65,7 @@ export const useTreeview = <Item>({
       : [...controlledOpenedState, item];
 
     onChange(newValue);
+
     if (!isControlled) {
       setOpenNodesState(newValue);
     }
@@ -168,7 +164,7 @@ export const useTreeview = <Item>({
 
       const shortcutMappingElement = shortcutMapping[event.key];
       const handler =
-        orientation === ContainerOrientation.VERTICAL
+        orientation === 'vertical'
           ? shortcutMappingElement.vertical
           : shortcutMappingElement.horizontal;
 

@@ -8,7 +8,6 @@
 import React, { createRef } from 'react';
 import { Story } from '@storybook/react';
 import classNames from 'classnames';
-import { ContainerOrientation } from '@zendeskgarden/container-utilities';
 import {
   ITreeviewContainerProps,
   IUseTreeviewProps,
@@ -43,7 +42,7 @@ const Node = ({
   const className = treeNode.children ? 'cursor-pointer' : 'cursor-default';
   const nameClassName = classNames('px-2', 'py-1', { 'bg-blue-300': nodeProps['aria-selected'] });
   const parentClassName = classNames({
-    flex: orientation === ContainerOrientation.HORIZONTAL,
+    flex: orientation === 'horizontal',
     'pl-5': !rtl,
     'pr-5': rtl
   });
@@ -91,7 +90,7 @@ const Component = ({
 }: IComponentProps) => (
   <ul
     className={classNames('overflow-auto', 'p-1', {
-      flex: orientation === ContainerOrientation.HORIZONTAL
+      flex: orientation === 'horizontal'
     })}
     style={{ direction: rtl ? 'rtl' : 'ltr' }}
     {...getTreeProps({ 'aria-label': ariaLabel })}

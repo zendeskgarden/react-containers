@@ -8,7 +8,7 @@
 import React, { createRef } from 'react';
 import userEvent from '@testing-library/user-event';
 import { render, fireEvent } from '@testing-library/react';
-import { KEY_CODES } from '@zendeskgarden/container-utilities';
+import { KEYS } from '@zendeskgarden/container-utilities';
 import { ModalContainer, IUseModalReturnValue } from './';
 
 describe('FocusJailContainer', () => {
@@ -92,14 +92,14 @@ describe('FocusJailContainer', () => {
       it('closes modal when ESC is pressed', () => {
         const { getByRole } = render(<BasicExample onClose={onCloseSpy} />);
 
-        fireEvent.keyDown(getByRole('dialog'), { keyCode: KEY_CODES.ESCAPE });
+        fireEvent.keyDown(getByRole('dialog'), { key: KEYS.ESCAPE });
         expect(onCloseSpy).toHaveBeenCalled();
       });
 
       it('does not close modal when other keys are pressed', () => {
         const { getByRole } = render(<BasicExample onClose={onCloseSpy} />);
 
-        fireEvent.keyDown(getByRole('dialog'), { keyCode: KEY_CODES.ENTER });
+        fireEvent.keyDown(getByRole('dialog'), { key: KEYS.ENTER });
         expect(onCloseSpy).not.toHaveBeenCalled();
       });
     });

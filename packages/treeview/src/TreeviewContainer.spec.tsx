@@ -9,8 +9,7 @@ import React, { createRef } from 'react';
 import { render, RenderResult, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { TreeviewContainer } from './TreeviewContainer';
-import { IUseTreeviewReturnValue } from './types';
-import { ContainerOrientation } from '@zendeskgarden/container-utilities';
+import { IUseTreeviewProps, IUseTreeviewReturnValue } from './types';
 
 interface IFoodNode {
   name: string;
@@ -64,7 +63,7 @@ const renderTestCase = ({
 }: {
   data?: IFoodNode[];
   openNodes?: string[];
-  orientation?: ContainerOrientation;
+  orientation?: IUseTreeviewProps<any>['orientation'];
   rtl?: boolean;
 } = {}): IContainerTestResult => {
   const onChangeMock = jest.fn();

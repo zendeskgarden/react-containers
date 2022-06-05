@@ -6,11 +6,7 @@
  */
 
 import { FocusEventHandler, KeyboardEventHandler, useEffect, useReducer } from 'react';
-import {
-  composeEventHandlers,
-  getControlledValue,
-  KEY_CODES
-} from '@zendeskgarden/container-utilities';
+import { composeEventHandlers, getControlledValue, KEYS } from '@zendeskgarden/container-utilities';
 import { IUseSelectionProps, IUseSelectionReturnValue } from './types';
 import { stateReducer } from './utils';
 
@@ -151,8 +147,8 @@ export const useSelection = <Item>({
 
       if (!hasModifierKeyPressed) {
         if (
-          (event.keyCode === KEY_CODES.UP && verticalDirection) ||
-          (event.keyCode === KEY_CODES.LEFT && horizontalDirection)
+          (event.key === KEYS.UP && verticalDirection) ||
+          (event.key === KEYS.LEFT && horizontalDirection)
         ) {
           if (rtl && horizontalDirection) {
             onIncrement();
@@ -162,8 +158,8 @@ export const useSelection = <Item>({
 
           event.preventDefault();
         } else if (
-          (event.keyCode === KEY_CODES.DOWN && verticalDirection) ||
-          (event.keyCode === KEY_CODES.RIGHT && horizontalDirection)
+          (event.key === KEYS.DOWN && verticalDirection) ||
+          (event.key === KEYS.RIGHT && horizontalDirection)
         ) {
           if (rtl && horizontalDirection) {
             onDecrement();
@@ -172,21 +168,21 @@ export const useSelection = <Item>({
           }
 
           event.preventDefault();
-        } else if (event.keyCode === KEY_CODES.HOME) {
+        } else if (event.key === KEYS.HOME) {
           if (!isFocusedItemControlled) {
             dispatch({ type: 'HOME', payload: items[0] });
           }
 
           onFocus && onFocus(items[0]);
           event.preventDefault();
-        } else if (event.keyCode === KEY_CODES.END) {
+        } else if (event.key === KEYS.END) {
           if (!isFocusedItemControlled) {
             dispatch({ type: 'END', payload: items[items.length - 1] });
           }
 
           onFocus && onFocus(items[items.length - 1]);
           event.preventDefault();
-        } else if (event.keyCode === KEY_CODES.SPACE || event.keyCode === KEY_CODES.ENTER) {
+        } else if (event.key === KEYS.SPACE || event.key === KEYS.ENTER) {
           onSelect && onSelect(item);
 
           if (!isSelectedItemControlled) {

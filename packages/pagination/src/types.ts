@@ -42,6 +42,16 @@ export interface IUsePaginationReturnValue<Item>
 }
 
 export interface IPaginationContainerProps<Item> extends IUseSelectionProps<Item> {
+  /**
+   * Provides pagination render prop state and functions
+   *
+   * @param {*} [options.focusedItem] Controlled focused item
+   * @param {*} [options.selectedItem] Controlled selected item
+   * @param {function} [options.getContainerProps] Container props getter
+   * @param {function} [options.getPageProps] Page props getter
+   * @param {function} [options.getPreviousPageProps] Previous page navigation props getter
+   * @param {function} [options.getNextPageProps] Next page navigation props getter
+   */
   render?: (options: {
     focusedItem?: IUsePaginationReturnValue<Item>['focusedItem'];
     selectedItem?: IUsePaginationReturnValue<Item>['selectedItem'];
