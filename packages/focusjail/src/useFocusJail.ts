@@ -15,7 +15,7 @@ export const useFocusJail = <T extends Element = Element>(
   {
     focusOnMount = true,
     restoreFocus = true,
-    environment = document,
+    environment,
     focusElem,
     containerRef
   }: IUseFocusJailProps<T> = {
@@ -104,14 +104,16 @@ export const useFocusJail = <T extends Element = Element>(
   };
 
   useEffect(() => {
-    restoreFocusElement.current = activeElement(environment);
+    const doc = environment || document;
+
+    restoreFocusElement.current = activeElement(doc);
 
     if (focusOnMount) {
       focusElement(currentRef);
     }
 
     return () => {
-      const isBodyInactive = restoreFocusElement.current !== environment.body;
+      const isBodyInactive = restoreFocusElement.current !== doc.body;
       const hasActiveElement = restoreFocusElement.current !== null;
 
       if (isBodyInactive && hasActiveElement && restoreFocus) {
