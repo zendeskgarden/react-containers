@@ -61,7 +61,7 @@ export const useTimingMeasurement = <CustomMetadata extends Record<string, unkno
     if (actionLogRef.current.reportedErrors.has(error)) {
       // same error was previously reported, no need to re-report
       actionLogRef.current.disableReporting();
-    } else {
+    } else if (typeof error === 'object') {
       actionLogRef.current.reportedErrors.add(error);
     }
     actionLogRef.current.markStage({
