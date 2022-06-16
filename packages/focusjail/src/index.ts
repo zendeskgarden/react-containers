@@ -7,8 +7,12 @@
 
 /* Hooks */
 export { useFocusJail } from './useFocusJail';
-export type { IUseFocusJailProps, IUseFocusJailReturnValue } from './useFocusJail';
 
 /* Render-props */
 export { FocusJailContainer } from './FocusJailContainer';
-export type { IFocusJailContainerProps } from './FocusJailContainer';
+
+export type {
+  IFocusJailContainerProps,
+  IUseFocusJailProps,
+  IUseFocusJailReturnValue
+} from './types';

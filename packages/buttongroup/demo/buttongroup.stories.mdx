@@ -37,8 +37,7 @@ import { ButtonGroupStory } from './stories/ButtonGroupStory';
     {args => {
       const updateArgs = useArgs()[1];
       const handleSelect = selectedItem => updateArgs({ selectedItem });
-      const handleFocus = focusedItem => updateArgs({ focusedItem });
-      return <ButtonGroupStory {...args} onSelect={handleSelect} onFocus={handleFocus} />;
+      return <ButtonGroupStory {...args} onSelect={handleSelect} />;
     }}
   </Story>
 </Canvas>

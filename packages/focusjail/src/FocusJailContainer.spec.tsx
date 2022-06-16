@@ -6,10 +6,9 @@
  */
 
 import React, { useRef } from 'react';
-import { KEY_CODES } from '@zendeskgarden/container-utilities';
 import userEvent from '@testing-library/user-event';
 import { render, fireEvent, waitFor, screen } from '@testing-library/react';
-
+import { KEYS } from '@zendeskgarden/container-utilities';
 import { FocusJailContainer, IUseFocusJailProps } from './';
 
 interface IBasicExampleProps extends Omit<IUseFocusJailProps, 'containerRef'> {
@@ -47,12 +46,7 @@ describe('FocusJailContainer', () => {
           containerReference = containerRef;
 
           return (
-            <div
-              {...getContainerProps({
-                'data-test-id': 'container',
-                ref: containerRef
-              })}
-            >
+            <div data-test-id="container" {...getContainerProps()} ref={containerRef}>
               <p>non-focusable test</p>
               {focusJailContainerChildren}
             </div>
@@ -98,7 +92,9 @@ describe('FocusJailContainer', () => {
           // @ts-expect-error
           <FocusJailContainer>
             {({ getContainerProps }) => (
-              <div {...getContainerProps({ 'data-test-id': 'container-no-ref' })}>Test</div>
+              <div data-test-id="container-no-ref" {...getContainerProps()}>
+                Test
+              </div>
             )}
           </FocusJailContainer>
           /* eslint-enable @typescript-eslint/ban-ts-comment */
@@ -122,7 +118,7 @@ describe('FocusJailContainer', () => {
       it('performs no action if non-tab key is pressed', () => {
         const { getByTestId } = render(<BasicExample focusElem={focusSpy} restoreFocus={false} />);
 
-        fireEvent.keyDown(getByTestId('container'), { keyCode: KEY_CODES.END });
+        fireEvent.keyDown(getByTestId('container'), { key: KEYS.END });
 
         // Container is still focused during initial mount
         expect(focusSpy).toHaveBeenCalledTimes(2);
@@ -134,7 +130,7 @@ describe('FocusJailContainer', () => {
         );
         const container = getByTestId('container');
 
-        fireEvent.keyDown(container, { keyCode: KEY_CODES.TAB });
+        fireEvent.keyDown(container, { key: KEYS.TAB });
 
         expect(focusSpy).toHaveBeenCalledTimes(3);
         expect(focusSpy).toHaveBeenLastCalledWith(container);
@@ -153,7 +149,7 @@ describe('FocusJailContainer', () => {
         );
         const container = getByTestId('container');
 
-        fireEvent.keyDown(container, { keyCode: KEY_CODES.TAB, shiftKey: true });
+        fireEvent.keyDown(container, { key: KEYS.TAB, shiftKey: true });
 
         expect(focusSpy).toHaveBeenCalledTimes(3);
         expect(focusSpy).toHaveBeenLastCalledWith(container);
@@ -213,12 +209,14 @@ describe('FocusJailContainer', () => {
         const { getByTestId } = render(
           <FocusJailContainer containerRef={React.createRef()}>
             {({ getContainerProps }) => (
-              <div {...getContainerProps({ 'data-test-id': 'container-no-ref' })}>Test</div>
+              <div data-test-id="container-no-ref" {...getContainerProps()}>
+                Test
+              </div>
             )}
           </FocusJailContainer>
         );
 
-        fireEvent.keyDown(getByTestId('container-no-ref'), { keyCode: KEY_CODES.TAB });
+        fireEvent.keyDown(getByTestId('container-no-ref'), { key: KEYS.TAB });
 
         expect(err).toBe(
           'Accessibility Error: You must apply the ref prop to your containing element.'
@@ -240,11 +238,11 @@ describe('FocusJailContainer', () => {
             <FocusJailContainer containerRef={containerRef}>
               {({ getContainerProps }) => (
                 <div
+                  data-test-id="container"
                   {...getContainerProps({
-                    ref: containerRef,
-                    tabIndex: -1,
-                    'data-test-id': 'container'
+                    tabIndex: -1
                   })}
+                  ref={containerRef}
                 >
                   <button onClick={() => setShowFocusJail(false)}>close</button>
                 </div>

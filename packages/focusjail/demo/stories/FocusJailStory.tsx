@@ -15,7 +15,7 @@ import {
   useFocusJail
 } from '@zendeskgarden/container-focusjail';
 
-const Component = forwardRef<HTMLElement, IUseFocusJailReturnValue>(
+const Component = forwardRef<HTMLDivElement, IUseFocusJailReturnValue>(
   ({ getContainerProps }, ref) => (
     <>
       <button className="m-1 px-2 py-1" type="button">
@@ -51,19 +51,19 @@ const Component = forwardRef<HTMLElement, IUseFocusJailReturnValue>(
 
 Component.displayName = 'Component';
 
-const Container = ({ containerRef, ...props }: IFocusJailContainerProps) => (
+const Container = ({ containerRef, ...props }: IFocusJailContainerProps<HTMLDivElement>) => (
   <FocusJailContainer containerRef={containerRef} {...props}>
     {containerProps => <Component {...containerProps} ref={containerRef} />}
   </FocusJailContainer>
 );
 
-const Hook = ({ containerRef, ...props }: IUseFocusJailProps) => {
+const Hook = ({ containerRef, ...props }: IUseFocusJailProps<HTMLDivElement>) => {
   const hookProps = useFocusJail({ containerRef, ...props });
 
   return <Component {...hookProps} ref={containerRef} />;
 };
 
-interface IArgs extends IFocusJailContainerProps {
+interface IArgs extends IFocusJailContainerProps<HTMLDivElement> {
   as: 'hook' | 'container';
 }
 

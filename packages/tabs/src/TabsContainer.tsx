@@ -7,29 +7,24 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useTabs } from './useTabs';
+import { ITabsContainerProps } from './types';
 
-import { useTabs, IUseTabsProps, IUseTabsReturnValue } from './useTabs';
-
-export interface ITabsContainerProps extends IUseTabsProps<any> {
-  /** A render prop function */
-  render?: (options: IUseTabsReturnValue<any>) => React.ReactNode;
-  /** A children render prop function */
-  children?: (options: IUseTabsReturnValue<any>) => React.ReactNode;
-}
-
-export const TabsContainer: React.FunctionComponent<ITabsContainerProps> = ({
+export const TabsContainer: React.FC<ITabsContainerProps<any>> = ({
   children,
   render = children,
   ...options
-}) => {
-  return <>{render!(useTabs(options)) as React.ReactElement}</>;
+}) => <>{render!(useTabs(options))}</>;
+
+TabsContainer.defaultProps = {
+  orientation: 'horizontal'
 };
 
 TabsContainer.propTypes = {
   children: PropTypes.func,
   render: PropTypes.func,
-  vertical: PropTypes.bool,
   rtl: PropTypes.bool,
+  orientation: PropTypes.oneOf(['horizontal', 'vertical']),
   idPrefix: PropTypes.string,
   defaultSelectedIndex: PropTypes.number,
   selectedItem: PropTypes.any,

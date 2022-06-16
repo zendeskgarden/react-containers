@@ -7,8 +7,8 @@
 
 /* Hooks */
 export { useTabs } from './useTabs';
-export type { IUseTabsProps, IUseTabsReturnValue } from './useTabs';
 
 /* Render-props */
 export { TabsContainer } from './TabsContainer';
-export type { ITabsContainerProps } from './TabsContainer';
+
+export type { ITabsContainerProps, IUseTabsProps, IUseTabsReturnValue } from './types';

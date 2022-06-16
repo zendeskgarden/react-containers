@@ -13,22 +13,22 @@ import { ButtonGroupContainer } from './';
 
 describe('ButtonGroupContainer', () => {
   const buttons = ['button-1', 'button-2', 'button-3'];
-  const buttonRefs = buttons.map(() => createRef());
+  const buttonRefs = buttons.map(() => createRef<HTMLDivElement>());
 
   const BasicExample = () => (
     <ButtonGroupContainer>
       {({ getGroupProps, getButtonProps, selectedItem, focusedItem }) => (
-        <div {...getGroupProps({ 'data-test-id': 'group' })}>
+        <div data-test-id="group" {...getGroupProps()}>
           {buttons.map((button, index) => (
             <div
+              data-test-id="button"
+              data-selected={button === selectedItem}
+              data-focused={button === focusedItem}
               {...getButtonProps({
                 key: button,
                 item: button,
-                focusRef: buttonRefs[index],
-                'data-test-id': 'button',
-                'data-selected': button === selectedItem,
-                'data-focused': button === focusedItem
-              } as any)}
+                focusRef: buttonRefs[index]
+              })}
             >
               {button}
             </div>

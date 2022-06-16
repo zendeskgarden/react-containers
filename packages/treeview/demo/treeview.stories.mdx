@@ -9,7 +9,8 @@ import { TREE } from './stories/data';
   component={TreeviewContainer}
   args={{
     as: 'hook',
-    tree: TREE
+    tree: TREE,
+    'aria-label': 'Treeview'
   }}
   argTypes={{
     as: { options: ['container', 'hook'], control: 'radio', table: { category: 'Story' } },

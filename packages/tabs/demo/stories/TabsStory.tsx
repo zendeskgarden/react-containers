@@ -18,7 +18,7 @@ import classNames from 'classnames';
 
 interface IComponentProps extends IUseTabsReturnValue<string> {
   tabs: RefObject<HTMLLIElement>[];
-  vertical: IUseTabsProps<any>['vertical'];
+  orientation: IUseTabsProps<any>['orientation'];
   rtl: IUseTabsProps<any>['rtl'];
 }
 
@@ -28,23 +28,23 @@ const Component = ({
   getTabPanelProps,
   getTabProps,
   selectedItem,
-  vertical,
+  orientation,
   rtl
 }: IComponentProps) => (
   <div
     className={classNames({
-      flex: vertical,
-      'flex-row-reverse': vertical && rtl
+      flex: orientation === 'vertical',
+      'flex-row-reverse': orientation === 'vertical' && rtl
     })}
   >
     <ul
       {...getTabListProps()}
       className={classNames('border-solid', 'border-transparent', 'flex', {
-        'flex-col': vertical,
-        'border-b-grey-600': !vertical,
-        'flex-row-reverse': !vertical && rtl,
-        'border-r-grey-600': vertical && !rtl,
-        'border-l-grey-600': vertical && rtl
+        'flex-col': orientation === 'vertical',
+        'border-b-grey-600': orientation !== 'vertical',
+        'flex-row-reverse': orientation !== 'vertical' && rtl,
+        'border-r-grey-600': orientation === 'vertical' && !rtl,
+        'border-l-grey-600': orientation === 'vertical' && rtl
       })}
     >
       {tabs.map((tab, index) => (
@@ -59,9 +59,11 @@ const Component = ({
             'px-2',
             'py-1',
             {
-              'border-b-blue-600': selectedItem === index.toString() && !vertical,
-              'border-r-blue-600': selectedItem === index.toString() && vertical && !rtl,
-              'border-l-blue-600': selectedItem === index.toString() && vertical && rtl
+              'border-b-blue-600': selectedItem === index.toString() && orientation !== 'vertical',
+              'border-r-blue-600':
+                selectedItem === index.toString() && orientation === 'vertical' && !rtl,
+              'border-l-blue-600':
+                selectedItem === index.toString() && orientation === 'vertical' && rtl
             }
           )}
         >{`Tab ${index + 1}`}</li>
@@ -84,7 +86,12 @@ interface IProps extends IUseTabsProps<string> {
 const Container = ({ tabRefs, ...props }: IProps) => (
   <TabsContainer {...props}>
     {containerProps => (
-      <Component tabs={tabRefs} vertical={props.vertical} rtl={props.rtl} {...containerProps} />
+      <Component
+        tabs={tabRefs}
+        orientation={props.orientation}
+        rtl={props.rtl}
+        {...containerProps}
+      />
     )}
   </TabsContainer>
 );
@@ -92,27 +99,25 @@ const Container = ({ tabRefs, ...props }: IProps) => (
 const Hook = ({ tabRefs, ...props }: IProps) => {
   const hookProps = useTabs(props);
 
-  return <Component tabs={tabRefs} vertical={props.vertical} rtl={props.rtl} {...hookProps} />;
+  return (
+    <Component tabs={tabRefs} orientation={props.orientation} rtl={props.rtl} {...hookProps} />
+  );
 };
 
-interface IArgs extends ITabsContainerProps {
+interface IArgs extends ITabsContainerProps<string> {
   as: 'hook' | 'container';
   tabs: number;
 }
 
 export const TabsStory: Story<IArgs> = ({ as, tabs, ...props }: IArgs) => {
-  const Tabs = () => {
-    const tabRefs = Array.from({ length: tabs }, () => createRef<HTMLLIElement>());
+  const tabRefs = Array.from({ length: tabs }, () => createRef<HTMLLIElement>());
 
-    switch (as) {
-      case 'container':
-        return <Container tabRefs={tabRefs} {...props} />;
+  switch (as) {
+    case 'container':
+      return <Container tabRefs={tabRefs} {...props} />;
 
-      case 'hook':
-      default:
-        return <Hook tabRefs={tabRefs} {...props} />;
-    }
-  };
-
-  return <Tabs />;
+    case 'hook':
+    default:
+      return <Hook tabRefs={tabRefs} {...props} />;
+  }
 };

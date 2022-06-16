@@ -6,37 +6,20 @@
  */
 
 import { createRef, useRef, useEffect, useState, useCallback } from 'react';
-import { composeEventHandlers, KEY_CODES } from '@zendeskgarden/container-utilities';
+import { composeEventHandlers, KEYS } from '@zendeskgarden/container-utilities';
 import { tabbable } from 'tabbable';
 import activeElement from 'dom-helpers/activeElement';
+import { IUseFocusJailProps, IUseFocusJailReturnValue } from './types';
 
-export interface IUseFocusJailProps {
-  /** Focuses on the `containerRef` element after mounting */
-  focusOnMount?: boolean;
-  /** Determines whether to return keyboard focus to the last active element upon unmounting */
-  restoreFocus?: boolean;
-  /** The global environment where the focus jail is rendered */
-  environment?: Document;
-  /** A callback function that receives the focused element */
-  focusElem?: (element: HTMLElement) => any;
-  /** A [ref](https://reactjs.org/docs/refs-and-the-dom.html) pointing to the focus jail's container element */
-  containerRef: React.RefObject<HTMLElement>;
-}
-
-export interface IUseFocusJailReturnValue {
-  getContainerProps: <T>(options?: T) => T & React.HTMLProps<any>;
-  focusElement: (element?: HTMLElement) => any;
-}
-
-export const useFocusJail = (
+export const useFocusJail = <T extends Element = Element>(
   {
     focusOnMount = true,
     restoreFocus = true,
     environment,
     focusElem,
     containerRef
-  }: IUseFocusJailProps = {
-    containerRef: createRef()
+  }: IUseFocusJailProps<T> = {
+    containerRef: createRef<T>()
   }
 ): IUseFocusJailReturnValue => {
   const restoreFocusElement = useRef<Element | null>(null);
@@ -44,7 +27,7 @@ export const useFocusJail = (
   // To support conditional rendering we need to store the ref in state and
   // trigger a re-render if the ref updates once rendered since react will
   // skip changes to a ref on first render
-  const [currentRef, setCurrentRef] = useState(containerRef.current);
+  const [currentRef, setCurrentRef] = useState<T | null>(containerRef.current);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
@@ -94,7 +77,7 @@ export const useFocusJail = (
   const getContainerProps = ({ onKeyDown, ...other } = {} as any) => {
     return {
       onKeyDown: composeEventHandlers(onKeyDown, (event: KeyboardEvent) => {
-        if (event.keyCode !== KEY_CODES.TAB) {
+        if (event.key !== KEYS.TAB) {
           return;
         }
         validateContainerRef();
@@ -121,14 +104,16 @@ export const useFocusJail = (
   };
 
   useEffect(() => {
-    restoreFocusElement.current = activeElement(environment || document);
+    const doc = environment || document;
+
+    restoreFocusElement.current = activeElement(doc);
 
     if (focusOnMount) {
       focusElement(currentRef);
     }
 
     return () => {
-      const isBodyInactive = restoreFocusElement.current !== document.body;
+      const isBodyInactive = restoreFocusElement.current !== doc.body;
       const hasActiveElement = restoreFocusElement.current !== null;
 
       if (isBodyInactive && hasActiveElement && restoreFocus) {

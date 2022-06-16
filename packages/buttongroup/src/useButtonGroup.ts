@@ -7,52 +7,38 @@
 
 import {
   useSelection,
-  IUseSelectionProps,
-  IUseSelectionState,
-  IGetItemPropsOptions
+  IUseSelectionProps as IUseButtonGroupProps
 } from '@zendeskgarden/container-selection';
+import { IUseButtonGroupReturnValue } from './types';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface IUseButtonGroupProps<Item> extends IUseSelectionProps<Item> {}
-
-export interface IUseButtonGroupPropGetters<Item> {
-  getGroupProps: <T>(options?: T) => T & React.HTMLProps<any>;
-  getButtonProps: <T extends IGetItemPropsOptions<Item>>(
-    options: T,
-    propGetterName?: string
-  ) => any;
-}
-
-export type UseButtonGroupReturnValue<Item> = IUseSelectionState<Item> &
-  IUseButtonGroupPropGetters<Item>;
-
-export function useButtonGroup<Item = any>(
+export const useButtonGroup = <Item>(
   options: IUseButtonGroupProps<Item>
-): UseButtonGroupReturnValue<Item> {
+): IUseButtonGroupReturnValue<Item> => {
   const { selectedItem, focusedItem, getContainerProps, getItemProps } =
     useSelection<Item>(options);
 
-  const getGroupProps = ({ role = 'group', ...other } = {}) => {
-    return {
-      role,
-      'data-garden-container-id': 'containers.buttongroup',
-      'data-garden-container-version': PACKAGE_VERSION,
-      ...other
-    };
-  };
+  const getGroupProps: IUseButtonGroupReturnValue<Item>['getGroupProps'] = ({
+    role = 'group',
+    ...other
+  } = {}) => ({
+    ...getContainerProps(other),
+    role: role === null ? undefined : role,
+    'data-garden-container-id': 'containers.buttongroup',
+    'data-garden-container-version': PACKAGE_VERSION
+  });
 
-  const getButtonProps = ({ role = 'button', selectedAriaKey = 'aria-pressed', ...other } = {}) => {
-    return {
-      role,
-      selectedAriaKey,
-      ...other
-    };
-  };
+  const getButtonProps: IUseButtonGroupReturnValue<Item>['getButtonProps'] = ({
+    role = 'button',
+    ...other
+  }) => ({
+    ...getItemProps({ selectedAriaKey: 'aria-pressed', ...other }),
+    role: role === null ? undefined : role
+  });
 
   return {
     selectedItem,
     focusedItem,
-    getGroupProps: props => getContainerProps(getGroupProps(props) as any),
-    getButtonProps: props => getItemProps(getButtonProps(props) as any, 'getButtonProps')
+    getGroupProps,
+    getButtonProps
   };
-}
+};

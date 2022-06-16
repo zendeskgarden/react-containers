@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React, { createRef, RefObject, useRef } from 'react';
+import React, { createRef, RefObject } from 'react';
 import { Story } from '@storybook/react';
 import {
   IPaginationContainerProps,
@@ -28,8 +28,8 @@ const Component = ({
   getNextPageProps,
   selectedItem
 }: IComponentProps) => {
-  const previousRef = useRef();
-  const nextRef = useRef();
+  const previousRef = createRef<HTMLLIElement>();
+  const nextRef = createRef<HTMLLIElement>();
   const className = 'border border-solid cursor-pointer px-3 py-1 select-none';
 
   return (
@@ -37,22 +37,26 @@ const Component = ({
       <ul className="flex" {...getContainerProps()}>
         <li
           className={classNames(className, { 'text-grey-400': selectedItem === '0' })}
-          {...getPreviousPageProps({ item: 'prev', focusRef: previousRef })}
+          {...getPreviousPageProps({
+            'aria-label': 'Previous page',
+            item: 'prev',
+            focusRef: previousRef
+          })}
         >
           &lt;
         </li>
         {pages.map((page, index) => {
           const current = index.toString() === selectedItem;
+          const ariaLabel = current ? `Current page, page ${index + 1}` : `Page ${index + 1}`;
 
           return (
             <li
               key={index}
               className={classNames(className, { 'bg-blue-300': current })}
               {...getPageProps({
+                'aria-label': ariaLabel,
                 item: index.toString(),
-                focusRef: page,
-                page: index + 1,
-                current
+                focusRef: page
               })}
             >
               {index + 1}
@@ -63,7 +67,7 @@ const Component = ({
           className={classNames(className, {
             'text-grey-400': selectedItem === (pages.length - 1).toString()
           })}
-          {...getNextPageProps({ item: 'next', focusRef: nextRef })}
+          {...getNextPageProps({ 'aria-label': 'Next page', item: 'next', focusRef: nextRef })}
         >
           &gt;
         </li>

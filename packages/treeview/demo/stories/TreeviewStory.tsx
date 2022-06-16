@@ -8,7 +8,6 @@
 import React, { createRef } from 'react';
 import { Story } from '@storybook/react';
 import classNames from 'classnames';
-import { ContainerOrientation } from '@zendeskgarden/container-utilities';
 import {
   ITreeviewContainerProps,
   IUseTreeviewProps,
@@ -36,14 +35,14 @@ const Node = ({
   level = 1
 }: INodeProps) => {
   const nodeProps = getNodeProps({
-    focusRef: createRef(),
+    focusRef: createRef<HTMLLIElement>(),
     item: treeNode.name,
     nodeType: treeNode.children ? 'parent' : 'end'
   });
   const className = treeNode.children ? 'cursor-pointer' : 'cursor-default';
   const nameClassName = classNames('px-2', 'py-1', { 'bg-blue-300': nodeProps['aria-selected'] });
   const parentClassName = classNames({
-    flex: orientation === ContainerOrientation.HORIZONTAL,
+    flex: orientation === 'horizontal',
     'pl-5': !rtl,
     'pr-5': rtl
   });
@@ -51,7 +50,7 @@ const Node = ({
   return (
     <li className={className} {...nodeProps}>
       {treeNode.children ? (
-        <details open={nodeProps['aria-expanded']}>
+        <details open={nodeProps['aria-expanded'] as boolean}>
           <summary className={nameClassName}>{treeNode.name}</summary>
           <ul className={parentClassName} {...getGroupProps()}>
             {treeNode.children.map((node, index) => (
@@ -78,15 +77,23 @@ interface IComponentProps extends IUseTreeviewReturnValue<string> {
   tree: ITreeNode[];
   orientation: IUseTreeviewProps<any>['orientation'];
   rtl: IUseTreeviewProps<any>['rtl'];
+  'aria-label': string;
 }
 
-const Component = ({ getTreeProps, tree, orientation, rtl, ...props }: IComponentProps) => (
+const Component = ({
+  getTreeProps,
+  tree,
+  orientation,
+  rtl,
+  'aria-label': ariaLabel,
+  ...props
+}: IComponentProps) => (
   <ul
     className={classNames('overflow-auto', 'p-1', {
-      flex: orientation === ContainerOrientation.HORIZONTAL
+      flex: orientation === 'horizontal'
     })}
     style={{ direction: rtl ? 'rtl' : 'ltr' }}
-    {...getTreeProps()}
+    {...getTreeProps({ 'aria-label': ariaLabel })}
   >
     {tree.map((node, index) => (
       <Node key={index} treeNode={node} orientation={orientation} rtl={rtl} {...props} />
@@ -96,25 +103,41 @@ const Component = ({ getTreeProps, tree, orientation, rtl, ...props }: IComponen
 
 interface IProps extends IUseTreeviewProps<string> {
   tree: ITreeNode[];
+  'aria-label': string;
 }
 
-const Container = ({ tree, ...props }: IProps) => (
+const Container = ({ tree, 'aria-label': ariaLabel, ...props }: IProps) => (
   <TreeviewContainer {...props}>
     {containerProps => (
-      <Component tree={tree} orientation={props.orientation} rtl={props.rtl} {...containerProps} />
+      <Component
+        tree={tree}
+        orientation={props.orientation}
+        rtl={props.rtl}
+        aria-label={ariaLabel}
+        {...containerProps}
+      />
     )}
   </TreeviewContainer>
 );
 
-const Hook = ({ tree, ...props }: IProps) => {
+const Hook = ({ tree, 'aria-label': ariaLabel, ...props }: IProps) => {
   const hookProps = useTreeview(props);
 
-  return <Component tree={tree} orientation={props.orientation} rtl={props.rtl} {...hookProps} />;
+  return (
+    <Component
+      tree={tree}
+      orientation={props.orientation}
+      rtl={props.rtl}
+      aria-label={ariaLabel}
+      {...hookProps}
+    />
+  );
 };
 
 interface IArgs extends ITreeviewContainerProps<string> {
   as: 'hook' | 'container';
   tree: ITreeNode[];
+  'aria-label': string;
 }
 
 export const TreeviewStory: Story<IArgs> = ({ as, tree, ...props }: IArgs) => {

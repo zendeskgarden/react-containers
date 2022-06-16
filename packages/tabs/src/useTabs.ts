@@ -5,103 +5,64 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import { useMemo } from 'react';
-import { useUIDSeed } from 'react-uid';
-import {
-  useSelection,
-  IGetItemPropsOptions,
-  IUseSelectionState,
-  IUseSelectionProps
-} from '@zendeskgarden/container-selection';
+import { useId } from '@zendeskgarden/container-utilities';
+import { useSelection } from '@zendeskgarden/container-selection';
+import { IUseTabsProps, IUseTabsReturnValue } from './types';
 
-interface IGetTabProps<Item> extends IGetItemPropsOptions<Item> {
-  index: number;
-}
-
-interface IGetTabPanelProps<Item> extends React.HTMLProps<any> {
-  index: number;
-  item: Item;
-}
-
-export interface IUseTabsReturnValue<Item> extends IUseSelectionState<Item> {
-  getTabProps: <T extends IGetItemPropsOptions<Item>>(options?: T) => any;
-  getTabPanelProps: <T extends IGetTabPanelProps<Item>>(options?: T) => any;
-  getTabListProps: <T>(options?: T) => T & React.HTMLProps<any>;
-}
-
-export interface IUseTabsProps<Item> extends IUseSelectionProps<Item> {
-  /** Determines the orientation of the tabs */
-  vertical?: boolean;
-  /** Prefix used for generating tab element IDs */
-  idPrefix?: string;
-}
-
-function requiredArguments(arg: any, argStr: string, methodName: string) {
-  if (typeof arg === 'undefined' || arg === null) {
-    throw new Error(
-      `Accessibility Error: You must provide an "${argStr}" option to "${methodName}()"`
-    );
-  }
-}
-
-export function useTabs<Item = any>({
-  vertical,
+export const useTabs = <Item>({
+  orientation = 'horizontal',
   idPrefix,
   ...options
-}: IUseTabsProps<Item> = {}): IUseTabsReturnValue<Item> {
+}: IUseTabsProps<Item> = {}): IUseTabsReturnValue<Item> => {
+  const prefix = useId(idPrefix);
+  const PANEL_ID = `${prefix}__panel`;
+  const TAB_ID = `${prefix}__tab`;
   const { selectedItem, focusedItem, getContainerProps, getItemProps } = useSelection<Item>({
-    direction: vertical ? 'vertical' : 'horizontal',
+    direction: orientation,
     defaultSelectedIndex: 0,
     ...options
   });
-  const seed = useUIDSeed();
-  const _id = useMemo(() => idPrefix || seed(`tabs_${PACKAGE_VERSION}`), [idPrefix, seed]);
-  const PANEL_ID = `${_id}--panel`;
-  const TAB_ID = `${_id}--tab`;
 
-  const getTabListProps = ({ role = 'tablist', ...other }: React.HTMLProps<any> = {}) => {
-    return {
-      role,
-      'aria-orientation': vertical ? 'vertical' : 'horizontal',
-      'data-garden-container-id': 'containers.tabs',
-      'data-garden-container-version': PACKAGE_VERSION,
-      ...other
-    };
-  };
+  const getTabListProps: IUseTabsReturnValue<Item>['getTabListProps'] = ({
+    role = 'tablist',
+    ...other
+  } = {}) => ({
+    ...getContainerProps(other),
+    role: role === null ? undefined : role,
+    'aria-orientation': orientation,
+    'data-garden-container-id': 'containers.tabs',
+    'data-garden-container-version': PACKAGE_VERSION
+  });
 
-  const getTabProps = ({ role = 'tab', index, ...other }: IGetTabProps<Item> = {} as any) => {
-    requiredArguments(index, 'index', 'getTabProps');
+  const getTabProps: IUseTabsReturnValue<Item>['getTabProps'] = ({
+    role = 'tab',
+    index,
+    ...other
+  }) => ({
+    ...getItemProps(other),
+    role: role === null ? undefined : role,
+    id: `${TAB_ID}:${index}`,
+    'aria-controls': `${PANEL_ID}:${index}`
+  });
 
-    return {
-      id: `${TAB_ID}:${index}`,
-      'aria-controls': `${PANEL_ID}:${index}`,
-      role,
-      ...other
-    };
-  };
-
-  const getTabPanelProps = (
-    { role = 'tabpanel', index, item, ...other }: IGetTabPanelProps<Item> = {} as any
-  ) => {
-    requiredArguments(index, 'index', 'getTabPanelProps');
-    requiredArguments(item, 'item', 'getTabPanelProps');
-
-    const isHidden = item !== selectedItem;
-
-    return {
-      role,
-      id: `${PANEL_ID}:${index}`,
-      hidden: isHidden,
-      'aria-labelledby': `${TAB_ID}:${index}`,
-      ...other
-    };
-  };
+  const getTabPanelProps: IUseTabsReturnValue<Item>['getTabPanelProps'] = ({
+    role = 'tabpanel',
+    index,
+    item,
+    ...other
+  }) => ({
+    role: role === null ? undefined : role,
+    id: `${PANEL_ID}:${index}`,
+    hidden: item !== selectedItem,
+    'aria-labelledby': `${TAB_ID}:${index}`,
+    ...other
+  });
 
   return {
     selectedItem,
     focusedItem,
-    getTabPanelProps,
-    getTabListProps: props => getContainerProps(getTabListProps(props) as any),
-    getTabProps: props => getItemProps(getTabProps(props as any), 'getTabProps')
+    getTabListProps,
+    getTabProps,
+    getTabPanelProps
   };
-}
+};

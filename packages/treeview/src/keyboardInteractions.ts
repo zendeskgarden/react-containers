@@ -8,7 +8,8 @@
 import { DocumentPosition } from '@zendeskgarden/container-utilities';
 
 import { getParentNode, getParentTree, isEndNode, isParentNode } from './utils';
-import { HandlerFunction } from './types';
+
+export type HandlerFunction = (target: HTMLElement) => void;
 
 /**
  * Moves focus to the next node that is focusable without opening or closing a node.

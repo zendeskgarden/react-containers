@@ -8,7 +8,7 @@
 import React, { createRef } from 'react';
 import userEvent from '@testing-library/user-event';
 import { render, fireEvent } from '@testing-library/react';
-import { KEY_CODES } from '@zendeskgarden/container-utilities';
+import { KEYS } from '@zendeskgarden/container-utilities';
 import { ModalContainer, IUseModalReturnValue } from './';
 
 describe('FocusJailContainer', () => {
@@ -17,7 +17,7 @@ describe('FocusJailContainer', () => {
   const modalRef: React.RefObject<HTMLDivElement> = createRef();
 
   const BasicExample = ({ onClose }: { onClose: jest.Mock }) => (
-    <ModalContainer modalRef={modalRef} onClose={onClose} id={MODAL_ID}>
+    <ModalContainer modalRef={modalRef} onClose={onClose} idPrefix={MODAL_ID}>
       {({
         getBackdropProps,
         getModalProps,
@@ -26,11 +26,19 @@ describe('FocusJailContainer', () => {
         getCloseProps,
         closeModal
       }: IUseModalReturnValue) => (
-        <div {...getBackdropProps({ 'data-test-id': 'backdrop' })}>
-          <div {...getModalProps({ 'data-test-id': 'modal' })} ref={modalRef}>
-            <div {...getTitleProps({ 'data-test-id': 'title' })}>Title</div>
-            <div {...getContentProps({ 'data-test-id': 'content' })}>Modal content</div>
-            <button {...(getCloseProps({ 'data-test-id': 'close' }) as any)} />
+        <div data-test-id="backdrop" {...getBackdropProps()}>
+          <div data-test-id="modal" {...getModalProps()} ref={modalRef}>
+            <div data-test-id="title" {...getTitleProps()}>
+              Title
+            </div>
+            <div data-test-id="content" {...getContentProps()}>
+              Modal content
+            </div>
+            <button
+              data-test-id="close"
+              {...getCloseProps({ 'aria-label': 'Close modal' })}
+              type="button"
+            />
             <button onClick={closeModal} data-test-id="additional-close">
               Additional close option
             </button>
@@ -69,8 +77,8 @@ describe('FocusJailContainer', () => {
       expect(modal).toHaveAttribute('role', 'dialog');
       expect(modal).toHaveAttribute('tabIndex', '-1');
       expect(modal).toHaveAttribute('aria-modal', 'true');
-      expect(modal).toHaveAttribute('aria-labelledby', `${MODAL_ID}--title`);
-      expect(modal).toHaveAttribute('aria-describedby', `${MODAL_ID}--content`);
+      expect(modal).toHaveAttribute('aria-labelledby', `${MODAL_ID}__title`);
+      expect(modal).toHaveAttribute('aria-describedby', `${MODAL_ID}__content`);
     });
 
     it('does not trigger onClose when clicked', () => {
@@ -84,14 +92,14 @@ describe('FocusJailContainer', () => {
       it('closes modal when ESC is pressed', () => {
         const { getByRole } = render(<BasicExample onClose={onCloseSpy} />);
 
-        fireEvent.keyDown(getByRole('dialog'), { keyCode: KEY_CODES.ESCAPE });
+        fireEvent.keyDown(getByRole('dialog'), { key: KEYS.ESCAPE });
         expect(onCloseSpy).toHaveBeenCalled();
       });
 
       it('does not close modal when other keys are pressed', () => {
         const { getByRole } = render(<BasicExample onClose={onCloseSpy} />);
 
-        fireEvent.keyDown(getByRole('dialog'), { keyCode: KEY_CODES.ENTER });
+        fireEvent.keyDown(getByRole('dialog'), { key: KEYS.ENTER });
         expect(onCloseSpy).not.toHaveBeenCalled();
       });
     });
@@ -101,7 +109,7 @@ describe('FocusJailContainer', () => {
     it('applies accessibility props', () => {
       const { getByTestId } = render(<BasicExample onClose={onCloseSpy} />);
 
-      expect(getByTestId('title')).toHaveAttribute('id', `${MODAL_ID}--title`);
+      expect(getByTestId('title')).toHaveAttribute('id', `${MODAL_ID}__title`);
     });
   });
 
@@ -109,7 +117,7 @@ describe('FocusJailContainer', () => {
     it('applies accessibility props', () => {
       const { getByTestId } = render(<BasicExample onClose={onCloseSpy} />);
 
-      expect(getByTestId('content')).toHaveAttribute('id', `${MODAL_ID}--content`);
+      expect(getByTestId('content')).toHaveAttribute('id', `${MODAL_ID}__content`);
     });
   });
 

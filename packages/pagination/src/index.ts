@@ -7,13 +7,9 @@
 
 /* Hooks */
 export { usePagination } from './usePagination';
-export type {
-  IUsePaginationProps,
-  IUsePaginationReturnValue,
-  IGetContainerProps,
-  IGetPageProps
-} from './usePagination';
 
 /* Render-props */
 export { PaginationContainer } from './PaginationContainer';
-export type { IPaginationContainerProps } from './PaginationContainer';
+
+export type { IUseSelectionProps as IUsePaginationProps } from '@zendeskgarden/container-selection';
+export type { IPaginationContainerProps, IUsePaginationReturnValue } from './types';
