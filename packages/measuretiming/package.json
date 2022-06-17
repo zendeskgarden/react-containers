@@ -1,7 +1,7 @@
 {
   "name": "@zendeskgarden/container-measuretiming",
   "version": "0.0.0",
-  "description": "Garden Design System Utility hooks, used to measure the time that a set of React components need, to fully render and become interactive",
+  "description": "Garden Design System utility hooks, used to measure the time that a set of React components need, to fully render and become interactive",
   "license": "Apache-2.0",
   "author": "Zendesk Garden <garden@zendesk.com>",
   "homepage": "https://garden.zendesk.com/",

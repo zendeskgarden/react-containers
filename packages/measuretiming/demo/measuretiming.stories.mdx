@@ -1,12 +1,7 @@
 import { Meta, ArgsTable, Canvas, Story } from '@storybook/addon-docs';
-import { MeasuretimingContainer } from '@zendeskgarden/container-measuretiming';
-import { MeasuretimingStory } from './stories/MeasuretimingStory';
+import { MeasureTimingStory } from './stories/MeasureTimingStory';
 
-<Meta title="Packages/MeasureTiming" component={MeasuretimingContainer} />
-
-# API
-
-<ArgsTable />
+<Meta title="Packages/MeasureTiming" />
 
 # Demo
 
@@ -24,7 +19,7 @@ export const argTypes = {
 };
 
 <Canvas>
-  <Story name="Measuretiming" args={args} argTypes={argTypes}>
-    {args => <MeasuretimingStory {...args} />}
+  <Story name="MeasureTiming" args={args} argTypes={argTypes}>
+    {args => <MeasureTimingStory {...args} />}
   </Story>
 </Canvas>

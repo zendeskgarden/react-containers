@@ -54,7 +54,7 @@ const TakesAWhile = ({ content, reportFn, isActive }: Omit<IArgs, 'mounted'>) =>
   return <div>Simulating something that loads for a while... {progress}%</div>;
 };
 
-export const MeasuretimingStory: Story<IArgs> = ({ mounted, ...props }: IArgs) => {
+export const MeasureTimingStory: Story<IArgs> = ({ mounted, ...props }: IArgs) => {
   const { content } = props;
   const render = content === 'immediately' ? <Hook {...props} /> : <TakesAWhile {...props} />;
 
