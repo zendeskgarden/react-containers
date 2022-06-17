@@ -3,6 +3,35 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-utilities@0.7.1...@zendeskgarden/container-utilities@1.0.0) (2022-06-17)
+
+
+* fix!(breadcrumb,modal,pagination,selection,tabs,treeview): refactored interface types for enhanced accessibility (#461) ([93f7b43](https://github.com/zendeskgarden/react-containers/commit/93f7b43485d22f2e88bc604c528849ef0b7bb556)), closes [#461](https://github.com/zendeskgarden/react-containers/issues/461)
+
+
+### Bug Fixes
+
+* **deps:** update non-major package dependencies ([#450](https://github.com/zendeskgarden/react-containers/issues/450)) ([677e7e0](https://github.com/zendeskgarden/react-containers/commit/677e7e02022da4c7c2acf8afc39020664cdcd0b9))
+
+
+### BREAKING CHANGES
+
+* - breadcrumb – `[options.getContainerProps]` requires `aria-label`
+- modal – `[options.getCloseProps]` requires `aria-label`
+- modal – rename `id` prop to `idPrefix` for consistency
+- pagination – remove `IGetContainerProps` and `IGetPageProps` exports
+- pagination – `[options.getPageProps]`, `[options.getPreviousPageProps]`, and `[options.getNextPageProps]` require `aria-label`
+- pagination – `[options.getPageProps]` no longer accepts `page` or `current` props (previously used to format the `aria-label` which is now required from the consumer)
+- selection – rename `UseSelectionReturnValue` -> `IUseSelectionReturnValue`
+- selection – remove `IGetItemPropsOptions`, `IUseSelectionState`
+- tabs – replace `vertical` prop with `orientation` for consistency
+- treeview – `[options.getTreeProps]` requires `aria-label`
+- utilities – remove `ContainerOrientation` (enum removed from treeview)
+
+
+
+
+
 ## [0.7.1](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-utilities@0.7.0...@zendeskgarden/container-utilities@0.7.1) (2022-02-28)
 
 **Note:** Version bump only for package @zendeskgarden/container-utilities

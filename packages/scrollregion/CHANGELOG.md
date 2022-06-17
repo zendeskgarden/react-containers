@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-scrollregion@0.1.4...@zendeskgarden/container-scrollregion@1.0.0) (2022-06-17)
+
+
+### Bug Fixes
+
+* **deps:** update non-major package dependencies ([#450](https://github.com/zendeskgarden/react-containers/issues/450)) ([677e7e0](https://github.com/zendeskgarden/react-containers/commit/677e7e02022da4c7c2acf8afc39020664cdcd0b9))
+
+
+
+
+
 ## [0.1.4](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-scrollregion@0.1.3...@zendeskgarden/container-scrollregion@0.1.4) (2022-03-31)
 
 **Note:** Version bump only for package @zendeskgarden/container-scrollregion
