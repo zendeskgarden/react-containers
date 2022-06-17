@@ -14,12 +14,13 @@ npm install @zendeskgarden/container-selection
 
 ## Usage
 
-Check out [storybook](https://zendeskgarden.github.io/react-containers) for live examples.
+Check out [storybook](https://zendeskgarden.github.io/react-containers) for live
+examples.
 
 ### useSelection
 
-The `useSelection` hook which manages an items focus state including keyboard controls, aria
-attributes and RTL support. It uses the
+The `useSelection` hook which manages an items focus state including keyboard controls,
+aria attributes and RTL support. It uses the
 [roving tab index strategy](https://www.w3.org/TR/wai-aria-practices/#kbd_roving_tabindex).
 
 ```jsx

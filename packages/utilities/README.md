@@ -3,7 +3,8 @@
 [npm version badge]: https://flat.badgen.net/npm/v/@zendeskgarden/container-utilities
 [npm version link]: https://www.npmjs.com/package/@zendeskgarden/container-utilities
 
-Container utility modules in the [Garden Design System](https://zendeskgarden.github.io/).
+Container utility modules in the
+[Garden Design System](https://zendeskgarden.github.io/).
 
 ## Installation
 

@@ -14,10 +14,11 @@ npm install @zendeskgarden/container-field
 
 ## Usage
 
-Check out [storybook](https://zendeskgarden.github.io/react-containers) for live examples.
+Check out [storybook](https://zendeskgarden.github.io/react-containers) for live
+examples.
 
-The `useField` hook will supply the prop getters to handle `aria-labelledby` along with for/id
-mapping and `aria-describedby` mapping when a hint is applied.
+The `useField` hook will supply the prop getters to handle `aria-labelledby` along
+with for/id mapping and `aria-describedby` mapping when a hint is applied.
 
 ### useField
 

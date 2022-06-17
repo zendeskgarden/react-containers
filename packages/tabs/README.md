@@ -14,8 +14,9 @@ npm install @zendeskgarden/container-tabs
 
 ## Usage
 
-This container implements the [tabs](https://www.w3.org/TR/wai-aria-practices/#tabpanel) design
-pattern and can be used to build a tabbed interface. Check out
+This container implements the
+[tabs](https://www.w3.org/TR/wai-aria-practices/#tabpanel) design pattern and
+can be used to build a tabbed interface. Check out
 [storybook](https://zendeskgarden.github.io/react-containers) for live examples.
 
 ### useTabs
