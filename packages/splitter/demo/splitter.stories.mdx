@@ -1,11 +1,6 @@
 import { Meta, ArgsTable, Canvas, Story } from '@storybook/addon-docs';
 import { useArgs } from '@storybook/client-api';
-import {
-  SplitterContainer,
-  SplitterOrientation,
-  SplitterPosition,
-  SplitterType
-} from '@zendeskgarden/container-splitter';
+import { SplitterContainer } from '@zendeskgarden/container-splitter';
 import { SplitterStory } from './stories/SplitterStory';
 
 <Meta
@@ -15,13 +10,11 @@ import { SplitterStory } from './stories/SplitterStory';
     as: 'hook',
     max: 700,
     min: 200,
-    orientation: SplitterOrientation.VERTICAL,
-    position: SplitterPosition.TRAILS,
-    type: SplitterType.VARIABLE
+    orientation: 'vertical'
   }}
   argTypes={{
     as: { options: ['container', 'hook'], control: 'radio', table: { category: 'Story' } },
-    environment: { control: false }
+    splitterRef: { control: false }
   }}
   parameters={{ layout: 'padded' }}
 />
@@ -36,20 +29,7 @@ import { SplitterStory } from './stories/SplitterStory';
 
 <Canvas>
   <Story name="Uncontrolled" argTypes={{ valueNow: { control: false } }}>
-    {({
-      orientation = SplitterOrientation.VERTICAL,
-      position = SplitterPosition.TRAILS,
-      type = SplitterType.VARIABLE,
-      ...args
-    }) => (
-      <SplitterStory
-        orientation={orientation}
-        position={position}
-        type={type}
-        {...args}
-        environment={window}
-      />
-    )}
+    {args => <SplitterStory {...args} />}
   </Story>
 </Canvas>
 
@@ -61,24 +41,10 @@ import { SplitterStory } from './stories/SplitterStory';
     args={{ valueNow: 200 }}
     argTypes={{ defaultValueNow: { control: false } }}
   >
-    {({
-      orientation = SplitterOrientation.VERTICAL,
-      position = SplitterPosition.TRAILS,
-      type = SplitterType.VARIABLE,
-      ...args
-    }) => {
+    {({ ...args }) => {
       const updateArgs = useArgs()[1];
       const handleChange = valueNow => updateArgs({ valueNow });
-      return (
-        <SplitterStory
-          orientation={orientation}
-          position={position}
-          type={type}
-          {...args}
-          environment={window}
-          onChange={handleChange}
-        />
-      );
+      return <SplitterStory {...args} onChange={handleChange} />;
     }}
   </Story>
 </Canvas>

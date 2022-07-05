@@ -5,91 +5,16 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import { useUIDSeed } from 'react-uid';
-import { composeEventHandlers } from '@zendeskgarden/container-utilities';
-import React, { HTMLProps, MouseEvent, useCallback, useMemo, useRef, useState } from 'react';
-
-export enum SplitterOrientation {
-  HORIZONTAL = 'horizontal',
-  VERTICAL = 'vertical'
-}
-
-export enum SplitterPosition {
-  LEADS = 'leads',
-  TRAILS = 'trails'
-}
-
-export enum SplitterType {
-  FIXED = 'fixed',
-  VARIABLE = 'variable'
-}
+import React, { useCallback, useMemo, useRef, useState } from 'react';
+import { composeEventHandlers, KEYS, useId } from '@zendeskgarden/container-utilities';
+import { IUseSplitterProps, IUseSplitterReturnValue } from './types';
 
 export const KEYBOARD_STEP = 48;
-
-interface IEventTargetLike {
-  addEventListener: (...args: any) => any;
-  removeEventListener: (...args: any) => any;
-}
-
-interface IBodyLike extends IEventTargetLike {
-  clientWidth: number;
-  clientHeight: number;
-}
-
-interface IDocumentLike extends IEventTargetLike {
-  body: IBodyLike;
-}
-
-export interface IWindowLike {
-  document: IDocumentLike;
-  scrollX: number;
-  scrollY: number;
-}
-
-export interface ISplitterGetterReturnProps extends HTMLProps<any> {
-  'data-garden-container-id': string;
-  'data-garden-container-version': string;
-}
-
-export interface IUseSplitterProps extends Omit<HTMLProps<any>, 'onChange'> {
-  /** Prefixes IDs for the separator */
-  idPrefix?: string;
-  /** An aria-label for the separator */
-  ariaLabel?: string;
-  /** A browser window environment to attach events to */
-  environment: Window | IWindowLike;
-  /** A default value for starting uncontrolled separator location */
-  defaultValueNow?: number;
-  /** Determines whether a separator behaves in fixed or variable mode */
-  type: SplitterType;
-  /** A minimum number for separator location */
-  min: number;
-  /** A maximum number for separator location */
-  max: number;
-  /** Determines whether the separator is vertical or horizontal orientation */
-  orientation: SplitterOrientation;
-  /** A number for incrementing the splitter position for keyboard mode */
-  keyboardStep?: number;
-  /** Determines current position of a controlled separator */
-  valueNow?: number;
-  /** A callback that receives updated valueNow when a separator moves */
-  onChange?: (valueNow: number) => void;
-  /** An enum that specifies whether the separator leads or trails the primary pane */
-  position: SplitterPosition;
-  /** A boolean that changes splitter from left-to-right to right-to-left mode */
-  rtl?: boolean;
-}
-
-export interface IUseSplitterReturnValue {
-  getSeparatorProps: <T>(options?: T & HTMLProps<any>) => any;
-  getPrimaryPaneProps: <T>(options?: T & HTMLProps<any>) => any;
-  valueNow: number;
-}
 
 // takes pointer distance from edge of viewport to the pointer
 // minus the offset of pointer position to the separator in the DOM layout
 // minus the separator width or height divided by 2 to place cursor in middle of separator
-export const normalizePointerToSeparator = (
+const normalizePointerToSeparator = (
   bodyPadding: number,
   pointerPosition: number,
   separatorHeightOrWidth = 0,
@@ -106,40 +31,6 @@ export const normalizePointerToSeparator = (
   );
 };
 
-export const verticalArrowKeys = {
-  rtl: {
-    [SplitterPosition.TRAILS]: {
-      INCREASE: 'ArrowLeft',
-      DECREASE: 'ArrowRight'
-    },
-    [SplitterPosition.LEADS]: {
-      INCREASE: 'ArrowRight',
-      DECREASE: 'ArrowLeft'
-    }
-  },
-  ltr: {
-    [SplitterPosition.LEADS]: {
-      INCREASE: 'ArrowLeft',
-      DECREASE: 'ArrowRight'
-    },
-    [SplitterPosition.TRAILS]: {
-      INCREASE: 'ArrowRight',
-      DECREASE: 'ArrowLeft'
-    }
-  }
-};
-
-export const horizontalArrowKeys = {
-  [SplitterPosition.LEADS]: {
-    INCREASE: 'ArrowUp',
-    DECREASE: 'ArrowDown'
-  },
-  [SplitterPosition.TRAILS]: {
-    INCREASE: 'ArrowDown',
-    DECREASE: 'ArrowUp'
-  }
-};
-
 const xor = (a: boolean | undefined, b: boolean | undefined) => {
   if (a && b) {
     return false;
@@ -148,28 +39,23 @@ const xor = (a: boolean | undefined, b: boolean | undefined) => {
   return a || b;
 };
 
-export function useSplitter({
+export const useSplitter = <T extends HTMLElement = HTMLElement>({
   idPrefix,
-  ariaLabel,
   environment,
-  type,
+  isFixed,
   min,
   max,
-  orientation,
+  orientation = 'vertical',
   keyboardStep = KEYBOARD_STEP,
   defaultValueNow = min,
   valueNow,
   onChange = () => undefined,
-  position,
-  rtl,
-  ...props
-}: IUseSplitterProps): IUseSplitterReturnValue {
-  const seed = useUIDSeed();
-  const prefix = useMemo<string>(
-    () => idPrefix || seed(`splitter_${PACKAGE_VERSION}`),
-    [idPrefix, seed]
-  );
-  const PRIMARY_PANE_ID = `${prefix}--primary-pane`;
+  separatorRef,
+  isLeading,
+  rtl
+}: IUseSplitterProps<T>): IUseSplitterReturnValue => {
+  const prefix = useId(idPrefix);
+  const primaryPaneId = `${prefix}--primary-pane`;
   const isControlled = valueNow !== undefined && valueNow !== null;
   const [state, setState] = useState(defaultValueNow);
   const offsetRef = useRef<{ left: number; right: number; top: number; bottom: number }>({
@@ -178,8 +64,9 @@ export function useSplitter({
     top: 0,
     bottom: 0
   });
-  const separatorRef = useRef<HTMLElement>(null);
   const separatorPosition = isControlled ? valueNow : state;
+  const doc = environment || document;
+
   const setSeparatorPosition = isControlled ? onChange : setState;
 
   const setRangedSeparatorPosition = useCallback(
@@ -192,251 +79,200 @@ export function useSplitter({
         setSeparatorPosition(nextDimension);
       }
     },
-    [setSeparatorPosition, min, max]
+    [max, min, setSeparatorPosition]
   );
 
-  // derive the distances between viewport to the outer edges of the separator position, offset by scroll
-  // see https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect
-  const updateOffsets = useCallback(() => {
-    const rect = separatorRef.current!.getBoundingClientRect();
-    const clientWidth = environment.document.body.clientWidth;
-    const clientHeight = environment.document.body.clientHeight;
-
-    // capture distance from left side of viewport to the separator position offset by horizontal scroll
-    offsetRef.current.left = rect.left - separatorPosition + environment.scrollX;
-    // capture distance from right side of viewport to the separator position offset by horizontal scroll
-    offsetRef.current.right = clientWidth - rect.right - separatorPosition - environment.scrollX;
-    // capture distance from top side of viewport to the separator position offset by vertical scroll
-    offsetRef.current.top = rect.top - separatorPosition + environment.scrollY;
-    // capture distance from bottom side of viewport to the separator position offset by vertical scroll
-    offsetRef.current.bottom = clientHeight - rect.bottom - separatorPosition - environment.scrollY;
-  }, [offsetRef, separatorRef, separatorPosition, environment]);
-
-  const onSplitterMouseMove = useCallback(
-    (event: MouseEvent) => {
+  const move = useCallback(
+    (pageX: number, pageY: number) => {
       const elem = separatorRef.current;
-      const clientWidth = xor(rtl, position === SplitterPosition.LEADS)
-        ? environment.document.body.clientWidth
-        : undefined;
-      const clientHeight =
-        position === SplitterPosition.LEADS ? environment.document.body.clientHeight : undefined;
+      const clientWidth = xor(rtl, isLeading) ? doc.body.clientWidth : undefined;
+      const clientHeight = isLeading ? doc.body.clientHeight : undefined;
 
-      if (orientation === SplitterOrientation.HORIZONTAL) {
-        const offset =
-          position === SplitterPosition.LEADS ? offsetRef.current.bottom : offsetRef.current.top;
+      if (orientation === 'horizontal') {
+        const offset = isLeading ? offsetRef.current.bottom : offsetRef.current.top;
 
         // normalizePointerToSeparator aligns pointer true pixel coordinates and to the separator accounting for relative DOM positioning
         setRangedSeparatorPosition(
           // event.pageY is in pixel values
-          normalizePointerToSeparator(offset, event.pageY, elem?.offsetHeight, clientHeight)
+          normalizePointerToSeparator(offset, pageY, elem?.offsetHeight, clientHeight)
         );
       } else {
-        const offset = xor(rtl, position === SplitterPosition.LEADS)
-          ? offsetRef.current.right
-          : offsetRef.current.left;
+        const offset = xor(rtl, isLeading) ? offsetRef.current.right : offsetRef.current.left;
 
         // normalizePointerToSeparator aligns pointer true pixel coordinates and to the separator accounting for relative DOM positioning
         setRangedSeparatorPosition(
           // event.pageX is in pixel values
-          normalizePointerToSeparator(offset, event.pageX, elem?.offsetWidth, clientWidth)
-        );
-      }
-    },
-    [orientation, setRangedSeparatorPosition, position, environment, rtl]
-  );
-
-  // Any events that are registered globally to the DOM need to conserve their reference for removal to prevent listener leaks
-  const onMouseMove = useMemo(
-    () => composeEventHandlers(props.onMouseMove, onSplitterMouseMove),
-    [props.onMouseMove, onSplitterMouseMove]
-  );
-
-  const onSplitterTouchMove = useCallback(
-    (event: TouchEvent) => {
-      const { pageY, pageX } = event.targetTouches[0];
-      const elem = separatorRef.current;
-      const clientWidth = xor(rtl, position === SplitterPosition.LEADS)
-        ? environment.document.body.clientWidth
-        : undefined;
-      const clientHeight =
-        position === SplitterPosition.LEADS ? environment.document.body.clientHeight : undefined;
-
-      if (orientation === SplitterOrientation.HORIZONTAL) {
-        const offset =
-          position === SplitterPosition.LEADS ? offsetRef.current.bottom : offsetRef.current.top;
-
-        // normalizePointerToSeparator aligns pointer true pixel coordinates and to the separator accounting for relative DOM positioning
-        setRangedSeparatorPosition(
-          // pageY is in pixel values
-          normalizePointerToSeparator(offset, pageY, elem?.offsetHeight, clientHeight)
-        );
-      } else {
-        const offset = xor(rtl, position === SplitterPosition.LEADS)
-          ? offsetRef.current.right
-          : offsetRef.current.left;
-
-        // normalizePointerToSeparator aligns pointer true pixel coordinates and to the separator accounting for relative DOM positioning
-        setRangedSeparatorPosition(
-          // pageX is in pixel values
           normalizePointerToSeparator(offset, pageX, elem?.offsetWidth, clientWidth)
         );
       }
     },
-    [orientation, setRangedSeparatorPosition, position, environment, rtl]
+    [doc, isLeading, orientation, rtl, separatorRef, setRangedSeparatorPosition]
   );
 
-  const onTouchMove = useMemo(
-    () => composeEventHandlers(props.onTouchMove, onSplitterTouchMove),
-    [props.onTouchMove, onSplitterTouchMove]
-  );
+  const getSeparatorProps = useCallback<IUseSplitterReturnValue['getSeparatorProps']>(
+    ({ role = 'separator', onMouseDown, onTouchStart, onKeyDown, onClick, ...other }) => {
+      const onMouseMove = (event: MouseEvent) => {
+        move(event.pageX, event.pageY);
+      };
 
-  const onMouseLeaveOrUp = useMemo(
-    () =>
-      composeEventHandlers(props.onMouseUp, props.onMouseLeave, () => {
+      const onTouchMove = (event: TouchEvent) => {
+        const { pageY, pageX } = event.targetTouches[0];
+
+        move(pageX, pageY);
+      };
+
+      const onMouseUp = () => {
         // must remove global events on transaction finish
-        environment.document.removeEventListener('mouseup', onMouseLeaveOrUp);
-        environment.document.body.removeEventListener('mouseleave', onMouseLeaveOrUp);
-        environment.document.removeEventListener('mousemove', onMouseMove);
-      }),
-    [environment, props.onMouseUp, props.onMouseLeave, onMouseMove]
-  );
+        doc.removeEventListener('mouseup', onMouseUp);
+        doc.removeEventListener('mousemove', onMouseMove);
+      };
 
-  const onTouchEnd = useMemo(
-    () =>
-      composeEventHandlers(props.onTouchEnd, () => {
+      const onTouchEnd = () => {
         // must remove global events on transaction finish
-        environment.document.removeEventListener('touchend', onTouchEnd);
-        environment.document.removeEventListener('touchmove', onTouchMove);
-      }),
-    [environment, props.onTouchEnd, onTouchMove]
-  );
+        doc.removeEventListener('touchend', onTouchEnd);
+        doc.removeEventListener('touchmove', onTouchMove);
+      };
 
-  const onMouseDown = composeEventHandlers(props.onMouseDown, () => {
-    if (type === SplitterType.FIXED) {
-      if (separatorPosition > min) {
-        setSeparatorPosition(min);
-      }
-      if (separatorPosition < max) {
-        setSeparatorPosition(max);
-      }
-    } else {
-      updateOffsets();
+      // derive the distances between viewport to the outer edges of the separator position, offset by scroll
+      // see https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect
+      const updateOffsets = () => {
+        const rect = separatorRef.current!.getBoundingClientRect();
+        const clientWidth = doc.body.clientWidth;
+        const clientHeight = doc.body.clientHeight;
+        const win = doc.documentElement || document.body.parentNode || document.body;
 
-      // Must register global events to track mouse move outside the container
-      environment.document.addEventListener('mouseup', onMouseLeaveOrUp);
-      environment.document.body.addEventListener('mouseleave', onMouseLeaveOrUp);
-      environment.document.addEventListener('mousemove', onMouseMove);
-    }
-  });
+        // capture distance from left side of viewport to the separator position offset by horizontal scroll
+        offsetRef.current.left = rect.left - separatorPosition + win.scrollLeft;
+        // capture distance from right side of viewport to the separator position offset by horizontal scroll
+        offsetRef.current.right = clientWidth - rect.right - separatorPosition - win.scrollLeft;
+        // capture distance from top side of viewport to the separator position offset by vertical scroll
+        offsetRef.current.top = rect.top - separatorPosition + win.scrollTop;
+        // capture distance from bottom side of viewport to the separator position offset by vertical scroll
+        offsetRef.current.bottom = clientHeight - rect.bottom - separatorPosition - win.scrollTop;
+      };
 
-  const onTouchStart = composeEventHandlers(props.onTouchStart, () => {
-    if (type === SplitterType.FIXED) {
-      if (separatorPosition > min) {
-        setSeparatorPosition(min);
-      }
-      if (separatorPosition < max) {
-        setSeparatorPosition(max);
-      }
-    } else {
-      updateOffsets();
+      const handleMouseDown = () => {
+        if (!isFixed) {
+          updateOffsets();
 
-      // Must register global events to track mouse move outside the container
-      environment.document.addEventListener('touchend', onTouchEnd);
-      environment.document.addEventListener('touchmove', onTouchMove);
-    }
-  });
-
-  const toggleMinMax = useCallback(() => {
-    if (separatorPosition === min) {
-      setSeparatorPosition(max);
-    } else {
-      setSeparatorPosition(min);
-    }
-  }, [separatorPosition, setSeparatorPosition, min, max]);
-
-  const onKeyDown = composeEventHandlers(props.onKeyDown, (event: React.KeyboardEvent) => {
-    const rtlKey = rtl ? 'rtl' : 'ltr';
-
-    if (orientation === SplitterOrientation.VERTICAL) {
-      switch (event.key) {
-        case verticalArrowKeys[rtlKey][position].DECREASE:
-          type === SplitterType.VARIABLE &&
-            setRangedSeparatorPosition(separatorPosition - keyboardStep);
-          break;
-        case verticalArrowKeys[rtlKey][position].INCREASE:
-          type === SplitterType.VARIABLE &&
-            setRangedSeparatorPosition(separatorPosition + keyboardStep);
-          break;
-        case 'Enter':
-          toggleMinMax();
-          break;
-      }
-    } else {
-      switch (event.key) {
-        case horizontalArrowKeys[position].DECREASE:
-          type === SplitterType.VARIABLE &&
-            setRangedSeparatorPosition(separatorPosition - keyboardStep);
-          break;
-        case horizontalArrowKeys[position].INCREASE:
-          type === SplitterType.VARIABLE &&
-            setRangedSeparatorPosition(separatorPosition + keyboardStep);
-          break;
-        case 'Enter': {
-          toggleMinMax();
-          break;
+          // Must register global events to track mouse move outside the container
+          doc.addEventListener('mouseup', onMouseUp);
+          doc.addEventListener('mousemove', onMouseMove);
         }
-      }
-    }
-  });
+      };
 
-  const getSeparatorProps = useCallback(
-    ({ ...other } = {}): ISplitterGetterReturnProps => ({
-      'data-garden-container-id': 'containers.splitter.separator',
-      'data-garden-container-version': PACKAGE_VERSION,
-      role: 'separator',
-      ref: separatorRef,
-      onMouseDown,
-      onKeyDown,
-      onTouchStart,
-      'aria-label': ariaLabel,
-      'aria-controls': PRIMARY_PANE_ID,
-      'aria-valuenow': separatorPosition,
-      'aria-valuemin': min,
-      'aria-valuemax': max,
-      'aria-orientation': orientation,
-      tabIndex: 0,
-      ...other
-    }),
+      const handleTouchStart = () => {
+        if (!isFixed) {
+          updateOffsets();
+
+          // Must register global events to track touch move outside the container
+          doc.addEventListener('touchend', onTouchEnd);
+          doc.addEventListener('touchmove', onTouchMove);
+        }
+      };
+
+      const handleKeyDown = (event: React.KeyboardEvent) => {
+        if (event.key === KEYS.ENTER) {
+          if (separatorPosition === min) {
+            setSeparatorPosition(max);
+          } else {
+            setSeparatorPosition(min);
+          }
+        } else if (!isFixed) {
+          if (event.key === KEYS.RIGHT && orientation === 'vertical') {
+            let position;
+
+            if (rtl) {
+              position = separatorPosition + (isLeading ? keyboardStep : -keyboardStep);
+            } else {
+              position = separatorPosition + (isLeading ? -keyboardStep : keyboardStep);
+            }
+
+            setRangedSeparatorPosition(position);
+          } else if (event.key === KEYS.LEFT && orientation === 'vertical') {
+            let position;
+
+            if (rtl) {
+              position = separatorPosition + (isLeading ? -keyboardStep : keyboardStep);
+            } else {
+              position = separatorPosition + (isLeading ? keyboardStep : -keyboardStep);
+            }
+
+            setRangedSeparatorPosition(position);
+          } else if (event.key === KEYS.UP && orientation === 'horizontal') {
+            setRangedSeparatorPosition(
+              separatorPosition + (isLeading ? keyboardStep : -keyboardStep)
+            );
+          } else if (event.key === KEYS.DOWN && orientation === 'horizontal') {
+            setRangedSeparatorPosition(
+              separatorPosition + (isLeading ? -keyboardStep : keyboardStep)
+            );
+          }
+        }
+      };
+
+      const handleClick = () => {
+        if (isFixed) {
+          if (separatorPosition > min) {
+            setSeparatorPosition(min);
+          }
+          if (separatorPosition < max) {
+            setSeparatorPosition(max);
+          }
+        }
+      };
+
+      return {
+        role: role === null ? undefined : role,
+        onMouseDown: composeEventHandlers(onMouseDown, handleMouseDown),
+        onTouchStart: composeEventHandlers(onTouchStart, handleTouchStart),
+        onKeyDown: composeEventHandlers(onKeyDown, handleKeyDown),
+        onClick: composeEventHandlers(onClick, handleClick),
+        'aria-controls': primaryPaneId,
+        'aria-valuenow': separatorPosition,
+        'aria-valuemin': min,
+        'aria-valuemax': max,
+        'aria-orientation': orientation,
+        'data-garden-container-id': 'containers.splitter.separator',
+        'data-garden-container-version': PACKAGE_VERSION,
+        tabIndex: 0,
+        ...other
+      };
+    },
     [
-      separatorRef,
-      onMouseDown,
-      onKeyDown,
-      onTouchStart,
-      ariaLabel,
-      PRIMARY_PANE_ID,
-      separatorPosition,
-      min,
+      doc,
+      isFixed,
+      isLeading,
+      keyboardStep,
       max,
-      orientation
+      min,
+      move,
+      orientation,
+      primaryPaneId,
+      rtl,
+      separatorPosition,
+      separatorRef,
+      setRangedSeparatorPosition,
+      setSeparatorPosition
     ]
   );
 
-  const getPrimaryPaneProps = useCallback(
-    ({ ...other } = {}): ISplitterGetterReturnProps => ({
+  const getPrimaryPaneProps = useCallback<IUseSplitterReturnValue['getPrimaryPaneProps']>(
+    (other = {}) => ({
       'data-garden-container-id': 'containers.splitter.primaryPane',
       'data-garden-container-version': PACKAGE_VERSION,
-      id: PRIMARY_PANE_ID,
+      id: primaryPaneId,
       ...other
     }),
-    [PRIMARY_PANE_ID]
+    [primaryPaneId]
   );
 
-  return useMemo(
+  return useMemo<IUseSplitterReturnValue>(
     () => ({
       getSeparatorProps,
       getPrimaryPaneProps,
       valueNow: separatorPosition
     }),
-    [separatorPosition, getSeparatorProps, getPrimaryPaneProps]
+    [getSeparatorProps, getPrimaryPaneProps, separatorPosition]
   );
-}
+};
