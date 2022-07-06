@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { composeEventHandlers, KEYS, useId } from '@zendeskgarden/container-utilities';
 import { IUseSplitterProps, IUseSplitterReturnValue } from './types';
 
@@ -58,6 +58,7 @@ export const useSplitter = <T extends HTMLElement = HTMLElement>({
   const primaryPaneId = `${prefix}--primary-pane`;
   const isControlled = valueNow !== undefined && valueNow !== null;
   const [state, setState] = useState(defaultValueNow);
+  const [separatorElement, setSeparatorElement] = useState(separatorRef.current);
   const offsetRef = useRef<{ left: number; right: number; top: number; bottom: number }>({
     left: 0,
     right: 0,
@@ -66,6 +67,15 @@ export const useSplitter = <T extends HTMLElement = HTMLElement>({
   });
   const separatorPosition = isControlled ? valueNow : state;
   const doc = environment || document;
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    // Handle controlled component re-renders which set `separatorRef.current`
+    // to null during mouse/touch move events.
+    if (separatorRef.current !== separatorElement) {
+      setSeparatorElement(separatorRef.current);
+    }
+  });
 
   const setSeparatorPosition = isControlled ? onChange : setState;
 
@@ -84,7 +94,7 @@ export const useSplitter = <T extends HTMLElement = HTMLElement>({
 
   const move = useCallback(
     (pageX: number, pageY: number) => {
-      if (separatorRef.current) {
+      if (separatorElement) {
         const clientWidth = xor(rtl, isLeading) ? doc.body.clientWidth : undefined;
         const clientHeight = isLeading ? doc.body.clientHeight : undefined;
 
@@ -94,12 +104,7 @@ export const useSplitter = <T extends HTMLElement = HTMLElement>({
           // normalizePointerToSeparator aligns pointer true pixel coordinates and to the separator accounting for relative DOM positioning
           setRangedSeparatorPosition(
             // event.pageY is in pixel values
-            normalizePointerToSeparator(
-              offset,
-              pageY,
-              separatorRef.current.offsetHeight,
-              clientHeight
-            )
+            normalizePointerToSeparator(offset, pageY, separatorElement.offsetHeight, clientHeight)
           );
         } else {
           const offset = xor(rtl, isLeading) ? offsetRef.current.right : offsetRef.current.left;
@@ -107,17 +112,12 @@ export const useSplitter = <T extends HTMLElement = HTMLElement>({
           // normalizePointerToSeparator aligns pointer true pixel coordinates and to the separator accounting for relative DOM positioning
           setRangedSeparatorPosition(
             // event.pageX is in pixel values
-            normalizePointerToSeparator(
-              offset,
-              pageX,
-              separatorRef.current.offsetWidth,
-              clientWidth
-            )
+            normalizePointerToSeparator(offset, pageX, separatorElement.offsetWidth, clientWidth)
           );
         }
       }
     },
-    [doc, isLeading, orientation, rtl, separatorRef, setRangedSeparatorPosition]
+    [doc, isLeading, orientation, rtl, separatorElement, setRangedSeparatorPosition]
   );
 
   const getSeparatorProps = useCallback<IUseSplitterReturnValue['getSeparatorProps']>(
@@ -147,8 +147,8 @@ export const useSplitter = <T extends HTMLElement = HTMLElement>({
       // derive the distances between viewport to the outer edges of the separator position, offset by scroll
       // see https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect
       const updateOffsets = () => {
-        if (separatorRef.current) {
-          const rect = separatorRef.current.getBoundingClientRect();
+        if (separatorElement) {
+          const rect = separatorElement.getBoundingClientRect();
           const clientWidth = doc.body.clientWidth;
           const clientHeight = doc.body.clientHeight;
           const win = doc.documentElement || doc.body.parentNode || doc.body;
@@ -264,7 +264,7 @@ export const useSplitter = <T extends HTMLElement = HTMLElement>({
       primaryPaneId,
       rtl,
       separatorPosition,
-      separatorRef,
+      separatorElement,
       setRangedSeparatorPosition,
       setSeparatorPosition
     ]
