@@ -20,7 +20,7 @@ SplitterContainer.propTypes = {
   children: PropTypes.func,
   render: PropTypes.func,
   idPrefix: PropTypes.string,
-  environment: PropTypes.any.isRequired,
+  environment: PropTypes.any,
   isFixed: PropTypes.bool,
   min: PropTypes.number.isRequired,
   max: PropTypes.number.isRequired,

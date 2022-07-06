@@ -84,26 +84,37 @@ export const useSplitter = <T extends HTMLElement = HTMLElement>({
 
   const move = useCallback(
     (pageX: number, pageY: number) => {
-      const elem = separatorRef.current;
-      const clientWidth = xor(rtl, isLeading) ? doc.body.clientWidth : undefined;
-      const clientHeight = isLeading ? doc.body.clientHeight : undefined;
+      if (separatorRef.current) {
+        const clientWidth = xor(rtl, isLeading) ? doc.body.clientWidth : undefined;
+        const clientHeight = isLeading ? doc.body.clientHeight : undefined;
 
-      if (orientation === 'horizontal') {
-        const offset = isLeading ? offsetRef.current.bottom : offsetRef.current.top;
+        if (orientation === 'horizontal') {
+          const offset = isLeading ? offsetRef.current.bottom : offsetRef.current.top;
 
-        // normalizePointerToSeparator aligns pointer true pixel coordinates and to the separator accounting for relative DOM positioning
-        setRangedSeparatorPosition(
-          // event.pageY is in pixel values
-          normalizePointerToSeparator(offset, pageY, elem?.offsetHeight, clientHeight)
-        );
-      } else {
-        const offset = xor(rtl, isLeading) ? offsetRef.current.right : offsetRef.current.left;
+          // normalizePointerToSeparator aligns pointer true pixel coordinates and to the separator accounting for relative DOM positioning
+          setRangedSeparatorPosition(
+            // event.pageY is in pixel values
+            normalizePointerToSeparator(
+              offset,
+              pageY,
+              separatorRef.current.offsetHeight,
+              clientHeight
+            )
+          );
+        } else {
+          const offset = xor(rtl, isLeading) ? offsetRef.current.right : offsetRef.current.left;
 
-        // normalizePointerToSeparator aligns pointer true pixel coordinates and to the separator accounting for relative DOM positioning
-        setRangedSeparatorPosition(
-          // event.pageX is in pixel values
-          normalizePointerToSeparator(offset, pageX, elem?.offsetWidth, clientWidth)
-        );
+          // normalizePointerToSeparator aligns pointer true pixel coordinates and to the separator accounting for relative DOM positioning
+          setRangedSeparatorPosition(
+            // event.pageX is in pixel values
+            normalizePointerToSeparator(
+              offset,
+              pageX,
+              separatorRef.current.offsetWidth,
+              clientWidth
+            )
+          );
+        }
       }
     },
     [doc, isLeading, orientation, rtl, separatorRef, setRangedSeparatorPosition]
@@ -136,19 +147,21 @@ export const useSplitter = <T extends HTMLElement = HTMLElement>({
       // derive the distances between viewport to the outer edges of the separator position, offset by scroll
       // see https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect
       const updateOffsets = () => {
-        const rect = separatorRef.current!.getBoundingClientRect();
-        const clientWidth = doc.body.clientWidth;
-        const clientHeight = doc.body.clientHeight;
-        const win = doc.documentElement || document.body.parentNode || document.body;
+        if (separatorRef.current) {
+          const rect = separatorRef.current.getBoundingClientRect();
+          const clientWidth = doc.body.clientWidth;
+          const clientHeight = doc.body.clientHeight;
+          const win = doc.documentElement || doc.body.parentNode || doc.body;
 
-        // capture distance from left side of viewport to the separator position offset by horizontal scroll
-        offsetRef.current.left = rect.left - separatorPosition + win.scrollLeft;
-        // capture distance from right side of viewport to the separator position offset by horizontal scroll
-        offsetRef.current.right = clientWidth - rect.right - separatorPosition - win.scrollLeft;
-        // capture distance from top side of viewport to the separator position offset by vertical scroll
-        offsetRef.current.top = rect.top - separatorPosition + win.scrollTop;
-        // capture distance from bottom side of viewport to the separator position offset by vertical scroll
-        offsetRef.current.bottom = clientHeight - rect.bottom - separatorPosition - win.scrollTop;
+          // capture distance from left side of viewport to the separator position offset by horizontal scroll
+          offsetRef.current.left = rect.left - separatorPosition + win.scrollLeft;
+          // capture distance from right side of viewport to the separator position offset by horizontal scroll
+          offsetRef.current.right = clientWidth - rect.right - separatorPosition - win.scrollLeft;
+          // capture distance from top side of viewport to the separator position offset by vertical scroll
+          offsetRef.current.top = rect.top - separatorPosition + win.scrollTop;
+          // capture distance from bottom side of viewport to the separator position offset by vertical scroll
+          offsetRef.current.bottom = clientHeight - rect.bottom - separatorPosition - win.scrollTop;
+        }
       };
 
       const handleMouseDown = () => {

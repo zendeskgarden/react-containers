@@ -5,23 +5,11 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React, { useState } from 'react';
+import React, { createRef, useState } from 'react';
 import { render, fireEvent } from '@testing-library/react';
+import { IUseSplitterProps, IUseSplitterReturnValue } from './types';
 import { SplitterContainer } from './';
-import {
-  IUseSplitterReturnValue,
-  IWindowLike,
-  SplitterOrientation,
-  SplitterType,
-  SplitterPosition,
-  normalizePointerToSeparator,
-  KEYBOARD_STEP
-} from './useSplitter';
-
-// make useUIDSeed consistent for testing purposes
-jest.mock('react-uid', () => ({
-  useUIDSeed: jest.fn(() => () => '1')
-}));
+import { KEYBOARD_STEP } from './useSplitter';
 
 const paneStyle: React.CSSProperties = {
   flexGrow: 0,
@@ -76,110 +64,82 @@ class ExtendedMouseEvent extends MouseEvent implements MouseEventInit {
 
 describe('SplitterContainer', () => {
   const UncontrolledTestSplitter = ({
-    type = SplitterType.VARIABLE,
     min = 0,
     max = 100,
-    orientation = SplitterOrientation.VERTICAL,
     defaultValueNow = 20,
-    position = SplitterPosition.TRAILS,
-    environment = window,
-    rtl
-  }: {
-    type?: SplitterType;
-    min?: number;
-    max?: number;
-    orientation?: SplitterOrientation;
-    defaultValueNow?: number;
-    position?: SplitterPosition;
-    environment?: Window | IWindowLike;
-    rtl?: boolean;
-  }) => (
-    <SplitterContainer
-      ariaLabel="flex-pane"
-      environment={environment}
-      type={type}
-      min={min}
-      max={max}
-      orientation={orientation}
-      defaultValueNow={defaultValueNow}
-      position={position}
-      rtl={rtl}
-    >
-      {({ getSeparatorProps, getPrimaryPaneProps, valueNow }: IUseSplitterReturnValue) => {
-        const separatorProps = getSeparatorProps({
-          style: separatorStyle,
-          tabIndex: 0
-        });
-        const { style: primaryPaneStyle, ...primaryPaneProps } = getPrimaryPaneProps({
-          style: paneStyle
-        });
+    ...props
+  }: Partial<IUseSplitterProps>) => {
+    const separatorRef = createRef<HTMLDivElement>();
 
-        return (
-          <div style={flexContainerStyle}>
-            <div {...primaryPaneProps} style={{ ...primaryPaneStyle, flexBasis: `${valueNow}px` }}>
-              Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+    return (
+      <SplitterContainer
+        min={min}
+        max={max}
+        defaultValueNow={defaultValueNow}
+        separatorRef={separatorRef}
+        {...props}
+      >
+        {({ getSeparatorProps, getPrimaryPaneProps, valueNow }: IUseSplitterReturnValue) => {
+          const separatorProps = getSeparatorProps<HTMLDivElement>({
+            'aria-label': 'flex-pane',
+            style: separatorStyle,
+            tabIndex: 0
+          });
+          const { style: primaryPaneStyle, ...primaryPaneProps } =
+            getPrimaryPaneProps<HTMLDivElement>({
+              style: paneStyle
+            });
+
+          return (
+            <div style={flexContainerStyle}>
+              <div
+                {...primaryPaneProps}
+                style={{ ...primaryPaneStyle, flexBasis: `${valueNow}px` }}
+              >
+                Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+              </div>
+              <div {...separatorProps} ref={separatorRef} />
             </div>
-            <div {...separatorProps} />
-          </div>
-        );
-      }}
-    </SplitterContainer>
-  );
+          );
+        }}
+      </SplitterContainer>
+    );
+  };
 
-  const ControlledTestSplitter = ({
-    type = SplitterType.VARIABLE,
-    min = 0,
-    max = 100,
-    orientation = SplitterOrientation.VERTICAL,
-    valueNow,
-    onChange,
-    environment = window
-  }: {
-    type?: SplitterType;
-    min?: number;
-    max?: number;
-    orientation?: SplitterOrientation;
-    valueNow: number;
-    onChange?: (value: number) => void;
-    environment?: Window | IWindowLike;
-  }) => (
-    <SplitterContainer
-      environment={environment}
-      ariaLabel="flex-pane"
-      type={type}
-      min={min}
-      max={max}
-      orientation={orientation}
-      valueNow={valueNow}
-      onChange={onChange}
-      position={SplitterPosition.TRAILS}
-    >
-      {({
-        getSeparatorProps,
-        getPrimaryPaneProps,
-        valueNow: paneValueNow
-      }: IUseSplitterReturnValue) => {
-        const separatorProps = getSeparatorProps({
-          style: separatorStyle
-        });
-        const { style: primaryPaneStyle, ...primaryPaneProps } = getPrimaryPaneProps({
-          style: paneStyle
-        });
+  const ControlledTestSplitter = ({ min = 0, max = 100, ...props }: Partial<IUseSplitterProps>) => {
+    const separatorRef = createRef<HTMLDivElement>();
 
-        return (
-          <div style={flexContainerStyle}>
-            <div
-              {...primaryPaneProps}
-              style={{ ...primaryPaneStyle, flexBasis: `${paneValueNow}px` }}
-            >
-              Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+    return (
+      <SplitterContainer min={min} max={max} separatorRef={separatorRef} {...props}>
+        {({
+          getSeparatorProps,
+          getPrimaryPaneProps,
+          valueNow: paneValueNow
+        }: IUseSplitterReturnValue) => {
+          const separatorProps = getSeparatorProps<HTMLDivElement>({
+            'aria-label': 'flex-pane',
+            style: separatorStyle
+          });
+          const { style: primaryPaneStyle, ...primaryPaneProps } =
+            getPrimaryPaneProps<HTMLDivElement>({
+              style: paneStyle
+            });
+
+          return (
+            <div style={flexContainerStyle}>
+              <div
+                {...primaryPaneProps}
+                style={{ ...primaryPaneStyle, flexBasis: `${paneValueNow}px` }}
+              >
+                Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+              </div>
+              <div {...separatorProps} ref={separatorRef} />
             </div>
-            <div {...separatorProps} />
-          </div>
-        );
-      }}
-    </SplitterContainer>
-  );
+          );
+        }}
+      </SplitterContainer>
+    );
+  };
 
   describe('getSeparatorProps', () => {
     it('returns correct default props', () => {
@@ -187,17 +147,9 @@ describe('SplitterContainer', () => {
       let primaryPaneProps;
 
       render(
-        <SplitterContainer
-          ariaLabel="flex-pane"
-          type={SplitterType.VARIABLE}
-          min={0}
-          max={100}
-          orientation={SplitterOrientation.VERTICAL}
-          position={SplitterPosition.TRAILS}
-          environment={window}
-        >
+        <SplitterContainer idPrefix="1" min={0} max={100} separatorRef={createRef()}>
           {({ getSeparatorProps, getPrimaryPaneProps }: IUseSplitterReturnValue) => {
-            separatorProps = getSeparatorProps();
+            separatorProps = getSeparatorProps({ 'aria-label': 'flex-pane' });
             primaryPaneProps = getPrimaryPaneProps();
 
             return null;
@@ -221,19 +173,18 @@ describe('SplitterContainer', () => {
           "aria-valuenow": 0,
           "data-garden-container-id": "containers.splitter.separator",
           "data-garden-container-version": "version",
+          "onClick": [Function],
           "onKeyDown": [Function],
           "onMouseDown": [Function],
           "onTouchStart": [Function],
-          "ref": Object {
-            "current": null,
-          },
           "role": "separator",
           "tabIndex": 0,
         }
       `);
     });
+
     describe('accessibility attributes', () => {
-      type AccessibilityAttributes = [string, string | SplitterOrientation];
+      type AccessibilityAttributes = [string, string];
       it.each<AccessibilityAttributes>([
         ['role', 'separator'],
         ['aria-controls', '1--primary-pane'],
@@ -242,24 +193,31 @@ describe('SplitterContainer', () => {
         ['aria-valuemax', '100'],
         ['aria-valuenow', '20'],
         ['tabindex', '0'],
-        ['aria-orientation', SplitterOrientation.VERTICAL]
+        ['aria-orientation', 'vertical']
       ])('should applies correct accessibility %s', (attribute, value) => {
-        const { getByRole } = render(<UncontrolledTestSplitter />);
+        const { getByRole } = render(<UncontrolledTestSplitter idPrefix="1" />);
         const element = getByRole('separator');
 
         expect(element).toHaveAttribute(attribute, value);
       });
     });
+
     describe('mouse', () => {
       describe('variable mode', () => {
-        type MouseDownMatrix = [SplitterOrientation, 'pageX' | 'pageY', number, number, number];
+        type MouseDownMatrix = [
+          IUseSplitterProps['orientation'],
+          'pageX' | 'pageY',
+          number,
+          number,
+          number
+        ];
         it.each<MouseDownMatrix>([
-          [SplitterOrientation.VERTICAL, 'pageX', 30, 20, 30],
-          [SplitterOrientation.VERTICAL, 'pageX', 101, 20, 100],
-          [SplitterOrientation.VERTICAL, 'pageX', -21, 20, 0],
-          [SplitterOrientation.HORIZONTAL, 'pageY', 70, 20, 70],
-          [SplitterOrientation.HORIZONTAL, 'pageY', 101, 20, 100],
-          [SplitterOrientation.HORIZONTAL, 'pageY', -21, 20, 0]
+          ['vertical', 'pageX', 30, 20, 30],
+          ['vertical', 'pageX', 101, 20, 100],
+          ['vertical', 'pageX', -21, 20, 0],
+          ['horizontal', 'pageY', 70, 20, 70],
+          ['horizontal', 'pageY', 101, 20, 100],
+          ['horizontal', 'pageY', -21, 20, 0]
         ])(
           'should move %s splitter with %s mouse set to %i from %i to %i',
           (orientation, mouseAxis, mousePosition, start, end) => {
@@ -291,13 +249,9 @@ describe('SplitterContainer', () => {
             expect(element).toHaveAttribute('aria-valuenow', String(end));
           }
         );
-        it('should respond to mouse leave and not move if disengaged', () => {
-          const { getByRole } = render(
-            <UncontrolledTestSplitter
-              orientation={SplitterOrientation.VERTICAL}
-              defaultValueNow={20}
-            />
-          );
+
+        it('should respond to mouse leave by continuing to move', () => {
+          const { getByRole } = render(<UncontrolledTestSplitter defaultValueNow={20} />);
           const element = getByRole('separator');
 
           fireEvent.mouseDown(element);
@@ -305,15 +259,11 @@ describe('SplitterContainer', () => {
           fireEvent.mouseLeave(document.body);
           fireEvent(document, new ExtendedMouseEvent('mousemove', { pageX: 70 }));
 
-          expect(element).toHaveAttribute('aria-valuenow', '70');
+          expect(element).toHaveAttribute('aria-valuenow', '90');
         });
+
         it('should respond to mouse up and not move if disengaged', () => {
-          const { getByRole } = render(
-            <UncontrolledTestSplitter
-              orientation={SplitterOrientation.VERTICAL}
-              defaultValueNow={20}
-            />
-          );
+          const { getByRole } = render(<UncontrolledTestSplitter defaultValueNow={20} />);
           const element = getByRole('separator');
 
           fireEvent.mouseDown(element);
@@ -324,26 +274,23 @@ describe('SplitterContainer', () => {
           expect(element).toHaveAttribute('aria-valuenow', '70');
         });
       });
+
       describe('fixed', () => {
-        type MouseDownMatrix = [SplitterOrientation, number, number];
+        type MouseDownMatrix = [IUseSplitterProps['orientation'], number, number];
         it.each<MouseDownMatrix>([
-          [SplitterOrientation.VERTICAL, 20, 100],
-          [SplitterOrientation.VERTICAL, 0, 100],
-          [SplitterOrientation.VERTICAL, 100, 0],
-          [SplitterOrientation.HORIZONTAL, 20, 100],
-          [SplitterOrientation.HORIZONTAL, 0, 100],
-          [SplitterOrientation.HORIZONTAL, 100, 0]
+          ['vertical', 20, 100],
+          ['vertical', 0, 100],
+          ['vertical', 100, 0],
+          ['horizontal', 20, 100],
+          ['horizontal', 0, 100],
+          ['horizontal', 100, 0]
         ])('should move %s splitter using mouse down from %i to %i', (orientation, start, end) => {
           const { getByRole } = render(
-            <UncontrolledTestSplitter
-              type={SplitterType.FIXED}
-              orientation={orientation}
-              defaultValueNow={start}
-            />
+            <UncontrolledTestSplitter isFixed orientation={orientation} defaultValueNow={start} />
           );
           const element = getByRole('separator');
 
-          fireEvent.mouseDown(element);
+          fireEvent.click(element);
 
           expect(element).toHaveAttribute('aria-valuenow', String(end));
         });
@@ -352,14 +299,20 @@ describe('SplitterContainer', () => {
 
     describe('touch', () => {
       describe('variable mode', () => {
-        type TouchMatrix = [SplitterOrientation, 'pageX' | 'pageY', number, number, number];
+        type TouchMatrix = [
+          IUseSplitterProps['orientation'],
+          'pageX' | 'pageY',
+          number,
+          number,
+          number
+        ];
         it.each<TouchMatrix>([
-          [SplitterOrientation.VERTICAL, 'pageX', 50, 20, 50],
-          [SplitterOrientation.VERTICAL, 'pageX', 101, 20, 100],
-          [SplitterOrientation.VERTICAL, 'pageX', -21, 20, 0],
-          [SplitterOrientation.HORIZONTAL, 'pageY', 70, 20, 70],
-          [SplitterOrientation.HORIZONTAL, 'pageY', 101, 20, 100],
-          [SplitterOrientation.HORIZONTAL, 'pageY', -21, 20, 0]
+          ['vertical', 'pageX', 50, 20, 50],
+          ['vertical', 'pageX', 101, 20, 100],
+          ['vertical', 'pageX', -21, 20, 0],
+          ['horizontal', 'pageY', 70, 20, 70],
+          ['horizontal', 'pageY', 101, 20, 100],
+          ['horizontal', 'pageY', -21, 20, 0]
         ])(
           'should move %s splitter using %s touch set to %i from %i to %i',
           (orientation, touchAxis, touchPosition, start, end) => {
@@ -393,25 +346,21 @@ describe('SplitterContainer', () => {
       });
 
       describe('fixed', () => {
-        type TouchMatrix = [SplitterOrientation, number, number];
+        type TouchMatrix = [IUseSplitterProps['orientation'], number, number];
         it.each<TouchMatrix>([
-          [SplitterOrientation.VERTICAL, 20, 100],
-          [SplitterOrientation.VERTICAL, 0, 100],
-          [SplitterOrientation.VERTICAL, 100, 0],
-          [SplitterOrientation.HORIZONTAL, 20, 100],
-          [SplitterOrientation.HORIZONTAL, 0, 100],
-          [SplitterOrientation.HORIZONTAL, 100, 0]
+          ['vertical', 20, 100],
+          ['vertical', 0, 100],
+          ['vertical', 100, 0],
+          ['horizontal', 20, 100],
+          ['horizontal', 0, 100],
+          ['horizontal', 100, 0]
         ])('should move %s splitter using touch from %i to %i', (orientation, start, end) => {
           const { getByRole } = render(
-            <UncontrolledTestSplitter
-              type={SplitterType.FIXED}
-              orientation={orientation}
-              defaultValueNow={start}
-            />
+            <UncontrolledTestSplitter isFixed orientation={orientation} defaultValueNow={start} />
           );
           const element = getByRole('separator');
 
-          fireEvent.touchStart(element);
+          fireEvent.click(element);
 
           expect(element).toHaveAttribute('aria-valuenow', String(end));
         });
@@ -419,18 +368,18 @@ describe('SplitterContainer', () => {
     });
 
     describe('keyboard', () => {
-      type KeyDownMatrix = [SplitterOrientation, string, number, number];
+      type KeyDownMatrix = [IUseSplitterProps['orientation'], string, number, number];
 
       describe('variable mode', () => {
         it.each<KeyDownMatrix>([
-          [SplitterOrientation.VERTICAL, 'ArrowRight', 20, 20 + KEYBOARD_STEP],
-          [SplitterOrientation.VERTICAL, 'ArrowLeft', 70, 70 - KEYBOARD_STEP],
-          [SplitterOrientation.VERTICAL, 'Enter', 20, 0],
-          [SplitterOrientation.VERTICAL, 'Enter', 0, 100],
-          [SplitterOrientation.HORIZONTAL, 'ArrowUp', 70, 70 - KEYBOARD_STEP],
-          [SplitterOrientation.HORIZONTAL, 'ArrowDown', 20, 20 + KEYBOARD_STEP],
-          [SplitterOrientation.HORIZONTAL, 'Enter', 20, 0],
-          [SplitterOrientation.HORIZONTAL, 'Enter', 0, 100]
+          ['vertical', 'ArrowRight', 20, 20 + KEYBOARD_STEP],
+          ['vertical', 'ArrowLeft', 70, 70 - KEYBOARD_STEP],
+          ['vertical', 'Enter', 20, 0],
+          ['vertical', 'Enter', 0, 100],
+          ['horizontal', 'ArrowUp', 70, 70 - KEYBOARD_STEP],
+          ['horizontal', 'ArrowDown', 20, 20 + KEYBOARD_STEP],
+          ['horizontal', 'Enter', 20, 0],
+          ['horizontal', 'Enter', 0, 100]
         ])('should move %s splitter using %s from %i to %i', (orientation, key, start, end) => {
           const { getByRole } = render(
             <UncontrolledTestSplitter orientation={orientation} defaultValueNow={start} />
@@ -445,17 +394,13 @@ describe('SplitterContainer', () => {
 
       describe('fixed mode', () => {
         it.each<KeyDownMatrix>([
-          [SplitterOrientation.VERTICAL, 'Enter', 20, 0],
-          [SplitterOrientation.VERTICAL, 'Enter', 0, 100],
-          [SplitterOrientation.HORIZONTAL, 'Enter', 20, 0],
-          [SplitterOrientation.HORIZONTAL, 'Enter', 0, 100]
+          ['vertical', 'Enter', 20, 0],
+          ['vertical', 'Enter', 0, 100],
+          ['horizontal', 'Enter', 20, 0],
+          ['horizontal', 'Enter', 0, 100]
         ])('should move %s splitter using %s from %i to %i', (orientation, key, start, end) => {
           const { getByRole } = render(
-            <UncontrolledTestSplitter
-              type={SplitterType.FIXED}
-              orientation={orientation}
-              defaultValueNow={start}
-            />
+            <UncontrolledTestSplitter isFixed orientation={orientation} defaultValueNow={start} />
           );
           const element = getByRole('separator');
 
@@ -465,6 +410,7 @@ describe('SplitterContainer', () => {
         });
       });
     });
+
     describe('controlled mode', () => {
       it('should update onChange with mouse input', () => {
         const valueNowStart = 20;
@@ -475,13 +421,7 @@ describe('SplitterContainer', () => {
 
             testValues.valueNow = valueNow;
 
-            return (
-              <ControlledTestSplitter
-                orientation={SplitterOrientation.VERTICAL}
-                valueNow={valueNow}
-                onChange={setValueNow}
-              />
-            );
+            return <ControlledTestSplitter valueNow={valueNow} onChange={setValueNow} />;
           })
         );
         const element = getByRole('separator');
@@ -506,6 +446,7 @@ describe('SplitterContainer', () => {
         expect(testValues.valueNow).toBe(60);
         expect(element).toHaveAttribute('aria-valuenow', '60');
       });
+
       it('should update onChange with touch input', () => {
         const valueNowStart = 20;
         const testValues: { valueNow?: number } = {};
@@ -515,13 +456,7 @@ describe('SplitterContainer', () => {
 
             testValues.valueNow = valueNow;
 
-            return (
-              <ControlledTestSplitter
-                orientation={SplitterOrientation.VERTICAL}
-                valueNow={valueNow}
-                onChange={setValueNow}
-              />
-            );
+            return <ControlledTestSplitter valueNow={valueNow} onChange={setValueNow} />;
           })
         );
         const element = getByRole('separator');
@@ -549,6 +484,7 @@ describe('SplitterContainer', () => {
         expect(testValues.valueNow).toBe(40);
         expect(element).toHaveAttribute('aria-valuenow', '40');
       });
+
       it('should update onChange with keyboard input', () => {
         const testValues: { valueNow?: number } = {};
         const { getByRole } = render(
@@ -557,13 +493,7 @@ describe('SplitterContainer', () => {
 
             testValues.valueNow = valueNow;
 
-            return (
-              <ControlledTestSplitter
-                orientation={SplitterOrientation.VERTICAL}
-                valueNow={valueNow}
-                onChange={setValueNow}
-              />
-            );
+            return <ControlledTestSplitter valueNow={valueNow} onChange={setValueNow} />;
           })
         );
         const element = getByRole('separator');
@@ -573,6 +503,7 @@ describe('SplitterContainer', () => {
         expect(testValues.valueNow).toBe(0);
         expect(element).toHaveAttribute('aria-valuenow', '0');
       });
+
       describe('when setting valueNow prop and supplying no onChange function', () => {
         it('should not change aria-valuenow with pointer input', () => {
           const valueNowStart = 20;
@@ -581,12 +512,7 @@ describe('SplitterContainer', () => {
             React.createElement(() => {
               testValues.valueNow = valueNowStart;
 
-              return (
-                <ControlledTestSplitter
-                  orientation={SplitterOrientation.VERTICAL}
-                  valueNow={testValues.valueNow}
-                />
-              );
+              return <ControlledTestSplitter valueNow={testValues.valueNow} />;
             })
           );
           const element = getByRole('separator');
@@ -617,39 +543,32 @@ describe('SplitterContainer', () => {
       });
     });
   });
-  describe('normalizePointerToSeparator', () => {
-    // must write a manual test for the normalize function in order factor the undefined case for separator element ref
-    // e.g. separatorRef.current?.offsetHeight
-    it('should accept undefined for separatorHeightOrWidth', () => {
-      expect(normalizePointerToSeparator(0, 50, undefined, 100)).toBe(50);
-    });
-  });
+
   describe('position leads mode', () => {
     // JSDom does not support clientWidth or clientHeight and we must mock it to test the inverted position calculation for position leads mode
-    const windowObjectMock = {
-      scrollX: window.scrollX,
-      scrollY: window.scrollY,
-      document: {
-        addEventListener: document.addEventListener.bind(document),
-        removeEventListener: document.removeEventListener.bind(document),
-        body: {
-          addEventListener: document.body.addEventListener.bind(document.body),
-          removeEventListener: document.body.removeEventListener.bind(document.body),
-          clientWidth: 100,
-          clientHeight: 100
-        }
+    const documentMockObject = {
+      addEventListener: document.addEventListener.bind(document),
+      removeEventListener: document.removeEventListener.bind(document),
+      body: {
+        addEventListener: document.body.addEventListener.bind(document.body),
+        removeEventListener: document.body.removeEventListener.bind(document.body),
+        clientWidth: 100,
+        clientHeight: 100
+      },
+      documentElement: {
+        scrollLeft: 0,
+        scrollTop: 0
       }
-    };
+    } as Document;
 
     describe('mouse navigation', () => {
       it('should move vertical splitter with pointer set to 30 from 30 to 70', () => {
         const defaultValueNow = 30;
         const { getByRole } = render(
           <UncontrolledTestSplitter
-            environment={windowObjectMock}
-            orientation={SplitterOrientation.VERTICAL}
+            environment={documentMockObject}
             defaultValueNow={defaultValueNow}
-            position={SplitterPosition.LEADS}
+            isLeading
           />
         );
         const element = getByRole('separator');
@@ -659,7 +578,7 @@ describe('SplitterContainer', () => {
           bottom: 0,
           height: 0,
           left: 0,
-          right: windowObjectMock.document.body.clientWidth - defaultValueNow,
+          right: documentMockObject.body.clientWidth - defaultValueNow,
           top: 0,
           width: 0,
           x: 0,
@@ -675,21 +594,22 @@ describe('SplitterContainer', () => {
 
         expect(element).toHaveAttribute('aria-valuenow', '70');
       });
+
       it('should move horizontal splitter with pointer set to 40 from 30 to 60', () => {
         const defaultValueNow = 30;
         const { getByRole } = render(
           <UncontrolledTestSplitter
-            environment={windowObjectMock}
-            orientation={SplitterOrientation.HORIZONTAL}
+            environment={documentMockObject}
+            orientation="horizontal"
             defaultValueNow={defaultValueNow}
-            position={SplitterPosition.LEADS}
+            isLeading
           />
         );
         const element = getByRole('separator');
 
         // must mock bottom position for offset calculation
         element.getBoundingClientRect = () => ({
-          bottom: windowObjectMock.document.body.clientHeight - defaultValueNow,
+          bottom: documentMockObject.body.clientHeight - defaultValueNow,
           height: 0,
           left: 0,
           right: 0,
@@ -708,15 +628,15 @@ describe('SplitterContainer', () => {
 
         expect(element).toHaveAttribute('aria-valuenow', '60');
       });
+
       describe('rtl', () => {
         it('should move vertical splitter with pointer set to 30 from 70 to 30', () => {
           const defaultValueNow = 30;
           const { getByRole } = render(
             <UncontrolledTestSplitter
-              environment={windowObjectMock}
-              orientation={SplitterOrientation.VERTICAL}
+              environment={documentMockObject}
               defaultValueNow={defaultValueNow}
-              position={SplitterPosition.LEADS}
+              isLeading
               rtl
             />
           );
@@ -727,7 +647,7 @@ describe('SplitterContainer', () => {
             bottom: 0,
             height: 0,
             left: defaultValueNow,
-            right: windowObjectMock.document.body.clientWidth - defaultValueNow,
+            right: documentMockObject.body.clientWidth - defaultValueNow,
             top: 0,
             width: 0,
             x: 0,
@@ -745,15 +665,15 @@ describe('SplitterContainer', () => {
         });
       });
     });
+
     describe('touch navigation', () => {
       it('should move vertical splitter with pointer set to 30 from 30 to 70', () => {
         const defaultValueNow = 30;
         const { getByRole } = render(
           <UncontrolledTestSplitter
-            environment={windowObjectMock}
-            orientation={SplitterOrientation.VERTICAL}
+            environment={documentMockObject}
             defaultValueNow={defaultValueNow}
-            position={SplitterPosition.LEADS}
+            isLeading
           />
         );
         const element = getByRole('separator');
@@ -763,7 +683,7 @@ describe('SplitterContainer', () => {
           bottom: 0,
           height: 0,
           left: 0,
-          right: windowObjectMock.document.body.clientWidth - defaultValueNow,
+          right: documentMockObject.body.clientWidth - defaultValueNow,
           top: 0,
           width: 0,
           x: 0,
@@ -781,21 +701,22 @@ describe('SplitterContainer', () => {
 
         expect(element).toHaveAttribute('aria-valuenow', '70');
       });
+
       it('should move horizontal splitter with pointer set to 40 from 30 to 60', () => {
         const defaultValueNow = 30;
         const { getByRole } = render(
           <UncontrolledTestSplitter
-            environment={windowObjectMock}
-            orientation={SplitterOrientation.HORIZONTAL}
+            environment={documentMockObject}
+            orientation="horizontal"
             defaultValueNow={defaultValueNow}
-            position={SplitterPosition.LEADS}
+            isLeading
           />
         );
         const element = getByRole('separator');
 
         // must mock bottom position for offset calculation
         element.getBoundingClientRect = () => ({
-          bottom: windowObjectMock.document.body.clientHeight - defaultValueNow,
+          bottom: documentMockObject.body.clientHeight - defaultValueNow,
           height: 0,
           left: 0,
           right: 0,
@@ -816,15 +737,15 @@ describe('SplitterContainer', () => {
 
         expect(element).toHaveAttribute('aria-valuenow', '60');
       });
+
       describe('rtl', () => {
         it('should move vertical splitter with pointer set to 30 from 70 to 30', () => {
           const defaultValueNow = 30;
           const { getByRole } = render(
             <UncontrolledTestSplitter
-              environment={windowObjectMock}
-              orientation={SplitterOrientation.VERTICAL}
+              environment={documentMockObject}
               defaultValueNow={defaultValueNow}
-              position={SplitterPosition.LEADS}
+              isLeading
               rtl
             />
           );
@@ -835,7 +756,7 @@ describe('SplitterContainer', () => {
             bottom: 0,
             height: 0,
             left: defaultValueNow,
-            right: windowObjectMock.document.body.clientWidth - defaultValueNow,
+            right: documentMockObject.body.clientWidth - defaultValueNow,
             top: 0,
             width: 0,
             x: 0,
@@ -855,18 +776,13 @@ describe('SplitterContainer', () => {
         });
       });
     });
+
     describe('keyboard navigation', () => {
       it(`should increase vertical splitter when arrow left is pressed from 30 to ${
         30 + KEYBOARD_STEP
       }`, () => {
         const { getByRole } = render(
-          <UncontrolledTestSplitter
-            environment={windowObjectMock}
-            orientation={SplitterOrientation.VERTICAL}
-            defaultValueNow={30}
-            position={SplitterPosition.TRAILS}
-            rtl
-          />
+          <UncontrolledTestSplitter environment={documentMockObject} defaultValueNow={30} rtl />
         );
         const element = getByRole('separator');
 
@@ -874,18 +790,13 @@ describe('SplitterContainer', () => {
 
         expect(element).toHaveAttribute('aria-valuenow', `${30 + KEYBOARD_STEP}`);
       });
+
       describe('rtl', () => {
         it(`should decrease vertical splitter when arrow right is pressed from 80 to ${
           80 - KEYBOARD_STEP
         }`, () => {
           const { getByRole } = render(
-            <UncontrolledTestSplitter
-              environment={windowObjectMock}
-              orientation={SplitterOrientation.VERTICAL}
-              defaultValueNow={80}
-              position={SplitterPosition.TRAILS}
-              rtl
-            />
+            <UncontrolledTestSplitter environment={documentMockObject} defaultValueNow={80} rtl />
           );
           const element = getByRole('separator');
 

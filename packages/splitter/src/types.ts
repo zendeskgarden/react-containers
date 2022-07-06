@@ -11,7 +11,7 @@ export interface IUseSplitterProps<T = HTMLElement> {
   /** Prefixes IDs for the splitter */
   idPrefix?: string;
   /** Sets the window environment to attach events to */
-  environment: Document;
+  environment?: Document;
   /** Determines whether a splitter behaves in fixed or variable mode */
   isFixed?: boolean;
   /** Indicates whether the splitter leads or trails the primary pane */
