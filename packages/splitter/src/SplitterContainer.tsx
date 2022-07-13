@@ -7,65 +7,34 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  useSplitter,
-  IUseSplitterProps,
-  IUseSplitterReturnValue,
-  SplitterOrientation,
-  SplitterType,
-  SplitterPosition,
-  KEYBOARD_STEP
-} from './useSplitter';
+import { useSplitter, KEYBOARD_STEP } from './useSplitter';
+import { ISplitterContainerProps } from './types';
 
-export interface ISplitterContainerProps extends IUseSplitterProps {
-  /** Documents the render function */
-  render?: (options: IUseSplitterReturnValue) => React.ReactNode;
-  /** Documents the children prop */
-  children?: (options: IUseSplitterReturnValue) => React.ReactNode;
-}
-
-export const SplitterContainer: React.FC<ISplitterContainerProps> = props => {
-  const { children, render = children, ...options } = props;
-
-  return <>{render!(useSplitter(options)) as React.ReactElement}</>;
-};
+export const SplitterContainer: React.FC<ISplitterContainerProps> = ({
+  children,
+  render = children,
+  ...options
+}) => <>{render!(useSplitter(options))}</>;
 
 SplitterContainer.propTypes = {
-  idPrefix: PropTypes.string,
-  ariaLabel: PropTypes.string,
   children: PropTypes.func,
   render: PropTypes.func,
-  environment: PropTypes.oneOfType([
-    PropTypes.shape({
-      scrollX: PropTypes.number.isRequired,
-      scrollY: PropTypes.number.isRequired,
-      document: PropTypes.oneOfType([
-        PropTypes.shape({
-          addEventListener: PropTypes.func.isRequired,
-          removeEventListener: PropTypes.func.isRequired,
-          body: PropTypes.shape({
-            clientWidth: PropTypes.number.isRequired,
-            clientHeight: PropTypes.number.isRequired,
-            addEventListener: PropTypes.func.isRequired,
-            removeEventListener: PropTypes.func.isRequired
-          }).isRequired
-        })
-      ]).isRequired
-    })
-  ]).isRequired,
-  orientation: PropTypes.oneOf([SplitterOrientation.VERTICAL, SplitterOrientation.HORIZONTAL])
-    .isRequired,
-  keyboardStep: PropTypes.number,
-  type: PropTypes.oneOf([SplitterType.FIXED, SplitterType.VARIABLE]).isRequired,
+  idPrefix: PropTypes.string,
+  environment: PropTypes.any,
+  isFixed: PropTypes.bool,
   min: PropTypes.number.isRequired,
   max: PropTypes.number.isRequired,
+  orientation: PropTypes.oneOf(['horizontal', 'vertical']),
+  keyboardStep: PropTypes.number,
   defaultValueNow: PropTypes.number,
   valueNow: PropTypes.number,
   onChange: PropTypes.func,
-  position: PropTypes.oneOf([SplitterPosition.LEADS, SplitterPosition.TRAILS]).isRequired,
+  separatorRef: PropTypes.any.isRequired,
+  isLeading: PropTypes.bool,
   rtl: PropTypes.bool
 };
 
 SplitterContainer.defaultProps = {
-  keyboardStep: KEYBOARD_STEP
+  keyboardStep: KEYBOARD_STEP,
+  orientation: 'vertical'
 };
