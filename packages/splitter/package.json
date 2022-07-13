@@ -1,6 +1,6 @@
 {
   "name": "@zendeskgarden/container-splitter",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Containers relating to Splitter in the Garden Design System",
   "license": "Apache-2.0",
   "author": "Zendesk Garden <garden@zendesk.com>",

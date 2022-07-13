@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-splitter@1.0.0...@zendeskgarden/container-splitter@2.0.0) (2022-07-13)
+
+
+* fix(splitter)!: refactor with improved type interfaces (#464) ([590f359](https://github.com/zendeskgarden/react-containers/commit/590f359156e4a543d808f4ccf4559b5cb1273056)), closes [#464](https://github.com/zendeskgarden/react-containers/issues/464)
+
+
+### BREAKING CHANGES
+
+* - make `aria-label` a required attribute of `getSeparatorProps` (will fix the missing label in `react-components`)
+- use standard `isLeading` & `isFixed` boolean types rather than `position` and `type` enums
+- shift `environment` to be optional and work off `document` rather than `window` context for API consistency
+- added `separatorRef` as a required prop. This aligns the API with other Garden containers and eliminates an awkward ownership problem where the previous returned `ref` had to merge and spread in the right order. The consumer should own element ref assignments.
+- remove `SplitterOrientation`, `SplitterType`, and `SplitterPosition` enum exports
+- `useSplitter` no longer receives arbitrary HTML prop spread. This is inconsistent with other containers and yields arbitrary results as `composeEventHandlers` was being incorrectly applied to document- (not component-) level events.
+
+Along with the following fixes...
+- splitter drag continues to work even if the mouse leaves the page
+- enhanced API readability in Storybook
+- overall major simplification of `useSplitter` code with targeted memoization for callbacks that are compute intensive
+
+
+
+
+
 # [1.0.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-splitter@0.2.3...@zendeskgarden/container-splitter@1.0.0) (2022-06-17)
 
 **Note:** Version bump only for package @zendeskgarden/container-splitter
