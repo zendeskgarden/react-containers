@@ -8,8 +8,8 @@
 import { HTMLProps, ReactNode } from 'react';
 
 export interface IUse{{capitalize component}}Props {
-  /** Documents the label prop */
-  label?: string;
+  /** Documents the title prop */
+  title?: string;
 }
 
 export interface IUse{{capitalize component}}ReturnValue {
@@ -26,9 +26,7 @@ export interface I{{capitalize component}}ContainerProps extends IUse{{capitaliz
    *
    * @param {function} [options.get{{capitalize component}}Props] {{capitalize component}} props getter
    */
-  render?: (options: {
-    get{{capitalize component}}Props: IUse{{capitalize component}}ReturnValue['get{{capitalize component}}Props'];
-  }) => ReactNode;
+  render?: (options: { get{{capitalize component}}Props: IUse{{capitalize component}}ReturnValue['get{{capitalize component}}Props'] }) => ReactNode;
   /** @ignore */
   children?: (options: IUse{{capitalize component}}ReturnValue) => ReactNode;
 }

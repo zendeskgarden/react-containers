@@ -7,14 +7,10 @@
 
 import { IUse{{capitalize component}}Props, IUse{{capitalize component}}ReturnValue } from './types';
 
-export const use{{capitalize component}} = ({ label }: IUse{{capitalize component}}Props): IUse{{capitalize component}}ReturnValue => {
-  const get{{capitalize component}}Props: IUse{{capitalize component}}ReturnValue['get{{capitalize component}}Props'] = ({
-    role = 'region',
-    'aria-label': ariaLabel = label,
-    ...props
-  }) => ({
+export const use{{capitalize component}} = ({ title }: IUse{{capitalize component}}Props): IUse{{capitalize component}}ReturnValue => {
+  const get{{capitalize component}}Props: IUse{{capitalize component}}ReturnValue['get{{capitalize component}}Props'] = ({ role = 'region', ...props }) => ({
     role: role === null ? undefined : role,
-    'aria-label': ariaLabel,
+    title,
     'data-garden-container-id': 'containers.{{snakecase component}}',
     'data-garden-container-version': PACKAGE_VERSION,
     ...props

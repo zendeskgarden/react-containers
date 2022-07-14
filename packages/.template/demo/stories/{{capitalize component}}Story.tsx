@@ -15,16 +15,16 @@ import {
   use{{capitalize component}}
 } from '@zendeskgarden/container-{{lowercase component}}';
 
-const Container = ({ label, text }: I{{capitalize component}}ContainerProps & { text: string }) => (
-  <{{capitalize component}}Container>
-    {({ get{{capitalize component}}Props }: IUse{{capitalize component}}ReturnValue) => <div {...get{{capitalize component}}Props({ 'aria-label': label || 'container' })}>{text}</div>}
+const Container = ({ title, text }: I{{capitalize component}}ContainerProps & { text: string }) => (
+  <{{capitalize component}}Container title={title}>
+    {({ get{{capitalize component}}Props }: IUse{{capitalize component}}ReturnValue) => <div {...get{{capitalize component}}Props({ 'aria-label': 'container' })}>{text}</div>}
   </{{capitalize component}}Container>
 );
 
-const Hook = ({ label }: IUse{{capitalize component}}Props) => {
-  const { get{{capitalize component}}Props } = use{{capitalize component}}({ label });
+const Hook = ({ title, text }: IUse{{capitalize component}}Props & { text: string }) => {
+  const { get{{capitalize component}}Props } = use{{capitalize component}}({ title });
 
-  return <div {...get{{capitalize component}}Props({ 'aria-label': label || 'hook' })} />;
+  return <div {...get{{capitalize component}}Props({ 'aria-label': 'hook' })}>{text}</div>;
 };
 
 interface IArgs extends I{{capitalize component}}ContainerProps {
@@ -32,13 +32,13 @@ interface IArgs extends I{{capitalize component}}ContainerProps {
   text: string;
 }
 
-export const {{capitalize component}}Story: Story<IArgs> = ({ as, text, ...props }) => {
+export const {{capitalize component}}Story: Story<IArgs> = ({ as, ...props }) => {
   switch (as) {
     case 'container':
-      return <Container text={text} {...props} />;
+      return <Container {...props} />;
 
     case 'hook':
     default:
-      return <Hook {...props}>{text}</Hook>;
+      return <Hook {...props} />;
   }
 };

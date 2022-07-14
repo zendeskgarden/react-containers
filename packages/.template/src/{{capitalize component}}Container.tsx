@@ -19,5 +19,5 @@ export const {{capitalize component}}Container: React.FC<I{{capitalize component
 {{capitalize component}}Container.propTypes = {
   children: PropTypes.func,
   render: PropTypes.func,
-  label: PropTypes.string
+  title: PropTypes.string
 };
