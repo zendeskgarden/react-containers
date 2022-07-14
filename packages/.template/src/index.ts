@@ -7,8 +7,8 @@
 
 /* Hooks */
 export { use{{capitalize component}} } from './use{{capitalize component}}';
-export type { IUse{{capitalize component}}Props, IUse{{capitalize component}}ReturnValue } from './use{{capitalize component}}';
 
 /* Render-props */
 export { {{capitalize component}}Container } from './{{capitalize component}}Container';
-export type { I{{capitalize component}}ContainerProps } from './{{capitalize component}}Container';
+
+export type { I{{capitalize component}}ContainerProps, IUse{{capitalize component}}Props, IUse{{capitalize component}}ReturnValue } from './types';
