@@ -8,13 +8,13 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import { {{capitalize component}}Container } from './';
-import { IUse{{capitalize component}}ReturnValue } from './use{{capitalize component}}';
+import { IUse{{capitalize component}}ReturnValue } from './types';
 
 describe('{{capitalize component}}Container', () => {
   const Test{{capitalize component}} = () => (
     <{{capitalize component}}Container>
       {({ get{{capitalize component}}Props }: IUse{{capitalize component}}ReturnValue) => (
-        <div {...get{{capitalize component}}Props({ 'data-test-id': 'div' })} />
+        <div data-test-id="div" {...get{{capitalize component}}Props({ 'aria-label': 'test' })} />
       )}
     </{{capitalize component}}Container>
   );
