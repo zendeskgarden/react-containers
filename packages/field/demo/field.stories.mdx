@@ -13,11 +13,11 @@ import { FieldStory } from './stories/FieldStory';
 <Canvas>
   <Story
     name="Field"
-    args={{ as: 'hook', isDescribed: true, containsMessage: false }}
+    args={{ as: 'hook', isDescribed: true, hasMessage: false }}
     argTypes={{
       as: { options: ['container', 'hook'], control: 'radio', table: { category: 'Story' } },
       isDescribed: { table: { category: 'Story' } },
-      containsMessage: { table: { category: 'Story' } }
+      hasMessage: { table: { category: 'Story' } }
     }}
   >
     {args => <FieldStory {...args} />}

@@ -49,15 +49,13 @@ describe('FieldContainer', () => {
     it.each([
       ['options', true, true],
       ['isDescribed', true, false],
-      ['containsMessage', false, true]
-    ])(`includes aria-describedby if %s is provided`, (_, isDescribed, containsMessage) => {
+      ['hasMessage', false, true]
+    ])(`includes aria-describedby if %s is provided`, (_, isDescribed, hasMessage) => {
       const { getByTestId } = render(
         <FieldContainer id={CONTAINER_ID}>
           {({ getInputProps }) => (
             <div>
-              <input
-                {...getInputProps({ 'data-test-id': 'input' }, { isDescribed, containsMessage })}
-              />
+              <input {...getInputProps({ 'data-test-id': 'input' }, { isDescribed, hasMessage })} />
             </div>
           )}
         </FieldContainer>
@@ -65,10 +63,7 @@ describe('FieldContainer', () => {
 
       expect(getByTestId('input')).toHaveAttribute(
         'aria-describedby',
-        [
-          isDescribed ? `${CONTAINER_ID}--hint` : '',
-          containsMessage ? `${CONTAINER_ID}--message` : ''
-        ]
+        [isDescribed ? `${CONTAINER_ID}--hint` : '', hasMessage ? `${CONTAINER_ID}--message` : '']
           .join(' ')
           .trim()
       );

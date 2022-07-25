@@ -13,7 +13,7 @@ export interface IUseFieldPropGetters {
   getLabelProps: <T>(options?: T) => T & HTMLProps<any>;
   getInputProps: <T>(
     options?: T,
-    isDescribedOptions?: { isDescribed?: boolean; containsMessage?: boolean }
+    isDescribedOptions?: { isDescribed?: boolean; hasMessage?: boolean }
   ) => T & HTMLProps<any>;
 }
 

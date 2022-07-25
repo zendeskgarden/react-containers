@@ -30,15 +30,15 @@ export function useField(idPrefix?: string): IUseFieldPropGetters {
 
   const getInputProps = (
     { id = inputId, ...other } = {},
-    { isDescribed = false, containsMessage = false } = {}
+    { isDescribed = false, hasMessage = false } = {}
   ) => {
     return {
       id,
       'aria-labelledby': labelId,
       'aria-describedby':
-        isDescribed || containsMessage
+        isDescribed || hasMessage
           ? ([] as string[])
-              .concat(isDescribed ? hintId : [], containsMessage ? messageId : [])
+              .concat(isDescribed ? hintId : [], hasMessage ? messageId : [])
               .join(' ')
           : null,
       ...other
