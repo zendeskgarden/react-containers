@@ -32,7 +32,11 @@ const Component = ({
     <label {...getLabelProps()}>Label</label>
     {isDescribed && <div {...getHintProps()}>Hint</div>}
     <input {...getInputProps({}, { isDescribed, hasMessage })} />
-    {hasMessage && <div {...getMessageProps()}>Message</div>}
+    {hasMessage && (
+      <div role="alert" {...getMessageProps()}>
+        Message
+      </div>
+    )}
   </>
 );
 
