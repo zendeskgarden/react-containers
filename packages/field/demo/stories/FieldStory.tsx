@@ -16,42 +16,50 @@ import {
 
 interface IComponentProps extends IUseFieldPropGetters {
   isDescribed: boolean;
+  containsMessage: boolean;
 }
 
 const Component = ({
   getLabelProps,
   getHintProps,
   getInputProps,
-  isDescribed
+  getMessageProps,
+  isDescribed,
+  containsMessage
 }: IComponentProps) => (
   /* eslint-disable jsx-a11y/label-has-associated-control */
   <>
     <label {...getLabelProps()}>Label</label>
     {isDescribed && <div {...getHintProps()}>Hint</div>}
-    <input {...getInputProps({}, { isDescribed })} />
+    <input {...getInputProps({}, { isDescribed, containsMessage })} />
+    {containsMessage && <div {...getMessageProps()}>Message</div>}
   </>
 );
 
 interface IProps {
   id?: NonNullable<IFieldContainerProps['id']>;
   isDescribed: boolean;
+  containsMessage: boolean;
 }
 
-const Container = ({ id, isDescribed }: IProps) => (
+const Container = ({ id, isDescribed, containsMessage }: IProps) => (
   <FieldContainer id={id}>
-    {containerProps => <Component isDescribed={isDescribed} {...containerProps} />}
+    {containerProps => (
+      <Component isDescribed={isDescribed} containsMessage={containsMessage} {...containerProps} />
+    )}
   </FieldContainer>
 );
 
-const Hook = ({ id, isDescribed }: IProps) => {
+const Hook = ({ id, isDescribed, containsMessage }: IProps) => {
   const hookProps = useField(id);
 
-  return <Component isDescribed={isDescribed} {...hookProps} />;
+  return <Component isDescribed={isDescribed} containsMessage={containsMessage} {...hookProps} />;
 };
 
 interface IArgs extends IFieldContainerProps {
   as: 'hook' | 'container';
   isDescribed: boolean;
+  containsMessage: boolean;
 }
 
 export const FieldStory: Story<IArgs> = ({ as, ...props }) => {
