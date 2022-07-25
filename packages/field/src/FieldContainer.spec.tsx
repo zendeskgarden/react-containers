@@ -15,11 +15,12 @@ describe('FieldContainer', () => {
 
   const BasicExample = () => (
     <FieldContainer id={CONTAINER_ID}>
-      {({ getLabelProps, getInputProps, getHintProps }) => (
+      {({ getLabelProps, getInputProps, getHintProps, getMessageProps }) => (
         <div>
           <label {...getLabelProps({ 'data-test-id': 'label' })}>Label</label>
           <div {...getHintProps({ 'data-test-id': 'hint' })}>Hint</div>
           <input {...getInputProps({ 'data-test-id': 'input' })} />
+          <div {...getMessageProps({ 'data-test-id': 'message' })}>Message</div>
         </div>
       )}
     </FieldContainer>
@@ -45,18 +46,32 @@ describe('FieldContainer', () => {
       expect(input).not.toHaveAttribute('aria-describedby');
     });
 
-    it('includes aria-describedby if option is provided', () => {
+    it.each([
+      ['options', true, true],
+      ['isDescribed', true, false],
+      ['containsMessage', false, true]
+    ])(`includes aria-describedby if %s is provided`, (_, isDescribed, containsMessage) => {
       const { getByTestId } = render(
         <FieldContainer id={CONTAINER_ID}>
           {({ getInputProps }) => (
             <div>
-              <input {...getInputProps({ 'data-test-id': 'input' }, { isDescribed: true })} />
+              <input
+                {...getInputProps({ 'data-test-id': 'input' }, { isDescribed, containsMessage })}
+              />
             </div>
           )}
         </FieldContainer>
       );
 
-      expect(getByTestId('input')).toHaveAttribute('aria-describedby', `${CONTAINER_ID}--hint`);
+      expect(getByTestId('input')).toHaveAttribute(
+        'aria-describedby',
+        [
+          isDescribed ? `${CONTAINER_ID}--hint` : '',
+          containsMessage ? `${CONTAINER_ID}--message` : ''
+        ]
+          .join(' ')
+          .trim()
+      );
     });
   });
 
@@ -65,6 +80,14 @@ describe('FieldContainer', () => {
       const { getByTestId } = render(<BasicExample />);
 
       expect(getByTestId('hint')).toHaveAttribute('id', `${CONTAINER_ID}--hint`);
+    });
+  });
+
+  describe('getMessageProps', () => {
+    it('applies correct accessibility role', () => {
+      const { getByTestId } = render(<BasicExample />);
+
+      expect(getByTestId('message')).toHaveAttribute('id', `${CONTAINER_ID}--message`);
     });
   });
 });

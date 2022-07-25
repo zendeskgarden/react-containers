@@ -7,8 +7,8 @@
 
 /* Hooks */
 export { useField } from './useField';
-export type { IUseFieldPropGetters } from './useField';
 
 /* Render-props */
 export { FieldContainer } from './FieldContainer';
-export type { IFieldContainerProps } from './FieldContainer';
+
+export type { IUseFieldPropGetters, IFieldContainerProps } from './types';

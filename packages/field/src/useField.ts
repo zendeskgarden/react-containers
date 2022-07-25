@@ -8,14 +8,7 @@
 import { useMemo } from 'react';
 import { useUIDSeed } from 'react-uid';
 
-export interface IUseFieldPropGetters {
-  getHintProps: <T>(options?: T) => T & React.HTMLProps<any>;
-  getLabelProps: <T>(options?: T) => T & React.HTMLProps<any>;
-  getInputProps: <T>(
-    options?: T,
-    isDescribedOptions?: { isDescribed: boolean }
-  ) => T & React.HTMLProps<any>;
-}
+import { IUseFieldPropGetters } from './types';
 
 export function useField(idPrefix?: string): IUseFieldPropGetters {
   const seed = useUIDSeed();
@@ -23,6 +16,7 @@ export function useField(idPrefix?: string): IUseFieldPropGetters {
   const inputId = `${prefix}--input`;
   const labelId = `${prefix}--label`;
   const hintId = `${prefix}--hint`;
+  const messageId = `${prefix}--message`;
 
   const getLabelProps = ({ id = labelId, htmlFor = inputId, ...other } = {}) => {
     return {
@@ -34,11 +28,19 @@ export function useField(idPrefix?: string): IUseFieldPropGetters {
     } as any;
   };
 
-  const getInputProps = ({ id = inputId, ...other } = {}, { isDescribed = false } = {}) => {
+  const getInputProps = (
+    { id = inputId, ...other } = {},
+    { isDescribed = false, containsMessage = false } = {}
+  ) => {
     return {
       id,
       'aria-labelledby': labelId,
-      'aria-describedby': isDescribed ? hintId : null,
+      'aria-describedby':
+        isDescribed || containsMessage
+          ? ([] as string[])
+              .concat(isDescribed ? hintId : [], containsMessage ? messageId : [])
+              .join(' ')
+          : null,
       ...other
     } as any;
   };
@@ -50,9 +52,17 @@ export function useField(idPrefix?: string): IUseFieldPropGetters {
     } as any;
   };
 
+  const getMessageProps = ({ id = messageId, ...other } = {}) => {
+    return {
+      id,
+      ...other
+    } as any;
+  };
+
   return {
     getLabelProps,
     getInputProps,
-    getHintProps
+    getHintProps,
+    getMessageProps
   };
 }
