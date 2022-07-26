@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.1.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-field@2.0.0...@zendeskgarden/container-field@2.1.0) (2022-07-26)
+
+
+### Features
+
+* **field:** add getMessageProps prop getter to container ([#473](https://github.com/zendeskgarden/react-containers/issues/473)) ([c5e5b5d](https://github.com/zendeskgarden/react-containers/commit/c5e5b5d916bc0b7ac8604bd52a07811bd980cb04))
+
+
+
+
+
 # [2.0.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-field@1.3.10...@zendeskgarden/container-field@2.0.0) (2022-06-17)
 
 **Note:** Version bump only for package @zendeskgarden/container-field
