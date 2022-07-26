@@ -18,7 +18,8 @@ Check out [storybook](https://zendeskgarden.github.io/react-containers) for live
 examples.
 
 The `useField` hook will supply the prop getters to handle `aria-labelledby` along
-with for/id mapping and `aria-describedby` mapping when a hint is applied.
+with for/id mapping and `aria-describedby` mapping when a hint and/or status message
+is applied.
 
 ### useField
 
@@ -26,13 +27,14 @@ with for/id mapping and `aria-describedby` mapping when a hint is applied.
 import { useField } from '@zendeskgarden/container-field';
 
 const Field = () => {
-  const { getLabelProps, getInputProps, getHintProps } = useField();
+  const { getLabelProps, getInputProps, getHintProps, getMessageProps } = useField();
 
   return (
     <>
       <label {...getLabelProps()}>Accessible Native Input</label>
       <p {...getHintProps()}>Optional Hint</p>
       <input {...getInputProps()} />
+      <p {...getMessageProps()}>Optional Status Message</p>
     </>
   );
 };
@@ -46,11 +48,12 @@ FieldContainer is a render-prop wrapper for the `useField` hook.
 import { FieldContainer } from '@zendeskgarden/container-field';
 
 <FieldContainer>
-  {({ getLabelProps, getInputProps, getHintProps }) => (
+  {({ getLabelProps, getInputProps, getHintProps, getMessageProps }) => (
     <>
       <label {...getLabelProps()}>Accessible Native Input</label>
       <p {...getHintProps()}>Optional Hint</p>
       <input {...getInputProps()} />
+      <p {...getMessageProps()}>Optional Status Message</p>
     </>
   )}
 </FieldContainer>;
