@@ -18,7 +18,11 @@ module.exports = {
     '!<rootDir>/packages/*/src/types.{js,jsx,ts,tsx}',
     '!<rootDir>/packages/.template/**',
     '!**/node_modules/**',
-    '!**/vendor/**'
+    '!**/vendor/**',
+    // constant files that are not tested
+    '!<rootDir>/packages/utilities/src/utils/DocumentPosition.ts',
+    '!<rootDir>/packages/utilities/src/utils/KeyboardEventValues.ts',
+    '!<rootDir>/packages/utilities/src/utils/useId.ts'
   ],
   testMatch: ['<rootDir>/packages/*/src/**/?(*.)+(spec|test).[jt]s?(x)'],
   testPathIgnorePatterns: ['/node_modules/', '<rootDir>/packages/.template'],
