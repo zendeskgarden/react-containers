@@ -3,6 +3,7 @@
 node_modules
 utils/storybook/coverage
 *.log
+.cache/
 
 # Package specific
 packages/**/dist

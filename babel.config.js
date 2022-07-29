@@ -11,10 +11,14 @@ module.exports = {
       '@babel/preset-env',
       {
         targets: '> 0.5%, last 2 versions, Firefox ESR, not dead',
-        loose: true
+        loose: true,
+        modules: false
       }
     ],
-    '@babel/preset-react'
+    '@babel/preset-react',
+    // added for testing purposes due to types being transpiled in
+    // JavaScript context when using Jest
+    ['@babel/preset-typescript', { onlyRemoveTypeImports: true }]
   ],
   plugins: [
     [

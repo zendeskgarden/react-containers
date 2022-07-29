@@ -6,35 +6,39 @@
  */
 
 const path = require('path');
-const { defaults } = require('jest-config');
+const fs = require('fs');
 
 module.exports = {
-  testEnvironment: 'jsdom',
   rootDir: '../../',
-  preset: 'ts-jest/presets/js-with-babel',
-  modulePathIgnorePatterns: ['./node_modules'],
-  resolver: path.resolve(__dirname, 'jest.resolver.js'),
-  transform: {
-    '^.+\\.js$': 'babel-jest'
-  },
-  globals: {
-    PACKAGE_VERSION: 'version',
-    'ts-jest': {
-      tsconfig: path.resolve(__dirname, 'tsconfig.test.json')
-    }
-  },
-  moduleFileExtensions: [...defaults.moduleFileExtensions],
-  setupFilesAfterEnv: ['<rootDir>/utils/test/jest.setup.js'],
-  moduleNameMapper: {
-    'garden-test-utils': '<rootDir>/utils/test/utilities.ts'
-  },
+  cacheDirectory: '<rootDir>/.cache/jest',
+  coverageDirectory: '<rootDir>/.cache/coverage',
   collectCoverageFrom: [
     '<rootDir>/packages/*/src/**/*.{js,jsx,ts,tsx}',
-    '!<rootDir>/packages/*/src/index.{js,ts}',
+    '!<rootDir>/packages/*/src/index.{js,jsx,ts,tsx}',
+    '!<rootDir>/packages/*/src/types.{js,jsx,ts,tsx}',
     '!<rootDir>/packages/.template/**',
     '!**/node_modules/**',
     '!**/vendor/**'
   ],
-  coverageDirectory: '<rootDir>/utils/storybook/coverage',
-  testPathIgnorePatterns: ['/node_modules/', '<rootDir>/packages/.template']
+  testMatch: ['<rootDir>/packages/*/src/**/?(*.)+(spec|test).[jt]s?(x)'],
+  testPathIgnorePatterns: ['/node_modules/', '<rootDir>/packages/.template'],
+  testEnvironment: 'jest-environment-jsdom',
+  setupFilesAfterEnv: ['<rootDir>/utils/test/jest.setup.js'],
+  modulePathIgnorePatterns: ['./node_modules'],
+  transformIgnorePatterns: ['\\/node_modules\\/(?!@zendeskgarden|@babel)'],
+  transform: {
+    '^.+\\.(j|t)sx?$': [
+      'esbuild-jest',
+      {
+        sourcemap: true,
+        tsconfigRaw: fs.readFileSync(path.resolve(__dirname, 'tsconfig.test.json'))
+      }
+    ]
+  },
+  moduleNameMapper: {
+    'garden-test-utils': '<rootDir>/utils/test/utilities.ts'
+  },
+  globals: {
+    PACKAGE_VERSION: 'version'
+  }
 };
