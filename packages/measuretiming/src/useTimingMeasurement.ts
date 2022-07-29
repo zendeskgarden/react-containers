@@ -55,6 +55,23 @@ export const useTimingMeasurement = <CustomMetadata extends Record<string, unkno
     placement
   );
 
+  // this will fire when external deps have changed:
+  // Note: we cannot use useEffect has we need this code to run during the render
+  // and especially before we call actionLogRef.current.setActive.
+  const lastExternalDeps = useRef(restartWhenChanged);
+  const externalDepsHaveChanged = restartWhenChanged.some(
+    (value, i) => value !== lastExternalDeps.current[i]
+  );
+
+  if (externalDepsHaveChanged) {
+    lastExternalDeps.current = restartWhenChanged;
+    actionLogRef.current.onExternalDependenciesChange(
+      restartWhenChanged,
+      lastStartTimeRef.current,
+      placement
+    );
+  }
+
   actionLogRef.current.setActive(isActive && stage !== DEFAULT_STAGES.INACTIVE, placement);
 
   if (error) {
@@ -78,18 +95,6 @@ export const useTimingMeasurement = <CustomMetadata extends Record<string, unkno
       source: placement
     });
   }
-
-  // this will fire when external deps have changed:
-  useEffect(() => {
-    actionLogRef.current.onExternalDependenciesChange(
-      restartWhenChanged,
-      lastStartTimeRef.current,
-      placement
-    );
-    // all the restartWhenChanged deps are required here,
-    // because we want to force a restart whenever those change:
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, restartWhenChanged);
 
   // this will fire after every render:
   useEffect(() => {

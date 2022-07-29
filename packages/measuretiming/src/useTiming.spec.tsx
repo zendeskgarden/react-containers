@@ -249,6 +249,117 @@ describe('useTiming', () => {
       expect(jest.getTimerCount()).toBe(0);
     });
 
+    it('should report a new metrics after updating', () => {
+      const simulatedFirstRenderTimeMs = timeIncrement;
+
+      let renderer: ReactTestRenderer;
+
+      const actionLogRef = {
+        current: new ActionLog({
+          reportFn: mockReportFn,
+          debounceMs,
+          timeoutMs,
+          onInternalError
+        })
+      };
+
+      const TimedTestComponent = ({ action }: { action: string }) => {
+        useTimingMeasurement(
+          {
+            id,
+            placement: 'manager',
+            actionLogRef
+          },
+          [action]
+        );
+
+        return <div>Hello!</div>;
+      };
+
+      act(() => {
+        renderer = create(<TimedTestComponent action="mount" />);
+      });
+
+      // the hook shouldn't affect the contents being rendered:
+      expect(renderer!.toJSON()).toMatchInlineSnapshot(`
+        <div>
+          Hello!
+        </div>
+      `);
+
+      // we're simulating a browser that doesn't support observing frozen states:
+      expect(mockObserve).not.toHaveBeenCalled();
+
+      // exhaust React's (?) next tick timer
+      jest.advanceTimersToNextTimer();
+
+      // report shouldn't have been called yet -- it's debounced:
+      expect(mockReportFn).not.toHaveBeenCalled();
+
+      // we should have timers for: debounce and timeoutMs
+      expect(jest.getTimerCount()).toBe(2);
+
+      jest.advanceTimersByTime(simulatedFirstRenderTimeMs);
+
+      // we should *still* have timers for: debounce and timeoutMs
+      expect(jest.getTimerCount()).toBe(2);
+
+      // report shouldn't have been called yet -- it's debounced:
+      expect(mockReportFn).not.toHaveBeenCalled();
+
+      jest.advanceTimersByTime(debounceMs);
+
+      // no more timers should be set by this time:
+      expect(jest.getTimerCount()).toBe(0);
+
+      expect(mockReportFn).toHaveBeenCalledTimes(1);
+
+      const report: Report = {
+        id,
+        isFirstLoad: true,
+        tti: null,
+        ttr: simulatedFirstRenderTimeMs,
+        lastStage: INFORMATIVE_STAGES.INITIAL,
+        counts: {
+          manager: 1
+        },
+        durations: {
+          manager: [timeIncrement]
+        },
+        timeSpent: {
+          manager: timeIncrement
+        },
+        // no stages were defined:
+        stages: {
+          [`0_${INFORMATIVE_STAGES.INITIAL}_until_${INFORMATIVE_STAGES.RENDERED}`]: {
+            timeToStage: timeIncrement,
+            mountedPlacements: ['manager'],
+            previousStage: INFORMATIVE_STAGES.INITIAL,
+            stage: INFORMATIVE_STAGES.RENDERED,
+            timingId: id
+          }
+        },
+        includedStages: [],
+        hadError: false,
+        handled: true
+      };
+
+      expect(mockReportFn).toHaveBeenCalledWith(report);
+
+      jest.runAllTimers();
+
+      actionLogRef.current.disableReporting();
+
+      act(() => {
+        renderer.update(<TimedTestComponent action="update" />);
+      });
+
+      jest.advanceTimersByTime(debounceMs);
+
+      // a new report should have been generated
+      expect(mockReportFn).toHaveBeenCalledTimes(2);
+    });
+
     it(`should keep debouncing and timeoutMs if the component keeps doing stuff for too long`, () => {
       expect(jest.getTimerCount()).toBe(0);
       let renderer: ReactTestRenderer;
