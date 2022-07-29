@@ -348,7 +348,7 @@ export class ActionLog<CustomMetadata extends Record<string, unknown>> {
     return this._shouldReport;
   }
 
-  private ensureReporting(): void {
+  ensureReporting(): void {
     if (!this._shouldReport) {
       // should enable reporting if not in final stage!
       this._shouldReport = true;

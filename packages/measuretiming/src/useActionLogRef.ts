@@ -16,7 +16,9 @@ import { ActionLog } from './actionLog';
 import { performanceMark, performanceMeasure } from './performanceMark';
 import { ACTION_TYPE } from './constants';
 
-export const useActionLogRef = <CustomMetadata extends Record<string, unknown> = never>({
+export const useActionLogRef = <
+  CustomMetadata extends Record<string, unknown> = Record<string, unknown>
+>({
   id,
   actionLogCache,
   garbageCollectMs,
@@ -117,12 +119,15 @@ export const useActionLogRef = <CustomMetadata extends Record<string, unknown> =
 };
 
 /** used to generate timing API that can be used outside of React, or together with React */
-export const getExternalApi = <Metadata extends Record<string, unknown>>({
+export const getExternalApi = <CustomMetadata extends Record<string, unknown>>({
   actionLogCache,
   idPrefix,
   placement,
   ...actionLogOptions
-}: GetPrefixedUseTimingHooksConfiguration<string, Metadata>): ActionLogExternalApi<Metadata> => {
+}: GetPrefixedUseTimingHooksConfiguration<
+  string,
+  CustomMetadata
+>): ActionLogExternalApi<CustomMetadata> => {
   const getFullId = (idSuffix: string) => `${idPrefix}/${idSuffix}`;
   const getActionLogForIdIfExists = (idSuffix: string) => {
     const id = getFullId(idSuffix);
@@ -148,14 +153,15 @@ export const getExternalApi = <Metadata extends Record<string, unknown>>({
     getActionLogForIdIfExists,
     markRenderStart: (idSuffix: string) => {
       const id = getFullId(idSuffix);
-      const actionLog = getActionLogForId(id);
+      const actionLog = getActionLogForId(idSuffix);
 
+      actionLog.ensureReporting();
       actionLog.setActive(true, placement);
       renderStartMark = renderStartMark || performanceMark(`${id}/${placement}/render-start`);
     },
     markRenderEnd: (idSuffix: string) => {
       const id = getFullId(idSuffix);
-      const actionLog = getActionLogForId(id);
+      const actionLog = getActionLogForId(idSuffix);
 
       actionLog.setActive(true, placement);
       if (!renderStartMark) {
@@ -179,24 +185,33 @@ export const getExternalApi = <Metadata extends Record<string, unknown>>({
       renderStartMark = null;
     },
     markStage: (idSuffix: string, stage: string, stageMeta?: Record<string, unknown>) => {
-      const id = getFullId(idSuffix);
-      const actionLog = getActionLogForId(id);
+      const actionLog = getActionLogForId(idSuffix);
 
       actionLog.setActive(true, placement);
       actionLog.markStage({ stage, source: placement, metadata: stageMeta });
     },
     setActive: (idSuffix: string, active: boolean) => {
-      const id = getFullId(idSuffix);
-      const actionLog = getActionLogForId(id);
+      const actionLog = getActionLogForId(idSuffix);
 
       actionLog.setActive(active, placement);
     },
     dispose: (idSuffix: string) => {
-      const id = getFullId(idSuffix);
-      const actionLog = actionLogCache.get(id);
+      const actionLog = actionLogCache.get(getFullId(idSuffix));
 
       if (!actionLog) return;
       actionLog.onBeaconRemoved(placement);
+    },
+    clear: (idSuffix: string) => {
+      const actionLog = getActionLogForIdIfExists(idSuffix);
+
+      if (actionLog) {
+        actionLog.clear();
+      }
+    },
+    setMetadata: (idSuffix: string, metadata: CustomMetadata) => {
+      const actionLog = getActionLogForId(idSuffix);
+
+      actionLog.customMetadataBySource.set(placement, metadata);
     }
   };
 };

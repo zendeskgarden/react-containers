@@ -149,6 +149,8 @@ export interface ActionLogExternalApi<
   getActionLogForIdIfExists: (idSuffix: string) => ActionLog<CustomMetadata> | undefined;
   setActive: (idSuffix: string, active: boolean) => void;
   markStage: (idSuffix: string, stage: string, stageMetadata?: Record<string, unknown>) => void;
+  clear: (idSuffix: string) => void;
+  setMetadata: (idSuffix: string, metadata: CustomMetadata) => void;
 }
 
 export interface UseActionLogRefOptions<
