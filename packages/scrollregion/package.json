@@ -22,8 +22,7 @@
   "dependencies": {
     "@babel/runtime": "^7.8.4",
     "lodash.debounce": "^4.0.8",
-    "prop-types": "^15.7.2",
-    "react-merge-refs": "^1.1.0"
+    "prop-types": "^15.7.2"
   },
   "peerDependencies": {
     "react": ">=16.8.0",
