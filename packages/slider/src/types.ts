@@ -5,17 +5,27 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import { HTMLProps, ReactNode } from 'react';
+import { AriaAttributes, HTMLProps, ReactNode } from 'react';
 
 export interface IUseSliderProps {
-  /** Documents the title prop */
+  /** */
   title?: string;
+  /** */
+  value?: AriaAttributes['aria-valuenow'];
+  /** */
+  min?: AriaAttributes['aria-valuemin'];
+  /** */
+  max?: AriaAttributes['aria-valuemax'];
+  /** */
+  orientation?: AriaAttributes['aria-orientation'];
+  /** */
+  required?: AriaAttributes['aria-required'];
 }
 
 export interface IUseSliderReturnValue {
   getSliderProps: <T extends Element>(
     props: Omit<HTMLProps<T>, 'role' | 'aria-label'> & {
-      role?: 'region' | null;
+      role?: 'slider';
       'aria-label': NonNullable<HTMLProps<T>['aria-label']>;
     }
   ) => HTMLProps<T>;

@@ -24,7 +24,7 @@ describe('SliderContainer', () => {
       const { getByTestId } = render(<TestSlider />);
       const element = getByTestId('div');
 
-      expect(element).toHaveAttribute('role', 'region');
+      expect(element).toHaveAttribute('role', 'slider');
     });
   });
 });
