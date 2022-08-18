@@ -10,10 +10,16 @@ import { SliderStory } from './stories/SliderStory';
     title: 'test',
     value: '50',
     min: '0',
-    max: '100'
+    max: '100',
+    disabled: false,
+    readOnly: false
   }}
   argTypes={{
-    as: { options: ['container', 'hook'], control: 'radio', table: { category: 'Story' } }
+    as: {
+      options: ['container', 'hook'],
+      control: 'radio',
+      table: { category: 'Story' }
+    }
   }}
 />
 

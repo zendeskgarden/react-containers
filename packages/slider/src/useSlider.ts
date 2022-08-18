@@ -5,6 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
+import { getSupportInfo } from 'prettier';
 import { useEffect, useState } from 'react';
 import { IUseSliderProps, IUseSliderReturnValue } from './types';
 
@@ -20,7 +21,6 @@ export const useSlider = ({
   orientation = 'horizontal',
   type,
   'aria-label': ariaLabel,
-  tabIndex,
 }: IUseSliderProps): IUseSliderReturnValue => {
   const [sliderValue, setSliderValue] = useState(value);
   
@@ -36,16 +36,25 @@ export const useSlider = ({
 
   const [sliderMax, setSliderMax] = useState(max);
   
-  useEffect(() => { 
+  useEffect(() => {
     setSliderMax(sliderMax) 
   }, [sliderMax]);
+
+  const getFoo = () => {
+    if (type) {
+      return {};
+    } else if (disabled || readOnly) {
+      return { tabIndex: -1 };
+    } else {
+      return { tabIndex: 0 };
+    }
+  }
 
   const getSliderProps: IUseSliderReturnValue['getSliderProps'] = ({ ...props }) => ({
     'data-garden-container-id': 'containers.slider',
     'data-garden-container-version': PACKAGE_VERSION,
     ...props,
     ariaLabel,
-    tabIndex,
     step,
     type,
     value: type ? sliderValue : undefined,
@@ -62,7 +71,8 @@ export const useSlider = ({
     'aria-readonly': type ? undefined : readOnly,
     'aria-orientation': orientation,
     'aria-valuetext': valueHumanReadable,
-    role: 'slider'
+    role: 'slider',
+    ...getFoo(),
   });
 
   return {

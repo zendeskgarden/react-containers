@@ -31,7 +31,7 @@ interface AriaSlider extends RequiredAriaSliderProps, OptionalAriaSliderProps, O
   tabIndex: 0 | -1;
 }
 
-export interface IUseSliderProps extends Partial<Pick<NativeSlider, 'type'>>, Partial<Pick<AriaSlider, 'aria-label' | 'tabIndex'>> {
+export interface IUseSliderProps extends Partial<Pick<NativeSlider, 'type'>>, Partial<Pick<AriaSlider, 'aria-label'>> {
   /** */
   value: NativeSlider['value'] | AriaSlider['aria-valuenow'];
   /** */
@@ -50,8 +50,6 @@ export interface IUseSliderProps extends Partial<Pick<NativeSlider, 'type'>>, Pa
   orientation?: OptionalSliderProps['aria-orientation'];
   /** */
   valueHumanReadable?: OptionalSliderProps['aria-valuetext'];
-  /** */
-  title?: string
   /** */
   // dimensions?: string // default 44px
 }
