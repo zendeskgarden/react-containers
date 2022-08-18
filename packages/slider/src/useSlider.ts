@@ -5,31 +5,64 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { IUseSliderProps, IUseSliderReturnValue } from './types';
 
 export const useSlider = ({
-  title,
-  value = 50,
-  min = 0,
-  max = 100,
+  value,
+  min,
+  max,
+  step,
+  required,
+  disabled,
+  readOnly,
+  valueHumanReadable,
   orientation = 'horizontal',
-  required = false
+  type,
+  'aria-label': ariaLabel,
+  tabIndex,
 }: IUseSliderProps): IUseSliderReturnValue => {
-  // const [valueNow, setValueNow] = useState(value);
-  const [valueNow] = useState(value);
+  const [sliderValue, setSliderValue] = useState(value);
+  
+  useEffect(() => { 
+    setSliderValue(sliderValue)
+  }, [sliderValue]);
+
+  const [sliderMin, setSliderMin] = useState(min);
+  
+  useEffect(() => { 
+    setSliderMin(sliderMin) 
+  }, [sliderMin]);
+
+  const [sliderMax, setSliderMax] = useState(max);
+  
+  useEffect(() => { 
+    setSliderMax(sliderMax) 
+  }, [sliderMax]);
 
   const getSliderProps: IUseSliderReturnValue['getSliderProps'] = ({ ...props }) => ({
-    title,
     'data-garden-container-id': 'containers.slider',
     'data-garden-container-version': PACKAGE_VERSION,
     ...props,
-    role: 'slider',
-    'aria-valuenow': valueNow,
-    'aria-valuemin': min,
-    'aria-valuemax': max,
+    ariaLabel,
+    tabIndex,
+    step,
+    type,
+    value: type ? sliderValue : undefined,
+    min: type ? sliderMin : undefined,
+    max: type ? sliderMax : undefined,
+    required: type ? required as boolean : undefined,
+    disabled: type ? disabled as boolean : undefined,
+    readOnly: type ? readOnly as boolean : undefined,
+    'aria-valuenow': type ? undefined : parseInt(sliderValue as string, 10),
+    'aria-valuemin': type ? undefined : parseInt(sliderMin as string, 10),
+    'aria-valuemax': type ? undefined : parseInt(sliderMax as string, 10),
+    'aria-required': type ? undefined : required,
+    'aria-disabled': type ? undefined : disabled,
+    'aria-readonly': type ? undefined : readOnly,
     'aria-orientation': orientation,
-    'aria-required': required
+    'aria-valuetext': valueHumanReadable,
+    role: 'slider'
   });
 
   return {

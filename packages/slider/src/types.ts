@@ -7,27 +7,54 @@
 
 import { AriaAttributes, HTMLProps, ReactNode } from 'react';
 
-export interface IUseSliderProps {
+//
+type OptionalSliderProps = Partial<Pick<AriaAttributes, 'aria-orientation' | 'aria-valuetext' >>;
+
+// Attributes that are required, when using an <input type="range">
+// type must be set to "range" --> readonly type: "range"
+type RequiredNativeSliderProps = Required<Pick<HTMLProps<HTMLInputElement>, 'value' | 'min' | 'max'>>;
+// Attributes that are optional, when using an <input type="range">
+type OptionalNativeSliderProps = Partial<Pick<HTMLProps<HTMLInputElement>, 'required' | 'disabled' | 'readOnly' | 'step'>>;
+// 
+interface NativeSlider extends RequiredNativeSliderProps, OptionalNativeSliderProps, OptionalSliderProps {
+  readonly type: 'range';
+}
+
+// Attributes that are required, when using a <div role="slider">
+// role must be set to "slider" --> readonly role: "slider"
+type RequiredAriaSliderProps = Required<Pick<AriaAttributes, 'aria-valuenow' | 'aria-valuemin' | 'aria-valuemax'>>;
+type OptionalAriaSliderProps = Partial<Pick<AriaAttributes, 'aria-required' | 'aria-disabled' | 'aria-readonly' >>;
+// 
+interface AriaSlider extends RequiredAriaSliderProps, OptionalAriaSliderProps, OptionalSliderProps {
+  'aria-label': NonNullable<AriaAttributes['aria-label']>;
+  readonly role: 'slider';
+  tabIndex: 0 | -1;
+}
+
+export interface IUseSliderProps extends Partial<Pick<NativeSlider, 'type'>>, Partial<Pick<AriaSlider, 'aria-label' | 'tabIndex'>> {
   /** */
-  title?: string;
+  value: NativeSlider['value'] | AriaSlider['aria-valuenow'];
   /** */
-  value?: AriaAttributes['aria-valuenow'];
+  min: NativeSlider['min'] | AriaSlider['aria-valuemin'];
   /** */
-  min?: AriaAttributes['aria-valuemin'];
+  max: NativeSlider['max'] | AriaSlider['aria-valuemax'];
   /** */
-  max?: AriaAttributes['aria-valuemax'];
+  step?: NativeSlider['step'];
   /** */
-  orientation?: AriaAttributes['aria-orientation'];
+  required?: NativeSlider['required'] | AriaSlider['aria-required'];
   /** */
-  required?: AriaAttributes['aria-required'];
+  disabled?: NativeSlider['disabled'] | AriaSlider['aria-disabled'];
+  /** */
+  readOnly?: NativeSlider['readOnly'] | AriaSlider['aria-readonly'];
+  /** */
+  orientation?: OptionalSliderProps['aria-orientation'];
+  /** */
+  valueHumanReadable?: OptionalSliderProps['aria-valuetext'];
 }
 
 export interface IUseSliderReturnValue {
-  getSliderProps: <T extends Element>(
-    props: Omit<HTMLProps<T>, 'role' | 'aria-label'> & {
-      role?: 'slider';
-      'aria-label': NonNullable<HTMLProps<T>['aria-label']>;
-    }
+  getSliderProps: <T extends HTMLInputElement | HTMLDivElement>(
+    props: NativeSlider | AriaSlider
   ) => HTMLProps<T>;
 }
 
