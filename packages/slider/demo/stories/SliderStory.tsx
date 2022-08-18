@@ -5,7 +5,8 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React from 'react';
+import React, { HTMLProps } from 'react';
+import styled, { css } from 'styled-components';
 import { Story } from '@storybook/react';
 import {
   ISliderContainerProps,
@@ -15,23 +16,43 @@ import {
   useSlider
 } from '@zendeskgarden/container-slider';
 
-const Container = ({ title, text }: ISliderContainerProps & { text: string }) => (
-  <SliderContainer title={title}>
+const SliderElement = (props: any) => {
+  const { type, ...other } = props;
+  const Slider = type === 'range' ? 'input' : 'div';
+  return <Slider type={type} {...other} />;
+};
+
+const StyledSliderElement = styled(SliderElement)`
+  ${({ type }) => type !== 'range' &&
+    css`
+      background-color: pink;
+      border-radius: 50%;
+      height: 2.5rem;
+      outline: transparent;
+      width: 2.5rem;
+      &:focus {
+        outline: 1px auto blue;
+      }
+    `
+  }
+`;
+
+const Container = ({ value, min, max, title }: ISliderContainerProps) => (
+  <SliderContainer value={value} min={min} max={max} title={title}>
     {({ getSliderProps }: IUseSliderReturnValue) => (
-      <div {...getSliderProps({ 'aria-label': 'container' })}>{text}</div>
+      <StyledSliderElement {...getSliderProps()} />
     )}
   </SliderContainer>
 );
 
-const Hook = ({ title, text }: IUseSliderProps & { text: string }) => {
-  const { getSliderProps } = useSlider({ title });
+const Hook = ({ value, min, max, type, title }: IUseSliderProps) => {
+  const { getSliderProps } = useSlider({ value, min, max, title, type });
 
-  return <div {...getSliderProps({ 'aria-label': 'hook' })}>{text}</div>;
+  return <StyledSliderElement {...getSliderProps()} />;
 };
 
 interface IArgs extends ISliderContainerProps {
   as: 'hook' | 'container';
-  text: string;
 }
 
 export const SliderStory: Story<IArgs> = ({ as, ...props }) => {

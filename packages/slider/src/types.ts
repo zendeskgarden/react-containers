@@ -50,12 +50,22 @@ export interface IUseSliderProps extends Partial<Pick<NativeSlider, 'type'>>, Pa
   orientation?: OptionalSliderProps['aria-orientation'];
   /** */
   valueHumanReadable?: OptionalSliderProps['aria-valuetext'];
+  /** */
+  title?: string
+  /** */
+  // dimensions?: string // default 44px
 }
+
+// export interface IUseSliderReturnValue {
+//   getSliderProps: <T extends HTMLInputElement | HTMLDivElement>(
+//     props?: NativeSlider | AriaSlider
+//   ) => HTMLProps<T>;
+// }
 
 export interface IUseSliderReturnValue {
   getSliderProps: <T extends HTMLInputElement | HTMLDivElement>(
-    props: NativeSlider | AriaSlider
-  ) => HTMLProps<T>;
+    props?: HTMLProps<T>
+  ) => NativeSlider | AriaSlider;
 }
 
 export interface ISliderContainerProps extends IUseSliderProps {
