@@ -5,8 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import { getSupportInfo } from 'prettier';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { IUseSliderProps, IUseSliderReturnValue } from './types';
 
 export const useSlider = ({
@@ -40,15 +39,21 @@ export const useSlider = ({
     setSliderMax(sliderMax) 
   }, [sliderMax]);
 
-  const getFoo = () => {
+  // The tabIndex attribute only accepts numbers as values, per TypeScript.
+  // Therefore, passing it undefined is a no-go —even in the context of conditional React props.
+  // To work around this, we return an empty object when no tabIndex is needed.
+
+  const [sliderTabIndex, setSliderTabIndex] = useState({});
+
+  useMemo(() => {
     if (type) {
-      return {};
+      setSliderTabIndex({});
     } else if (disabled || readOnly) {
-      return { tabIndex: -1 };
+      setSliderTabIndex({tabIndex: -1 });
     } else {
-      return { tabIndex: 0 };
-    }
-  }
+      setSliderTabIndex({tabIndex: 0 });
+    } 
+  }, [type, disabled, readOnly]);
 
   const getSliderProps: IUseSliderReturnValue['getSliderProps'] = ({ ...props }) => ({
     'data-garden-container-id': 'containers.slider',
@@ -72,7 +77,7 @@ export const useSlider = ({
     'aria-orientation': orientation,
     'aria-valuetext': valueHumanReadable,
     role: 'slider',
-    ...getFoo(),
+    ...sliderTabIndex,
   });
 
   return {

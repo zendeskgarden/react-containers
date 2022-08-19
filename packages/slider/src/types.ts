@@ -16,7 +16,7 @@ type RequiredNativeSliderProps = Required<Pick<HTMLProps<HTMLInputElement>, 'val
 // Attributes that are optional, when using an <input type="range">
 type OptionalNativeSliderProps = Partial<Pick<HTMLProps<HTMLInputElement>, 'required' | 'disabled' | 'readOnly' | 'step'>>;
 // 
-interface NativeSlider extends RequiredNativeSliderProps, OptionalNativeSliderProps, OptionalSliderProps {
+export interface NativeSlider extends RequiredNativeSliderProps, OptionalNativeSliderProps, OptionalSliderProps {
   readonly type: 'range';
 }
 
@@ -25,7 +25,7 @@ interface NativeSlider extends RequiredNativeSliderProps, OptionalNativeSliderPr
 type RequiredAriaSliderProps = Required<Pick<AriaAttributes, 'aria-valuenow' | 'aria-valuemin' | 'aria-valuemax'>>;
 type OptionalAriaSliderProps = Partial<Pick<AriaAttributes, 'aria-required' | 'aria-disabled' | 'aria-readonly' >>;
 // 
-interface AriaSlider extends RequiredAriaSliderProps, OptionalAriaSliderProps, OptionalSliderProps {
+export interface AriaSlider extends RequiredAriaSliderProps, OptionalAriaSliderProps, OptionalSliderProps {
   'aria-label': NonNullable<AriaAttributes['aria-label']>;
   readonly role: 'slider';
   tabIndex: 0 | -1;
@@ -52,6 +52,8 @@ export interface IUseSliderProps extends Partial<Pick<NativeSlider, 'type'>>, Pa
   valueHumanReadable?: OptionalSliderProps['aria-valuetext'];
   /** */
   // dimensions?: string // default 44px
+  /** */
+  as?: 'input' | 'div'
 }
 
 // export interface IUseSliderReturnValue {

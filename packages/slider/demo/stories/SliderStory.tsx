@@ -38,16 +38,16 @@ const StyledSliderElement = styled(SliderElement)`
   }
 `;
 
-const Container = ({ value, min, max, disabled, readOnly }: ISliderContainerProps) => (
-  <SliderContainer value={value} min={min} max={max} disabled={disabled} readOnly={readOnly}>
+const Container = ({...props}: ISliderContainerProps) => (
+  <SliderContainer {...props}>
     {({ getSliderProps }: IUseSliderReturnValue) => (
       <StyledSliderElement {...getSliderProps()} />
     )}
   </SliderContainer>
 );
 
-const Hook = ({ value, min, max, type, disabled, readOnly}: IUseSliderProps) => {
-  const { getSliderProps } = useSlider({ value, min, max, type, disabled, readOnly });
+const Hook = ({...props}: IUseSliderProps) => {
+  const { getSliderProps } = useSlider({...props});
 
   return <StyledSliderElement {...getSliderProps()} />;
 };
