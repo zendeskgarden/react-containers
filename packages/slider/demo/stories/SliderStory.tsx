@@ -6,7 +6,6 @@
  */
 
 import React, { HTMLProps } from 'react';
-import styled, { css } from 'styled-components';
 import { Story } from '@storybook/react';
 import {
   ISliderContainerProps,
@@ -15,41 +14,20 @@ import {
   SliderContainer,
   useSlider
 } from '@zendeskgarden/container-slider';
-
-const SliderElement = (props: any) => {
-  const { type, ...other } = props;
-  const Slider = type === 'range' ? 'input' : 'div';
-  return <Slider type={type} {...other} />;
-};
-
-const StyledSliderElement = styled(SliderElement)`
-  ${({ type }) => type !== 'range' &&
-    css`
-      background-color: pink;
-      border-radius: 50%;
-      cursor: pointer;
-      height: 44px;
-      outline: transparent;
-      width: 44px;
-      &:focus {
-        outline: 1px auto blue;
-      }
-    `
-  }
-`;
+import { Slider } from './components';
 
 const Container = ({...props}: ISliderContainerProps) => (
   <SliderContainer {...props}>
-    {({ getSliderProps }: IUseSliderReturnValue) => (
-      <StyledSliderElement {...getSliderProps()} />
+    {({ getThumbProps }: IUseSliderReturnValue) => (
+      <Slider thumbs={[getThumbProps(0), getThumbProps(1)]}></Slider>
     )}
   </SliderContainer>
 );
 
 const Hook = ({...props}: IUseSliderProps) => {
-  const { getSliderProps } = useSlider({...props});
+  const { getThumbProps } = useSlider({...props});
 
-  return <StyledSliderElement {...getSliderProps()} />;
+  return <Slider thumbs={[getThumbProps(0), getThumbProps(1)]}></Slider>
 };
 
 interface IArgs extends ISliderContainerProps {

@@ -1,4 +1,5 @@
 import { Meta, ArgsTable, Canvas, Story } from '@storybook/addon-docs';
+import { useArgs } from '@storybook/client-api';
 import { SliderContainer } from '@zendeskgarden/container-slider';
 import { SliderStory } from './stories/SliderStory';
 
@@ -7,10 +8,9 @@ import { SliderStory } from './stories/SliderStory';
   component={SliderContainer}
   args={{
     as: 'hook',
-    title: 'test',
-    value: '50',
-    min: '0',
-    max: '100',
+    value: 50,
+    min: 0,
+    max: 100,
     disabled: false,
     readOnly: false
   }}
@@ -29,28 +29,21 @@ import { SliderStory } from './stories/SliderStory';
 
 # Demo
 
-## Range Input Slider
+## Controlled
 
 <Canvas>
   <Story
-    name="Range Input"
+    name="Controlled"
     args={{
-      type: 'range'
-    }}
-    argTypes={{
-      type: {
-        table: {
-          disable: true
-        }
-      }
+      defaultValue: [0, 100]
     }}
   >
     {args => <SliderStory {...args} />}
   </Story>
 </Canvas>
 
-## ARIA Slider
+## Uncontrolled
 
 <Canvas>
-  <Story name="Custom with ARIA">{args => <SliderStory {...args} />}</Story>
+  <Story name="Uncontrolled">{args => <SliderStory {...args} />}</Story>
 </Canvas>

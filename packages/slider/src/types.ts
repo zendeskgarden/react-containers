@@ -7,74 +7,74 @@
 
 import { AriaAttributes, HTMLProps, ReactNode } from 'react';
 
-//
-type OptionalSliderProps = Partial<Pick<AriaAttributes, 'aria-orientation' | 'aria-valuetext' >>;
+type TRequiredSliderThumbProps = Required<Pick<AriaAttributes, 'aria-valuenow' | 'aria-valuemin' | 'aria-valuemax'>>;
 
-// Attributes that are required, when using an <input type="range">
-// type must be set to "range" --> readonly type: "range"
-type RequiredNativeSliderProps = Required<Pick<HTMLProps<HTMLInputElement>, 'value' | 'min' | 'max'>>;
-// Attributes that are optional, when using an <input type="range">
-type OptionalNativeSliderProps = Partial<Pick<HTMLProps<HTMLInputElement>, 'required' | 'disabled' | 'readOnly' | 'step'>>;
-// 
-export interface NativeSlider extends RequiredNativeSliderProps, OptionalNativeSliderProps, OptionalSliderProps {
-  readonly type: 'range';
-}
+type TOptionalSliderThumbProps = Partial<Pick<AriaAttributes, 'aria-required' | 'aria-disabled' | 'aria-readonly' | 'aria-orientation' | 'aria-valuetext'>>;
 
-// Attributes that are required, when using a <div role="slider">
-// role must be set to "slider" --> readonly role: "slider"
-type RequiredAriaSliderProps = Required<Pick<AriaAttributes, 'aria-valuenow' | 'aria-valuemin' | 'aria-valuemax'>>;
-type OptionalAriaSliderProps = Partial<Pick<AriaAttributes, 'aria-required' | 'aria-disabled' | 'aria-readonly' >>;
-// 
-export interface AriaSlider extends RequiredAriaSliderProps, OptionalAriaSliderProps, OptionalSliderProps {
+export interface ISliderThumbProps extends TRequiredSliderThumbProps, TOptionalSliderThumbProps {
   'aria-label': NonNullable<AriaAttributes['aria-label']>;
   readonly role: 'slider';
-  tabIndex: 0 | -1;
+  tabIndex: 0;
 }
 
-export interface IUseSliderProps extends Partial<Pick<NativeSlider, 'type'>>, Partial<Pick<AriaSlider, 'aria-label'>> {
-  /** */
-  value: NativeSlider['value'] | AriaSlider['aria-valuenow'];
-  /** */
-  min: NativeSlider['min'] | AriaSlider['aria-valuemin'];
-  /** */
-  max: NativeSlider['max'] | AriaSlider['aria-valuemax'];
-  /** */
-  step?: NativeSlider['step'];
-  /** */
-  required?: NativeSlider['required'] | AriaSlider['aria-required'];
-  /** */
-  disabled?: NativeSlider['disabled'] | AriaSlider['aria-disabled'];
-  /** */
-  readOnly?: NativeSlider['readOnly'] | AriaSlider['aria-readonly'];
-  /** */
-  orientation?: OptionalSliderProps['aria-orientation'];
-  /** */
-  valueHumanReadable?: OptionalSliderProps['aria-valuetext'];
-  /** */
-  // dimensions?: string // default 44px
-  /** */
-  as?: 'input' | 'div'
+type TNumberWithTextLabel = {
+  number: number;
+  text?: ISliderThumbProps['aria-valuetext'];
 }
 
-// export interface IUseSliderReturnValue {
-//   getSliderProps: <T extends HTMLInputElement | HTMLDivElement>(
-//     props?: NativeSlider | AriaSlider
-//   ) => HTMLProps<T>;
-// }
+export type TSliderValues = number[] | TNumberWithTextLabel[];
+
+export interface IUseSliderProps {
+  /** */
+  label?: ISliderThumbProps['aria-label'];
+  /** */
+  value?: TSliderValues;
+  /** */
+  defaultValue?: TSliderValues;
+  /** */
+  min: ISliderThumbProps['aria-valuemin'];
+  /** */
+  max: ISliderThumbProps['aria-valuemax'];
+  /** */
+  step?: number;
+  /** */
+  required?: ISliderThumbProps['aria-required'];
+  /** */
+  disabled?: ISliderThumbProps['aria-disabled'];
+  /** */
+  readOnly?: ISliderThumbProps['aria-readonly'];
+  /** */
+  orientation?: ISliderThumbProps['aria-orientation'];
+  /** */
+  // onStepUp?: () => {}
+  /** */
+  // onStepDown?: () => {}
+  /** */
+  // onChange?: () => void;
+}
 
 export interface IUseSliderReturnValue {
-  getSliderProps: <T extends HTMLInputElement | HTMLDivElement>(
-    props?: HTMLProps<T>
-  ) => NativeSlider | AriaSlider;
+  getRootProps: <T extends Element>(props?: HTMLProps<T>) => HTMLProps<T>;
+  getTrackProps: <T extends Element>(props?: HTMLProps<T>) => HTMLProps<T>;
+  getThumbProps: <T extends HTMLDivElement>(
+    index: number,
+    props?: HTMLProps<T>,
+  ) => ISliderThumbProps;
 }
 
 export interface ISliderContainerProps extends IUseSliderProps {
   /**
    * Provides slider render prop functions
    *
-   * @param {function} [options.getSliderProps] Slider props getter
+   * @param {function} [options.getRootProps] Slider root props getter
+   * @param {function} [options.getTrackProps] Slider track props getter
+   * @param {function} [options.getThumbProps] Slider thumb props getter
    */
-  render?: (options: { getSliderProps: IUseSliderReturnValue['getSliderProps'] }) => ReactNode;
+  render?: (options: { 
+    getRootProps: IUseSliderReturnValue['getRootProps'];
+    getTrackProps: IUseSliderReturnValue['getTrackProps'];
+    getThumbProps: IUseSliderReturnValue['getThumbProps'];
+  }) => ReactNode;
   /** @ignore */
   children?: (options: IUseSliderReturnValue) => ReactNode;
 }

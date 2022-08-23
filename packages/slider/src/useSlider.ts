@@ -5,82 +5,166 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import { useEffect, useMemo, useState } from 'react';
-import { IUseSliderProps, IUseSliderReturnValue } from './types';
+import { KeyboardEventHandler, useReducer } from 'react';
+import { IUseSliderProps, IUseSliderReturnValue, TSliderValues } from './types';
+import { composeEventHandlers, KEYS } from '@zendeskgarden/container-utilities';
+
+const POSSIBLE_SLIDER_KEYS = [
+  KEYS.LEFT, 
+  KEYS.RIGHT, 
+  KEYS.UP, 
+  KEYS.DOWN, 
+  KEYS.HOME, 
+  KEYS.END
+];
+
+const SLIDER_KEYS = {
+  INCREASE: [
+    KEYS.UP,
+    KEYS.RIGHT
+  ],
+  DECREASE: [
+    KEYS.DOWN,
+    KEYS.LEFT
+  ],
+  SET_MIN: KEYS.HOME,
+  SET_MAX: KEYS.END
+};
 
 export const useSlider = ({
+  label,
   value,
+  defaultValue,
   min,
   max,
-  step,
+  step = 1,
   required,
   disabled,
   readOnly,
-  valueHumanReadable,
   orientation = 'horizontal',
-  type,
-  'aria-label': ariaLabel,
 }: IUseSliderProps): IUseSliderReturnValue => {
-  const [sliderValue, setSliderValue] = useState(value);
-  
-  useEffect(() => { 
-    setSliderValue(sliderValue)
-  }, [sliderValue]);
+  const isInteractive = disabled === false && readOnly === false;
+  const isControlled = defaultValue !== null || defaultValue !== undefined;
+  const test = isControlled ? defaultValue : [0, 25];
 
-  const [sliderMin, setSliderMin] = useState(min);
-  
-  useEffect(() => { 
-    setSliderMin(sliderMin) 
-  }, [sliderMin]);
+  const init = (initialRangeValue: any) => {
+    return {rangeValue: initialRangeValue};
+  }
 
-  const [sliderMax, setSliderMax] = useState(max);
-  
-  useEffect(() => {
-    setSliderMax(sliderMax) 
-  }, [sliderMax]);
+  const reducer = (state: any, action: any) => {
+    console.log("reducer state", state);
+    switch (action.type) {
+      case 'stepUp':
+        return {rangeValue: [state.rangeValue + step]};
+      case 'stepDown':
+        return {rangeValue: [state.rangeValue - step]};
+      case 'setRangeMin':
+        return {rangeValue: [min]};
+      case 'setRangeMax':
+        return {rangeValue: [max]};
+      default:
+        throw new Error();
+    }
+  }
 
-  // The tabIndex attribute only accepts numbers as values, per TypeScript.
-  // Therefore, passing it undefined is a no-go —even in the context of conditional React props.
-  // To work around this, we return an empty object when no tabIndex is needed.
+  const [state, dispatch] = useReducer(reducer, test, init);
 
-  const [sliderTabIndex, setSliderTabIndex] = useState({});
+  const getThumbValueNumber = (index = 0) => {
+    if (typeof state.rangeValue[index] === 'object') {
+      return state.rangeValue[index].number;
+    }
+    return state.rangeValue[index];
+  };
 
-  useMemo(() => {
-    if (type) {
-      setSliderTabIndex({});
-    } else if (disabled || readOnly) {
-      setSliderTabIndex({tabIndex: -1 });
-    } else {
-      setSliderTabIndex({tabIndex: 0 });
-    } 
-  }, [type, disabled, readOnly]);
+  const getThumbValueText = (index = 0) => {
+    if (typeof state.rangeValue[index] === 'object') {
+      return state.rangeValue[index].text;
+    }
+    return undefined;
+  };
 
-  const getSliderProps: IUseSliderReturnValue['getSliderProps'] = ({ ...props }) => ({
+  // Set the min and max of each thumb based on the value, min, and max of the other thumbs
+
+  // const setValueMin = () => setSliderValue(sliderMin);
+
+  // const setValueMax = () => setSliderValue(sliderMax);
+
+  // const increaseValue = () => {
+  //   let nextIncrease = sliderValue + step;
+  //   if (nextIncrease > sliderMax) {
+  //     setValueMax();
+  //   }
+  //   setSliderValue(nextIncrease);
+  // }
+
+  // const decreaseValue = () => {
+  //   let nextDecrease = sliderValue - step;
+  //   if (nextDecrease < sliderMin) {
+  //     setValueMin();
+  //   }
+  //   setSliderValue(nextDecrease);
+  // }
+
+  const handleKeyDown: KeyboardEventHandler = (event) => {
+    console.log(event);
+
+    if (isInteractive && POSSIBLE_SLIDER_KEYS.includes(event.key)) {
+      event.preventDefault();
+      
+      // if (SLIDER_KEYS.INCREASE.includes(event.key) && sliderValue < rangeMax) {
+      if (SLIDER_KEYS.INCREASE.includes(event.key)) {
+        // increaseValue();
+        dispatch({type: 'stepUp', index: 0})
+      }
+
+      // if (SLIDER_KEYS.DECREASE.includes(event.key) && sliderValue > rangeMin) {
+      if (SLIDER_KEYS.DECREASE.includes(event.key)) {
+        // decreaseValue();
+        dispatch({type: 'stepDown', index: 0})
+      }
+
+      if (event.key === SLIDER_KEYS.SET_MIN) {
+        // setValueMin();
+        dispatch({type: 'setRangeMin', index: 0})
+      }
+
+      if (event.key === SLIDER_KEYS.SET_MAX) {
+        // setValueMax();
+        dispatch({type: 'setRangeMax', index: 0})
+      }
+    }
+  }
+
+  const getRootProps: IUseSliderReturnValue['getRootProps'] = ({ ...props }) => ({
     'data-garden-container-id': 'containers.slider',
     'data-garden-container-version': PACKAGE_VERSION,
+    ...props
+  });
+
+  const getTrackProps: IUseSliderReturnValue['getTrackProps'] = ({ ...props }) => ({
+    ...props
+  });
+
+  const getThumbProps: IUseSliderReturnValue['getThumbProps'] = (index, props) => ({
     ...props,
-    ariaLabel,
-    step,
-    type,
-    value: type ? sliderValue : undefined,
-    min: type ? sliderMin : undefined,
-    max: type ? sliderMax : undefined,
-    required: type ? required as boolean : undefined,
-    disabled: type ? disabled as boolean : undefined,
-    readOnly: type ? readOnly as boolean : undefined,
-    'aria-valuenow': type ? undefined : parseInt(sliderValue as string, 10),
-    'aria-valuemin': type ? undefined : parseInt(sliderMin as string, 10),
-    'aria-valuemax': type ? undefined : parseInt(sliderMax as string, 10),
-    'aria-required': type ? undefined : required,
-    'aria-disabled': type ? undefined : disabled,
-    'aria-readonly': type ? undefined : readOnly,
+    'aria-label': label,
+    'aria-valuenow': getThumbValueNumber(index),
+    // 'aria-valuemin': parseInt(sliderMin as string, 10),
+    // 'aria-valuemax': parseInt(sliderMax as string, 10),
+    'aria-required': required,
+    'aria-disabled': disabled,
+    'aria-readonly': readOnly,
     'aria-orientation': orientation,
-    'aria-valuetext': valueHumanReadable,
+    'aria-valuetext': getThumbValueText(index),
+    'data-index': index,
     role: 'slider',
-    ...sliderTabIndex,
+    tabIndex: 0,
+    onKeyDown: handleKeyDown
   });
 
   return {
-    getSliderProps
+    getRootProps,
+    getTrackProps,
+    getThumbProps
   };
 };
