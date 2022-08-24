@@ -22,19 +22,17 @@ type TNumberWithTextLabel = {
   text?: ISliderThumbProps['aria-valuetext'];
 }
 
-export type TSliderValues = number[] | TNumberWithTextLabel[];
+export type TSliderValues = number | number[] | TNumberWithTextLabel | TNumberWithTextLabel[];
 
 export interface IUseSliderProps {
   /** */
-  label?: ISliderThumbProps['aria-label'];
+  min?: ISliderThumbProps['aria-valuemin'];
   /** */
-  value?: TSliderValues;
+  max?: ISliderThumbProps['aria-valuemax'];
   /** */
-  defaultValue?: TSliderValues;
-  /** */
-  min: ISliderThumbProps['aria-valuemin'];
-  /** */
-  max: ISliderThumbProps['aria-valuemax'];
+  // TODO: Add single numbers back in
+  // TODO: Add TNumberWithTextLabel back in
+  defaultValue?: number[];
   /** */
   step?: number;
   /** */
@@ -51,14 +49,18 @@ export interface IUseSliderProps {
   // onStepDown?: () => {}
   /** */
   // onChange?: () => void;
+  /** */
+  rtl?: boolean;
 }
 
 export interface IUseSliderReturnValue {
   getRootProps: <T extends Element>(props?: HTMLProps<T>) => HTMLProps<T>;
   getTrackProps: <T extends Element>(props?: HTMLProps<T>) => HTMLProps<T>;
   getThumbProps: <T extends HTMLDivElement>(
-    index: number,
-    props?: HTMLProps<T>,
+    props: Omit<HTMLProps<T>, 'aria-label'> & {
+      index?: number,
+      'aria-label': ISliderThumbProps['aria-label'];
+    }
   ) => ISliderThumbProps;
 }
 
@@ -78,3 +80,37 @@ export interface ISliderContainerProps extends IUseSliderProps {
   /** @ignore */
   children?: (options: IUseSliderReturnValue) => ReactNode;
 }
+
+export type State = {
+  rangeValue: number[];
+};
+
+export type Action =
+  | {
+      type: 'stepUp';
+      payload: {
+        key: string;
+        value: number;
+      };
+    }
+  | {
+    type: 'stepDown';
+    payload: {
+      key: string;
+      value: number;
+    };
+  }
+  | {
+    type: 'setRangeMax';
+    payload: {
+      key: string;
+      value: number;
+    };
+  }
+  | {
+    type: 'setRangeMin';
+    payload: {
+      key: string;
+      value: number;
+    };
+  }

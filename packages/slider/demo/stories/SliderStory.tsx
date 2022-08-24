@@ -7,6 +7,7 @@
 
 import React, { HTMLProps } from 'react';
 import { Story } from '@storybook/react';
+import styled from 'styled-components';
 import {
   ISliderContainerProps,
   IUseSliderProps,
@@ -14,20 +15,44 @@ import {
   SliderContainer,
   useSlider
 } from '@zendeskgarden/container-slider';
-import { Slider } from './components';
+import { SliderComponent } from './components';
+
+const SliderComponentWrapper = styled.div`
+  width: 50vw;
+`;
 
 const Container = ({...props}: ISliderContainerProps) => (
   <SliderContainer {...props}>
-    {({ getThumbProps }: IUseSliderReturnValue) => (
-      <Slider thumbs={[getThumbProps(0), getThumbProps(1)]}></Slider>
+    {({ getRootProps, getTrackProps, getThumbProps }: IUseSliderReturnValue) => (
+      <SliderComponentWrapper>
+        <SliderComponent 
+          root={getRootProps()} 
+          track={getTrackProps()} 
+          thumbs={[
+            getThumbProps({index: 0, 'aria-label': 'Minimum value'}), 
+            getThumbProps({index: 1, 'aria-label': 'Maximum value'}), 
+          ]}
+        />
+      </SliderComponentWrapper>
     )}
   </SliderContainer>
 );
 
 const Hook = ({...props}: IUseSliderProps) => {
-  const { getThumbProps } = useSlider({...props});
+  const { getRootProps, getTrackProps, getThumbProps } = useSlider({...props});
 
-  return <Slider thumbs={[getThumbProps(0), getThumbProps(1)]}></Slider>
+  return (
+    <SliderComponentWrapper>
+      <SliderComponent 
+        root={getRootProps()} 
+        track={getTrackProps()} 
+        thumbs={[
+          getThumbProps({index: 0, 'aria-label': 'Minimum value'}), 
+          getThumbProps({index: 1, 'aria-label': 'Maximum value'}), 
+        ]}
+      />
+    </SliderComponentWrapper>
+  )
 };
 
 interface IArgs extends ISliderContainerProps {

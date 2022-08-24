@@ -35,7 +35,9 @@ import { SliderStory } from './stories/SliderStory';
   <Story
     name="Controlled"
     args={{
-      defaultValue: [0, 100]
+      defaultValue: [0, 10],
+      min: 0,
+      max: 10
     }}
   >
     {args => <SliderStory {...args} />}
