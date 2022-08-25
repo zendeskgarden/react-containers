@@ -25,13 +25,11 @@ const Container = ({...props}: ISliderContainerProps) => (
   <SliderContainer {...props}>
     {({ getRootProps, getTrackProps, getThumbProps }: IUseSliderReturnValue) => (
       <SliderComponentWrapper>
-        <SliderComponent 
-          root={getRootProps()} 
-          track={getTrackProps()} 
-          thumbs={[
-            getThumbProps({index: 0, 'aria-label': 'Minimum value'}), 
-            getThumbProps({index: 1, 'aria-label': 'Maximum value'}), 
-          ]}
+        <SliderComponent
+          rangeMax={props.max}
+          getRootProps={getRootProps} 
+          getTrackProps={getTrackProps} 
+          getThumbProps={getThumbProps} 
         />
       </SliderComponentWrapper>
     )}
@@ -43,13 +41,11 @@ const Hook = ({...props}: IUseSliderProps) => {
 
   return (
     <SliderComponentWrapper>
-      <SliderComponent 
-        root={getRootProps()} 
-        track={getTrackProps()} 
-        thumbs={[
-          getThumbProps({index: 0, 'aria-label': 'Minimum value'}), 
-          getThumbProps({index: 1, 'aria-label': 'Maximum value'}), 
-        ]}
+      <SliderComponent
+        rangeMax={props.max} 
+        getRootProps={getRootProps} 
+        getTrackProps={getTrackProps} 
+        getThumbProps={getThumbProps} 
       />
     </SliderComponentWrapper>
   )

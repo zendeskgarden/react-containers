@@ -54,29 +54,29 @@ export const useSlider = ({
   // const isControlled = defaultValue !== null || defaultValue !== undefined;
   const isInteractive = disabled === false && readOnly === false;
   
-  const [sliderWidth, setSliderWidth] = useState(0);
-  const trackElement = useRef<HTMLDivElement>(null);
+  // const [sliderWidth, setSliderWidth] = useState(0);
+  // const trackElement = useRef<HTMLDivElement>(null);
 
   /**
    * The window resize event is debounced to reduce unnecessary renders
    */
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const getSliderWidth = useCallback(
-    debounce(() => {
-      if (trackElement.current) {
-        setSliderWidth(trackElement.current.getBoundingClientRect().width);
-      }
-    }, 100),
-    []
-  );
+  // const getSliderWidth = useCallback(
+  //   debounce(() => {
+  //     if (trackElement.current) {
+  //       setSliderWidth(trackElement.current.getBoundingClientRect().width);
+  //     }
+  //   }, 100),
+  //   []
+  // );
 
-  useEffect(() => {
-    getSliderWidth();
-    window.addEventListener('resize', getSliderWidth);
-    return () => {
-      window.removeEventListener('resize', getSliderWidth);
-    };
-  }, [getSliderWidth]);
+  // useEffect(() => {
+  //   getSliderWidth();
+  //   window.addEventListener('resize', getSliderWidth);
+  //   return () => {
+  //     window.removeEventListener('resize', getSliderWidth);
+  //   };
+  // }, [getSliderWidth]);
 
   const initialState: number[] = defaultValue ? defaultValue : [min, max];
 
@@ -85,7 +85,6 @@ export const useSlider = ({
   }
 
   const reducer = (state: State, action: any) => {
-    console.log("reducer state", state);
     switch (action.type) {
       case 'stepUp':
         return {
@@ -167,18 +166,20 @@ export const useSlider = ({
   //   }
   //   setSliderValue(nextDecrease);
   // }
+  
+  const convertMousePositionToValue: MouseEventHandler = (event) => {
+    // https://github.com/zendeskgarden/react-components/blob/main/packages/forms/src/elements/MultiThumbRange.tsx#L156-L180
+  }
 
   const handleTrackClick: MouseEventHandler = (event) => {
     console.log("track clicked", event);
-    console.log("current slider width:", sliderWidth);
+    // console.log("current slider width:", sliderWidth);
   }
 
   const handleThumbKeyDown: any = (event: any) => {
-    console.log(event);
+    console.log("handleThumbKeyDown", event);
 
     if (isInteractive && POSSIBLE_SLIDER_KEYS.includes(event.key)) {
-      event.preventDefault();
-      
       // if (SLIDER_KEYS.INCREASE.includes(event.key) && sliderValue < rangeMax) {
       if (SLIDER_KEYS.INCREASE.includes(event.key)) {
         // increaseValue();
@@ -192,13 +193,11 @@ export const useSlider = ({
       }
 
       if (event.key === SLIDER_KEYS.SET_MIN) {
-        // setValueMin();
-        dispatch({type: 'setRangeMin', index: event.target.dataset.index})
+        dispatch({type: 'setRangeMin', index: 0})
       }
 
       if (event.key === SLIDER_KEYS.SET_MAX) {
-        // setValueMax();
-        dispatch({type: 'setRangeMax', index: event.target.dataset.index})
+        dispatch({type: 'setRangeMax', index: 1})
       }
     }
   }
@@ -211,13 +210,14 @@ export const useSlider = ({
 
   const getTrackProps: IUseSliderReturnValue['getTrackProps'] = ({ ...props }) => ({
     ...props,
-    ref: trackElement,
+    // ref: trackElement,
     onClick: handleTrackClick
   });
 
   const getThumbProps: IUseSliderReturnValue['getThumbProps'] = ({
     'aria-label': ariaLabel,
     index,
+    onKeyDown,
     ...props
   }) => ({
     ...props,
@@ -233,7 +233,8 @@ export const useSlider = ({
     'data-index': index,
     role: 'slider',
     tabIndex: 0,
-    onKeyDown: handleThumbKeyDown
+    // onKeyDown: handleThumbKeyDown
+    onKeyDown: composeEventHandlers(handleThumbKeyDown, onKeyDown),
   });
 
   return {

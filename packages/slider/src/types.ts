@@ -48,7 +48,7 @@ export interface IUseSliderProps {
   /** */
   // onStepDown?: () => {}
   /** */
-  // onChange?: () => void;
+  onChange?: () => void;
   /** */
   rtl?: boolean;
 }
