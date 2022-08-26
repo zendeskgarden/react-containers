@@ -7,7 +7,6 @@
 
 import React, { HTMLProps } from 'react';
 import { Story } from '@storybook/react';
-import styled from 'styled-components';
 import {
   ISliderContainerProps,
   IUseSliderProps,
@@ -17,21 +16,15 @@ import {
 } from '@zendeskgarden/container-slider';
 import { SliderComponent } from './components';
 
-const SliderComponentWrapper = styled.div`
-  width: 50vw;
-`;
-
 const Container = ({...props}: ISliderContainerProps) => (
   <SliderContainer {...props}>
     {({ getRootProps, getTrackProps, getThumbProps }: IUseSliderReturnValue) => (
-      <SliderComponentWrapper>
-        <SliderComponent
-          rangeMax={props.max}
-          getRootProps={getRootProps} 
-          getTrackProps={getTrackProps} 
-          getThumbProps={getThumbProps} 
-        />
-      </SliderComponentWrapper>
+      <SliderComponent
+        storyProps={props}
+        getRootProps={getRootProps} 
+        getTrackProps={getTrackProps} 
+        getThumbProps={getThumbProps} 
+      />
     )}
   </SliderContainer>
 );
@@ -40,14 +33,12 @@ const Hook = ({...props}: IUseSliderProps) => {
   const { getRootProps, getTrackProps, getThumbProps } = useSlider({...props});
 
   return (
-    <SliderComponentWrapper>
-      <SliderComponent
-        rangeMax={props.max} 
-        getRootProps={getRootProps} 
-        getTrackProps={getTrackProps} 
-        getThumbProps={getThumbProps} 
-      />
-    </SliderComponentWrapper>
+    <SliderComponent
+      storyProps={props} 
+      getRootProps={getRootProps} 
+      getTrackProps={getTrackProps} 
+      getThumbProps={getThumbProps} 
+    />
   )
 };
 

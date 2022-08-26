@@ -14,9 +14,10 @@ import {
   useRef, 
   useState
 } from 'react';
-import { IUseSliderProps, IUseSliderReturnValue, TSliderValues, State, Action } from './types';
+import { IUseSliderProps, IUseSliderReturnValue, TSliderValues } from './types';
 import { composeEventHandlers, KEYS } from '@zendeskgarden/container-utilities';
 import debounce from 'lodash.debounce';
+import { AnyFramework } from '@storybook/csf';
 
 const POSSIBLE_SLIDER_KEYS = [
   KEYS.LEFT, 
@@ -28,17 +29,25 @@ const POSSIBLE_SLIDER_KEYS = [
 ];
 
 const SLIDER_KEYS = {
-  INCREASE: [
+  STEP_UP: [
     KEYS.UP,
     KEYS.RIGHT
   ],
-  DECREASE: [
+  STEP_DOWN: [
     KEYS.DOWN,
     KEYS.LEFT
   ],
-  SET_MIN: KEYS.HOME,
-  SET_MAX: KEYS.END
+  RESET_RANGE_MIN: KEYS.HOME,
+  RESET_RANGE_MAX: KEYS.END
 };
+
+export const sliderActionTypes = {
+  STEP_UP: 'stepUp',
+  STEP_DOWN: 'stepDown',
+  RESET_RANGE_MIN: 'resetRangeMin',
+  RESET_RANGE_MAX: 'resetRangeMax',
+  SET_CUSTOM_VALUE: 'setCustomValue'
+}
 
 export const useSlider = ({
   defaultValue,
@@ -49,44 +58,39 @@ export const useSlider = ({
   disabled,
   readOnly,
   orientation = 'horizontal',
-  rtl
+  rtl,
+  // reducer = defaultSliderReducer
 }: IUseSliderProps): IUseSliderReturnValue => {
   // const isControlled = defaultValue !== null || defaultValue !== undefined;
   const isInteractive = disabled === false && readOnly === false;
   
-  // const [sliderWidth, setSliderWidth] = useState(0);
-  // const trackElement = useRef<HTMLDivElement>(null);
+  const [sliderDimensions, setSliderDimensions] = useState<DOMRect | null>(null);
+  const trackElement = useRef<HTMLDivElement>(null);
 
   /**
    * The window resize event is debounced to reduce unnecessary renders
    */
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // const getSliderWidth = useCallback(
-  //   debounce(() => {
-  //     if (trackElement.current) {
-  //       setSliderWidth(trackElement.current.getBoundingClientRect().width);
-  //     }
-  //   }, 100),
-  //   []
-  // );
+  const getSliderDimensions = useCallback(
+    debounce(() => {
+      if (trackElement.current) {
+        setSliderDimensions(trackElement.current.getBoundingClientRect());
+      }
+    }, 100),
+    []
+  );
 
-  // useEffect(() => {
-  //   getSliderWidth();
-  //   window.addEventListener('resize', getSliderWidth);
-  //   return () => {
-  //     window.removeEventListener('resize', getSliderWidth);
-  //   };
-  // }, [getSliderWidth]);
+  useEffect(() => {
+    getSliderDimensions();
+    window.addEventListener('resize', getSliderDimensions);
+    return () => {
+      window.removeEventListener('resize', getSliderDimensions);
+    };
+  }, [getSliderDimensions]);
 
-  const initialState: number[] = defaultValue ? defaultValue : [min, max];
-
-  const init = (initialState: number[]) => {
-    return {rangeValue: initialState};
-  }
-
-  const reducer = (state: State, action: any) => {
+  const reducer = (state: any, action: any) => {
     switch (action.type) {
-      case 'stepUp':
+      case sliderActionTypes.STEP_UP:
         return {
           rangeValue: [
             ...state.rangeValue.slice(0, action.index),
@@ -94,7 +98,7 @@ export const useSlider = ({
             ...state.rangeValue.slice(action.index + 1),
           ]
         };
-      case 'stepDown':
+      case sliderActionTypes.STEP_DOWN:
         return {
           rangeValue: [
             ...state.rangeValue.slice(0, action.index),
@@ -102,7 +106,7 @@ export const useSlider = ({
             ...state.rangeValue.slice(action.index + 1),
           ]
         };
-      case 'setRangeMin':
+      case sliderActionTypes.RESET_RANGE_MIN:
         return {
           rangeValue: [
             ...state.rangeValue.slice(0, action.index),
@@ -110,7 +114,7 @@ export const useSlider = ({
             ...state.rangeValue.slice(action.index + 1),
           ]
         };
-      case 'setRangeMax':
+      case sliderActionTypes.RESET_RANGE_MAX:
         return {
           rangeValue: [
             ...state.rangeValue.slice(0, action.index),
@@ -118,14 +122,28 @@ export const useSlider = ({
             ...state.rangeValue.slice(action.index + 1),
           ]
         };   
+      case sliderActionTypes.SET_CUSTOM_VALUE:
+        return {
+          rangeValue: [
+            ...state.rangeValue.slice(0, action.index),
+            action.value,
+            ...state.rangeValue.slice(action.index + 1),
+          ]
+        };    
       default:
         throw new Error();
     }
   }
 
+  const initialState: number[] = defaultValue ? defaultValue : [min, max];
+
+  const init = (initialState: number[]) => {
+    return {rangeValue: initialState};
+  }
+
   const [state, dispatch] = useReducer(reducer, initialState, init);
 
-  const getThumbValueNumber = (index = 0) => {
+  const getThumbCurrentValueNumber = (index = 0) => {
     // if (typeof state.rangeValue[index] === 'object') {
     //   return state.rangeValue[index].number;
     // }
@@ -135,7 +153,7 @@ export const useSlider = ({
     return state.rangeValue[index];
   };
 
-  const getThumbValueText = (index = 0) => {
+  const getThumbCurrentValueText = (index = 0) => {
     // if (typeof state.rangeValue[index] === 'object') {
     //   return state.rangeValue[index].text;
     // }
@@ -145,59 +163,85 @@ export const useSlider = ({
     return undefined;
   };
 
-  // Set the min and max of each thumb based on the value, min, and max of the other thumbs
+  const getThumbMinValueNumber = (index = 0) => {
+    // By default, min value is overall range min
+    let thumbMinValue = min;
 
-  // const setValueMin = () => setSliderValue(sliderMin);
+    // If index is anything other than 0, then the min is the value of the thumb right before it
+    if (index > 0) {
+      thumbMinValue = state.rangeValue[index - 1];
+    }
 
-  // const setValueMax = () => setSliderValue(sliderMax);
+    return thumbMinValue;
+  };
 
-  // const increaseValue = () => {
-  //   let nextIncrease = sliderValue + step;
-  //   if (nextIncrease > sliderMax) {
-  //     setValueMax();
-  //   }
-  //   setSliderValue(nextIncrease);
-  // }
+  const getThumbMaxValueNumber = (index = 0) => {
+    // By default, max value is overall range max
+    let thumbMaxValue = max;
 
-  // const decreaseValue = () => {
-  //   let nextDecrease = sliderValue - step;
-  //   if (nextDecrease < sliderMin) {
-  //     setValueMin();
-  //   }
-  //   setSliderValue(nextDecrease);
-  // }
-  
-  const convertMousePositionToValue: MouseEventHandler = (event) => {
+    // If index is anything other than last available index, then the max is the value of the thumb right after it
+    if (index < (state.rangeValue.length - 1)) {
+      thumbMaxValue = state.rangeValue[index + 1];
+    }
+
+    return thumbMaxValue;
+  };
+
+  const shouldStepUp = (thumbIndex: number, thumbMax: number) => {
+    return state.rangeValue[thumbIndex] < thumbMax;
+  }
+
+  const shouldStepDown = (thumbIndex: number, thumbMin: number) => {
+    return state.rangeValue[thumbIndex] > thumbMin;
+  }
+
+  const convertMousePositionToValue = (event: MouseEvent) => {
     // https://github.com/zendeskgarden/react-components/blob/main/packages/forms/src/elements/MultiThumbRange.tsx#L156-L180
+
   }
 
   const handleTrackClick: MouseEventHandler = (event) => {
-    console.log("track clicked", event);
-    // console.log("current slider width:", sliderWidth);
+    // https://htmldom.dev/calculate-the-mouse-position-relative-to-an-element/
+
+    console.log("current slider dimensions:", sliderDimensions);
+
+    // Mouse position
+    const x = event.clientX - sliderDimensions.left;
+    console.log("x", x);
+
+    const clickFraction = sliderDimensions.width / x;
+    const closestValue = Math.round(max / clickFraction);
+    console.log("closestValue", closestValue);
+
+    // https://thewebdev.info/2021/04/18/how-to-get-the-closest-number-to-a-number-out-of-a-javascript-array/
+    const closestThumbValue = state.rangeValue.reduce((previousValue, currentValue) => {
+      return (Math.abs(currentValue - closestValue) < Math.abs(previousValue - closestValue) ? currentValue : previousValue);
+    });
+    console.log("index", closestThumbValue);
+
+    const closestThumbIndex = state.rangeValue.findIndex(element => element === closestThumbValue);
+    console.log("closestThumbIndex", closestThumbIndex);
+
+    dispatch({type: sliderActionTypes.SET_CUSTOM_VALUE, index: closestThumbIndex, value: closestValue})
   }
 
   const handleThumbKeyDown: any = (event: any) => {
-    console.log("handleThumbKeyDown", event);
-
     if (isInteractive && POSSIBLE_SLIDER_KEYS.includes(event.key)) {
-      // if (SLIDER_KEYS.INCREASE.includes(event.key) && sliderValue < rangeMax) {
-      if (SLIDER_KEYS.INCREASE.includes(event.key)) {
-        // increaseValue();
-        dispatch({type: 'stepUp', index: event.target.dataset.index})
+
+      if (SLIDER_KEYS.STEP_UP.includes(event.key) && shouldStepUp(event.target.dataset.index, event.target.ariaValueMax)) {
+        dispatch({type: sliderActionTypes.STEP_UP, index: event.target.dataset.index})
       }
 
-      // if (SLIDER_KEYS.DECREASE.includes(event.key) && sliderValue > rangeMin) {
-      if (SLIDER_KEYS.DECREASE.includes(event.key)) {
-        // decreaseValue();
-        dispatch({type: 'stepDown', index: event.target.dataset.index})
+      if (SLIDER_KEYS.STEP_DOWN.includes(event.key) && shouldStepDown(event.target.dataset.index, event.target.ariaValueMin)) {
+        dispatch({type: sliderActionTypes.STEP_DOWN, index: event.target.dataset.index})
       }
 
-      if (event.key === SLIDER_KEYS.SET_MIN) {
-        dispatch({type: 'setRangeMin', index: 0})
+      if (event.key === SLIDER_KEYS.RESET_RANGE_MIN) {
+        dispatch({type: sliderActionTypes.RESET_RANGE_MIN, index: 0})
       }
 
-      if (event.key === SLIDER_KEYS.SET_MAX) {
-        dispatch({type: 'setRangeMax', index: 1})
+      if (event.key === SLIDER_KEYS.RESET_RANGE_MAX) {
+        dispatch({type: sliderActionTypes.RESET_RANGE_MAX, index: state.rangeValue.length - 1})
       }
     }
   }
@@ -210,7 +254,7 @@ export const useSlider = ({
 
   const getTrackProps: IUseSliderReturnValue['getTrackProps'] = ({ ...props }) => ({
     ...props,
-    // ref: trackElement,
+    ref: trackElement,
     onClick: handleTrackClick
   });
 
@@ -222,18 +266,17 @@ export const useSlider = ({
   }) => ({
     ...props,
     'aria-label': ariaLabel,
-    'aria-valuenow': getThumbValueNumber(index),
-    'aria-valuemin': min,
-    'aria-valuemax': max,
+    'aria-valuenow': getThumbCurrentValueNumber(index),
+    'aria-valuemin': getThumbMinValueNumber(index),
+    'aria-valuemax': getThumbMaxValueNumber(index),
     'aria-required': required,
     'aria-disabled': disabled,
     'aria-readonly': readOnly,
     'aria-orientation': orientation,
-    // 'aria-valuetext': getThumbValueText(index),
+    // 'aria-valuetext': getThumbCurrentValueText(index),
     'data-index': index,
     role: 'slider',
     tabIndex: 0,
-    // onKeyDown: handleThumbKeyDown
     onKeyDown: composeEventHandlers(handleThumbKeyDown, onKeyDown),
   });
 

@@ -26,13 +26,13 @@ export type TSliderValues = number | number[] | TNumberWithTextLabel | TNumberWi
 
 export interface IUseSliderProps {
   /** */
-  min?: ISliderThumbProps['aria-valuemin'];
-  /** */
-  max?: ISliderThumbProps['aria-valuemax'];
-  /** */
   // TODO: Add single numbers back in
   // TODO: Add TNumberWithTextLabel back in
   defaultValue?: number[];
+  /** */
+  min?: ISliderThumbProps['aria-valuemin'];
+  /** */
+  max?: ISliderThumbProps['aria-valuemax'];
   /** */
   step?: number;
   /** */
@@ -48,9 +48,12 @@ export interface IUseSliderProps {
   /** */
   // onStepDown?: () => {}
   /** */
-  onChange?: () => void;
+  // onChange?: () => void;
   /** */
   rtl?: boolean;
+  /** */
+  // reducer?: any;
+  // https://kentcdodds.com/blog/the-state-reducer-pattern-with-react-hooks
 }
 
 export interface IUseSliderReturnValue {
@@ -80,37 +83,3 @@ export interface ISliderContainerProps extends IUseSliderProps {
   /** @ignore */
   children?: (options: IUseSliderReturnValue) => ReactNode;
 }
-
-export type State = {
-  rangeValue: number[];
-};
-
-export type Action =
-  | {
-      type: 'stepUp';
-      payload: {
-        key: string;
-        value: number;
-      };
-    }
-  | {
-    type: 'stepDown';
-    payload: {
-      key: string;
-      value: number;
-    };
-  }
-  | {
-    type: 'setRangeMax';
-    payload: {
-      key: string;
-      value: number;
-    };
-  }
-  | {
-    type: 'setRangeMin';
-    payload: {
-      key: string;
-      value: number;
-    };
-  }
