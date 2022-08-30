@@ -32,6 +32,8 @@ const Container = ({...props}: ISliderContainerProps) => (
 const Hook = ({...props}: IUseSliderProps) => {
   const { getRootProps, getTrackProps, getThumbProps } = useSlider({...props});
 
+  console.log('hook props', props);
+
   return (
     <SliderComponent
       storyProps={props} 

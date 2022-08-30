@@ -121,9 +121,6 @@ export const SliderComponent = ({
   getTrackProps, 
   getThumbProps
 }: any) => {
-  const [thumb1Position, setThumb1Position] = useState("0%");
-  const [thumb2Position, setThumb2Position] = useState("100%");
-
   const computeThumbPosition = (newValue: number) => {
     // console.log("👋 Slider value changed!", newValue);
     // console.log("👋 Range max:", storyProps.max);
@@ -134,7 +131,11 @@ export const SliderComponent = ({
     return test2;
   }
 
+  const [thumb1Position, setThumb1Position] = useState(computeThumbPosition(storyProps.defaultValue[0]));
+  const [thumb2Position, setThumb2Position] = useState(computeThumbPosition(storyProps.defaultValue[1]));
+
   const handleThumb1ValueChange = (event: any) => {
+    console.log('handleThumb1ValueChange', event.target.ariaValueNow);
     const newThumb1Position = computeThumbPosition(event.target.ariaValueNow);
     setThumb1Position(newThumb1Position);
   }
@@ -145,32 +146,37 @@ export const SliderComponent = ({
   }
 
   useEffect(() => {
-    setThumb1Position(computeThumbPosition(3));
-    setThumb2Position(computeThumbPosition(8));
-  }, []);
+    setThumb1Position(computeThumbPosition(storyProps.defaultValue[0]));
+    setThumb2Position(computeThumbPosition(storyProps.defaultValue[1]));
+  }, [storyProps.defaultValue]);
 
   return (
     <StyledSliderWrapper {...getRootProps()}>
       <span>{storyProps.min}</span>
       <StyledSliderTrack
-        {...getTrackProps()} 
+        {...getTrackProps({
+          // onClick: 
+        })} 
         fillStart={thumb1Position} 
         fillEnd={thumb2Position}
       >
         <MemoizedSliderThumbComponent 
           elementAttributes={getThumbProps({
-            index: 0, 'aria-label': 'Minimum value', 
+            index: 0, 
+            'aria-label': 'Minimum value', 
             onKeyDown: handleThumb1ValueChange
           })} 
           position={thumb1Position} 
         />
         <MemoizedSliderThumbComponent 
           elementAttributes={getThumbProps({
-            index: 1, 'aria-label': 'Maximum value', 
+            index: 1, 
+            'aria-label': 'Maximum value', 
             onKeyDown: handleThumb2ValueChange
           })} 
           position={thumb2Position} 
         />
+
       </StyledSliderTrack>
       <span>{storyProps.max}</span>
     </StyledSliderWrapper>
