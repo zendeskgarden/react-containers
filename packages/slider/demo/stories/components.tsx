@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 const StyledSliderWrapper = styled.div`
@@ -18,12 +18,12 @@ const StyledSliderWrapper = styled.div`
 const StyledSliderTrack = styled.div`
   background: linear-gradient(
     90deg,
-    #FFF 0%,
-    #FFF ${props => props.fillStart},
-    #5800FF ${props => props.fillStart},
-    #5800FF ${props => props.fillEnd},
-    #FFF ${props => props.fillEnd},
-    #FFF 100%
+    #fff 0%,
+    #fff ${props => props.fillStart},
+    #5800ff ${props => props.fillStart},
+    #5800ff ${props => props.fillEnd},
+    #fff ${props => props.fillEnd},
+    #fff 100%
   );
   border: 1px solid black;
   border-radius: 50em;
@@ -38,15 +38,15 @@ const StyledSliderTrack = styled.div`
 
 // TODO: update left position to right position if RTL is true
 const StyledSliderThumb = styled.div.attrs(props => ({
-  size: "2.75em",
+  size: '2.75em'
 }))`
   align-items: flex-end;
-  background: ${props => props['aria-disabled'] ? "darkgray" : "#FFC600"};
+  background: ${props => (props['aria-disabled'] ? 'darkgray' : '#FFC600')};
   border: 1px solid black;
   border-radius: 50%;
   bottom: 0;
   box-sizing: border-box;
-  cursor: ${props => props['aria-disabled'] ? "not-allowed" : "grab"};
+  cursor: ${props => (props['aria-disabled'] ? 'not-allowed' : 'grab')};
   display: inline-flex;
   font-size: 1em;
   height: ${props => props.size};
@@ -61,7 +61,7 @@ const StyledSliderThumb = styled.div.attrs(props => ({
   z-index: 1;
   &:active,
   &:focus {
-    cursor: ${props => props['aria-disabled'] ? "not-allowed" : "grabbing"};
+    cursor: ${props => (props['aria-disabled'] ? 'not-allowed' : 'grabbing')};
   }
   &:focus {
     outline: 1px auto blue;
@@ -78,7 +78,7 @@ const StyledSliderThumbLabel = styled.div`
 `;
 
 const StyledSliderThumbLabelWithValueText = styled(StyledSliderThumbLabel).attrs(props => ({
-  background: "#E900FF",
+  background: '#E900FF'
 }))`
   align-items: flex-end;
   flex-direction: column;
@@ -99,7 +99,7 @@ const StyledSliderThumbLabelWithValueText = styled(StyledSliderThumbLabel).attrs
   }
 `;
 
-const SliderThumbComponent = ({elementAttributes, position}) => {
+const SliderThumbComponent = ({ elementAttributes, position }) => {
   return (
     <StyledSliderThumb {...elementAttributes} position={position}>
       {elementAttributes['aria-valuetext'] ? (
@@ -110,73 +110,55 @@ const SliderThumbComponent = ({elementAttributes, position}) => {
         <StyledSliderThumbLabel>{elementAttributes['aria-valuenow']}</StyledSliderThumbLabel>
       )}
     </StyledSliderThumb>
-  )
-}
+  );
+};
 
 const MemoizedSliderThumbComponent = React.memo(SliderThumbComponent);
 
 export const SliderComponent = ({
-  storyProps, 
-  getRootProps, 
-  getTrackProps, 
+  storyProps,
+  value,
+  getRootProps,
+  getTrackProps,
   getThumbProps
 }: any) => {
-  const computeThumbPosition = (newValue: number) => {
-    // console.log("👋 Slider value changed!", newValue);
-    // console.log("👋 Range max:", storyProps.max);
-    // Compute thumb position based on how much of the maximum value percentage it is
-    const percentage = (newValue / storyProps.max) * 100;
-    const test2 = `${percentage}%`;
-    // console.log("test2", test2);
-    return test2;
-  }
+  const computeThumbPosition = useCallback(
+    (newValue: number) => {
+      // Compute thumb position based on how much of the maximum value percentage it is
+      const percentage = (newValue / storyProps.max) * 100;
+      const test2 = `${percentage}%`;
 
-  const [thumb1Position, setThumb1Position] = useState(computeThumbPosition(storyProps.defaultValue[0]));
-  const [thumb2Position, setThumb2Position] = useState(computeThumbPosition(storyProps.defaultValue[1]));
+      return test2;
+    },
+    [storyProps.max]
+  );
 
-  const handleThumb1ValueChange = (event: any) => {
-    console.log('handleThumb1ValueChange', event.target.ariaValueNow);
-    const newThumb1Position = computeThumbPosition(event.target.ariaValueNow);
-    setThumb1Position(newThumb1Position);
-  }
-
-  const handleThumb2ValueChange = (event: any) => {
-    const newThumb2Position = computeThumbPosition(event.target.ariaValueNow);
-    setThumb2Position(newThumb2Position);
-  }
+  const [thumb1Position, setThumb1Position] = useState(computeThumbPosition(value[0]));
+  const [thumb2Position, setThumb2Position] = useState(computeThumbPosition(value[1]));
 
   useEffect(() => {
-    setThumb1Position(computeThumbPosition(storyProps.defaultValue[0]));
-    setThumb2Position(computeThumbPosition(storyProps.defaultValue[1]));
-  }, [storyProps.defaultValue]);
+    setThumb1Position(computeThumbPosition(value[0]));
+    setThumb2Position(computeThumbPosition(value[1]));
+  }, [value, computeThumbPosition]);
 
   return (
     <StyledSliderWrapper {...getRootProps()}>
       <span>{storyProps.min}</span>
-      <StyledSliderTrack
-        {...getTrackProps({
-          // onClick: 
-        })} 
-        fillStart={thumb1Position} 
-        fillEnd={thumb2Position}
-      >
-        <MemoizedSliderThumbComponent 
+      <StyledSliderTrack {...getTrackProps()} fillStart={thumb1Position} fillEnd={thumb2Position}>
+        <MemoizedSliderThumbComponent
           elementAttributes={getThumbProps({
-            index: 0, 
-            'aria-label': 'Minimum value', 
-            onKeyDown: handleThumb1ValueChange
-          })} 
-          position={thumb1Position} 
+            index: 0,
+            'aria-label': 'Minimum value'
+          })}
+          position={thumb1Position}
         />
-        <MemoizedSliderThumbComponent 
+        <MemoizedSliderThumbComponent
           elementAttributes={getThumbProps({
-            index: 1, 
-            'aria-label': 'Maximum value', 
-            onKeyDown: handleThumb2ValueChange
-          })} 
-          position={thumb2Position} 
+            index: 1,
+            'aria-label': 'Maximum value'
+          })}
+          position={thumb2Position}
         />
-
       </StyledSliderTrack>
       <span>{storyProps.max}</span>
     </StyledSliderWrapper>

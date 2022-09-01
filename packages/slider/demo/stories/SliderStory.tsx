@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React, { HTMLProps } from 'react';
+import React from 'react';
 import { Story } from '@storybook/react';
 import {
   ISliderContainerProps,
@@ -16,32 +16,32 @@ import {
 } from '@zendeskgarden/container-slider';
 import { SliderComponent } from './components';
 
-const Container = ({...props}: ISliderContainerProps) => (
+const Container = ({ ...props }: ISliderContainerProps) => (
   <SliderContainer {...props}>
-    {({ getRootProps, getTrackProps, getThumbProps }: IUseSliderReturnValue) => (
+    {({ getRootProps, getTrackProps, getThumbProps, value }: IUseSliderReturnValue) => (
       <SliderComponent
         storyProps={props}
-        getRootProps={getRootProps} 
-        getTrackProps={getTrackProps} 
-        getThumbProps={getThumbProps} 
+        value={value}
+        getRootProps={getRootProps}
+        getTrackProps={getTrackProps}
+        getThumbProps={getThumbProps}
       />
     )}
   </SliderContainer>
 );
 
-const Hook = ({...props}: IUseSliderProps) => {
-  const { getRootProps, getTrackProps, getThumbProps } = useSlider({...props});
-
-  console.log('hook props', props);
+const Hook = ({ ...props }: IUseSliderProps) => {
+  const { getRootProps, getTrackProps, getThumbProps, value } = useSlider({ ...props });
 
   return (
     <SliderComponent
-      storyProps={props} 
-      getRootProps={getRootProps} 
-      getTrackProps={getTrackProps} 
-      getThumbProps={getThumbProps} 
+      storyProps={props}
+      value={value}
+      getRootProps={getRootProps}
+      getTrackProps={getTrackProps}
+      getThumbProps={getThumbProps}
     />
-  )
+  );
 };
 
 interface IArgs extends ISliderContainerProps {

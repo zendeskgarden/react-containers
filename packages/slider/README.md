@@ -22,9 +22,15 @@ Check out [storybook](https://zendeskgarden.github.io/react-containers) for live
 import { useSlider } from '@zendeskgarden/container-slider';
 
 const Slider = () => {
-  const { getSliderProps } = useSlider();
+  const { getSliderProps, getTrackProps, getThumbProps } = useSlider();
 
-  return <div {...getSliderProps()} />;
+  return (
+    <div {...getSliderProps()}>
+      <div {...getTrackProps()}>
+        <div {...getThumbProps()} />
+      </div>
+    </div>
+  );
 };
 ```
 

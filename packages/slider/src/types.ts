@@ -7,9 +7,30 @@
 
 import { AriaAttributes, HTMLProps, ReactNode } from 'react';
 
-type TRequiredSliderThumbProps = Required<Pick<AriaAttributes, 'aria-valuenow' | 'aria-valuemin' | 'aria-valuemax'>>;
+type TRequiredSliderThumbProps = Required<
+  Pick<AriaAttributes, 'aria-valuenow' | 'aria-valuemin' | 'aria-valuemax'>
+>;
 
-type TOptionalSliderThumbProps = Partial<Pick<AriaAttributes, 'aria-required' | 'aria-disabled' | 'aria-readonly' | 'aria-orientation' | 'aria-valuetext'>>;
+type TOptionalSliderThumbProps = Partial<
+  Pick<
+    AriaAttributes,
+    'aria-required' | 'aria-disabled' | 'aria-readonly' | 'aria-orientation' | 'aria-valuetext'
+  >
+>;
+
+export type SliderReducerThumbValue = number;
+
+export type SliderReducerState = SliderReducerThumbValue[];
+
+export interface ISliderReducerAction {
+  type: string;
+  index: number;
+  value: number;
+  step: number;
+  min: number;
+  max: number;
+  range: SliderReducerState;
+}
 
 export interface ISliderThumbProps extends TRequiredSliderThumbProps, TOptionalSliderThumbProps {
   'aria-label': NonNullable<AriaAttributes['aria-label']>;
@@ -20,7 +41,7 @@ export interface ISliderThumbProps extends TRequiredSliderThumbProps, TOptionalS
 type TNumberWithTextLabel = {
   number: number;
   text?: ISliderThumbProps['aria-valuetext'];
-}
+};
 
 export type TSliderValues = number | number[] | TNumberWithTextLabel | TNumberWithTextLabel[];
 
@@ -29,6 +50,8 @@ export interface IUseSliderProps {
   // TODO: Add single numbers back in
   // TODO: Add TNumberWithTextLabel back in
   defaultValue?: number[];
+  /** */
+  value?: number[];
   /** */
   min?: ISliderThumbProps['aria-valuemin'];
   /** */
@@ -57,11 +80,12 @@ export interface IUseSliderProps {
 }
 
 export interface IUseSliderReturnValue {
+  value: number[];
   getRootProps: <T extends Element>(props?: HTMLProps<T>) => HTMLProps<T>;
   getTrackProps: <T extends Element>(props?: HTMLProps<T>) => HTMLProps<T>;
   getThumbProps: <T extends HTMLDivElement>(
     props: Omit<HTMLProps<T>, 'aria-label'> & {
-      index?: number,
+      index?: number;
       'aria-label': ISliderThumbProps['aria-label'];
     }
   ) => ISliderThumbProps;
@@ -75,7 +99,8 @@ export interface ISliderContainerProps extends IUseSliderProps {
    * @param {function} [options.getTrackProps] Slider track props getter
    * @param {function} [options.getThumbProps] Slider thumb props getter
    */
-  render?: (options: { 
+  render?: (options: {
+    values: number[];
     getRootProps: IUseSliderReturnValue['getRootProps'];
     getTrackProps: IUseSliderReturnValue['getTrackProps'];
     getThumbProps: IUseSliderReturnValue['getThumbProps'];

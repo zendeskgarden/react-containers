@@ -10,6 +10,7 @@ import { SliderStory } from './stories/SliderStory';
     as: 'hook',
     min: 0,
     max: 100,
+    step: 1,
     disabled: false,
     readOnly: false
   }}
@@ -36,7 +37,8 @@ import { SliderStory } from './stories/SliderStory';
     args={{
       defaultValue: [3, 8],
       min: 0,
-      max: 10
+      max: 10,
+      step: 1
     }}
   >
     {args => <SliderStory {...args} />}
