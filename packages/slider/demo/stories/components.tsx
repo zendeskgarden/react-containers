@@ -10,6 +10,7 @@ import styled from 'styled-components';
 
 const StyledSliderWrapper = styled.div`
   align-items: center;
+  color: #222831;
   display: flex;
   gap: 0.5em;
   width: 50vw;
@@ -18,16 +19,17 @@ const StyledSliderWrapper = styled.div`
 const StyledSliderTrack = styled.div`
   background: linear-gradient(
     90deg,
-    #fff 0%,
-    #fff ${props => props.fillStart},
-    #5800ff ${props => props.fillStart},
-    #5800ff ${props => props.fillEnd},
-    #fff ${props => props.fillEnd},
-    #fff 100%
+    #FFF 0%,
+    #FFF ${props => props.fillStart},
+    ${props => (props['aria-disabled'] ? '#A799B7' : '#542E71')} ${props => props.fillStart},
+    ${props => (props['aria-disabled'] ? '#A799B7' : '#542E71')} ${props => props.fillEnd},
+    #FFF ${props => props.fillEnd},
+    #FFF 100%
   );
-  border: 1px solid black;
+  border: 1px solid currentColor;
   border-radius: 50em;
   box-sizing: border-box;
+  cursor: ${props => (props['aria-disabled'] ? 'not-allowed' : 'default')};
   display: block;
   font-size: 16px;
   height: 1.5em;
@@ -41,8 +43,8 @@ const StyledSliderThumb = styled.div.attrs(props => ({
   size: '2.75em'
 }))`
   align-items: flex-end;
-  background: ${props => (props['aria-disabled'] ? 'darkgray' : '#FFC600')};
-  border: 1px solid black;
+  background: ${props => (props['aria-disabled'] ? '#A799B7' : '#FDCA40')};
+  border: 1px solid currentColor;
   border-radius: 50%;
   bottom: 0;
   box-sizing: border-box;
@@ -64,7 +66,9 @@ const StyledSliderThumb = styled.div.attrs(props => ({
     cursor: ${props => (props['aria-disabled'] ? 'not-allowed' : 'grabbing')};
   }
   &:focus {
-    outline: 1px auto blue;
+    box-shadow: 0 0 0 0.125em #FFF, 0 0 0 0.25em #FB3640; 
+    outline: 1px solid transparent; 
+    z-index: 1;
   }
 `;
 
@@ -74,6 +78,7 @@ const StyledSliderThumbLabel = styled.div`
   height: 100%;
   font-size: 0.875em;
   justify-content: center;
+  pointer-events: none;
   text-align: center;
 `;
 
@@ -118,9 +123,9 @@ const MemoizedSliderThumbComponent = React.memo(SliderThumbComponent);
 export const SliderComponent = ({
   storyProps,
   value,
-  getRootProps,
-  getTrackProps,
-  getThumbProps
+  getSliderRootProps,
+  getSliderTrackProps,
+  getSliderThumbProps
 }: any) => {
   const computeThumbPosition = useCallback(
     (newValue: number) => {
@@ -142,25 +147,25 @@ export const SliderComponent = ({
   }, [value, computeThumbPosition]);
 
   return (
-    <StyledSliderWrapper {...getRootProps()}>
-      <span>{storyProps.min}</span>
-      <StyledSliderTrack {...getTrackProps()} fillStart={thumb1Position} fillEnd={thumb2Position}>
+    <StyledSliderWrapper {...getSliderRootProps()}>
+      <span aria-hidden="true">{storyProps.min}</span>
+      <StyledSliderTrack {...getSliderTrackProps({'aria-label': `Current range is ${value[0]} to ${value[1]}.`})} fillStart={thumb1Position} fillEnd={thumb2Position}>
         <MemoizedSliderThumbComponent
-          elementAttributes={getThumbProps({
+          elementAttributes={getSliderThumbProps({
             index: 0,
             'aria-label': 'Minimum value'
           })}
           position={thumb1Position}
         />
         <MemoizedSliderThumbComponent
-          elementAttributes={getThumbProps({
+          elementAttributes={getSliderThumbProps({
             index: 1,
             'aria-label': 'Maximum value'
           })}
           position={thumb2Position}
         />
       </StyledSliderTrack>
-      <span>{storyProps.max}</span>
+      <span aria-hidden="true">{storyProps.max}</span>
     </StyledSliderWrapper>
   );
 };

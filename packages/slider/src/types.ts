@@ -81,9 +81,9 @@ export interface IUseSliderProps {
 
 export interface IUseSliderReturnValue {
   value: number[];
-  getRootProps: <T extends Element>(props?: HTMLProps<T>) => HTMLProps<T>;
-  getTrackProps: <T extends Element>(props?: HTMLProps<T>) => HTMLProps<T>;
-  getThumbProps: <T extends HTMLDivElement>(
+  getSliderRootProps: <T extends Element>(props?: HTMLProps<T>) => HTMLProps<T>;
+  getSliderTrackProps: <T extends Element>(props?: HTMLProps<T>) => HTMLProps<T>;
+  getSliderThumbProps: <T extends HTMLDivElement>(
     props: Omit<HTMLProps<T>, 'aria-label'> & {
       index?: number;
       'aria-label': ISliderThumbProps['aria-label'];
@@ -95,15 +95,15 @@ export interface ISliderContainerProps extends IUseSliderProps {
   /**
    * Provides slider render prop functions
    *
-   * @param {function} [options.getRootProps] Slider root props getter
-   * @param {function} [options.getTrackProps] Slider track props getter
-   * @param {function} [options.getThumbProps] Slider thumb props getter
+   * @param {function} [options.getSliderRootProps] Slider root props getter
+   * @param {function} [options.getSliderTrackProps] Slider track props getter
+   * @param {function} [options.getSliderThumbProps] Slider thumb props getter
    */
   render?: (options: {
     values: number[];
-    getRootProps: IUseSliderReturnValue['getRootProps'];
-    getTrackProps: IUseSliderReturnValue['getTrackProps'];
-    getThumbProps: IUseSliderReturnValue['getThumbProps'];
+    getSliderRootProps: IUseSliderReturnValue['getSliderRootProps'];
+    getSliderTrackProps: IUseSliderReturnValue['getSliderTrackProps'];
+    getSliderThumbProps: IUseSliderReturnValue['getSliderThumbProps'];
   }) => ReactNode;
   /** @ignore */
   children?: (options: IUseSliderReturnValue) => ReactNode;

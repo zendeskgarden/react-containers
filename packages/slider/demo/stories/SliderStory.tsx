@@ -18,28 +18,28 @@ import { SliderComponent } from './components';
 
 const Container = ({ ...props }: ISliderContainerProps) => (
   <SliderContainer {...props}>
-    {({ getRootProps, getTrackProps, getThumbProps, value }: IUseSliderReturnValue) => (
+    {({ getSliderRootProps, getSliderTrackProps, getSliderThumbProps, value }: IUseSliderReturnValue) => (
       <SliderComponent
         storyProps={props}
         value={value}
-        getRootProps={getRootProps}
-        getTrackProps={getTrackProps}
-        getThumbProps={getThumbProps}
+        getSliderRootProps={getSliderRootProps}
+        getSliderTrackProps={getSliderTrackProps}
+        getSliderThumbProps={getSliderThumbProps}
       />
     )}
   </SliderContainer>
 );
 
 const Hook = ({ ...props }: IUseSliderProps) => {
-  const { getRootProps, getTrackProps, getThumbProps, value } = useSlider({ ...props });
+  const { getSliderRootProps, getSliderTrackProps, getSliderThumbProps, value } = useSlider({ ...props });
 
   return (
     <SliderComponent
       storyProps={props}
       value={value}
-      getRootProps={getRootProps}
-      getTrackProps={getTrackProps}
-      getThumbProps={getThumbProps}
+      getSliderRootProps={getSliderRootProps}
+      getSliderTrackProps={getSliderTrackProps}
+      getSliderThumbProps={getSliderThumbProps}
     />
   );
 };

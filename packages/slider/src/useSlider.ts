@@ -119,7 +119,7 @@ export function useSlider({
     [isInteractive, min, max, step]
   );
 
-  const getRootProps: IUseSliderReturnValue['getRootProps'] = useCallback(
+  const getSliderRootProps: IUseSliderReturnValue['getSliderRootProps'] = useCallback(
     ({ ...props } = {}) => ({
       'data-garden-container-id': 'containers.slider',
       'data-garden-container-version': PACKAGE_VERSION,
@@ -128,15 +128,18 @@ export function useSlider({
     []
   );
 
-  const getTrackProps: IUseSliderReturnValue['getTrackProps'] = useCallback(
+  const getSliderTrackProps: IUseSliderReturnValue['getSliderTrackProps'] = useCallback(
     ({ onClick, ...props } = {}) => ({
+      // onClick: composeEventHandlers(handleTrackClick, onClick),
+      ...props,
+      'aria-disabled': disabled,
+      'aria-readonly': readOnly,
       onClick: composeEventHandlers(handleTrackClick, onClick),
-      ...props
     }),
     [handleTrackClick]
   );
 
-  const getThumbProps: IUseSliderReturnValue['getThumbProps'] = useCallback(
+  const getSliderThumbProps: IUseSliderReturnValue['getSliderThumbProps'] = useCallback(
     ({ 'aria-label': ariaLabel, index, onKeyDown, onClick, ...props }) => ({
       ...props,
       'aria-label': ariaLabel,
@@ -160,10 +163,10 @@ export function useSlider({
   return useMemo(
     () => ({
       value: state,
-      getRootProps,
-      getTrackProps,
-      getThumbProps
+      getSliderRootProps,
+      getSliderTrackProps,
+      getSliderThumbProps
     }),
-    [state, getRootProps, getTrackProps, getThumbProps]
+    [state, getSliderRootProps, getSliderTrackProps, getSliderThumbProps]
   );
 }
