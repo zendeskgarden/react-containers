@@ -5,9 +5,8 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import { useReducer, useMemo, useCallback } from 'react';
+import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import { composeEventHandlers, KEYS } from '@zendeskgarden/container-utilities';
-
 import { IUseSliderProps, IUseSliderReturnValue } from './types';
 import {
   sliderReducer,
@@ -21,6 +20,7 @@ import {
   resetRangeMin,
   resetRangeMax
 } from './sliderReducer';
+import debounce from 'lodash.debounce';
 
 const POSSIBLE_SLIDER_KEYS = [KEYS.LEFT, KEYS.RIGHT, KEYS.UP, KEYS.DOWN, KEYS.HOME, KEYS.END];
 
@@ -42,7 +42,12 @@ export function useSlider({
   readOnly,
   orientation = 'horizontal'
 }: IUseSliderProps): IUseSliderReturnValue {
+  const trackElement = useRef<HTMLDivElement>(null);
+
   const isInteractive = disabled === false && readOnly === false;
+
+  const [isSlidingThumb, setIsSlidingThumb] = useState<boolean>(false);
+  const [slidingThumbInfo, setSlidingThumbInfo] = useState<any | null>(null);
 
   const [state, dispatch] = useReducer(
     sliderReducer,
@@ -85,10 +90,103 @@ export function useSlider({
     [isInteractive, state, min, max]
   );
 
+  // https://stackoverflow.com/questions/55360736/how-do-i-window-removeeventlistener-using-react-useeffect
+  useEffect(
+    () => {
+      console.log('isSlidingThumb', isSlidingThumb);
+
+      if (isSlidingThumb === false) {
+        return;
+      }
+    
+      const doTheThing = (event: MouseEvent) => {
+        console.log("doTheThing", event.target);
+
+        // This if statement works when the jump between numbers is on the larger side (e.g., 0-10)
+        // Need to figure out a better way for smaller steps (e.g., 0-100)
+        if (event.target === trackElement.current) {
+          console.log('doTheThing, slidingThumbInfo', slidingThumbInfo);
+
+          const sliderDimensions = (event.target as HTMLElement)!.getBoundingClientRect();
+
+          const thing1 = event.clientX - sliderDimensions.left;
+          console.log('doTheThing, thing1', thing1);
+
+          const thing2 = thing1 - slidingThumbInfo.startingPosition;
+          console.log('doTheThing, thing2', thing2);
+          
+          const slideFraction = sliderDimensions.width / thing2;
+          console.log('doTheThing, slideFraction', slideFraction);
+
+          const closestValue = Math.round(max / slideFraction);
+          console.log('doTheThing, closest value', closestValue);
+
+          const thumbValue = getThumbCurrentValueNumber(state, { index: slidingThumbInfo.index });
+          console.log('doTheThing, current thumb value', thumbValue);
+
+          const bar = thumbValue + closestValue;
+          console.log('doTheThing, proposed new value', bar);
+
+          dispatch(
+            setCustomValue({
+              index: slidingThumbInfo.index,
+              value: bar,
+              min,
+              max
+            })
+          );
+        }
+      }
+
+      trackElement.current!.addEventListener("mousemove", doTheThing);
+      return () => {
+        trackElement.current!.removeEventListener("mousemove", doTheThing);
+      };
+    },
+    [trackElement, isSlidingThumb, slidingThumbInfo]
+  );
+
+  const handleThumbMouseDown = useCallback(
+    event => {
+      if (isInteractive) {
+        event.stopPropagation();
+        setIsSlidingThumb(true);
+        
+        const sliderDimensions = (trackElement.current as HTMLElement)!.getBoundingClientRect();
+        setSlidingThumbInfo({
+          index: parseInt((event.target as HTMLElement).dataset.index as string, 10),
+          startingPosition: event.clientX - sliderDimensions.left
+        });
+      }
+    },
+    [isInteractive, setIsSlidingThumb, setSlidingThumbInfo]
+  );
+
+  const handleSlideEnd = useCallback(
+    event => {
+      if (isInteractive) {
+        event.stopPropagation();
+        setIsSlidingThumb(false);
+        setSlidingThumbInfo(null);
+      }
+    },
+    [isInteractive, setIsSlidingThumb, setSlidingThumbInfo]
+  );
+
   const handleThumbClick = useCallback(
     event => {
       if (isInteractive) {
         event.stopPropagation();
+      }
+    },
+    [isInteractive]
+  );
+
+  const test = useCallback(
+    event => {
+      if (isInteractive) {
+        event.preventDefault();
+        console.log("THUMB MOUSE MOVE", event);
       }
     },
     [isInteractive]
@@ -130,13 +228,14 @@ export function useSlider({
 
   const getSliderTrackProps: IUseSliderReturnValue['getSliderTrackProps'] = useCallback(
     ({ onClick, ...props } = {}) => ({
-      // onClick: composeEventHandlers(handleTrackClick, onClick),
       ...props,
       'aria-disabled': disabled,
       'aria-readonly': readOnly,
-      onClick: composeEventHandlers(handleTrackClick, onClick),
+      // onClick: composeEventHandlers(handleTrackClick, onClick),
+      onMouseLeave: handleSlideEnd,
+      ref: trackElement
     }),
-    [handleTrackClick]
+    [handleTrackClick, handleSlideEnd]
   );
 
   const getSliderThumbProps: IUseSliderReturnValue['getSliderThumbProps'] = useCallback(
@@ -154,10 +253,14 @@ export function useSlider({
       'data-index': index,
       role: 'slider',
       tabIndex: 0,
+      // onMouseMove: test,
+      onMouseDown: handleThumbMouseDown,
+      onMouseUp: handleSlideEnd,
+      onBlur: handleSlideEnd,
       onKeyDown: composeEventHandlers(handleThumbKeyDown, onKeyDown),
-      onClick: composeEventHandlers(handleThumbClick, onClick)
+      onClick: composeEventHandlers(handleThumbClick, onClick),
     }),
-    [required, disabled, readOnly, orientation, state, handleThumbKeyDown, handleThumbClick]
+    [required, disabled, readOnly, orientation, state, test, handleSlideEnd, handleThumbMouseDown, handleThumbKeyDown, handleThumbClick]
   );
 
   return useMemo(

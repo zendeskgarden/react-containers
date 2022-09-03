@@ -59,6 +59,7 @@ const StyledSliderThumb = styled.div.attrs(props => ({
   padding: 0;
   position: absolute;
   top: 0;
+  user-select: none;
   width: ${props => props.size};
   z-index: 1;
   &:active,
