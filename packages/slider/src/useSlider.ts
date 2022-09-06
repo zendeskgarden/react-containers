@@ -100,32 +100,38 @@ export function useSlider({
       }
     
       const doTheThing = (event: MouseEvent) => {
-        console.log("doTheThing", event.target);
+        console.log("doTheThing, whole event", event);
+        // console.log("doTheThing, event target", event.target);
+        // console.log("doTheThing, event clientX", event.clientX);
+        // const targetDimensions = (event.target as HTMLElement)!.getBoundingClientRect();
+        // const sliderDimensions = (trackElement.current as HTMLElement)!.getBoundingClientRect();
+        // console.log("doTheThing, targetDimensions", targetDimensions);
+        // console.log("doTheThing, sliderDimensions", sliderDimensions);
 
         // This if statement works when the jump between numbers is on the larger side (e.g., 0-10)
         // Need to figure out a better way for smaller steps (e.g., 0-100)
-        if (event.target === trackElement.current) {
-          console.log('doTheThing, slidingThumbInfo', slidingThumbInfo);
+        // if (event.target === trackElement.current) {
+          // console.log('doTheThing, slidingThumbInfo', slidingThumbInfo);
 
-          const sliderDimensions = (event.target as HTMLElement)!.getBoundingClientRect();
+          const sliderDimensions = (trackElement.current as HTMLElement)!.getBoundingClientRect();
 
           const thing1 = event.clientX - sliderDimensions.left;
-          console.log('doTheThing, thing1', thing1);
+          // console.log('doTheThing, thing1', thing1);
 
           const thing2 = thing1 - slidingThumbInfo.startingPosition;
-          console.log('doTheThing, thing2', thing2);
+          // console.log('doTheThing, thing2', thing2);
           
           const slideFraction = sliderDimensions.width / thing2;
-          console.log('doTheThing, slideFraction', slideFraction);
+          // console.log('doTheThing, slideFraction', slideFraction);
 
           const closestValue = Math.round(max / slideFraction);
-          console.log('doTheThing, closest value', closestValue);
+          // console.log('doTheThing, closest value', closestValue);
 
           const thumbValue = getThumbCurrentValueNumber(state, { index: slidingThumbInfo.index });
-          console.log('doTheThing, current thumb value', thumbValue);
+          // console.log('doTheThing, current thumb value', thumbValue);
 
           const bar = thumbValue + closestValue;
-          console.log('doTheThing, proposed new value', bar);
+          // console.log('doTheThing, proposed new value', bar);
 
           dispatch(
             setCustomValue({
@@ -135,7 +141,7 @@ export function useSlider({
               max
             })
           );
-        }
+        // }
       }
 
       trackElement.current!.addEventListener("mousemove", doTheThing);

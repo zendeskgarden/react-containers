@@ -64,7 +64,7 @@ const StyledSliderThumb = styled.div.attrs(props => ({
   z-index: 1;
   &:active,
   &:focus {
-    cursor: ${props => (props['aria-disabled'] ? 'not-allowed' : 'grabbing')};
+    cursor: ${props => (props['aria-disabled'] ? 'not-allowed' : 'grab')};
   }
   &:focus {
     box-shadow: 0 0 0 0.125em #FFF, 0 0 0 0.25em #FB3640; 
