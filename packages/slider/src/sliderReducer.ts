@@ -74,13 +74,30 @@ export const getThumbMaxValueNumber = (
 
 // getters - internal to reducer
 
+/**
+ * @todo Collapse into isWithinBounds
+ */
 const shouldStepUp = (state: SliderReducerState, { index, max }: { index: number; max: number }) =>
   getThumbCurrentValueNumber(state, { index }) < getThumbMaxValueNumber(state, { index, max });
 
+/**
+ * @todo Collapse into isWithinBounds
+ */
 const shouldStepDown = (
   state: SliderReducerState,
   { index, min }: { index: number; min: number }
 ) => getThumbCurrentValueNumber(state, { index }) > getThumbMinValueNumber(state, { index, min });
+
+const isWithinBounds = (
+  state: SliderReducerState,
+  { index, value, min, max }: { index: number; value: number; min: number; max: number }
+) => {
+  if (value < getThumbMinValueNumber(state, { index, min }) || value > getThumbMaxValueNumber(state, { index, max })) {
+    return false;
+  }
+  
+  return true;
+};
 
 // setters - internal to reducer
 
@@ -89,8 +106,11 @@ const setRangeValue = (
   { index, value }: { index: number; value: SliderReducerThumbValue }
 ): SliderReducerState => [...state.slice(0, index), value, ...state.slice(index + 1)];
 
-// reducer
+// reduce
 
+/**
+ * @todo Refactor so STEP_UP and STEP_DOWN uses isWithinBounds
+ */
 export const sliderReducer = (
   state: SliderReducerState,
   action: ISliderReducerAction
@@ -123,10 +143,12 @@ export const sliderReducer = (
         value: getThumbMaxValueNumber(state, { index: state.length - 1, max })
       });
     case SET_CUSTOM_VALUE:
-      return setRangeValue(state, {
-        index,
-        value
-      });
+      return isWithinBounds(state, { index, value, min, max })
+        ? setRangeValue(state, {
+            index,
+            value
+          })
+        : state;
     case SET_RANGE:
       return range;
     default:
@@ -136,14 +158,14 @@ export const sliderReducer = (
 
 // actions
 
-export const increment = ({ index, step, max }: Partial<ISliderReducerAction>) => ({
+export const stepUp = ({ index, step, max }: Partial<ISliderReducerAction>) => ({
   type: STEP_UP,
   index,
   step,
   max
 });
 
-export const decrement = ({ index, step, min }: Partial<ISliderReducerAction>) => ({
+export const stepDown = ({ index, step, min }: Partial<ISliderReducerAction>) => ({
   type: STEP_DOWN,
   index,
   step,

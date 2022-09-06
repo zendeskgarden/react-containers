@@ -40,7 +40,7 @@ const StyledSliderTrack = styled.div`
 
 // TODO: update left position to right position if RTL is true
 const StyledSliderThumb = styled.div.attrs(props => ({
-  size: '2.75em'
+  size: props.size || '2.75em'
 }))`
   align-items: flex-end;
   background: ${props => (props['aria-disabled'] ? '#A799B7' : '#FDCA40')};
@@ -62,7 +62,7 @@ const StyledSliderThumb = styled.div.attrs(props => ({
   user-select: none;
   width: ${props => props.size};
   z-index: 1;
-  &:active,
+  &:active, 
   &:focus {
     cursor: ${props => (props['aria-disabled'] ? 'not-allowed' : 'grab')};
   }
@@ -83,7 +83,7 @@ const StyledSliderThumbLabel = styled.div`
   text-align: center;
 `;
 
-const StyledSliderThumbLabelWithValueText = styled(StyledSliderThumbLabel).attrs(props => ({
+const StyledSliderThumbLabelWithValueText = styled(StyledSliderThumbLabel).attrs(() => ({
   background: '#E900FF'
 }))`
   align-items: flex-end;
@@ -129,13 +129,8 @@ export const SliderComponent = ({
   getSliderThumbProps
 }: any) => {
   const computeThumbPosition = useCallback(
-    (newValue: number) => {
-      // Compute thumb position based on how much of the maximum value percentage it is
-      const percentage = (newValue / storyProps.max) * 100;
-      const test2 = `${percentage}%`;
-
-      return test2;
-    },
+    // Compute thumb position based on how much of the maximum value percentage it is
+    (newValue: number) => `${(newValue / storyProps.max) * 100}%`,
     [storyProps.max]
   );
 
@@ -150,7 +145,7 @@ export const SliderComponent = ({
   return (
     <StyledSliderWrapper {...getSliderRootProps()}>
       <span aria-hidden="true">{storyProps.min}</span>
-      <StyledSliderTrack {...getSliderTrackProps({'aria-label': `Current range is ${value[0]} to ${value[1]}.`})} fillStart={thumb1Position} fillEnd={thumb2Position}>
+      <StyledSliderTrack {...getSliderTrackProps()} fillStart={thumb1Position} fillEnd={thumb2Position}>
         <MemoizedSliderThumbComponent
           elementAttributes={getSliderThumbProps({
             index: 0,

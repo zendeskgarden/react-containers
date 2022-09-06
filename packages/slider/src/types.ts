@@ -38,20 +38,9 @@ export interface ISliderThumbProps extends TRequiredSliderThumbProps, TOptionalS
   tabIndex: 0;
 }
 
-type TNumberWithTextLabel = {
-  number: number;
-  text?: ISliderThumbProps['aria-valuetext'];
-};
-
-export type TSliderValues = number | number[] | TNumberWithTextLabel | TNumberWithTextLabel[];
-
 export interface IUseSliderProps {
   /** */
-  // TODO: Add single numbers back in
-  // TODO: Add TNumberWithTextLabel back in
   defaultValue?: number[];
-  /** */
-  value?: number[];
   /** */
   min?: ISliderThumbProps['aria-valuemin'];
   /** */
@@ -65,8 +54,6 @@ export interface IUseSliderProps {
   /** */
   readOnly?: ISliderThumbProps['aria-readonly'];
   /** */
-  orientation?: ISliderThumbProps['aria-orientation'];
-  /** */
   // onStepUp?: () => {}
   /** */
   // onStepDown?: () => {}
@@ -74,9 +61,6 @@ export interface IUseSliderProps {
   // onChange?: () => void;
   /** */
   rtl?: boolean;
-  /** */
-  // reducer?: any;
-  // https://kentcdodds.com/blog/the-state-reducer-pattern-with-react-hooks
 }
 
 export interface IUseSliderReturnValue {
@@ -95,6 +79,7 @@ export interface ISliderContainerProps extends IUseSliderProps {
   /**
    * Provides slider render prop functions
    *
+   * @param {array} [options.values] Slider values
    * @param {function} [options.getSliderRootProps] Slider root props getter
    * @param {function} [options.getSliderTrackProps] Slider track props getter
    * @param {function} [options.getSliderThumbProps] Slider thumb props getter
