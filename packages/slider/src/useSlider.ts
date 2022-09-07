@@ -39,6 +39,7 @@ export function useSlider({
   min = DEFAULT_MIN,
   max = DEFAULT_MAX,
   step = DEFAULT_STEP,
+  rtl = false,
   required,
   disabled,
   readOnly
@@ -193,9 +194,10 @@ export function useSlider({
     ({ ...props } = {}) => ({
       'data-garden-container-id': 'containers.slider',
       'data-garden-container-version': PACKAGE_VERSION,
-      ...props
+      ...props,
+      dir: rtl ? 'rtl' : 'ltr'
     }),
-    []
+    [rtl]
   );
 
   const getSliderTrackProps: IUseSliderReturnValue['getSliderTrackProps'] = useCallback(
@@ -203,11 +205,12 @@ export function useSlider({
       ...props,
       'aria-disabled': disabled,
       'aria-readonly': readOnly,
+      dir: rtl ? 'rtl' : 'ltr',
       onClick: composeEventHandlers(handleTrackClick, onClick),
       onMouseMove: handleSlideMove,
       ref: trackElement
     }),
-    [disabled, readOnly, handleTrackClick, handleSlideMove]
+    [disabled, readOnly, rtl, handleTrackClick, handleSlideMove]
   );
 
   /**
@@ -228,6 +231,7 @@ export function useSlider({
       'data-index': index,
       role: 'slider',
       tabIndex: isInteractive ? 0 : -1,
+      dir: rtl ? 'rtl' : 'ltr',
       onMouseDown: handleSlideStart,
       onTouchStart: handleSlideStart,
       onMouseUp: handleSlideEnd,
@@ -241,6 +245,7 @@ export function useSlider({
       disabled,
       readOnly,
       isInteractive,
+      rtl,
       handleSlideStart,
       handleSlideEnd,
       handleThumbKeyDown,

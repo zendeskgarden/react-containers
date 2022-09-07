@@ -35,7 +35,7 @@ export interface ISliderReducerAction {
 export interface ISliderThumbProps extends TRequiredSliderThumbProps, TOptionalSliderThumbProps {
   'aria-label': NonNullable<AriaAttributes['aria-label']>;
   readonly role: 'slider';
-  tabIndex: 0;
+  tabIndex: 0 | -1;
 }
 
 export interface IUseSliderProps {

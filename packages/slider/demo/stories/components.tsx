@@ -18,7 +18,7 @@ const StyledSliderWrapper = styled.div`
 
 const StyledSliderTrack = styled.div`
   background: linear-gradient(
-    90deg,
+    ${props => (props.dir === 'rtl' ? '-90deg' : '90deg')},
     #fff 0%,
     #fff ${props => props.fillStart},
     ${props => (props['aria-disabled'] ? '#A799B7' : '#542E71')} ${props => props.fillStart},
@@ -38,7 +38,6 @@ const StyledSliderTrack = styled.div`
   width: min(30em, 100%);
 `;
 
-// TODO: update left position to right position if RTL is true
 const StyledSliderThumb = styled.div.attrs(props => ({
   size: props.size || '2.75em'
 }))`
@@ -52,7 +51,8 @@ const StyledSliderThumb = styled.div.attrs(props => ({
   display: inline-flex;
   font-size: 1em;
   height: ${props => props.size};
-  left: calc(${props => props.position} - (${props => props.size} / 2));
+  ${props => (props.dir === 'rtl' ? 'right' : 'left')}: calc(${props =>
+    props.position} - (${props => props.size} / 2));
   margin: auto;
   justify-content: center;
   outline: 1px solid transparent;
@@ -81,38 +81,10 @@ const StyledSliderThumbLabel = styled.div`
   text-align: center;
 `;
 
-const StyledSliderThumbLabelWithValueText = styled(StyledSliderThumbLabel).attrs(() => ({
-  background: '#E900FF'
-}))`
-  align-items: flex-end;
-  flex-direction: column;
-  height: auto;
-  transform: translateY(2.25em);
-  &::before {
-    content: '';
-    width: 0;
-    height: 0;
-    border-left: 0.5em solid transparent;
-    border-right: 0.5em solid transparent;
-    border-bottom: 0.5em solid ${props => props.background};
-  }
-  span {
-    background-color: ${props => props.background};
-    border-radius: 0.25em;
-    padding: 0.125em 0.25em;
-  }
-`;
-
 const SliderThumbComponent = ({ elementAttributes, position }) => {
   return (
     <StyledSliderThumb {...elementAttributes} position={position}>
-      {elementAttributes['aria-valuetext'] ? (
-        <StyledSliderThumbLabelWithValueText>
-          <span>{elementAttributes['aria-valuetext']}</span>
-        </StyledSliderThumbLabelWithValueText>
-      ) : (
-        <StyledSliderThumbLabel>{elementAttributes['aria-valuenow']}</StyledSliderThumbLabel>
-      )}
+      <StyledSliderThumbLabel>{elementAttributes['aria-valuenow']}</StyledSliderThumbLabel>
     </StyledSliderThumb>
   );
 };
@@ -127,7 +99,6 @@ export const SliderComponent = ({
   getSliderThumbProps
 }: any) => {
   const computeThumbPosition = useCallback(
-    // Compute thumb position based on how much of the maximum value percentage it is
     (newValue: number) => `${(newValue / storyProps.max) * 100}%`,
     [storyProps.max]
   );
