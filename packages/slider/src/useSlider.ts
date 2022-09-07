@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import { useCallback, useMemo, useReducer, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import { composeEventHandlers, KEYS } from '@zendeskgarden/container-utilities';
 import { IUseSliderProps, IUseSliderReturnValue } from './types';
 import {
@@ -27,13 +27,6 @@ import throttle from 'lodash.throttle';
 
 const POSSIBLE_SLIDER_KEYS = [KEYS.LEFT, KEYS.RIGHT, KEYS.UP, KEYS.DOWN, KEYS.HOME, KEYS.END];
 
-const SLIDER_KEYS = {
-  STEP_UP: [KEYS.UP, KEYS.RIGHT],
-  STEP_DOWN: [KEYS.DOWN, KEYS.LEFT],
-  RESET_RANGE_MIN: KEYS.HOME,
-  RESET_RANGE_MAX: KEYS.END
-};
-
 export function useSlider({
   defaultValue,
   min = DEFAULT_MIN,
@@ -46,6 +39,12 @@ export function useSlider({
 }: IUseSliderProps): IUseSliderReturnValue {
   const trackElement = useRef<HTMLDivElement>(null);
   const isInteractive = disabled === false && readOnly === false;
+  const [keyboardInteractions, setKeyboardInteractions] = useState({
+    STEP_UP: [KEYS.UP, KEYS.RIGHT],
+    STEP_DOWN: [KEYS.DOWN, KEYS.LEFT],
+    RESET_RANGE_MIN: KEYS.HOME,
+    RESET_RANGE_MAX: KEYS.END
+  });
   const [slidingThumbIndex, setSlidingThumbIndex] = useState<number | null>(null);
   const [state, dispatch] = useReducer(
     sliderReducer,
@@ -162,6 +161,31 @@ export function useSlider({
     [isInteractive]
   );
 
+  /**
+   * Update keyboard interactions map to reflect current layout direction (LTR or RTL)
+   * @see {@link https://www.w3.org/WAI/ARIA/apg/patterns/slider/#keyboard-interaction-16|ARIA Authoring Practices Guide, Slider pattern, Keyboard interaction}
+   * @todo Accommodate vertical orientation
+   */
+  useEffect(() => {
+    if (rtl === true) {
+      setKeyboardInteractions(previousKeyboardInteractions => {
+        return {
+          ...previousKeyboardInteractions,
+          STEP_UP: [KEYS.UP, KEYS.LEFT],
+          STEP_DOWN: [KEYS.DOWN, KEYS.RIGHT]
+        };
+      });
+    } else {
+      setKeyboardInteractions(previousKeyboardInteractions => {
+        return {
+          ...previousKeyboardInteractions,
+          STEP_UP: [KEYS.UP, KEYS.RIGHT],
+          STEP_DOWN: [KEYS.DOWN, KEYS.LEFT]
+        };
+      });
+    }
+  }, [rtl]);
+
   const handleThumbKeyDown = useCallback(
     (event: KeyboardEvent): void => {
       if (isInteractive && POSSIBLE_SLIDER_KEYS.includes(event.key)) {
@@ -170,24 +194,24 @@ export function useSlider({
           10
         );
 
-        if (SLIDER_KEYS.STEP_UP.includes(event.key)) {
+        if (keyboardInteractions.STEP_UP.includes(event.key)) {
           dispatch(stepUp({ index: currentThumbIndex, step, max }));
         }
 
-        if (SLIDER_KEYS.STEP_DOWN.includes(event.key)) {
+        if (keyboardInteractions.STEP_DOWN.includes(event.key)) {
           dispatch(stepDown({ index: currentThumbIndex, step, min }));
         }
 
-        if (event.key === SLIDER_KEYS.RESET_RANGE_MIN) {
+        if (event.key === keyboardInteractions.RESET_RANGE_MIN) {
           dispatch(resetRangeMin({ min }));
         }
 
-        if (event.key === SLIDER_KEYS.RESET_RANGE_MAX) {
+        if (event.key === keyboardInteractions.RESET_RANGE_MAX) {
           dispatch(resetRangeMax({ max }));
         }
       }
     },
-    [isInteractive, min, max, step]
+    [isInteractive, keyboardInteractions, min, max, step]
   );
 
   const getSliderRootProps: IUseSliderReturnValue['getSliderRootProps'] = useCallback(
