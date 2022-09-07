@@ -18,8 +18,12 @@ import {
   stepUp,
   stepDown,
   resetRangeMin,
-  resetRangeMax
+  resetRangeMax,
+  DEFAULT_MIN,
+  DEFAULT_MAX,
+  DEFAULT_STEP
 } from './sliderReducer';
+import throttle from 'lodash.throttle';
 
 const POSSIBLE_SLIDER_KEYS = [KEYS.LEFT, KEYS.RIGHT, KEYS.UP, KEYS.DOWN, KEYS.HOME, KEYS.END];
 
@@ -32,17 +36,16 @@ const SLIDER_KEYS = {
 
 export function useSlider({
   defaultValue,
-  min = 0,
-  max = 100,
-  step = 1,
+  min = DEFAULT_MIN,
+  max = DEFAULT_MAX,
+  step = DEFAULT_STEP,
   required,
   disabled,
   readOnly
 }: IUseSliderProps): IUseSliderReturnValue {
   const trackElement = useRef<HTMLDivElement>(null);
   const isInteractive = disabled === false && readOnly === false;
-  const [isSliding, setIsSliding] = useState<boolean>(false);
-  const [slidingThumbInfo, setSlidingThumbInfo] = useState<any | null>(null);
+  const [slidingThumbIndex, setSlidingThumbIndex] = useState<number | null>(null);
   const [state, dispatch] = useReducer(
     sliderReducer,
     initializeSliderReducerState(defaultValue || [min, max])
@@ -53,20 +56,16 @@ export function useSlider({
    * @todo Accommodate vertical orientation
    */
   const getValueClosestToMouse = useCallback(
-    (coordinate: number, startingPosition = null) => {
+    (coordinate: number) => {
       const sliderDimensions = (trackElement.current as HTMLElement)!.getBoundingClientRect();
-      let positionFromEdge = coordinate - sliderDimensions.left;
-      
-      if (startingPosition) {
-        positionFromEdge = positionFromEdge - startingPosition;
-      }
-      
+
+      const positionFromEdge = coordinate - sliderDimensions.left;
       const targetPosition = sliderDimensions.width / positionFromEdge;
-      
+
       return Math.round(max / targetPosition);
-    }, 
+    },
     [trackElement, max]
-  )
+  );
 
   /**
    * @todo Accommodate RTL
@@ -77,14 +76,15 @@ export function useSlider({
       if (isInteractive) {
         const closestRangeValue = getValueClosestToMouse(event.clientX);
         const closestThumbValue = state.reduce((previousValue: number, currentValue: number) => {
-          return Math.abs(currentValue - closestRangeValue) < Math.abs(previousValue - closestRangeValue)
+          return Math.abs(currentValue - closestRangeValue) <
+            Math.abs(previousValue - closestRangeValue)
             ? currentValue
             : previousValue;
         });
         const closestThumbIndex = state.findIndex(
           (element: number) => element === closestThumbValue
         );
-        
+
         dispatch(
           setCustomValue({
             index: closestThumbIndex,
@@ -102,26 +102,30 @@ export function useSlider({
    * @todo Accommodate RTL
    * @todo Accommodate vertical orientation
    */
-  const handleSlideMove = useCallback(
-    (event: MouseEvent) => {
-      if (trackElement.current && isSliding) {
-        const closestRangeValue = getValueClosestToMouse(event.clientX, slidingThumbInfo.startingPosition);
-        const currentThumbValue = getThumbCurrentValueNumber(state, { index: slidingThumbInfo.index });
-        const newThumbValue = currentThumbValue + closestRangeValue;
-        
-        if (newThumbValue !== currentThumbValue) {
-          dispatch(
-            setCustomValue({
-              index: slidingThumbInfo.index,
-              value: newThumbValue,
-              min,
-              max
-            })
-          );
-        }
-      }
-    },
-    [trackElement, isSliding, getValueClosestToMouse, slidingThumbInfo, state, min, max]
+  const handleSlideMove = useMemo(
+    () =>
+      throttle(
+        (event: MouseEvent) => {
+          if (trackElement.current && slidingThumbIndex) {
+            const closestRangeValue = getValueClosestToMouse(event.clientX);
+
+            const currentThumbValue = getThumbCurrentValueNumber(state, {
+              index: slidingThumbIndex
+            });
+
+            if (closestRangeValue > currentThumbValue) {
+              dispatch(stepUp({ index: slidingThumbIndex, step, max }));
+            }
+
+            if (closestRangeValue < currentThumbValue) {
+              dispatch(stepDown({ index: slidingThumbIndex, step, min }));
+            }
+          }
+        },
+        200,
+        { trailing: false }
+      ),
+    [trackElement, slidingThumbIndex, getValueClosestToMouse, state, step, min, max]
   );
 
   /**
@@ -129,31 +133,23 @@ export function useSlider({
    * @todo Accommodate vertical orientation
    */
   const handleSlideStart = useCallback(
-    event => {
+    (event: MouseEvent) => {
       if (trackElement.current && isInteractive) {
         event.stopPropagation();
-        setIsSliding(true);
-        
-        const sliderDimensions = (trackElement.current as HTMLElement)!.getBoundingClientRect();
-        
-        setSlidingThumbInfo({
-          index: parseInt((event.target as HTMLElement).dataset.index as string, 10),
-          startingPosition: event.clientX - sliderDimensions.left
-        });
+        setSlidingThumbIndex(parseInt((event.target as HTMLElement).dataset.index as string, 10));
       }
     },
-    [trackElement, isInteractive, setIsSliding]
+    [trackElement, isInteractive, setSlidingThumbIndex]
   );
 
   const handleSlideEnd = useCallback(
-    event => {
+    (event: MouseEvent) => {
       if (trackElement.current && isInteractive) {
         event.stopPropagation();
-        setIsSliding(false);
-        setSlidingThumbInfo(null);
+        setSlidingThumbIndex(null);
       }
     },
-    [trackElement, isInteractive, setIsSliding, setSlidingThumbInfo]
+    [trackElement, isInteractive, setSlidingThumbIndex]
   );
 
   const handleThumbClick = useCallback(
@@ -168,7 +164,10 @@ export function useSlider({
   const handleThumbKeyDown = useCallback(
     (event: KeyboardEvent): void => {
       if (isInteractive && POSSIBLE_SLIDER_KEYS.includes(event.key)) {
-        const currentThumbIndex = parseInt((event.target as HTMLElement).dataset.index as string, 10);
+        const currentThumbIndex = parseInt(
+          (event.target as HTMLElement).dataset.index as string,
+          10
+        );
 
         if (SLIDER_KEYS.STEP_UP.includes(event.key)) {
           dispatch(stepUp({ index: currentThumbIndex, step, max }));
@@ -234,9 +233,19 @@ export function useSlider({
       onMouseUp: handleSlideEnd,
       onTouchEnd: handleSlideEnd,
       onKeyDown: composeEventHandlers(handleThumbKeyDown, onKeyDown),
-      onClick: composeEventHandlers(handleThumbClick, onClick),
+      onClick: composeEventHandlers(handleThumbClick, onClick)
     }),
-    [state, required, disabled, readOnly, isInteractive, handleSlideStart, handleSlideEnd, handleThumbKeyDown, handleThumbClick]
+    [
+      state,
+      required,
+      disabled,
+      readOnly,
+      isInteractive,
+      handleSlideStart,
+      handleSlideEnd,
+      handleThumbKeyDown,
+      handleThumbClick
+    ]
   );
 
   return useMemo(

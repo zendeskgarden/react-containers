@@ -19,12 +19,12 @@ const StyledSliderWrapper = styled.div`
 const StyledSliderTrack = styled.div`
   background: linear-gradient(
     90deg,
-    #FFF 0%,
-    #FFF ${props => props.fillStart},
+    #fff 0%,
+    #fff ${props => props.fillStart},
     ${props => (props['aria-disabled'] ? '#A799B7' : '#542E71')} ${props => props.fillStart},
     ${props => (props['aria-disabled'] ? '#A799B7' : '#542E71')} ${props => props.fillEnd},
-    #FFF ${props => props.fillEnd},
-    #FFF 100%
+    #fff ${props => props.fillEnd},
+    #fff 100%
   );
   border: 1px solid currentColor;
   border-radius: 50em;
@@ -61,15 +61,13 @@ const StyledSliderThumb = styled.div.attrs(props => ({
   top: 0;
   user-select: none;
   width: ${props => props.size};
-  z-index: 1;
-  &:active, 
+  &:active,
   &:focus {
     cursor: ${props => (props['aria-disabled'] ? 'not-allowed' : 'grab')};
   }
   &:focus {
-    box-shadow: 0 0 0 0.125em #FFF, 0 0 0 0.25em #FB3640; 
-    outline: 1px solid transparent; 
-    z-index: 1;
+    box-shadow: 0 0 0 0.125em #fff, 0 0 0 0.25em #fb3640;
+    outline: 1px solid transparent;
   }
 `;
 
@@ -145,7 +143,11 @@ export const SliderComponent = ({
   return (
     <StyledSliderWrapper {...getSliderRootProps()}>
       <span aria-hidden="true">{storyProps.min}</span>
-      <StyledSliderTrack {...getSliderTrackProps()} fillStart={thumb1Position} fillEnd={thumb2Position}>
+      <StyledSliderTrack
+        {...getSliderTrackProps()}
+        fillStart={thumb1Position}
+        fillEnd={thumb2Position}
+      >
         <MemoizedSliderThumbComponent
           elementAttributes={getSliderThumbProps({
             index: 0,

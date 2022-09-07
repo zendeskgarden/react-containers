@@ -10,8 +10,10 @@ import { SliderReducerState, SliderReducerThumbValue, ISliderReducerAction } fro
 // constants
 
 const DEFAULT_INDEX = 0;
-const DEFAULT_MIN = 0;
-const DEFAULT_MAX = 100;
+
+export const DEFAULT_MIN = 0;
+export const DEFAULT_MAX = 100;
+export const DEFAULT_STEP = 1;
 
 // action types
 
@@ -88,14 +90,18 @@ const shouldStepDown = (
   { index, min }: { index: number; min: number }
 ) => getThumbCurrentValueNumber(state, { index }) > getThumbMinValueNumber(state, { index, min });
 
-const isWithinBounds = (
+const shouldChangeValue = (
   state: SliderReducerState,
   { index, value, min, max }: { index: number; value: number; min: number; max: number }
 ) => {
-  if (value < getThumbMinValueNumber(state, { index, min }) || value > getThumbMaxValueNumber(state, { index, max })) {
+  if (value < getThumbMinValueNumber(state, { index, min })) {
     return false;
   }
-  
+
+  if (value > getThumbMaxValueNumber(state, { index, max })) {
+    return false;
+  }
+
   return true;
 };
 
@@ -143,7 +149,7 @@ export const sliderReducer = (
         value: getThumbMaxValueNumber(state, { index: state.length - 1, max })
       });
     case SET_CUSTOM_VALUE:
-      return isWithinBounds(state, { index, value, min, max })
+      return shouldChangeValue(state, { index, value, min, max })
         ? setRangeValue(state, {
             index,
             value

@@ -22,12 +22,12 @@ Check out [storybook](https://zendeskgarden.github.io/react-containers) for live
 import { useSlider } from '@zendeskgarden/container-slider';
 
 const Slider = () => {
-  const { getSliderProps, getTrackProps, getThumbProps } = useSlider();
+  const { getSliderRootProps, getSliderTrackProps, getSliderThumbProps, value } = useSlider();
 
   return (
-    <div {...getSliderProps()}>
-      <div {...getTrackProps()}>
-        <div {...getThumbProps()} />
+    <div {...getSliderRootProps()}>
+      <div {...getSliderTrackProps()}>
+        <div {...getSliderThumbProps()} />
       </div>
     </div>
   );
@@ -39,7 +39,15 @@ const Slider = () => {
 ```jsx
 import { SliderContainer } from '@zendeskgarden/container-slider';
 
-<SliderContainer>{({ getSliderProps }) => <div {...getSliderProps()} />}</SliderContainer>;
+<SliderContainer>
+  {({ getSliderRootProps, getSliderTrackProps, getSliderThumbProps, value }) => {
+    <div {...getSliderRootProps()}>
+      <div {...getSliderTrackProps()}>
+        <div {...getSliderThumbProps()} />
+      </div>
+    </div>;
+  }}
+</SliderContainer>;
 ```
 
 <!--

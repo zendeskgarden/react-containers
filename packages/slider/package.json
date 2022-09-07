@@ -20,12 +20,16 @@
   "sideEffects": false,
   "types": "dist/typings/index.d.ts",
   "dependencies": {
-    "@babel/runtime": "^7.8.4"
+    "@babel/runtime": "^7.8.4",
+    "lodash.throttle": "^4.1.1"
   },
   "peerDependencies": {
     "prop-types": "^15.6.1",
     "react": ">=16.8.0",
     "react-dom": ">=16.8.0"
+  },
+  "devDependencies": {
+    "@types/lodash.throttle": "^4.1.7"
   },
   "keywords": [
     "a11y",
