@@ -21,15 +21,18 @@ const StyledSliderTrack = styled.div`
     ${props => (props.dir === 'rtl' ? '-90deg' : '90deg')},
     #fff 0%,
     #fff ${props => props.fillStart},
-    ${props => (props['aria-disabled'] ? '#A799B7' : '#542E71')} ${props => props.fillStart},
-    ${props => (props['aria-disabled'] ? '#A799B7' : '#542E71')} ${props => props.fillEnd},
+    ${props => (props['aria-disabled'] || props['aria-readonly'] ? '#A799B7' : '#542E71')}
+      ${props => props.fillStart},
+    ${props => (props['aria-disabled'] || props['aria-readonly'] ? '#A799B7' : '#542E71')}
+      ${props => props.fillEnd},
     #fff ${props => props.fillEnd},
     #fff 100%
   );
   border: 1px solid currentColor;
   border-radius: 50em;
   box-sizing: border-box;
-  cursor: ${props => (props['aria-disabled'] ? 'not-allowed' : 'default')};
+  cursor: ${props =>
+    props['aria-disabled'] || props['aria-readonly'] ? 'not-allowed' : 'default'};
   display: block;
   font-size: 16px;
   height: 1.5em;
@@ -42,12 +45,13 @@ const StyledSliderThumb = styled.div.attrs(props => ({
   size: props.size || '2.75em'
 }))`
   align-items: flex-end;
-  background: ${props => (props['aria-disabled'] ? '#A799B7' : '#FDCA40')};
+  background: ${props =>
+    props['aria-disabled'] || props['aria-readonly'] ? '#A799B7' : '#FDCA40'};
   border: 1px solid currentColor;
   border-radius: 50%;
   bottom: 0;
   box-sizing: border-box;
-  cursor: ${props => (props['aria-disabled'] ? 'not-allowed' : 'grab')};
+  cursor: ${props => (props['aria-disabled'] || props['aria-readonly'] ? 'not-allowed' : 'grab')};
   display: inline-flex;
   font-size: 1em;
   height: ${props => props.size};
@@ -63,7 +67,7 @@ const StyledSliderThumb = styled.div.attrs(props => ({
   width: ${props => props.size};
   &:active,
   &:focus {
-    cursor: ${props => (props['aria-disabled'] ? 'not-allowed' : 'grab')};
+    cursor: ${props => (props['aria-disabled'] || props['aria-readonly'] ? 'not-allowed' : 'grab')};
   }
   &:focus {
     box-shadow: 0 0 0 0.125em #fff, 0 0 0 0.25em #fb3640;
