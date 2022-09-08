@@ -16,18 +16,23 @@ const StyledSliderWrapper = styled.div`
   width: 50vw;
 `;
 
-const StyledSliderTrack = styled.div`
-  background: linear-gradient(
-    ${props => (props.dir === 'rtl' ? '-90deg' : '90deg')},
-    #fff 0%,
-    #fff ${props => props.fillStart},
-    ${props => (props['aria-disabled'] || props['aria-readonly'] ? '#A799B7' : '#542E71')}
-      ${props => props.fillStart},
-    ${props => (props['aria-disabled'] || props['aria-readonly'] ? '#A799B7' : '#542E71')}
-      ${props => props.fillEnd},
-    #fff ${props => props.fillEnd},
-    #fff 100%
-  );
+const StyledSliderTrack = styled.div.attrs(props => ({
+  // When the slider is sliding via a mouse event, styled-components updates the background property a whole bunch of times.
+  // When this property existed inside of the class, styled-components gave a warning in the dev console that it was generating too many classes.
+  // They were the ones who (in the warning) recommended taking the Styled Objects approach here.
+  // @see {@link https://styled-components.com/docs/advanced#style-objects|Style Objects}
+  style: {
+    background: `linear-gradient(
+      ${props.dir === 'rtl' ? '-90deg' : '90deg'}, 
+      #fff 0%, #fff ${props.fillStart}, 
+      ${props['aria-disabled'] || props['aria-readonly'] ? '#A799B7' : '#542E71'} ${
+      props.fillStart
+    }, 
+      ${props['aria-disabled'] || props['aria-readonly'] ? '#A799B7' : '#542E71'} ${props.fillEnd}, 
+      #fff ${props.fillEnd}, 
+      #fff 100%)`
+  }
+}))`
   border: 1px solid currentColor;
   border-radius: 50em;
   box-sizing: border-box;
@@ -116,29 +121,34 @@ export const SliderComponent = ({
   }, [value, computeThumbPosition]);
 
   return (
-    <StyledSliderWrapper {...getSliderRootProps()}>
-      <span aria-hidden="true">{storyProps.min}</span>
-      <StyledSliderTrack
-        {...getSliderTrackProps()}
-        fillStart={thumb1Position}
-        fillEnd={thumb2Position}
-      >
-        <MemoizedSliderThumbComponent
-          elementAttributes={getSliderThumbProps({
-            index: 0,
-            'aria-label': 'Minimum value'
-          })}
-          position={thumb1Position}
-        />
-        <MemoizedSliderThumbComponent
-          elementAttributes={getSliderThumbProps({
-            index: 1,
-            'aria-label': 'Maximum value'
-          })}
-          position={thumb2Position}
-        />
-      </StyledSliderTrack>
-      <span aria-hidden="true">{storyProps.max}</span>
-    </StyledSliderWrapper>
+    <fieldset dir={storyProps.rtl ? 'rtl' : 'ltr'}>
+      <legend>
+        <h2>Rate your experience</h2>
+      </legend>
+      <StyledSliderWrapper {...getSliderRootProps()}>
+        <span aria-hidden="true">{storyProps.min}</span>
+        <StyledSliderTrack
+          {...getSliderTrackProps()}
+          fillStart={thumb1Position}
+          fillEnd={thumb2Position}
+        >
+          <MemoizedSliderThumbComponent
+            elementAttributes={getSliderThumbProps({
+              index: 0,
+              'aria-label': 'Minimum rating'
+            })}
+            position={thumb1Position}
+          />
+          <MemoizedSliderThumbComponent
+            elementAttributes={getSliderThumbProps({
+              index: 1,
+              'aria-label': 'Maximum rating'
+            })}
+            position={thumb2Position}
+          />
+        </StyledSliderTrack>
+        <span aria-hidden="true">{storyProps.max}</span>
+      </StyledSliderWrapper>
+    </fieldset>
   );
 };

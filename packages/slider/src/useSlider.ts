@@ -38,6 +38,7 @@ export function useSlider({
   readOnly
 }: IUseSliderProps): IUseSliderReturnValue {
   const trackElement = useRef<HTMLDivElement>(null);
+  const [trackElementDimensions, setTrackElementDimensions] = useState<DOMRect | null>(null);
   const isInteractive = disabled === false && readOnly === false;
   const [keyboardInteractions, setKeyboardInteractions] = useState({
     STEP_UP: [KEYS.UP, KEYS.RIGHT],
@@ -52,28 +53,54 @@ export function useSlider({
   );
 
   /**
-   * @todo Accommodate RTL
+   * Set up a ResizeObserver to capture the track element's dimensions,
+   * even when those dimensions, even when those dimensions change.
+   */
+  useEffect(() => {
+    if (trackElement.current === null) {
+      return;
+    }
+
+    // Store track element ref in a variable, per eslint's react-hooks/exhaustive-deps warning, which says:
+    // “The ref value 'trackElement.current' will likely have changed by the time this effect cleanup function runs.
+    // If this ref points to a node rendered by React, copy 'trackElement.current' to a variable inside the effect, and use that variable in the cleanup function.”
+    const initialTrackElement = trackElement.current;
+
+    const resizeObserver = new ResizeObserver(
+      throttle(
+        () => {
+          setTrackElementDimensions((initialTrackElement as HTMLElement)!.getBoundingClientRect());
+        },
+        1000,
+        { leading: false }
+      )
+    );
+
+    resizeObserver.observe(initialTrackElement);
+
+    // eslint-disable-next-line consistent-return
+    return () => {
+      resizeObserver.unobserve(initialTrackElement);
+    };
+  }, [trackElement, setTrackElementDimensions]);
+
+  /**
    * @todo Accommodate vertical orientation
    */
   const getValueClosestToMouse = useCallback(
     (coordinate: number) => {
-      const sliderDimensions = (trackElement.current as HTMLElement)!.getBoundingClientRect();
-      const mouseDistanceFromLeftEdge = coordinate - sliderDimensions.left;
-      const mouseTargetPosition = sliderDimensions.width / mouseDistanceFromLeftEdge;
-      let value;
+      const mouseDistanceFromLeftEdge = coordinate - trackElementDimensions!.left;
+      const mouseTargetPosition = trackElementDimensions!.width / mouseDistanceFromLeftEdge;
+
+      let value = Math.round(max / mouseTargetPosition);
 
       if (rtl === true) {
-        value = max - Math.round(max / mouseTargetPosition);
-      } else {
-        value = Math.round(max / mouseTargetPosition);
+        value = max - value;
       }
-
-      console.log('targetPosition', mouseTargetPosition);
-      console.log('value', value);
 
       return value;
     },
-    [trackElement, rtl, max]
+    [trackElementDimensions, rtl, max]
   );
 
   /**
@@ -146,6 +173,7 @@ export function useSlider({
           (event.target as HTMLElement).dataset.index as string,
           10
         );
+
         setSlidingThumbIndex(currentThumbIndex);
       }
     },
