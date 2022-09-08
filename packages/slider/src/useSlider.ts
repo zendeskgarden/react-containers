@@ -106,7 +106,7 @@ export function useSlider({
     () =>
       throttle(
         (event: MouseEvent) => {
-          if (trackElement.current && slidingThumbIndex) {
+          if (trackElement.current && slidingThumbIndex !== null) {
             const closestRangeValue = getValueClosestToMouse(event.clientX);
 
             const currentThumbValue = getThumbCurrentValueNumber(state, {
@@ -136,7 +136,8 @@ export function useSlider({
     (event: MouseEvent) => {
       if (trackElement.current && isInteractive) {
         event.stopPropagation();
-        setSlidingThumbIndex(parseInt((event.target as HTMLElement).dataset.index as string, 10));
+        const index = parseInt((event.target as HTMLElement).dataset.index as string, 10);
+        setSlidingThumbIndex(index);
       }
     },
     [trackElement, isInteractive, setSlidingThumbIndex]
