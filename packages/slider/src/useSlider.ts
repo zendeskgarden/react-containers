@@ -58,17 +58,25 @@ export function useSlider({
   const getValueClosestToMouse = useCallback(
     (coordinate: number) => {
       const sliderDimensions = (trackElement.current as HTMLElement)!.getBoundingClientRect();
+      const mouseDistanceFromLeftEdge = coordinate - sliderDimensions.left;
+      const mouseTargetPosition = sliderDimensions.width / mouseDistanceFromLeftEdge;
+      let value;
 
-      const positionFromEdge = coordinate - sliderDimensions.left;
-      const targetPosition = sliderDimensions.width / positionFromEdge;
+      if (rtl === true) {
+        value = max - Math.round(max / mouseTargetPosition);
+      } else {
+        value = Math.round(max / mouseTargetPosition);
+      }
 
-      return Math.round(max / targetPosition);
+      console.log('targetPosition', mouseTargetPosition);
+      console.log('value', value);
+
+      return value;
     },
-    [trackElement, max]
+    [trackElement, rtl, max]
   );
 
   /**
-   * @todo Accommodate RTL
    * @todo Accommodate vertical orientation
    */
   const handleTrackClick = useCallback(
@@ -99,7 +107,6 @@ export function useSlider({
   );
 
   /**
-   * @todo Accommodate RTL
    * @todo Accommodate vertical orientation
    */
   const handleSlideMove = useMemo(
@@ -129,15 +136,17 @@ export function useSlider({
   );
 
   /**
-   * @todo Accommodate RTL
    * @todo Accommodate vertical orientation
    */
   const handleSlideStart = useCallback(
     (event: MouseEvent) => {
       if (trackElement.current && isInteractive) {
         event.stopPropagation();
-        const index = parseInt((event.target as HTMLElement).dataset.index as string, 10);
-        setSlidingThumbIndex(index);
+        const currentThumbIndex = parseInt(
+          (event.target as HTMLElement).dataset.index as string,
+          10
+        );
+        setSlidingThumbIndex(currentThumbIndex);
       }
     },
     [trackElement, isInteractive, setSlidingThumbIndex]
@@ -233,6 +242,7 @@ export function useSlider({
       dir: rtl ? 'rtl' : 'ltr',
       onClick: composeEventHandlers(handleTrackClick, onClick),
       onMouseMove: handleSlideMove,
+      onTouchMove: handleSlideMove,
       ref: trackElement
     }),
     [disabled, readOnly, rtl, handleTrackClick, handleSlideMove]
