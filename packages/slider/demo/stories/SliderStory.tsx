@@ -7,6 +7,7 @@
 
 import React from 'react';
 import { Story } from '@storybook/react';
+
 import {
   ISliderContainerProps,
   IUseSliderProps,
@@ -14,13 +15,53 @@ import {
   SliderContainer,
   useSlider
 } from '@zendeskgarden/container-slider';
-import { SliderComponent } from './components';
 
-const Container = ({ ...props }: ISliderContainerProps) => (
-  <SliderContainer {...props}>
-    {({ getSliderRootProps, getSliderTrackProps, getSliderThumbProps, value }: IUseSliderReturnValue) => (
-      <SliderComponent
-        storyProps={props}
+import { IArgs } from './types';
+import { Wrapper, Track, Thumb } from './styled';
+
+export const Component = ({
+  storyArgs,
+  value,
+  getSliderRootProps,
+  getSliderTrackProps,
+  getSliderThumbProps
+}: { storyArgs: Omit<IArgs, 'as'> } & IUseSliderReturnValue) => {
+  const { rtl, min, max } = storyArgs;
+
+  return (
+    <fieldset dir={rtl ? 'rtl' : 'ltr'}>
+      <legend>
+        <h2>Rate your experience</h2>
+      </legend>
+
+      <Wrapper {...getSliderRootProps()}>
+        <span aria-hidden="true">{min}</span>
+        <Track thumbs={value} sliderMax={max} {...getSliderTrackProps()}>
+          {value.map((_, index: number) => {
+            const props = getSliderThumbProps({
+              index,
+              'aria-label': index === 0 ? 'Minimum rating' : 'Maximum rating'
+            });
+
+            return <Thumb key={index} sliderMax={max} {...props} />;
+          })}
+        </Track>
+        <span aria-hidden="true">{max}</span>
+      </Wrapper>
+    </fieldset>
+  );
+};
+
+const Container = ({ ...args }: ISliderContainerProps & Omit<IArgs, 'as'>) => (
+  <SliderContainer {...args}>
+    {({
+      getSliderRootProps,
+      getSliderTrackProps,
+      getSliderThumbProps,
+      value
+    }: IUseSliderReturnValue) => (
+      <Component
+        storyArgs={args}
         value={value}
         getSliderRootProps={getSliderRootProps}
         getSliderTrackProps={getSliderTrackProps}
@@ -30,12 +71,19 @@ const Container = ({ ...props }: ISliderContainerProps) => (
   </SliderContainer>
 );
 
-const Hook = ({ ...props }: IUseSliderProps) => {
-  const { getSliderRootProps, getSliderTrackProps, getSliderThumbProps, value } = useSlider({ ...props });
+const Hook = ({ ...args }: IUseSliderProps & Omit<IArgs, 'as'>) => {
+  const {
+    getSliderRootProps,
+    getSliderTrackProps,
+    getSliderThumbProps,
+    value
+  }: IUseSliderReturnValue = useSlider({
+    ...args
+  });
 
   return (
-    <SliderComponent
-      storyProps={props}
+    <Component
+      storyArgs={args}
       value={value}
       getSliderRootProps={getSliderRootProps}
       getSliderTrackProps={getSliderTrackProps}
@@ -44,17 +92,13 @@ const Hook = ({ ...props }: IUseSliderProps) => {
   );
 };
 
-interface IArgs extends ISliderContainerProps {
-  as: 'hook' | 'container';
-}
-
-export const SliderStory: Story<IArgs> = ({ as, ...props }) => {
+export const SliderStory: Story<IArgs> = ({ as, ...args }) => {
   switch (as) {
     case 'container':
-      return <Container {...props} />;
+      return <Container {...args} />;
 
     case 'hook':
     default:
-      return <Hook {...props} />;
+      return <Hook {...args} />;
   }
 };

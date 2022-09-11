@@ -1,6 +1,6 @@
 import { Meta, ArgsTable, Canvas, Story } from '@storybook/addon-docs';
-import { useArgs } from '@storybook/client-api';
 import { SliderContainer } from '@zendeskgarden/container-slider';
+
 import { SliderStory } from './stories/SliderStory';
 
 <Meta
@@ -20,6 +20,11 @@ import { SliderStory } from './stories/SliderStory';
       options: ['container', 'hook'],
       control: 'radio',
       table: { category: 'Story' }
+    },
+    render: {
+      table: {
+        disable: true
+      }
     }
   }}
 />
@@ -30,11 +35,11 @@ import { SliderStory } from './stories/SliderStory';
 
 # Demo
 
-## Controlled
+## Uncontrolled
 
 <Canvas>
   <Story
-    name="Controlled"
+    name="Uncontrolled"
     args={{
       defaultValue: [3, 8],
       min: 0,
