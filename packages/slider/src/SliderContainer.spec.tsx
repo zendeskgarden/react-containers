@@ -7,21 +7,22 @@
 
 import React from 'react';
 import { render } from '@testing-library/react';
-import { SliderContainer } from './';
+
+import { SliderContainer } from './SliderContainer';
 import { IUseSliderReturnValue } from './types';
 
 describe('SliderContainer', () => {
-  const TestSlider = () => (
+  const TestSliderThumb = () => (
     <SliderContainer>
-      {({ getSliderProps }: IUseSliderReturnValue) => (
-        <div data-test-id="div" {...getSliderProps({ 'aria-label': 'test' })} />
+      {({ getSliderThumbProps }: IUseSliderReturnValue) => (
+        <div data-test-id="div" {...getSliderThumbProps({ index: 0, 'aria-label': 'test' })} />
       )}
     </SliderContainer>
   );
 
-  describe('getSliderProps', () => {
+  describe('getSliderThumbProps', () => {
     it('applies correct accessibility role', () => {
-      const { getByTestId } = render(<TestSlider />);
+      const { getByTestId } = render(<TestSliderThumb />);
       const element = getByTestId('div');
 
       expect(element).toHaveAttribute('role', 'slider');

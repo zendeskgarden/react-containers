@@ -7,6 +7,8 @@
 
 import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import { composeEventHandlers, KEYS } from '@zendeskgarden/container-utilities';
+import throttle from 'lodash.throttle';
+
 import { IUseSliderProps, IUseSliderReturnValue } from './types';
 import {
   sliderReducer,
@@ -14,7 +16,7 @@ import {
   getThumbCurrentValueNumber,
   getThumbMaxValueNumber,
   getThumbMinValueNumber,
-  setCustomValue,
+  setThumbValue,
   stepUp,
   stepDown,
   resetRangeMin,
@@ -23,7 +25,6 @@ import {
   DEFAULT_MAX,
   DEFAULT_STEP
 } from './sliderReducer';
-import throttle from 'lodash.throttle';
 
 const POSSIBLE_SLIDER_KEYS = [KEYS.LEFT, KEYS.RIGHT, KEYS.UP, KEYS.DOWN, KEYS.HOME, KEYS.END];
 
@@ -40,12 +41,6 @@ export function useSlider({
   const trackElement = useRef<HTMLDivElement>(null);
   const [trackElementDimensions, setTrackElementDimensions] = useState<DOMRect | null>(null);
   const isInteractive = disabled === false && readOnly === false;
-  const [keyboardInteractions, setKeyboardInteractions] = useState({
-    STEP_UP: [KEYS.UP, KEYS.RIGHT],
-    STEP_DOWN: [KEYS.DOWN, KEYS.LEFT],
-    RESET_RANGE_MIN: KEYS.HOME,
-    RESET_RANGE_MAX: KEYS.END
-  });
   const [slidingThumbIndex, setSlidingThumbIndex] = useState<number | null>(null);
   const [state, dispatch] = useReducer(
     sliderReducer,
@@ -121,7 +116,7 @@ export function useSlider({
         );
 
         dispatch(
-          setCustomValue({
+          setThumbValue({
             index: closestThumbIndex,
             value: closestRangeValue,
             min,
@@ -204,25 +199,22 @@ export function useSlider({
    * @see {@link https://www.w3.org/WAI/ARIA/apg/patterns/slider/#keyboard-interaction-16|ARIA Authoring Practices Guide, Slider pattern, Keyboard interaction}
    * @todo Accommodate vertical orientation
    */
-  useEffect(() => {
-    if (rtl === true) {
-      setKeyboardInteractions(previousKeyboardInteractions => {
-        return {
-          ...previousKeyboardInteractions,
-          STEP_UP: [KEYS.UP, KEYS.LEFT],
-          STEP_DOWN: [KEYS.DOWN, KEYS.RIGHT]
-        };
-      });
-    } else {
-      setKeyboardInteractions(previousKeyboardInteractions => {
-        return {
-          ...previousKeyboardInteractions,
-          STEP_UP: [KEYS.UP, KEYS.RIGHT],
-          STEP_DOWN: [KEYS.DOWN, KEYS.LEFT]
-        };
-      });
-    }
-  }, [rtl]);
+  const keyboardInteractions = useMemo(
+    () => ({
+      ...(rtl
+        ? {
+            STEP_UP: [KEYS.UP, KEYS.LEFT],
+            STEP_DOWN: [KEYS.DOWN, KEYS.RIGHT]
+          }
+        : {
+            STEP_UP: [KEYS.UP, KEYS.RIGHT],
+            STEP_DOWN: [KEYS.DOWN, KEYS.LEFT]
+          }),
+      RESET_RANGE_MIN: KEYS.HOME,
+      RESET_RANGE_MAX: KEYS.END
+    }),
+    [rtl]
+  );
 
   const handleThumbKeyDown = useCallback(
     (event: KeyboardEvent): void => {
@@ -252,8 +244,8 @@ export function useSlider({
     [isInteractive, keyboardInteractions, min, max, step]
   );
 
-  const getSliderRootProps: IUseSliderReturnValue['getSliderRootProps'] = useCallback(
-    ({ ...props } = {}) => ({
+  const getSliderRootProps = useCallback(
+    ({ ...props } = {}): IUseSliderReturnValue['getSliderRootProps'] => ({
       'data-garden-container-id': 'containers.slider',
       'data-garden-container-version': PACKAGE_VERSION,
       ...props,
@@ -262,8 +254,8 @@ export function useSlider({
     [rtl]
   );
 
-  const getSliderTrackProps: IUseSliderReturnValue['getSliderTrackProps'] = useCallback(
-    ({ onClick, ...props } = {}) => ({
+  const getSliderTrackProps = useCallback(
+    ({ onClick, ...props } = {}): IUseSliderReturnValue['getSliderTrackProps'] => ({
       ...props,
       'aria-disabled': disabled,
       'aria-readonly': readOnly,
@@ -280,8 +272,14 @@ export function useSlider({
    * @todo Accommodate aria-valuetext
    * @todo Accommodate vertical orientation
    */
-  const getSliderThumbProps: IUseSliderReturnValue['getSliderThumbProps'] = useCallback(
-    ({ 'aria-label': ariaLabel, index, onKeyDown, onClick, ...props }) => ({
+  const getSliderThumbProps = useCallback(
+    ({
+      'aria-label': ariaLabel,
+      index,
+      onKeyDown,
+      onClick,
+      ...props
+    }): IUseSliderReturnValue['getSliderThumbProps'] => ({
       ...props,
       'aria-label': ariaLabel,
       'aria-valuenow': getThumbCurrentValueNumber(state, { index }),
@@ -324,5 +322,5 @@ export function useSlider({
       getSliderThumbProps
     }),
     [state, getSliderRootProps, getSliderTrackProps, getSliderThumbProps]
-  );
+  ) as any;
 }

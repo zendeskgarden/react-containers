@@ -18,18 +18,17 @@ type TOptionalSliderThumbProps = Partial<
   >
 >;
 
-export type SliderReducerThumbValue = number;
+export type TSliderReducerThumbValue = number;
 
-export type SliderReducerState = SliderReducerThumbValue[];
+export type TSliderReducerState = TSliderReducerThumbValue[];
 
 export interface ISliderReducerAction {
-  type: string;
+  readonly type: string;
   index: number;
   value: number;
   step: number;
   min: number;
   max: number;
-  range: SliderReducerState;
 }
 
 export interface ISliderThumbProps extends TRequiredSliderThumbProps, TOptionalSliderThumbProps {
@@ -67,7 +66,7 @@ export interface IUseSliderReturnValue {
   value: number[];
   getSliderRootProps: <T extends Element>(props?: HTMLProps<T>) => HTMLProps<T>;
   getSliderTrackProps: <T extends Element>(props?: HTMLProps<T>) => HTMLProps<T>;
-  getSliderThumbProps: <T extends HTMLDivElement>(
+  getSliderThumbProps: <T extends Element>(
     props: Omit<HTMLProps<T>, 'aria-label'> & {
       index?: number;
       'aria-label': ISliderThumbProps['aria-label'];
@@ -79,13 +78,13 @@ export interface ISliderContainerProps extends IUseSliderProps {
   /**
    * Provides slider render prop functions
    *
-   * @param {array} [options.values] Slider values
+   * @param {number[]} [options.value] Slider values
    * @param {function} [options.getSliderRootProps] Slider root props getter
    * @param {function} [options.getSliderTrackProps] Slider track props getter
    * @param {function} [options.getSliderThumbProps] Slider thumb props getter
    */
   render?: (options: {
-    values: number[];
+    value: IUseSliderReturnValue['value'];
     getSliderRootProps: IUseSliderReturnValue['getSliderRootProps'];
     getSliderTrackProps: IUseSliderReturnValue['getSliderTrackProps'];
     getSliderThumbProps: IUseSliderReturnValue['getSliderThumbProps'];

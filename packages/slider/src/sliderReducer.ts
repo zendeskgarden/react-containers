@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import { SliderReducerState, SliderReducerThumbValue, ISliderReducerAction } from './types';
+import { TSliderReducerState, TSliderReducerThumbValue, ISliderReducerAction } from './types';
 
 // constants
 
@@ -21,31 +21,30 @@ const STEP_UP = 'stepUp';
 const STEP_DOWN = 'stepDown';
 const RESET_RANGE_MIN = 'resetRangeMin';
 const RESET_RANGE_MAX = 'resetRangeMax';
-const SET_CUSTOM_VALUE = 'setCustomValue';
-const SET_RANGE = 'setRange';
+const SET_THUMB_VALUE = 'setThumbValue';
 
 // initialization
 
 export const initializeSliderReducerState = (
-  initialState: SliderReducerThumbValue[] = [0]
-): SliderReducerState => {
+  initialState: TSliderReducerThumbValue[] = [0]
+): TSliderReducerState => {
   return initialState;
 };
 
 // getters
 
 export const getThumbCurrentValue = (
-  state: SliderReducerState,
+  state: TSliderReducerState,
   { index = DEFAULT_INDEX }
 ): number => state[index];
 
 export const getThumbCurrentValueNumber = (
-  state: SliderReducerState,
+  state: TSliderReducerState,
   { index = DEFAULT_INDEX }
 ): number => getThumbCurrentValue(state, { index });
 
 export const getThumbMinValueNumber = (
-  state: SliderReducerState,
+  state: TSliderReducerState,
   { index = DEFAULT_INDEX, min = DEFAULT_MIN }
 ) => {
   // By default, min value is overall range min
@@ -60,7 +59,7 @@ export const getThumbMinValueNumber = (
 };
 
 export const getThumbMaxValueNumber = (
-  state: SliderReducerState,
+  state: TSliderReducerState,
   { index = DEFAULT_INDEX, max = DEFAULT_MAX }
 ) => {
   // By default, max value is overall range max
@@ -79,19 +78,19 @@ export const getThumbMaxValueNumber = (
 /**
  * @todo Collapse into isWithinBounds
  */
-const shouldStepUp = (state: SliderReducerState, { index, max }: { index: number; max: number }) =>
+const shouldStepUp = (state: TSliderReducerState, { index, max }: { index: number; max: number }) =>
   getThumbCurrentValueNumber(state, { index }) < getThumbMaxValueNumber(state, { index, max });
 
 /**
  * @todo Collapse into isWithinBounds
  */
 const shouldStepDown = (
-  state: SliderReducerState,
+  state: TSliderReducerState,
   { index, min }: { index: number; min: number }
 ) => getThumbCurrentValueNumber(state, { index }) > getThumbMinValueNumber(state, { index, min });
 
 const shouldChangeValue = (
-  state: SliderReducerState,
+  state: TSliderReducerState,
   { index, value, min, max }: { index: number; value: number; min: number; max: number }
 ) => {
   if (value < getThumbMinValueNumber(state, { index, min })) {
@@ -108,9 +107,9 @@ const shouldChangeValue = (
 // setters - internal to reducer
 
 const setRangeValue = (
-  state: SliderReducerState,
-  { index, value }: { index: number; value: SliderReducerThumbValue }
-): SliderReducerState => [...state.slice(0, index), value, ...state.slice(index + 1)];
+  state: TSliderReducerState,
+  { index, value }: { index: number; value: TSliderReducerThumbValue }
+): TSliderReducerState => [...state.slice(0, index), value, ...state.slice(index + 1)];
 
 // reduce
 
@@ -118,10 +117,10 @@ const setRangeValue = (
  * @todo Refactor so STEP_UP and STEP_DOWN uses isWithinBounds
  */
 export const sliderReducer = (
-  state: SliderReducerState,
-  action: ISliderReducerAction
-): SliderReducerState => {
-  const { type, index, value, step, min, max, range } = action;
+  state: TSliderReducerState,
+  action: Record<string, any>
+): TSliderReducerState => {
+  const { type, index, value, step, min, max } = action;
 
   switch (type) {
     case STEP_UP:
@@ -148,15 +147,13 @@ export const sliderReducer = (
         index,
         value: getThumbMaxValueNumber(state, { index: state.length - 1, max })
       });
-    case SET_CUSTOM_VALUE:
+    case SET_THUMB_VALUE:
       return shouldChangeValue(state, { index, value, min, max })
         ? setRangeValue(state, {
             index,
             value
           })
         : state;
-    case SET_RANGE:
-      return range;
     default:
       return state;
   }
@@ -164,39 +161,47 @@ export const sliderReducer = (
 
 // actions
 
-export const stepUp = ({ index, step, max }: Partial<ISliderReducerAction>) => ({
+export const stepUp = ({
+  index,
+  step,
+  max
+}: Pick<ISliderReducerAction, 'index' | 'step' | 'max'>) => ({
   type: STEP_UP,
   index,
   step,
   max
 });
 
-export const stepDown = ({ index, step, min }: Partial<ISliderReducerAction>) => ({
+export const stepDown = ({
+  index,
+  step,
+  min
+}: Pick<ISliderReducerAction, 'index' | 'step' | 'min'>) => ({
   type: STEP_DOWN,
   index,
   step,
   min
 });
 
-export const resetRangeMin = ({ min }: Partial<ISliderReducerAction>) => ({
+export const resetRangeMin = ({ min }: Pick<ISliderReducerAction, 'min'>) => ({
   type: RESET_RANGE_MIN,
   min
 });
 
-export const resetRangeMax = ({ max }: Partial<ISliderReducerAction>) => ({
+export const resetRangeMax = ({ max }: Pick<ISliderReducerAction, 'max'>) => ({
   type: RESET_RANGE_MAX,
   max
 });
 
-export const setCustomValue = ({ index, value, min, max }: Partial<ISliderReducerAction>) => ({
-  type: SET_CUSTOM_VALUE,
+export const setThumbValue = ({
   index,
   value,
   min,
   max
-});
-
-export const setRange = ({ range }: Partial<ISliderReducerAction>) => ({
-  type: SET_RANGE,
-  range
+}: Pick<ISliderReducerAction, 'index' | 'value' | 'min' | 'max'>) => ({
+  type: SET_THUMB_VALUE,
+  index,
+  value,
+  min,
+  max
 });

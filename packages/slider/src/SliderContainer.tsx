@@ -18,6 +18,5 @@ export const SliderContainer: React.FC<ISliderContainerProps> = props => {
 
 SliderContainer.propTypes = {
   children: PropTypes.func,
-  render: PropTypes.func,
-  title: PropTypes.string
+  render: PropTypes.func
 };
