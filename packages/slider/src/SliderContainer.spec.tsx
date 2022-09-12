@@ -12,18 +12,29 @@ import { SliderContainer } from './SliderContainer';
 import { IUseSliderReturnValue } from './types';
 
 describe('SliderContainer', () => {
-  const TestSliderThumb = () => (
+  const TestSlider = () => (
     <SliderContainer>
-      {({ getSliderThumbProps }: IUseSliderReturnValue) => (
-        <div data-test-id="div" {...getSliderThumbProps({ index: 0, 'aria-label': 'test' })} />
+      {({
+        getSliderRootProps,
+        getSliderTrackProps,
+        getSliderThumbProps
+      }: IUseSliderReturnValue) => (
+        <div {...getSliderRootProps()}>
+          <div {...getSliderTrackProps()}>
+            <div
+              data-test-id="thumb"
+              {...getSliderThumbProps({ index: 0, 'aria-label': 'test' })}
+            />
+          </div>
+        </div>
       )}
     </SliderContainer>
   );
 
   describe('getSliderThumbProps', () => {
     it('applies correct accessibility role', () => {
-      const { getByTestId } = render(<TestSliderThumb />);
-      const element = getByTestId('div');
+      const { getByTestId } = render(<TestSlider />);
+      const element = getByTestId('thumb');
 
       expect(element).toHaveAttribute('role', 'slider');
     });

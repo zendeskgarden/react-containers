@@ -56,27 +56,31 @@ export function useSlider({
       return;
     }
 
-    // Store track element ref in a variable, per eslint's react-hooks/exhaustive-deps warning, which says:
-    // “The ref value 'trackElement.current' will likely have changed by the time this effect cleanup function runs.
-    // If this ref points to a node rendered by React, copy 'trackElement.current' to a variable inside the effect, and use that variable in the cleanup function.”
-    const initialTrackElement = trackElement.current;
+    if ('ResizeObserver' in window) {
+      // Store track element ref in a variable, per eslint's react-hooks/exhaustive-deps warning, which says:
+      // “The ref value 'trackElement.current' will likely have changed by the time this effect cleanup function runs.
+      // If this ref points to a node rendered by React, copy 'trackElement.current' to a variable inside the effect, and use that variable in the cleanup function.”
+      const initialTrackElement = trackElement.current;
 
-    const resizeObserver = new ResizeObserver(
-      throttle(
-        () => {
-          setTrackElementDimensions((initialTrackElement as HTMLElement)!.getBoundingClientRect());
-        },
-        1000,
-        { leading: false }
-      )
-    );
+      const resizeObserver = new ResizeObserver(
+        throttle(
+          () => {
+            setTrackElementDimensions(
+              (initialTrackElement as HTMLElement)!.getBoundingClientRect()
+            );
+          },
+          1000,
+          { leading: false }
+        )
+      );
 
-    resizeObserver.observe(initialTrackElement);
+      resizeObserver.observe(initialTrackElement);
 
-    // eslint-disable-next-line consistent-return
-    return () => {
-      resizeObserver.unobserve(initialTrackElement);
-    };
+      // eslint-disable-next-line consistent-return
+      return () => {
+        resizeObserver.unobserve(initialTrackElement);
+      };
+    }
   }, [trackElement, setTrackElementDimensions]);
 
   /**

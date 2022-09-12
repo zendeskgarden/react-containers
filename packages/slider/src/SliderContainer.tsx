@@ -18,5 +18,12 @@ export const SliderContainer: React.FC<ISliderContainerProps> = props => {
 
 SliderContainer.propTypes = {
   children: PropTypes.func,
-  render: PropTypes.func
+  render: PropTypes.func,
+  defaultValue: PropTypes.arrayOf(PropTypes.number),
+  min: PropTypes.number,
+  max: PropTypes.number,
+  step: PropTypes.number,
+  disabled: PropTypes.bool,
+  readOnly: PropTypes.bool,
+  rtl: PropTypes.bool
 };
