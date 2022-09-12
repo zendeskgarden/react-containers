@@ -7,6 +7,25 @@
 
 import { AriaAttributes, HTMLProps, ReactNode } from 'react';
 
+export type TSliderThumbValue = number;
+
+export type TSliderState = TSliderThumbValue[];
+
+export interface ISliderReducerAction {
+  readonly type: string;
+  index: number;
+  value: number;
+  step: number;
+  min: number;
+  max: number;
+}
+
+export type TStepUpAction = Pick<ISliderReducerAction, 'index' | 'step' | 'max'>;
+export type TStepDownAction = Pick<ISliderReducerAction, 'index' | 'step' | 'min'>;
+export type TResetRangeMinAction = Pick<ISliderReducerAction, 'min'>;
+export type TResetRangeMaxAction = Pick<ISliderReducerAction, 'max'>;
+export type TSetThumbValueAction = Pick<ISliderReducerAction, 'index' | 'value' | 'min' | 'max'>;
+
 type TRequiredSliderThumbProps = Required<
   Pick<AriaAttributes, 'aria-valuenow' | 'aria-valuemin' | 'aria-valuemax'>
 >;
@@ -18,28 +37,14 @@ type TOptionalSliderThumbProps = Partial<
   >
 >;
 
-export type TSliderReducerThumbValue = number;
-
-export type TSliderReducerState = TSliderReducerThumbValue[];
-
-export interface ISliderReducerAction {
-  readonly type: string;
-  index: number;
-  value: number;
-  step: number;
-  min: number;
-  max: number;
-}
-
 export interface ISliderThumbProps extends TRequiredSliderThumbProps, TOptionalSliderThumbProps {
   'aria-label': NonNullable<AriaAttributes['aria-label']>;
   readonly role: 'slider';
   tabIndex: 0 | -1;
 }
-
 export interface IUseSliderProps {
   /** */
-  defaultValue?: number[];
+  defaultValue?: TSliderState;
   /** */
   min?: ISliderThumbProps['aria-valuemin'];
   /** */
@@ -60,10 +65,12 @@ export interface IUseSliderProps {
   // onChange?: () => void;
   /** */
   rtl?: boolean;
+  /** Sets the environment where the slider is rendered */
+  environment?: Document;
 }
 
 export interface IUseSliderReturnValue {
-  value: number[];
+  value: TSliderState;
   getSliderRootProps: <T extends Element>(props?: HTMLProps<T>) => HTMLProps<T>;
   getSliderTrackProps: <T extends Element>(props?: HTMLProps<T>) => HTMLProps<T>;
   getSliderThumbProps: <T extends Element>(

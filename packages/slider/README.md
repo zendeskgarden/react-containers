@@ -49,10 +49,3 @@ import { SliderContainer } from '@zendeskgarden/container-slider';
   }}
 </SliderContainer>;
 ```
-
-<!--
-  TODO:
-
-  * [ ] Add Slider to root README table.
-  * [ ] Delete this comment block.
--->

@@ -17,7 +17,12 @@ import {
 } from '@zendeskgarden/container-slider';
 
 import { IArgs } from './types';
-import { Wrapper, Track, Thumb } from './styled';
+import {
+  StyledSliderWrapper,
+  StyledSliderTrack,
+  StyledSliderThumb,
+  StyledSliderThumbLabel
+} from './styled';
 
 export const Component = ({
   storyArgs,
@@ -34,20 +39,24 @@ export const Component = ({
         <h2>Rate your experience</h2>
       </legend>
 
-      <Wrapper {...getSliderRootProps()}>
+      <StyledSliderWrapper {...getSliderRootProps()}>
         <span aria-hidden="true">{min}</span>
-        <Track thumbs={value} sliderMax={max} {...getSliderTrackProps()}>
+        <StyledSliderTrack thumbs={value} sliderMax={max} {...getSliderTrackProps()}>
           {value.map((_, index: number) => {
             const props = getSliderThumbProps({
               index,
               'aria-label': index === 0 ? 'Minimum rating' : 'Maximum rating'
             });
 
-            return <Thumb key={index} sliderMax={max} {...props} />;
+            return (
+              <StyledSliderThumb key={index} sliderMax={max} {...props}>
+                <StyledSliderThumbLabel>{props['aria-valuenow']}</StyledSliderThumbLabel>
+              </StyledSliderThumb>
+            );
           })}
-        </Track>
+        </StyledSliderTrack>
         <span aria-hidden="true">{max}</span>
-      </Wrapper>
+      </StyledSliderWrapper>
     </fieldset>
   );
 };

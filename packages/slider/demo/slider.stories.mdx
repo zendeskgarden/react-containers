@@ -13,6 +13,7 @@ import { SliderStory } from './stories/SliderStory';
     step: 1,
     disabled: false,
     readOnly: false,
+    required: false,
     rtl: false
   }}
   argTypes={{
@@ -25,6 +26,15 @@ import { SliderStory } from './stories/SliderStory';
       table: {
         disable: true
       }
+    },
+    disabled: {
+      control: 'boolean'
+    },
+    readOnly: {
+      control: 'boolean'
+    },
+    required: {
+      control: 'boolean'
     }
   }}
 />
@@ -41,7 +51,7 @@ import { SliderStory } from './stories/SliderStory';
   <Story
     name="Uncontrolled"
     args={{
-      defaultValue: [3, 8],
+      defaultValue: [3],
       min: 0,
       max: 10,
       step: 1

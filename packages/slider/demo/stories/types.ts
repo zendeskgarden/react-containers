@@ -5,15 +5,16 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import { HTMLAttributes } from 'react';
+import { HTMLProps, ReactNode } from 'react';
 import { IUseSliderProps } from '@zendeskgarden/container-slider';
 
 export interface IArgs extends IUseSliderProps {
   as: 'hook' | 'container';
 }
 
-export interface IStyledElement extends HTMLAttributes<HTMLDivElement> {
-  children?: JSX.Element | JSX.Element[] | string | number;
+export interface IStyledElementProps extends HTMLProps<HTMLDivElement> {
   thumbs?: number[];
   sliderMax?: number;
+  dir: 'rtl' | 'ltr';
+  children?: ReactNode | ReactNode[];
 }

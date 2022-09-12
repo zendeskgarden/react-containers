@@ -38,7 +38,7 @@ export function useSlider({
   disabled,
   readOnly
 }: IUseSliderProps): IUseSliderReturnValue {
-  const trackElement = useRef<HTMLDivElement>(null);
+  const trackElement = useRef<Element>(null);
   const [trackElementDimensions, setTrackElementDimensions] = useState<DOMRect | null>(null);
   const isInteractive = disabled === false && readOnly === false;
   const [slidingThumbIndex, setSlidingThumbIndex] = useState<number | null>(null);
@@ -56,6 +56,9 @@ export function useSlider({
       return;
     }
 
+    // we need to check the scope/runtime and make sure it has resize observer
+    // we should also evaluate if a library may be a better solution than using a "newish" browser API
+    // lastly - should we be handling this in the container hook? Or could we get the info per event?
     if ('ResizeObserver' in window) {
       // Store track element ref in a variable, per eslint's react-hooks/exhaustive-deps warning, which says:
       // “The ref value 'trackElement.current' will likely have changed by the time this effect cleanup function runs.
@@ -134,32 +137,58 @@ export function useSlider({
 
   /**
    * @todo Accommodate vertical orientation
+   * @todo move to document mouse move (using environment) instead of track
+   * @todo use thumb with ref for reference to document event, use 'thumbElement.closest('track [example]')'
+   *   to find the track of a given thumb.
+   * @todo consider moving "getValueClosestToMouse" out of function component
    */
   const handleSlideMove = useMemo(
-    () =>
-      throttle(
-        (event: MouseEvent) => {
-          if (trackElement.current && slidingThumbIndex !== null) {
-            const closestRangeValue = getValueClosestToMouse(event.clientX);
+    () => (event: MouseEvent) => {
+      if (trackElement.current && slidingThumbIndex !== null) {
+        const closestRangeValue = getValueClosestToMouse(event.clientX);
 
-            const currentThumbValue = getThumbCurrentValueNumber(state, {
-              index: slidingThumbIndex
-            });
-
-            if (closestRangeValue > currentThumbValue) {
-              dispatch(stepUp({ index: slidingThumbIndex, step, max }));
-            }
-
-            if (closestRangeValue < currentThumbValue) {
-              dispatch(stepDown({ index: slidingThumbIndex, step, min }));
-            }
-          }
-        },
-        200,
-        { trailing: false }
-      ),
-    [trackElement, slidingThumbIndex, getValueClosestToMouse, state, step, min, max]
+        dispatch(
+          setThumbValue({
+            index: slidingThumbIndex,
+            value: closestRangeValue,
+            min,
+            max
+          })
+        );
+      }
+    },
+    [trackElement, slidingThumbIndex, getValueClosestToMouse, min, max]
   );
+
+  // Note - We may not need to throttle, or set by increments, using setThumbValue feels more responsive
+  // Throttle seemed to make a more jagged experience unless [state] was in the dependency array
+  // (which may lead to a leak depending on how throttle is disposed of by the garbage collector, regardless it becomes overhead for the GC)
+
+  // const handleSlideMove = useMemo(
+  //   () =>
+  //     throttle(
+  //       (event: MouseEvent) => {
+  //         if (trackElement.current && slidingThumbIndex !== null) {
+  //           const closestRangeValue = getValueClosestToMouse(event.clientX);
+
+  //           const currentThumbValue = getThumbCurrentValueNumber(state, {
+  //             index: slidingThumbIndex
+  //           });
+
+  //           if (closestRangeValue > currentThumbValue) {
+  //             dispatch(stepUp({ index: slidingThumbIndex, step, max }));
+  //           }
+
+  //           if (closestRangeValue < currentThumbValue) {
+  //             dispatch(stepDown({ index: slidingThumbIndex, step, min }));
+  //           }
+  //         }
+  //       },
+  //       200,
+  //       { trailing: false }
+  //     ),
+  //   [trackElement, slidingThumbIndex, getValueClosestToMouse, state, step, min, max]
+  // );
 
   /**
    * @todo Accommodate vertical orientation
@@ -281,6 +310,10 @@ export function useSlider({
       'aria-label': ariaLabel,
       index,
       onKeyDown,
+      onMouseDown,
+      onTouchStart,
+      onMouseUp,
+      onTouchEnd,
       onClick,
       ...props
     }): IUseSliderReturnValue['getSliderThumbProps'] => ({
@@ -297,10 +330,10 @@ export function useSlider({
       role: 'slider',
       tabIndex: isInteractive ? 0 : -1,
       dir: rtl ? 'rtl' : 'ltr',
-      onMouseDown: handleSlideStart,
-      onTouchStart: handleSlideStart,
-      onMouseUp: handleSlideEnd,
-      onTouchEnd: handleSlideEnd,
+      onMouseDown: composeEventHandlers(handleSlideStart, onMouseDown),
+      onTouchStart: composeEventHandlers(handleSlideStart, onTouchStart),
+      onMouseUp: composeEventHandlers(handleSlideEnd, onMouseUp),
+      onTouchEnd: composeEventHandlers(handleSlideEnd, onTouchEnd),
       onKeyDown: composeEventHandlers(handleThumbKeyDown, onKeyDown),
       onClick: composeEventHandlers(handleThumbClick, onClick)
     }),
@@ -326,5 +359,6 @@ export function useSlider({
       getSliderThumbProps
     }),
     [state, getSliderRootProps, getSliderTrackProps, getSliderThumbProps]
+    // TODO: we will need to remove any type and resolve type conflict...
   ) as any;
 }

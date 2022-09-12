@@ -5,10 +5,9 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React from 'react';
 import styled, { css } from 'styled-components';
 
-import { IStyledElement } from './types';
+import { IStyledElementProps } from './types';
 
 const THUMB_COLOR = '#FDCA40';
 const TRACK_COLOR = '#542E71';
@@ -17,23 +16,23 @@ const FOCUS_COLOR = '#fb3640';
 const CURRENT_COLOR = '#222831';
 const BASE_COLOR = '#fff';
 
-const isRTL = (props: IStyledElement) => (props.dir === 'rtl' ? 'right' : 'left');
-const isNonInteractive = (props: IStyledElement) =>
-  props['aria-disabled'] || props['aria-readonly'];
+const isRTL = (props: IStyledElementProps) => props.dir === 'rtl';
+const isNonInteractive = (props: IStyledElementProps) =>
+  !!(props['aria-disabled'] || props['aria-readonly']);
 
 const computeThumbPosition = (value: number, max: number): string => `${(value / max) * 100}%`;
 
-const calculateCursor = (props: IStyledElement, type: 'default' | 'grab' = 'default') => css`
+const calculateCursor = (props: IStyledElementProps, type: 'default' | 'grab' = 'default') => css`
   cursor: ${isNonInteractive(props) ? 'not-allowed' : type};
 `;
 
-const calculateThumbCursor = (props: IStyledElement) => calculateCursor(props, 'grab');
+const calculateThumbCursor = (props: IStyledElementProps) => calculateCursor(props, 'grab');
 
-const calculateThumbBackground = (props: IStyledElement) => css`
+const calculateThumbBackground = (props: IStyledElementProps) => css`
   background: ${isNonInteractive(props) ? DISABLED_COLOR : THUMB_COLOR};
 `;
 
-const calculateThumbDimensions = (props: IStyledElement) => {
+const calculateThumbDimensions = (props: IStyledElementProps) => {
   const { sliderMax = 10 } = props;
 
   const position = computeThumbPosition(props['aria-valuenow'] as number, sliderMax);
@@ -48,14 +47,14 @@ const calculateThumbDimensions = (props: IStyledElement) => {
     position: absolute;
     bottom: 0;
     top: 0;
+    ${positionRule}
+    box-sizing: border-box;
     padding: 0;
     margin: auto;
-    font-size: 1em;
-    ${positionRule}
   `;
 };
 
-const calculateTrackGradient = (props: IStyledElement) => {
+const calculateTrackGradient = (props: IStyledElementProps) => {
   const { thumbs = [], sliderMax = 10 } = props;
 
   const direction = isRTL(props) ? '-90deg' : '90deg';
@@ -72,8 +71,8 @@ const calculateTrackGradient = (props: IStyledElement) => {
     fillEnd = computeThumbPosition(thumbs[0] || 0, sliderMax);
   }
 
-  return css`
-    background: linear-gradient(
+  return `
+    linear-gradient(
       ${direction},
       ${BASE_COLOR} 0%,
       ${BASE_COLOR} ${fillStart},
@@ -81,11 +80,11 @@ const calculateTrackGradient = (props: IStyledElement) => {
       ${trackColor} ${fillEnd},
       ${BASE_COLOR} ${fillEnd},
       ${BASE_COLOR} 100%
-    );
-  `;
+    )
+  `.trim();
 };
 
-export const StyledSliderWrapper = styled.div<IStyledElement>`
+export const StyledSliderWrapper = styled.div<IStyledElementProps>`
   display: flex;
   align-items: center;
   gap: 0.5em;
@@ -93,7 +92,15 @@ export const StyledSliderWrapper = styled.div<IStyledElement>`
   color: ${CURRENT_COLOR};
 `;
 
-export const StyledSliderTrack = styled.div<IStyledElement>`
+export const StyledSliderTrack = styled.div.attrs(props => ({
+  // When the slider is sliding via a mouse event, styled-components updates the background property a whole bunch of times.
+  // When this property existed inside of the class, styled-components gave a warning in the dev console that it was generating too many classes.
+  // They were the ones who (in the warning) recommended taking the Styled Objects approach here.
+  // @see {@link https://styled-components.com/docs/advanced#style-objects|Style Objects}
+  style: {
+    background: calculateTrackGradient(props as any)
+  }
+}))<IStyledElementProps>`
   box-sizing: border-box;
   display: block;
   position: relative;
@@ -104,18 +111,17 @@ export const StyledSliderTrack = styled.div<IStyledElement>`
   border: 1px solid currentColor;
   border-radius: 50em;
 
-  ${calculateTrackGradient}
   ${calculateCursor}
 `;
 
-export const StyledSliderThumb = styled.div<IStyledElement>`
-  box-sizing: border-box;
+export const StyledSliderThumb = styled.div<IStyledElementProps>`
   display: inline-flex;
   align-items: flex-end;
   justify-content: center;
   outline: 1px solid transparent;
   border: 1px solid currentColor;
   border-radius: 50%;
+  font-size: 1em;
   user-select: none;
 
   ${calculateThumbBackground}
@@ -128,7 +134,7 @@ export const StyledSliderThumb = styled.div<IStyledElement>`
   }
 `;
 
-export const StyledSliderThumbLabel = styled.div<IStyledElement>`
+export const StyledSliderThumbLabel = styled.div<IStyledElementProps>`
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -137,19 +143,3 @@ export const StyledSliderThumbLabel = styled.div<IStyledElement>`
   font-size: 0.875em;
   pointer-events: none;
 `;
-
-export const Wrapper = (props: any) => {
-  return <StyledSliderWrapper {...props} />;
-};
-
-export const Track = (props: any) => {
-  return <StyledSliderTrack {...props} />;
-};
-
-export const Thumb = ({ max, index, ...props }: any) => {
-  return (
-    <StyledSliderThumb key={index} sliderMax={max} {...props}>
-      <StyledSliderThumbLabel>{props['aria-valuenow']}</StyledSliderThumbLabel>
-    </StyledSliderThumb>
-  );
-};

@@ -25,5 +25,7 @@ SliderContainer.propTypes = {
   step: PropTypes.number,
   disabled: PropTypes.bool,
   readOnly: PropTypes.bool,
-  rtl: PropTypes.bool
+  required: PropTypes.bool,
+  rtl: PropTypes.bool,
+  environment: PropTypes.any
 };
