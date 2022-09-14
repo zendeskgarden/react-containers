@@ -6,13 +6,13 @@
  */
 
 import {
-  TSliderState,
-  TSliderThumbValue,
-  TStepUpAction,
-  TStepDownAction,
-  TResetRangeMinAction,
-  TResetRangeMaxAction,
-  TSetThumbValueAction
+  SliderState,
+  SliderThumbValue,
+  StepUpAction,
+  StepDownAction,
+  ResetRangeMinAction,
+  ResetRangeMaxAction,
+  SetThumbValueAction
 } from './types';
 
 // constants
@@ -34,23 +34,21 @@ const SET_THUMB_VALUE = 'setThumbValue';
 // initialization
 
 export const initializeSliderReducerState = (
-  initialState: TSliderThumbValue[] = [0]
-): TSliderState => {
+  initialState: SliderThumbValue[] = [0]
+): SliderState => {
   return initialState;
 };
 
 // getters
 
-export const getThumbCurrentValue = (state: TSliderState, { index = DEFAULT_INDEX }): number =>
+export const getThumbCurrentValue = (state: SliderState, { index = DEFAULT_INDEX }): number =>
   state[index];
 
-export const getThumbCurrentValueNumber = (
-  state: TSliderState,
-  { index = DEFAULT_INDEX }
-): number => getThumbCurrentValue(state, { index });
+export const getThumbCurrentValueNumber = (state: SliderState, { index = DEFAULT_INDEX }): number =>
+  getThumbCurrentValue(state, { index });
 
 export const getThumbMinValueNumber = (
-  state: TSliderState,
+  state: SliderState,
   { index = DEFAULT_INDEX, min = DEFAULT_MIN }
 ) => {
   // By default, min value is overall range min
@@ -65,7 +63,7 @@ export const getThumbMinValueNumber = (
 };
 
 export const getThumbMaxValueNumber = (
-  state: TSliderState,
+  state: SliderState,
   { index = DEFAULT_INDEX, max = DEFAULT_MAX }
 ) => {
   // By default, max value is overall range max
@@ -84,17 +82,17 @@ export const getThumbMaxValueNumber = (
 /**
  * @todo Collapse into isWithinBounds
  */
-const shouldStepUp = (state: TSliderState, { index, max }: { index: number; max: number }) =>
+const shouldStepUp = (state: SliderState, { index, max }: { index: number; max: number }) =>
   getThumbCurrentValueNumber(state, { index }) < getThumbMaxValueNumber(state, { index, max });
 
 /**
  * @todo Collapse into isWithinBounds
  */
-const shouldStepDown = (state: TSliderState, { index, min }: { index: number; min: number }) =>
+const shouldStepDown = (state: SliderState, { index, min }: { index: number; min: number }) =>
   getThumbCurrentValueNumber(state, { index }) > getThumbMinValueNumber(state, { index, min });
 
 const shouldChangeValue = (
-  state: TSliderState,
+  state: SliderState,
   { index, value, min, max }: { index: number; value: number; min: number; max: number }
 ) => {
   if (value < getThumbMinValueNumber(state, { index, min })) {
@@ -111,16 +109,16 @@ const shouldChangeValue = (
 // setters - internal to reducer
 
 const setRangeValue = (
-  state: TSliderState,
-  { index, value }: { index: number; value: TSliderThumbValue }
-): TSliderState => [...state.slice(0, index), value, ...state.slice(index + 1)];
+  state: SliderState,
+  { index, value }: { index: number; value: SliderThumbValue }
+): SliderState => [...state.slice(0, index), value, ...state.slice(index + 1)];
 
 // reduce
 
 /**
  * @todo Refactor so STEP_UP and STEP_DOWN uses isWithinBounds
  */
-export const sliderReducer = (state: TSliderState, action: Record<string, any>): TSliderState => {
+export const sliderReducer = (state: SliderState, action: Record<string, any>): SliderState => {
   const { type, index, value, step, min, max } = action;
 
   switch (type) {
@@ -162,31 +160,31 @@ export const sliderReducer = (state: TSliderState, action: Record<string, any>):
 
 // actions
 
-export const stepUp = ({ index, step, max }: TStepUpAction) => ({
+export const stepUp = ({ index, step, max }: StepUpAction) => ({
   type: STEP_UP,
   index,
   step,
   max
 });
 
-export const stepDown = ({ index, step, min }: TStepDownAction) => ({
+export const stepDown = ({ index, step, min }: StepDownAction) => ({
   type: STEP_DOWN,
   index,
   step,
   min
 });
 
-export const resetRangeMin = ({ min }: TResetRangeMinAction) => ({
+export const resetRangeMin = ({ min }: ResetRangeMinAction) => ({
   type: RESET_RANGE_MIN,
   min
 });
 
-export const resetRangeMax = ({ max }: TResetRangeMaxAction) => ({
+export const resetRangeMax = ({ max }: ResetRangeMaxAction) => ({
   type: RESET_RANGE_MAX,
   max
 });
 
-export const setThumbValue = ({ index, value, min, max }: TSetThumbValueAction) => ({
+export const setThumbValue = ({ index, value, min, max }: SetThumbValueAction) => ({
   type: SET_THUMB_VALUE,
   index,
   value,

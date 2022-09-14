@@ -7,9 +7,9 @@
 
 import { AriaAttributes, HTMLProps, ReactNode } from 'react';
 
-export type TSliderThumbValue = number;
+export type SliderThumbValue = number;
 
-export type TSliderState = TSliderThumbValue[];
+export type SliderState = SliderThumbValue[];
 
 export interface ISliderReducerAction {
   readonly type: string;
@@ -20,31 +20,32 @@ export interface ISliderReducerAction {
   max: number;
 }
 
-export type TStepUpAction = Pick<ISliderReducerAction, 'index' | 'step' | 'max'>;
-export type TStepDownAction = Pick<ISliderReducerAction, 'index' | 'step' | 'min'>;
-export type TResetRangeMinAction = Pick<ISliderReducerAction, 'min'>;
-export type TResetRangeMaxAction = Pick<ISliderReducerAction, 'max'>;
-export type TSetThumbValueAction = Pick<ISliderReducerAction, 'index' | 'value' | 'min' | 'max'>;
+export type StepUpAction = Pick<ISliderReducerAction, 'index' | 'step' | 'max'>;
+export type StepDownAction = Pick<ISliderReducerAction, 'index' | 'step' | 'min'>;
+export type ResetRangeMinAction = Pick<ISliderReducerAction, 'min'>;
+export type ResetRangeMaxAction = Pick<ISliderReducerAction, 'max'>;
+export type SetThumbValueAction = Pick<ISliderReducerAction, 'index' | 'value' | 'min' | 'max'>;
 
-type TRequiredSliderThumbProps = Required<
+type RequiredSliderThumbProps = Required<
   Pick<AriaAttributes, 'aria-valuenow' | 'aria-valuemin' | 'aria-valuemax'>
 >;
 
-type TOptionalSliderThumbProps = Partial<
+type OptionalSliderThumbProps = Partial<
   Pick<
     AriaAttributes,
     'aria-required' | 'aria-disabled' | 'aria-readonly' | 'aria-orientation' | 'aria-valuetext'
   >
 >;
 
-export interface ISliderThumbProps extends TRequiredSliderThumbProps, TOptionalSliderThumbProps {
+export interface ISliderThumbProps extends RequiredSliderThumbProps, OptionalSliderThumbProps {
   'aria-label': NonNullable<AriaAttributes['aria-label']>;
   readonly role: 'slider';
   tabIndex: 0 | -1;
 }
+
 export interface IUseSliderProps {
   /** */
-  defaultValue?: TSliderState;
+  defaultValue?: SliderState;
   /** */
   min?: ISliderThumbProps['aria-valuemin'];
   /** */
@@ -70,7 +71,7 @@ export interface IUseSliderProps {
 }
 
 export interface IUseSliderReturnValue {
-  value: TSliderState;
+  value: SliderState;
   getSliderRootProps: <T extends Element>(props?: HTMLProps<T>) => HTMLProps<T>;
   getSliderTrackProps: <T extends Element>(props?: HTMLProps<T>) => HTMLProps<T>;
   getSliderThumbProps: <T extends Element>(

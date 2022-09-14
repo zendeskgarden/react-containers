@@ -26,7 +26,14 @@ import {
   DEFAULT_STEP
 } from './sliderReducer';
 
-const POSSIBLE_SLIDER_KEYS = [KEYS.LEFT, KEYS.RIGHT, KEYS.UP, KEYS.DOWN, KEYS.HOME, KEYS.END];
+const POSSIBLE_SLIDER_KEYS = [
+  KEYS.LEFT,
+  KEYS.RIGHT,
+  KEYS.UP,
+  KEYS.DOWN,
+  KEYS.HOME,
+  KEYS.END
+] as const;
 
 export function useSlider({
   defaultValue,
