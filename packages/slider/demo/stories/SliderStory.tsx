@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Story } from '@storybook/react';
 
 import {
@@ -17,12 +17,6 @@ import {
 } from '@zendeskgarden/container-slider';
 
 import { IArgs } from './types';
-import {
-  StyledSliderWrapper,
-  StyledSliderTrack,
-  StyledSliderThumb,
-  StyledSliderThumbLabel
-} from './styled';
 
 export const Component = ({
   storyArgs,
@@ -31,32 +25,93 @@ export const Component = ({
   getSliderTrackProps,
   getSliderThumbProps
 }: { storyArgs: Omit<IArgs, 'as'> } & IUseSliderReturnValue) => {
-  const { rtl, min, max } = storyArgs;
+  const { rtl, disabled, max } = storyArgs;
+
+  const convertThumbValueToPercentage = useCallback(
+    (thumbValue: number): string => `${(thumbValue / max!) * 100}%`,
+    [max]
+  );
+
+  const getTrackGradient = useCallback(() => {
+    const direction = rtl ? '-90deg' : '90deg';
+    let fillStart = '0%';
+    let fillEnd = convertThumbValueToPercentage(value[0] || 0);
+
+    if (value.length > 1) {
+      fillStart = convertThumbValueToPercentage(value[0]);
+      fillEnd = convertThumbValueToPercentage(value[value.length - 1]);
+    }
+
+    return `
+      linear-gradient(
+        ${direction},
+        #fff 0%,
+        #fff ${fillStart},
+        currentColor ${fillStart},
+        currentColor ${fillEnd},
+        #fff ${fillEnd},
+        #fff 100%
+      )
+    `.trim();
+  }, [rtl, value, convertThumbValueToPercentage]);
+
+  const getThumbPosition = useCallback(
+    (thumbValue: number) => {
+      const percentage = convertThumbValueToPercentage(thumbValue);
+      const position = `calc(${percentage} - (40px / 2))`;
+
+      let css;
+
+      if (rtl) {
+        css = {
+          right: position
+        };
+      } else {
+        css = {
+          left: position
+        };
+      }
+
+      return css;
+    },
+    [rtl, convertThumbValueToPercentage]
+  );
 
   return (
-    <fieldset dir={rtl ? 'rtl' : 'ltr'}>
-      <legend>
-        <h2>Rate your experience</h2>
+    <fieldset
+      className={`box-border ${disabled ? 'text-grey-400' : 'text-grey-800'}`}
+      style={{ width: '50vw' }}
+      dir={rtl ? 'rtl' : 'ltr'}
+    >
+      <legend className="sr-only">
+        <h2>Price range</h2>
       </legend>
+      <div
+        className="border border-grey-800 border-solid box-border h-6 my-2 relative rounded-full"
+        style={{ background: getTrackGradient() }}
+        {...getSliderRootProps()}
+        {...getSliderTrackProps()}
+      >
+        {value.map((_, index: number) => {
+          const props = getSliderThumbProps({
+            index,
+            'aria-label': index === 0 ? 'Minimum price' : 'Maximum price'
+          });
 
-      <StyledSliderWrapper {...getSliderRootProps()}>
-        <span aria-hidden="true">{min}</span>
-        <StyledSliderTrack thumbs={value} sliderMax={max} {...getSliderTrackProps()}>
-          {value.map((_, index: number) => {
-            const props = getSliderThumbProps({
-              index,
-              'aria-label': index === 0 ? 'Minimum rating' : 'Maximum rating'
-            });
-
-            return (
-              <StyledSliderThumb key={index} sliderMax={max} {...props}>
-                <StyledSliderThumbLabel>{props['aria-valuenow']}</StyledSliderThumbLabel>
-              </StyledSliderThumb>
-            );
-          })}
-        </StyledSliderTrack>
-        <span aria-hidden="true">{max}</span>
-      </StyledSliderWrapper>
+          return (
+            <div
+              className={`absolute bg-white border border-grey-800 border-solid bottom-0 box-border h-10 inline-flex items-center justify-center m-auto outline-1 outline-transparent rounded-full select-none text-center text-grey-800 top-0 w-10 ${
+                rtl ? 'left-auto' : 'right-auto'
+              } ${!disabled && 'focus:ring-2 focus:ring-offset-2'}`}
+              style={getThumbPosition(props['aria-valuenow'])}
+              key={index}
+              {...props}
+            >
+              <span className="box-border pointer-events-none">{props['aria-valuenow']}</span>
+            </div>
+          );
+        })}
+      </div>
     </fieldset>
   );
 };
