@@ -33,7 +33,6 @@ export const Component = ({
   );
 
   const getTrackGradient = useCallback(() => {
-    const direction = rtl ? '-90deg' : '90deg';
     let fillStart = '0%';
     let fillEnd = convertThumbValueToPercentage(value[0] || 0);
 
@@ -44,7 +43,7 @@ export const Component = ({
 
     return `
       linear-gradient(
-        ${direction},
+        ${rtl ? '-90deg' : '90deg'},
         #fff 0%,
         #fff ${fillStart},
         currentColor ${fillStart},
@@ -60,19 +59,7 @@ export const Component = ({
       const percentage = convertThumbValueToPercentage(thumbValue);
       const position = `calc(${percentage} - (40px / 2))`;
 
-      let css;
-
-      if (rtl) {
-        css = {
-          right: position
-        };
-      } else {
-        css = {
-          left: position
-        };
-      }
-
-      return css;
+      return rtl ? { right: position } : { left: position };
     },
     [rtl, convertThumbValueToPercentage]
   );
@@ -84,7 +71,7 @@ export const Component = ({
       dir={rtl ? 'rtl' : 'ltr'}
     >
       <legend className="sr-only">
-        <h2>Price range</h2>
+        <h2>Select a range</h2>
       </legend>
       <div
         className="border border-grey-800 border-solid box-border h-6 my-2 relative rounded-full"
@@ -95,7 +82,7 @@ export const Component = ({
         {value.map((_, index: number) => {
           const props = getSliderThumbProps({
             index,
-            'aria-label': index === 0 ? 'Minimum price' : 'Maximum price'
+            'aria-label': index === 0 ? 'Minimum value' : 'Maximum value'
           });
 
           return (
