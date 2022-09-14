@@ -5,7 +5,16 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
+import {
+  KeyboardEventHandler,
+  MouseEventHandler,
+  useCallback,
+  useEffect,
+  useMemo,
+  useReducer,
+  useRef,
+  useState
+} from 'react';
 import { composeEventHandlers, KEYS } from '@zendeskgarden/container-utilities';
 import throttle from 'lodash.throttle';
 
@@ -45,7 +54,7 @@ export function useSlider({
   disabled,
   readOnly
 }: IUseSliderProps): IUseSliderReturnValue {
-  const trackElement = useRef<Element>(null);
+  const trackElement = useRef(null);
   const [trackElementDimensions, setTrackElementDimensions] = useState<DOMRect | null>(null);
   const isInteractive = disabled === false && readOnly === false;
   const [slidingThumbIndex, setSlidingThumbIndex] = useState<number | null>(null);
@@ -115,8 +124,8 @@ export function useSlider({
   /**
    * @todo Accommodate vertical orientation
    */
-  const handleTrackClick = useCallback(
-    (event: MouseEvent) => {
+  const handleTrackClick: MouseEventHandler = useCallback(
+    event => {
       if (isInteractive) {
         const closestRangeValue = getValueClosestToMouse(event.clientX);
         const closestThumbValue = state.reduce((previousValue: number, currentValue: number) => {
@@ -149,8 +158,8 @@ export function useSlider({
    *   to find the track of a given thumb.
    * @todo consider moving "getValueClosestToMouse" out of function component
    */
-  const handleSlideMove = useMemo(
-    () => (event: MouseEvent) => {
+  const handleSlideMove: MouseEventHandler = useMemo(
+    () => event => {
       if (trackElement.current && slidingThumbIndex !== null) {
         const closestRangeValue = getValueClosestToMouse(event.clientX);
 
@@ -200,8 +209,8 @@ export function useSlider({
   /**
    * @todo Accommodate vertical orientation
    */
-  const handleSlideStart = useCallback(
-    (event: MouseEvent) => {
+  const handleSlideStart: MouseEventHandler = useCallback(
+    event => {
       if (trackElement.current && isInteractive) {
         event.stopPropagation();
         const currentThumbIndex = parseInt(
@@ -215,8 +224,8 @@ export function useSlider({
     [trackElement, isInteractive, setSlidingThumbIndex]
   );
 
-  const handleSlideEnd = useCallback(
-    (event: MouseEvent) => {
+  const handleSlideEnd: MouseEventHandler = useCallback(
+    event => {
       if (trackElement.current && isInteractive) {
         event.stopPropagation();
         setSlidingThumbIndex(null);
@@ -225,8 +234,8 @@ export function useSlider({
     [trackElement, isInteractive, setSlidingThumbIndex]
   );
 
-  const handleThumbClick = useCallback(
-    (event: MouseEvent) => {
+  const handleThumbClick: MouseEventHandler = useCallback(
+    event => {
       if (isInteractive) {
         event.stopPropagation();
       }
@@ -256,8 +265,8 @@ export function useSlider({
     [rtl]
   );
 
-  const handleThumbKeyDown = useCallback(
-    (event: KeyboardEvent): void => {
+  const handleThumbKeyDown: KeyboardEventHandler = useCallback(
+    event => {
       if (isInteractive && POSSIBLE_SLIDER_KEYS.includes(event.key)) {
         const currentThumbIndex = parseInt(
           (event.target as HTMLElement).dataset.index as string,
@@ -284,8 +293,8 @@ export function useSlider({
     [isInteractive, keyboardInteractions, min, max, step]
   );
 
-  const getSliderRootProps = useCallback(
-    ({ ...props } = {}): IUseSliderReturnValue['getSliderRootProps'] => ({
+  const getSliderRootProps = useCallback<IUseSliderReturnValue['getSliderRootProps']>(
+    (props = {}) => ({
       'data-garden-container-id': 'containers.slider',
       'data-garden-container-version': PACKAGE_VERSION,
       ...props,
@@ -294,15 +303,17 @@ export function useSlider({
     [rtl]
   );
 
-  const getSliderTrackProps = useCallback(
-    ({ onClick, ...props } = {}): IUseSliderReturnValue['getSliderTrackProps'] => ({
+  /**
+   * @todo Accommodate touch events for sliding
+   */
+  const getSliderTrackProps = useCallback<IUseSliderReturnValue['getSliderTrackProps']>(
+    ({ onClick, ...props } = {}) => ({
       ...props,
       'aria-disabled': disabled,
       'aria-readonly': readOnly,
       dir: rtl ? 'rtl' : 'ltr',
       onClick: composeEventHandlers(handleTrackClick, onClick),
       onMouseMove: handleSlideMove,
-      onTouchMove: handleSlideMove,
       ref: trackElement
     }),
     [disabled, readOnly, rtl, handleTrackClick, handleSlideMove]
@@ -311,19 +322,10 @@ export function useSlider({
   /**
    * @todo Accommodate aria-valuetext
    * @todo Accommodate vertical orientation
+   * @todo Accommodate touch events for sliding
    */
-  const getSliderThumbProps = useCallback(
-    ({
-      'aria-label': ariaLabel,
-      index,
-      onKeyDown,
-      onMouseDown,
-      onTouchStart,
-      onMouseUp,
-      onTouchEnd,
-      onClick,
-      ...props
-    }): IUseSliderReturnValue['getSliderThumbProps'] => ({
+  const getSliderThumbProps = useCallback<IUseSliderReturnValue['getSliderThumbProps']>(
+    ({ 'aria-label': ariaLabel, index, onKeyDown, onMouseDown, onMouseUp, onClick, ...props }) => ({
       ...props,
       'aria-label': ariaLabel,
       'aria-valuenow': getThumbCurrentValueNumber(state, { index }),
@@ -338,9 +340,7 @@ export function useSlider({
       tabIndex: isInteractive ? 0 : -1,
       dir: rtl ? 'rtl' : 'ltr',
       onMouseDown: composeEventHandlers(handleSlideStart, onMouseDown),
-      onTouchStart: composeEventHandlers(handleSlideStart, onTouchStart),
       onMouseUp: composeEventHandlers(handleSlideEnd, onMouseUp),
-      onTouchEnd: composeEventHandlers(handleSlideEnd, onTouchEnd),
       onKeyDown: composeEventHandlers(handleThumbKeyDown, onKeyDown),
       onClick: composeEventHandlers(handleThumbClick, onClick)
     }),
@@ -358,7 +358,7 @@ export function useSlider({
     ]
   );
 
-  return useMemo(
+  return useMemo<IUseSliderReturnValue>(
     () => ({
       value: state,
       getSliderRootProps,
@@ -366,6 +366,5 @@ export function useSlider({
       getSliderThumbProps
     }),
     [state, getSliderRootProps, getSliderTrackProps, getSliderThumbProps]
-    // TODO: we will need to remove any type and resolve type conflict...
-  ) as any;
+  );
 }

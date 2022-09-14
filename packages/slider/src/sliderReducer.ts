@@ -80,13 +80,13 @@ export const getThumbMaxValueNumber = (
 // getters - internal to reducer
 
 /**
- * @todo Collapse into isWithinBounds
+ * @todo Collapse into shouldChangeValue
  */
 const shouldStepUp = (state: SliderState, { index, max }: { index: number; max: number }) =>
   getThumbCurrentValueNumber(state, { index }) < getThumbMaxValueNumber(state, { index, max });
 
 /**
- * @todo Collapse into isWithinBounds
+ * @todo Collapse into shouldChangeValue
  */
 const shouldStepDown = (state: SliderState, { index, min }: { index: number; min: number }) =>
   getThumbCurrentValueNumber(state, { index }) > getThumbMinValueNumber(state, { index, min });
