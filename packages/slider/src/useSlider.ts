@@ -51,7 +51,6 @@ export function useSlider({
   max = DEFAULT_MAX,
   step = DEFAULT_STEP,
   rtl = false,
-  required = false,
   disabled = false,
   environment
 }: IUseSliderProps): IUseSliderReturnValue {
@@ -347,7 +346,6 @@ export function useSlider({
       'aria-valuenow': getThumbCurrentValueNumber(state, { index }),
       'aria-valuemin': getThumbMinValueNumber(state, { index }),
       'aria-valuemax': getThumbMaxValueNumber(state, { index }),
-      'aria-required': required,
       'aria-disabled': disabled,
       'aria-orientation': 'horizontal',
       'data-index': index,
@@ -361,7 +359,6 @@ export function useSlider({
     }),
     [
       state,
-      required,
       disabled,
       isInteractive,
       rtl,

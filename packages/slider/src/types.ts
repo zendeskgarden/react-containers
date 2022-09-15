@@ -25,8 +25,6 @@ export interface IUseSliderProps {
   max?: AriaAttributes['aria-valuemax'];
   /** */
   step?: number;
-  /** Sets whether or not the Slider is a required field */
-  required?: AriaAttributes['aria-required'];
   /** Sets whether or not the Slider is disabled */
   disabled?: AriaAttributes['aria-disabled'];
   /** Sets the text & layout direction */

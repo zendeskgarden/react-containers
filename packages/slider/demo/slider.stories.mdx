@@ -6,7 +6,7 @@ import { SliderStory } from './stories/SliderStory';
 <Meta
   title="Packages/Slider"
   component={SliderContainer}
-  args={{ as: 'hook', min: 0, max: 10, disabled: false, required: false, rtl: false, step: 1 }}
+  args={{ as: 'hook', min: 0, max: 10, disabled: false, rtl: false, step: 1 }}
   argTypes={{
     as: {
       options: ['container', 'hook'],
@@ -24,9 +24,6 @@ import { SliderStory } from './stories/SliderStory';
       }
     },
     disabled: {
-      control: 'boolean'
-    },
-    required: {
       control: 'boolean'
     }
   }}
