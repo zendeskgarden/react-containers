@@ -65,7 +65,7 @@ export interface IUseSliderReturnValue {
 
 export interface ISliderContainerProps extends IUseSliderProps {
   /**
-   * Provides slider render prop functions
+   * Provides Slider render prop functions
    *
    * @param {number[]} [options.value] Slider values
    * @param {function} [options.getSliderRootProps] Slider root props getter

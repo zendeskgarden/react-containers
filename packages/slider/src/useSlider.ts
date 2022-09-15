@@ -51,8 +51,10 @@ export function useSlider({
   step = DEFAULT_STEP,
   rtl = false,
   required = false,
-  disabled = false
+  disabled = false,
+  environment
 }: IUseSliderProps): IUseSliderReturnValue {
+  const doc = environment || document;
   const trackElement = useRef(null);
   const [trackElementDimensions, setTrackElementDimensions] = useState<DOMRect | null>(null);
   const isInteractive = disabled === false;
@@ -100,36 +102,21 @@ export function useSlider({
     }
   }, [trackElement, setTrackElementDimensions]);
 
-  /** @function
-   * @name getValueClosestToMouse
-   * @desc
-   * @todo Accommodate vertical orientation
-   */
-  const getValueClosestToMouse = useCallback(
-    (coordinate: number) => {
-      const mouseDistanceFromLeftEdge = coordinate - trackElementDimensions!.left;
-      const mouseTargetPosition = trackElementDimensions!.width / mouseDistanceFromLeftEdge;
-
-      let value = Math.round(max / mouseTargetPosition);
-
-      if (rtl === true) {
-        value = max - value;
-      }
-
-      return value;
-    },
-    [trackElementDimensions, rtl, max]
-  );
-
-  /** @function
-   * @name handleTrackClick
-   * @desc
-   * @todo Accommodate vertical orientation
+  /** @function handleTrackClick
+   * @desc Determine a new Slider value, based on where someone has clicked on the track
+   * @todo Consider accommodating vertical orientation
    */
   const handleTrackClick: MouseEventHandler = useCallback(
     event => {
-      if (isInteractive) {
-        const closestRangeValue = getValueClosestToMouse(event.clientX);
+      if (trackElementDimensions && isInteractive) {
+        const mouseDistanceFromLeftEdge = event.clientX - trackElementDimensions!.left;
+        const mouseTargetPosition = trackElementDimensions!.width / mouseDistanceFromLeftEdge;
+        let closestRangeValue = Math.round(max / mouseTargetPosition);
+
+        if (rtl === true) {
+          closestRangeValue = max - closestRangeValue;
+        }
+
         const closestThumbValue = state.reduce((previousValue: number, currentValue: number) => {
           return Math.abs(currentValue - closestRangeValue) <
             Math.abs(previousValue - closestRangeValue)
@@ -150,21 +137,31 @@ export function useSlider({
         );
       }
     },
-    [isInteractive, getValueClosestToMouse, state, min, max]
+    [trackElementDimensions, isInteractive, rtl, state, min, max]
   );
 
-  /** @function
-   * @name handleSlideMove
-   * @todo Accommodate vertical orientation
-   * @todo move to document mouse move (using environment) instead of track
-   * @todo Use thumb with ref for reference to document event, use 'thumbElement.closest('track [example]')'
-   *   to find the track of a given thumb.
-   * @todo Consider moving "getValueClosestToMouse" out of function component
+  /** @function handleSlideMove
+   * @desc Determine a new Slider value, based on where someone has moved their mouse on the page
+   * @todo Consider accommodating vertical orientation
    */
-  const handleSlideMove: MouseEventHandler = useMemo(
-    () => event => {
+  const handleSlideMove = useCallback(
+    event => {
       if (trackElement.current && slidingThumbIndex !== null) {
-        const closestRangeValue = getValueClosestToMouse(event.clientX);
+        const trackOffsetLeft = trackElementDimensions!.left;
+        const trackOffsetRight = trackOffsetLeft + trackElementDimensions!.width;
+        const trackWidth = trackElementDimensions!.width;
+
+        let diffX = event.pageX - (rtl ? trackOffsetRight : trackOffsetLeft);
+
+        if (rtl) {
+          diffX *= -1;
+        }
+
+        const newValue =
+          min! + parseInt((((max! - min!) * diffX) / trackWidth) as unknown as string, 10);
+
+        // Reduce updated value to align with step size
+        const closestRangeValue = Math.floor(newValue / step!) * step!;
 
         dispatch(
           setThumbValue({
@@ -176,12 +173,41 @@ export function useSlider({
         );
       }
     },
-    [trackElement, slidingThumbIndex, getValueClosestToMouse, min, max]
+    [trackElement, slidingThumbIndex, trackElementDimensions, rtl, min, max, step]
   );
 
-  /** @function
-   * @name handleSlideStart
-   * @todo Accommodate vertical orientation
+  /** @function removeSlideMove
+   * @desc Clean up mouse events that have been added to the page for sliding
+   */
+  const removeSlideMove = useCallback(() => {
+    if (doc) {
+      doc.removeEventListener('mousemove', handleSlideMove);
+      doc.removeEventListener('mouseup', removeSlideMove);
+    }
+
+    setSlidingThumbIndex(null);
+  }, [doc, handleSlideMove, setSlidingThumbIndex]);
+
+  /**
+   *
+   */
+  useEffect(() => {
+    if (isInteractive && slidingThumbIndex !== null && doc) {
+      doc.addEventListener('mousemove', handleSlideMove);
+      doc.addEventListener('mouseup', removeSlideMove);
+    }
+
+    return () => {
+      if (isInteractive && slidingThumbIndex !== null && doc) {
+        doc.removeEventListener('mousemove', handleSlideMove);
+        doc.removeEventListener('mouseup', removeSlideMove);
+      }
+    };
+  }, [isInteractive, slidingThumbIndex, doc, handleSlideMove, removeSlideMove]);
+
+  /** @function handleSlideStart
+   * @desc Identify which thumb is being used for sliding
+   * @todo Consider accommodating vertical orientation
    */
   const handleSlideStart: MouseEventHandler = useCallback(
     event => {
@@ -198,9 +224,8 @@ export function useSlider({
     [trackElement, isInteractive, setSlidingThumbIndex]
   );
 
-  /** @function
-   * @name handleSlideEnd
-   * @desc
+  /** @function handleSlideEnd
+   * @desc Clear information about which thumb is being used for sliding
    */
   const handleSlideEnd: MouseEventHandler = useCallback(
     event => {
@@ -212,8 +237,7 @@ export function useSlider({
     [trackElement, isInteractive, setSlidingThumbIndex]
   );
 
-  /** @function
-   * @name handleThumbClick
+  /** @function handleThumbClick
    * @desc Stop thumb event propagation, in order to avoid jittery behavior
    */
   const handleThumbClick: MouseEventHandler = useCallback(
@@ -227,7 +251,7 @@ export function useSlider({
 
   /**
    * @desc Update keyboard interactions map to reflect current layout direction (LTR or RTL)
-   * @todo Accommodate vertical orientation
+   * @todo Consider accommodating vertical orientation
    */
   const keyboardInteractions = useMemo(
     () => ({
@@ -246,9 +270,8 @@ export function useSlider({
     [rtl]
   );
 
-  /** @function
-   * @name handleThumbKeyDown
-   * @desc
+  /** @function handleThumbKeyDown
+   * @desc Respond to keyboard interactions in an accessible way, as dictated by the ARIA Authoring Practices Guide (APG)
    * @see {@link https://www.w3.org/WAI/ARIA/apg/patterns/slider/#keyboard-interaction-16|Keyboard Interaction, APG Slider pattern}
    * @see {@link https://www.w3.org/WAI/ARIA/apg/patterns/slidertwothumb/#keyboard-interaction-17|Keyboard Interaction, APG Slider (Multi-Thumb) pattern}
    */
@@ -280,8 +303,7 @@ export function useSlider({
     [isInteractive, keyboardInteractions, min, max, step]
   );
 
-  /** @function
-   * @name getSliderRootProps
+  /** @function getSliderRootProps
    * @desc Get all of the HTML attributes for the element containing the Slider
    */
   const getSliderRootProps = useCallback<IUseSliderReturnValue['getSliderRootProps']>(
@@ -294,10 +316,9 @@ export function useSlider({
     [rtl]
   );
 
-  /** @function
-   * @name getSliderTrackProps
+  /** @function getSliderTrackProps
    * @desc Get all of the HTML attributes for the element serving as the Slider track
-   * @todo Accommodate touch events for sliding
+   * @todo Consider accommodating touch events for sliding
    */
   const getSliderTrackProps = useCallback<IUseSliderReturnValue['getSliderTrackProps']>(
     ({ onClick, ...props } = {}) => ({
@@ -305,20 +326,18 @@ export function useSlider({
       'aria-disabled': disabled,
       dir: rtl ? 'rtl' : 'ltr',
       onClick: composeEventHandlers(handleTrackClick, onClick),
-      onMouseMove: handleSlideMove,
       ref: trackElement
     }),
-    [disabled, rtl, handleTrackClick, handleSlideMove]
+    [disabled, rtl, handleTrackClick]
   );
 
-  /** @function
-   * @name getSliderThumbProps
+  /** @function getSliderThumbProps
    * @desc Get all of the attributes for an element serving as a Slider thumb
    * @see {@link https://www.w3.org/WAI/ARIA/apg/patterns/slider/|APG Slider pattern}
    * @see {@link https://www.w3.org/WAI/ARIA/apg/patterns/slidertwothumb/|APG Slider (Multi-Thumb) pattern}
    * @todo Accommodate aria-valuetext
-   * @todo Accommodate vertical orientation
-   * @todo Accommodate touch events for sliding
+   * @todo Consider accommodating vertical orientation
+   * @todo Consider accommodating touch events for sliding
    */
   const getSliderThumbProps = useCallback<IUseSliderReturnValue['getSliderThumbProps']>(
     ({ 'aria-label': ariaLabel, index, onKeyDown, onMouseDown, onMouseUp, onClick, ...props }) => ({
