@@ -50,8 +50,8 @@ export function useSlider({
   max = DEFAULT_MAX,
   step = DEFAULT_STEP,
   rtl = false,
-  required,
-  disabled
+  required = false,
+  disabled = false
 }: IUseSliderProps): IUseSliderReturnValue {
   const trackElement = useRef(null);
   const [trackElementDimensions, setTrackElementDimensions] = useState<DOMRect | null>(null);

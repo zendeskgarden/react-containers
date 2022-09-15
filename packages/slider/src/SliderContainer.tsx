@@ -6,7 +6,6 @@
  */
 
 import React from 'react';
-import PropTypes from 'prop-types';
 import { useSlider } from './useSlider';
 import { ISliderContainerProps } from './types';
 
@@ -14,17 +13,4 @@ export const SliderContainer: React.FC<ISliderContainerProps> = props => {
   const { children, render = children, ...options } = props;
 
   return <>{render!(useSlider(options))}</>;
-};
-
-SliderContainer.propTypes = {
-  children: PropTypes.func,
-  render: PropTypes.func,
-  defaultValue: PropTypes.arrayOf(PropTypes.number),
-  min: PropTypes.number,
-  max: PropTypes.number,
-  step: PropTypes.number,
-  disabled: PropTypes.bool,
-  required: PropTypes.bool,
-  rtl: PropTypes.bool,
-  environment: PropTypes.any
 };
