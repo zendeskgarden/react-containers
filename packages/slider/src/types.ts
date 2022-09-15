@@ -14,7 +14,7 @@ export type SliderState = SliderThumbValue[];
 export interface ISliderReducerAction {
   readonly type: string;
   index: number;
-  value: number;
+  value: SliderThumbValue;
   step: number;
   min: number;
   max: number;
@@ -26,46 +26,29 @@ export type ResetRangeMinAction = Pick<ISliderReducerAction, 'min'>;
 export type ResetRangeMaxAction = Pick<ISliderReducerAction, 'max'>;
 export type SetThumbValueAction = Pick<ISliderReducerAction, 'index' | 'value' | 'min' | 'max'>;
 
-type RequiredSliderThumbProps = Required<
-  Pick<AriaAttributes, 'aria-valuenow' | 'aria-valuemin' | 'aria-valuemax'>
->;
-
-type OptionalSliderThumbProps = Partial<
-  Pick<
-    AriaAttributes,
-    'aria-required' | 'aria-disabled' | 'aria-readonly' | 'aria-orientation' | 'aria-valuetext'
-  >
->;
-
-export interface ISliderThumbProps extends RequiredSliderThumbProps, OptionalSliderThumbProps {
-  'aria-label': NonNullable<AriaAttributes['aria-label']>;
-  readonly role: 'slider';
-  tabIndex: 0 | -1;
-}
-
 export interface IUseSliderProps {
-  /** */
+  /** Sets the Slider’s initial value */
   defaultValue?: SliderState;
-  /** */
-  min?: ISliderThumbProps['aria-valuemin'];
-  /** */
-  max?: ISliderThumbProps['aria-valuemax'];
+  /** Sets the Slider range’s overall minimum value */
+  min?: AriaAttributes['aria-valuemin'];
+  /** Sets the Slider range’s overall maximum value */
+  max?: AriaAttributes['aria-valuemax'];
   /** */
   step?: number;
-  /** */
-  required?: ISliderThumbProps['aria-required'];
-  /** */
-  disabled?: ISliderThumbProps['aria-disabled'];
+  /** Sets whether or not the Slider is a required field */
+  required?: AriaAttributes['aria-required'];
+  /** Sets whether or not the Slider is disabled */
+  disabled?: AriaAttributes['aria-disabled'];
+  /** Sets the text & layout direction */
+  rtl?: boolean;
+  /** Sets the environment where the Slider is rendered */
+  environment?: Document;
   /** */
   // onStepUp?: () => {}
   /** */
   // onStepDown?: () => {}
   /** */
   // onChange?: () => void;
-  /** */
-  rtl?: boolean;
-  /** Sets the environment where the slider is rendered */
-  environment?: Document;
 }
 
 export interface IUseSliderReturnValue {
@@ -75,9 +58,9 @@ export interface IUseSliderReturnValue {
   getSliderThumbProps: <T extends Element>(
     props: Omit<HTMLProps<T>, 'aria-label'> & {
       index?: number;
-      'aria-label': ISliderThumbProps['aria-label'];
+      'aria-label': NonNullable<AriaAttributes['aria-label']>;
     }
-  ) => ISliderThumbProps;
+  ) => HTMLProps<T>;
 }
 
 export interface ISliderContainerProps extends IUseSliderProps {
