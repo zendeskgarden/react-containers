@@ -7,28 +7,18 @@
 
 import { AriaAttributes, HTMLProps, ReactNode } from 'react';
 
+// If/when we add support for aria-valuetext, this type could become something like:
+// type sliderThumbValueWithText = { a: number, b: string }
+// type SliderThumbValue = number | SliderThumbValueWithText
 export type SliderThumbValue = number;
 
 export type SliderState = SliderThumbValue[];
 
-export interface ISliderReducerAction {
-  readonly type: string;
-  index: number;
-  value: SliderThumbValue;
-  step: number;
-  min: number;
-  max: number;
-}
-
-export type StepUpAction = Pick<ISliderReducerAction, 'index' | 'step' | 'max'>;
-export type StepDownAction = Pick<ISliderReducerAction, 'index' | 'step' | 'min'>;
-export type ResetRangeMinAction = Pick<ISliderReducerAction, 'min'>;
-export type ResetRangeMaxAction = Pick<ISliderReducerAction, 'max'>;
-export type SetThumbValueAction = Pick<ISliderReducerAction, 'index' | 'value' | 'min' | 'max'>;
-
 export interface IUseSliderProps {
-  /** Sets the Slider’s initial value */
-  defaultValue?: SliderState;
+  /** Sets the Slider’s initial minimum value */
+  defaultMinValue?: SliderThumbValue;
+  /** Sets the Slider’s initial maximum value */
+  defaultMaxValue?: SliderThumbValue;
   /** Sets the Slider range’s overall minimum value */
   min?: AriaAttributes['aria-valuemin'];
   /** Sets the Slider range’s overall maximum value */
@@ -67,7 +57,7 @@ export interface ISliderContainerProps extends IUseSliderProps {
   /**
    * Provides Slider render prop functions
    *
-   * @param {number[]} [options.value] Slider values
+   * @param {SliderState} [options.value] Slider values
    * @param {function} [options.getSliderRootProps] Slider root props getter
    * @param {function} [options.getSliderTrackProps] Slider track props getter
    * @param {function} [options.getSliderThumbProps] Slider thumb props getter
@@ -81,3 +71,18 @@ export interface ISliderContainerProps extends IUseSliderProps {
   /** @ignore */
   children?: (options: IUseSliderReturnValue) => ReactNode;
 }
+
+export interface ISliderReducerAction {
+  readonly type: string;
+  index: number;
+  value: SliderThumbValue;
+  step: number;
+  min: number;
+  max: number;
+}
+
+export type StepUpAction = Pick<ISliderReducerAction, 'index' | 'step' | 'max'>;
+export type StepDownAction = Pick<ISliderReducerAction, 'index' | 'step' | 'min'>;
+export type ResetRangeMinAction = Pick<ISliderReducerAction, 'min'>;
+export type ResetRangeMaxAction = Pick<ISliderReducerAction, 'max'>;
+export type SetThumbValueAction = Pick<ISliderReducerAction, 'index' | 'value' | 'min' | 'max'>;

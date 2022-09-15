@@ -45,7 +45,8 @@ const POSSIBLE_SLIDER_KEYS = [
 ] as const;
 
 export function useSlider({
-  defaultValue,
+  defaultMinValue = DEFAULT_MIN,
+  defaultMaxValue = DEFAULT_MAX,
   min = DEFAULT_MIN,
   max = DEFAULT_MAX,
   step = DEFAULT_STEP,
@@ -61,7 +62,7 @@ export function useSlider({
   const [slidingThumbIndex, setSlidingThumbIndex] = useState<number | null>(null);
   const [state, dispatch] = useReducer(
     sliderReducer,
-    initializeSliderReducerState(defaultValue || [min, max])
+    initializeSliderReducerState([defaultMinValue, defaultMaxValue])
   );
 
   /**
