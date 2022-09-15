@@ -51,12 +51,11 @@ export function useSlider({
   step = DEFAULT_STEP,
   rtl = false,
   required,
-  disabled,
-  readOnly
+  disabled
 }: IUseSliderProps): IUseSliderReturnValue {
   const trackElement = useRef(null);
   const [trackElementDimensions, setTrackElementDimensions] = useState<DOMRect | null>(null);
-  const isInteractive = disabled === false && readOnly === false;
+  const isInteractive = disabled === false;
   const [slidingThumbIndex, setSlidingThumbIndex] = useState<number | null>(null);
   const [state, dispatch] = useReducer(
     sliderReducer,
@@ -310,13 +309,12 @@ export function useSlider({
     ({ onClick, ...props } = {}) => ({
       ...props,
       'aria-disabled': disabled,
-      'aria-readonly': readOnly,
       dir: rtl ? 'rtl' : 'ltr',
       onClick: composeEventHandlers(handleTrackClick, onClick),
       onMouseMove: handleSlideMove,
       ref: trackElement
     }),
-    [disabled, readOnly, rtl, handleTrackClick, handleSlideMove]
+    [disabled, rtl, handleTrackClick, handleSlideMove]
   );
 
   /**
@@ -333,7 +331,6 @@ export function useSlider({
       'aria-valuemax': getThumbMaxValueNumber(state, { index }),
       'aria-required': required,
       'aria-disabled': disabled,
-      'aria-readonly': readOnly,
       'aria-orientation': 'horizontal',
       'data-index': index,
       role: 'slider',
@@ -348,7 +345,6 @@ export function useSlider({
       state,
       required,
       disabled,
-      readOnly,
       isInteractive,
       rtl,
       handleSlideStart,

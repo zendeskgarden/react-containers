@@ -57,8 +57,6 @@ export interface IUseSliderProps {
   /** */
   disabled?: ISliderThumbProps['aria-disabled'];
   /** */
-  readOnly?: ISliderThumbProps['aria-readonly'];
-  /** */
   // onStepUp?: () => {}
   /** */
   // onStepDown?: () => {}
