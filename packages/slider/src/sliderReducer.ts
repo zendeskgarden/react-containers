@@ -79,18 +79,6 @@ export const getThumbMaxValueNumber = (
 
 // getters - internal to reducer
 
-/**
- * @todo Collapse into shouldChangeValue
- */
-const shouldStepUp = (state: SliderState, { index, max }: { index: number; max: number }) =>
-  getThumbCurrentValueNumber(state, { index }) < getThumbMaxValueNumber(state, { index, max });
-
-/**
- * @todo Collapse into shouldChangeValue
- */
-const shouldStepDown = (state: SliderState, { index, min }: { index: number; min: number }) =>
-  getThumbCurrentValueNumber(state, { index }) > getThumbMinValueNumber(state, { index, min });
-
 const shouldChangeValue = (
   state: SliderState,
   { index, value, min, max }: { index: number; value: number; min: number; max: number }
@@ -123,14 +111,14 @@ export const sliderReducer = (state: SliderState, action: Record<string, any>): 
 
   switch (type) {
     case STEP_UP:
-      return shouldStepUp(state, { index, max })
+      return shouldChangeValue(state, { index, value: state[index] + step, min, max })
         ? setRangeValue(state, {
             index,
             value: state[index] + step
           })
         : state;
     case STEP_DOWN:
-      return shouldStepDown(state, { index, min })
+      return shouldChangeValue(state, { index, value: state[index] - step, min, max })
         ? setRangeValue(state, {
             index,
             value: state[index] - step
