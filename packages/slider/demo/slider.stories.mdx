@@ -6,7 +6,7 @@ import { SliderStory } from './stories/SliderStory';
 <Meta
   title="Packages/Slider"
   component={SliderContainer}
-  args={{ as: 'hook', min: 0, max: 10, disabled: false, rtl: false, step: 1 }}
+  args={{ as: 'hook', min: 0, max: 100, disabled: false, rtl: false, step: 1 }}
   argTypes={{
     as: {
       options: ['container', 'hook'],
@@ -40,9 +40,21 @@ import { SliderStory } from './stories/SliderStory';
 <Canvas>
   <Story
     name="Uncontrolled"
+    argTypes={{ defaultMinValue: { control: false }, defaultMaxValue: { control: false } }}
+  >
+    {args => <SliderStory {...args} />}
+  </Story>
+</Canvas>
+
+## Controlled
+
+<Canvas>
+  <Story
+    name="Controlled"
     args={{
       defaultMinValue: 3,
-      defaultMaxValue: 8
+      defaultMaxValue: 8,
+      max: 10
     }}
   >
     {args => <SliderStory {...args} />}

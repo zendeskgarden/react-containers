@@ -79,25 +79,24 @@ export const Component = ({
         {...getSliderRootProps()}
         {...getSliderTrackProps()}
       >
-        {value.map((_, index: number) => {
-          const props = getSliderThumbProps({
-            index,
-            'aria-label': index === 0 ? 'Minimum value' : 'Maximum value'
-          });
-
-          return (
-            <div
-              className={`absolute bg-white border border-grey-800 border-solid bottom-0 box-border h-10 inline-flex items-center justify-center m-auto outline-1 outline-transparent rounded-full select-none text-center text-grey-800 top-0 w-10 ${
-                rtl ? 'left-auto' : 'right-auto'
-              } ${!disabled && 'focus:ring-2 focus:ring-offset-2'}`}
-              style={getThumbPosition(props['aria-valuenow'])}
-              key={index}
-              {...props}
-            >
-              <span className="box-border pointer-events-none">{props['aria-valuenow']}</span>
-            </div>
-          );
-        })}
+        <div
+          className={`absolute bg-white border border-grey-800 border-solid bottom-0 box-border h-10 inline-flex items-center justify-center m-auto outline-1 outline-transparent rounded-full select-none text-center text-grey-800 top-0 w-10 ${
+            rtl ? 'left-auto' : 'right-auto'
+          } ${!disabled && 'focus:ring-2 focus:ring-offset-2'}`}
+          style={getThumbPosition(value[0])}
+          {...getSliderThumbProps({ index: 0, 'aria-label': 'Minimum range value' })}
+        >
+          <span className="box-border pointer-events-none">{value[0]}</span>
+        </div>
+        <div
+          className={`absolute bg-white border border-grey-800 border-solid bottom-0 box-border h-10 inline-flex items-center justify-center m-auto outline-1 outline-transparent rounded-full select-none text-center text-grey-800 top-0 w-10 ${
+            rtl ? 'left-auto' : 'right-auto'
+          } ${!disabled && 'focus:ring-2 focus:ring-offset-2'}`}
+          style={getThumbPosition(value[1])}
+          {...getSliderThumbProps({ index: 1, 'aria-label': 'Maximum range value' })}
+        >
+          <span className="box-border pointer-events-none">{value[1]}</span>
+        </div>
       </div>
     </fieldset>
   );
