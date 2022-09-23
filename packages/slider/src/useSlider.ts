@@ -13,6 +13,7 @@ import { IUseSliderProps, IUseSliderReturnValue } from './types';
 export const SLIDER_MIN = 0;
 export const SLIDER_MAX = 100;
 export const SLIDER_STEP = 1;
+export const SLIDER_JUMP = 1;
 
 export function useSlider<T extends Element = Element, M extends HTMLElement = HTMLElement>({
   trackRef,
@@ -26,7 +27,7 @@ export function useSlider<T extends Element = Element, M extends HTMLElement = H
   maxValue,
   onChange = () => undefined,
   step = SLIDER_STEP,
-  jump = 1,
+  jump = SLIDER_JUMP,
   disabled,
   rtl,
   environment
@@ -185,16 +186,14 @@ export function useSlider<T extends Element = Element, M extends HTMLElement = H
               case KEYS.PAGE_UP:
                 event.stopPropagation();
                 setThumbPosition(thumb)(
-                  (thumb === 'min' ? position.minValue : position.maxValue) +
-                    (rtl ? -step : step) * jump
+                  (thumb === 'min' ? position.minValue : position.maxValue) + (rtl ? -jump : jump)
                 );
                 break;
 
               case KEYS.PAGE_DOWN:
                 event.stopPropagation();
                 setThumbPosition(thumb)(
-                  (thumb === 'min' ? position.minValue : position.maxValue) -
-                    (rtl ? -step : step) * jump
+                  (thumb === 'min' ? position.minValue : position.maxValue) - (rtl ? -jump : jump)
                 );
                 break;
 

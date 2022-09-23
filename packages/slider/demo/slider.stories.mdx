@@ -1,4 +1,5 @@
 import { Meta, ArgsTable, Canvas, Story } from '@storybook/addon-docs';
+import { useArgs } from '@storybook/client-api';
 import { SliderContainer } from '@zendeskgarden/container-slider';
 import { SliderStory } from './stories/SliderStory';
 
@@ -7,7 +8,10 @@ import { SliderStory } from './stories/SliderStory';
   component={SliderContainer}
   args={{ as: 'hook', max: 100, min: 0, step: 1 }}
   argTypes={{
-    as: { options: ['container', 'hook'], control: 'radio', table: { category: 'Story' } }
+    as: { options: ['container', 'hook'], control: 'radio', table: { category: 'Story' } },
+    trackRef: { control: false },
+    minThumbRef: { control: false },
+    maxThumbRef: { control: false }
   }}
 />
 
@@ -20,7 +24,12 @@ import { SliderStory } from './stories/SliderStory';
 ## Uncontrolled
 
 <Canvas>
-  <Story name="Uncontrolled">{args => <SliderStory {...args} />}</Story>
+  <Story
+    name="Uncontrolled"
+    argTypes={{ minValue: { control: false }, maxValue: { control: false } }}
+  >
+    {args => <SliderStory {...args} />}
+  </Story>
 </Canvas>
 
 ## Controlled
@@ -28,12 +37,13 @@ import { SliderStory } from './stories/SliderStory';
 <Canvas>
   <Story
     name="Controlled"
-    args={{
-      defaultMinValue: 3,
-      defaultMaxValue: 8,
-      max: 10
-    }}
+    args={{ minValue: 25, maxValue: 75 }}
+    argsTypes={{ defaultMinValue: { control: false }, defaultMaxValue: { control: false } }}
   >
-    {args => <SliderStory {...args} />}
+    {args => {
+      const updateArgs = useArgs()[1];
+      const handleChange = ({ minValue, maxValue }) => updateArgs({ minValue, maxValue });
+      return <SliderStory {...args} onChange={handleChange} />;
+    }}
   </Story>
 </Canvas>
