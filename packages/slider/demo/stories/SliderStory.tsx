@@ -5,9 +5,8 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React, { useCallback } from 'react';
+import React, { createRef, forwardRef } from 'react';
 import { Story } from '@storybook/react';
-
 import {
   ISliderContainerProps,
   IUseSliderProps,
@@ -15,140 +14,192 @@ import {
   SliderContainer,
   useSlider
 } from '@zendeskgarden/container-slider';
+import classNames from 'classnames';
 
-import { IArgs } from './types';
+interface IComponentProps extends IUseSliderReturnValue {
+  max: IUseSliderProps['max'];
+  min: IUseSliderProps['min'];
+  minThumbRef: IUseSliderProps<Element, HTMLDivElement>['minThumbRef'];
+  maxThumbRef: IUseSliderProps<Element, HTMLDivElement>['minThumbRef'];
+  disabled: IUseSliderProps['disabled'];
+  rtl: IUseSliderProps['rtl'];
+}
 
-export const Component = ({
-  storyArgs,
-  value,
-  getSliderRootProps,
-  getSliderTrackProps,
-  getSliderThumbProps
-}: { storyArgs: Omit<IArgs, 'as'> } & IUseSliderReturnValue) => {
-  const { rtl, disabled, max } = storyArgs;
-
-  const convertThumbValueToPercentage = useCallback(
-    (thumbValue: number): string => `${(thumbValue / max!) * 100}%`,
-    [max]
-  );
-
-  const getTrackGradient = useCallback(() => {
-    let fillStart = '0%';
-    let fillEnd = convertThumbValueToPercentage(value[0] || 0);
-
-    if (value.length > 1) {
-      fillStart = convertThumbValueToPercentage(value[0]);
-      fillEnd = convertThumbValueToPercentage(value[value.length - 1]);
-    }
-
-    return `
-      linear-gradient(
-        ${rtl ? '-90deg' : '90deg'},
-        #fff 0%,
-        #fff ${fillStart},
-        currentColor ${fillStart},
-        currentColor ${fillEnd},
-        #fff ${fillEnd},
-        #fff 100%
-      )
-    `.trim();
-  }, [rtl, value, convertThumbValueToPercentage]);
-
-  const getThumbPosition = useCallback(
-    (thumbValue: number) => {
-      const percentage = convertThumbValueToPercentage(thumbValue);
-      const position = `calc(${percentage} - (40px / 2))`;
-
-      return rtl ? { right: position } : { left: position };
+const Component = forwardRef<HTMLDivElement, IComponentProps>(
+  (
+    {
+      getTrackProps,
+      getMinThumbProps,
+      getMaxThumbProps,
+      min = 0,
+      max = 100,
+      minValue,
+      maxValue,
+      minThumbRef,
+      maxThumbRef,
+      disabled,
+      rtl
     },
-    [rtl, convertThumbValueToPercentage]
-  );
+    ref
+  ) => {
+    const trackClassName = classNames('border', 'border-solid', 'h-4', 'relative', 'rounded-full', {
+      'text-grey-400': disabled
+    });
 
-  return (
-    <fieldset
-      className={`box-border ${disabled ? 'text-grey-400' : 'text-grey-800'}`}
-      style={{ width: '50vw' }}
-      dir={rtl ? 'rtl' : 'ltr'}
-    >
-      <legend className="sr-only">
-        <h2>Select a range</h2>
-      </legend>
+    const thumbClassName = classNames(
+      'absolute',
+      'bg-white',
+      'border',
+      'border-solid',
+      'bottom-0',
+      'h-9',
+      'inline-flex',
+      'items-center',
+      'justify-center',
+      'm-auto',
+      'rounded-full',
+      'select-none',
+      'top-0',
+      'w-9'
+    );
+
+    const minPosition = (minValue / (max - min)) * 100;
+    const maxPosition = (maxValue / (max - min)) * 100;
+
+    const background = `linear-gradient(
+      ${rtl ? '-90deg' : '90deg'},
+      #fff 0%,
+      #fff ${minPosition}%,
+      currentColor ${minPosition}%,
+      currentColor ${maxPosition}%,
+      #fff ${maxPosition}%,
+      #fff 100%
+    )`;
+
+    return (
       <div
-        className="border border-grey-800 border-solid box-border h-6 my-2 relative rounded-full"
-        style={{ background: getTrackGradient() }}
-        {...getSliderRootProps()}
-        {...getSliderTrackProps()}
+        className={trackClassName}
+        style={{ width: '50vw', background }}
+        {...getTrackProps()}
+        ref={ref}
       >
         <div
-          className={`absolute bg-white border border-grey-800 border-solid bottom-0 box-border h-10 inline-flex items-center justify-center m-auto outline-1 outline-transparent rounded-full select-none text-center text-grey-800 top-0 w-10 ${
-            rtl ? 'left-auto' : 'right-auto'
-          } ${!disabled && 'focus:ring-2 focus:ring-offset-2'}`}
-          style={getThumbPosition(value[0])}
-          {...getSliderThumbProps({ index: 0, 'aria-label': 'Minimum range value' })}
+          className={thumbClassName}
+          {...getMinThumbProps({ 'aria-label': 'Minimum range value' })}
+          style={{ [rtl ? 'right' : 'left']: `calc(${minPosition}% - 18px)` }}
+          ref={minThumbRef}
         >
-          <span className="box-border pointer-events-none">{value[0]}</span>
+          {minValue}
         </div>
         <div
-          className={`absolute bg-white border border-grey-800 border-solid bottom-0 box-border h-10 inline-flex items-center justify-center m-auto outline-1 outline-transparent rounded-full select-none text-center text-grey-800 top-0 w-10 ${
-            rtl ? 'left-auto' : 'right-auto'
-          } ${!disabled && 'focus:ring-2 focus:ring-offset-2'}`}
-          style={getThumbPosition(value[1])}
-          {...getSliderThumbProps({ index: 1, 'aria-label': 'Maximum range value' })}
+          className={thumbClassName}
+          {...getMaxThumbProps({ 'aria-label': 'Maximum range value' })}
+          style={{ [rtl ? 'right' : 'left']: `calc(${maxPosition}% - 18px)` }}
+          ref={maxThumbRef}
         >
-          <span className="box-border pointer-events-none">{value[1]}</span>
+          {maxValue}
         </div>
       </div>
-    </fieldset>
-  );
-};
+    );
+  }
+);
 
-const Container = ({ ...args }: ISliderContainerProps & Omit<IArgs, 'as'>) => (
-  <SliderContainer {...args}>
-    {({
-      getSliderRootProps,
-      getSliderTrackProps,
-      getSliderThumbProps,
-      value
-    }: IUseSliderReturnValue) => (
+Component.displayName = 'Component';
+
+const Container = ({
+  trackRef,
+  minThumbRef,
+  maxThumbRef,
+  min,
+  max,
+  disabled,
+  rtl,
+  ...props
+}: ISliderContainerProps<HTMLDivElement, HTMLDivElement>) => (
+  <SliderContainer
+    trackRef={trackRef}
+    minThumbRef={minThumbRef}
+    maxThumbRef={maxThumbRef}
+    min={min}
+    max={max}
+    disabled={disabled}
+    rtl={rtl}
+    {...props}
+  >
+    {containerProps => (
       <Component
-        storyArgs={args}
-        value={value}
-        getSliderRootProps={getSliderRootProps}
-        getSliderTrackProps={getSliderTrackProps}
-        getSliderThumbProps={getSliderThumbProps}
+        {...containerProps}
+        ref={trackRef}
+        minThumbRef={minThumbRef}
+        maxThumbRef={maxThumbRef}
+        min={min}
+        max={max}
+        disabled={disabled}
+        rtl={rtl}
       />
     )}
   </SliderContainer>
 );
 
-const Hook = ({ ...args }: IUseSliderProps & Omit<IArgs, 'as'>) => {
-  const {
-    getSliderRootProps,
-    getSliderTrackProps,
-    getSliderThumbProps,
-    value
-  }: IUseSliderReturnValue = useSlider({
-    ...args
+const Hook = ({
+  trackRef,
+  minThumbRef,
+  maxThumbRef,
+  min,
+  max,
+  disabled,
+  rtl,
+  ...props
+}: IUseSliderProps<HTMLDivElement, HTMLDivElement>) => {
+  const hookProps = useSlider<HTMLDivElement, HTMLDivElement>({
+    trackRef,
+    minThumbRef,
+    maxThumbRef,
+    min,
+    max,
+    disabled,
+    rtl,
+    ...props
   });
 
   return (
     <Component
-      storyArgs={args}
-      value={value}
-      getSliderRootProps={getSliderRootProps}
-      getSliderTrackProps={getSliderTrackProps}
-      getSliderThumbProps={getSliderThumbProps}
+      {...hookProps}
+      ref={trackRef}
+      minThumbRef={minThumbRef}
+      maxThumbRef={maxThumbRef}
+      min={min}
+      max={max}
+      disabled={disabled}
+      rtl={rtl}
     />
   );
 };
 
+interface IArgs extends ISliderContainerProps<HTMLDivElement, HTMLDivElement> {
+  as: 'hook' | 'container';
+}
+
 export const SliderStory: Story<IArgs> = ({ as, ...args }) => {
+  const trackRef = createRef<HTMLDivElement>();
+  const minThumbRef = createRef<HTMLDivElement>();
+  const maxThumbRef = createRef<HTMLDivElement>();
+
   switch (as) {
     case 'container':
-      return <Container {...args} />;
+      return (
+        <Container
+          {...args}
+          trackRef={trackRef}
+          minThumbRef={minThumbRef}
+          maxThumbRef={maxThumbRef}
+        />
+      );
 
     case 'hook':
     default:
-      return <Hook {...args} />;
+      return (
+        <Hook {...args} trackRef={trackRef} minThumbRef={minThumbRef} maxThumbRef={maxThumbRef} />
+      );
   }
 };

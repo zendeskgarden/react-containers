@@ -1,31 +1,13 @@
 import { Meta, ArgsTable, Canvas, Story } from '@storybook/addon-docs';
 import { SliderContainer } from '@zendeskgarden/container-slider';
-
 import { SliderStory } from './stories/SliderStory';
 
 <Meta
   title="Packages/Slider"
   component={SliderContainer}
-  args={{ as: 'hook', min: 0, max: 100, disabled: false, rtl: false, step: 1 }}
+  args={{ as: 'hook', max: 100, min: 0, step: 1 }}
   argTypes={{
-    as: {
-      options: ['container', 'hook'],
-      control: 'radio',
-      table: { category: 'Story' }
-    },
-    render: {
-      table: {
-        disable: true
-      }
-    },
-    environment: {
-      table: {
-        disable: true
-      }
-    },
-    disabled: {
-      control: 'boolean'
-    }
+    as: { options: ['container', 'hook'], control: 'radio', table: { category: 'Story' } }
   }}
 />
 
@@ -38,12 +20,7 @@ import { SliderStory } from './stories/SliderStory';
 ## Uncontrolled
 
 <Canvas>
-  <Story
-    name="Uncontrolled"
-    argTypes={{ defaultMinValue: { control: false }, defaultMaxValue: { control: false } }}
-  >
-    {args => <SliderStory {...args} />}
-  </Story>
+  <Story name="Uncontrolled">{args => <SliderStory {...args} />}</Story>
 </Canvas>
 
 ## Controlled
