@@ -22,12 +22,22 @@ Check out [storybook](https://zendeskgarden.github.io/react-containers) for live
 import { useSlider } from '@zendeskgarden/container-slider';
 
 const Slider = () => {
-  const { getSliderRootProps, getSliderTrackProps, getSliderThumbProps, value } = useSlider();
+  const trackRef = createRef();
+  const minThumbRef = createRef();
+  const maxThumbRef = createRef();
+  const { getTrackProps, getMinThumbProps, getMaxThumbProps, minValue, maxValue } = useSlider({
+    trackRef,
+    minThumbRef,
+    maxThumbRef
+  });
 
   return (
-    <div {...getSliderRootProps()}>
-      <div {...getSliderTrackProps()}>
-        <div {...getSliderThumbProps()} />
+    <div {...getTrackProps()} ref={trackRef}>
+      <div {...getMinThumbProps()} minThumbRef={minThumbRef}>
+        {minValue}
+      </div>
+      <div {...getMaxThumbProps()} maxThumbRef={maxThumbRef}>
+        {maxValue}
       </div>
     </div>
   );
@@ -39,13 +49,20 @@ const Slider = () => {
 ```jsx
 import { SliderContainer } from '@zendeskgarden/container-slider';
 
-<SliderContainer>
-  {({ getSliderRootProps, getSliderTrackProps, getSliderThumbProps, value }) => {
-    <div {...getSliderRootProps()}>
-      <div {...getSliderTrackProps()}>
-        <div {...getSliderThumbProps()} />
+const trackRef = createRef();
+const minThumbRef = createRef();
+const maxThumbRef = createRef();
+
+<SliderContainer trackRef={trackRef} minThumbRef={minThumbRef} maxThumbRef={maxThumbRef}>
+  {({ getTrackProps, getMinThumbProps, getMaxThumbProps, minValue, maxValue }) => (
+    <div {...getTrackProps()} trackRef={trackRef}>
+      <div {...getMinThumbProps()} minThumbRef={minThumbRef}>
+        {minValue}
       </div>
-    </div>;
-  }}
+      <div {...getMaxThumbProps()} maxThumbRef={maxThumbRef}>
+        {maxValue}
+      </div>
+    </div>
+  )}
 </SliderContainer>;
 ```
