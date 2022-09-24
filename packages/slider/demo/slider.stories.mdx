@@ -6,7 +6,7 @@ import { SliderStory } from './stories/SliderStory';
 <Meta
   title="Packages/Slider"
   component={SliderContainer}
-  args={{ as: 'hook', max: 100, min: 0, step: 1 }}
+  args={{ as: 'hook', max: 100, min: 0, step: 1, jump: 1 }}
   argTypes={{
     as: { options: ['container', 'hook'], control: 'radio', table: { category: 'Story' } },
     trackRef: { control: false },
@@ -38,7 +38,7 @@ import { SliderStory } from './stories/SliderStory';
   <Story
     name="Controlled"
     args={{ minValue: 25, maxValue: 75 }}
-    argsTypes={{ defaultMinValue: { control: false }, defaultMaxValue: { control: false } }}
+    argTypes={{ defaultMinValue: { control: false }, defaultMaxValue: { control: false } }}
   >
     {args => {
       const updateArgs = useArgs()[1];

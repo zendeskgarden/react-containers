@@ -63,8 +63,8 @@ const Component = forwardRef<HTMLDivElement, IComponentProps>(
       'w-9'
     );
 
-    const minPosition = (minValue / (max - min)) * 100;
-    const maxPosition = (maxValue / (max - min)) * 100;
+    const minPosition = ((minValue - min) / (max - min)) * 100;
+    const maxPosition = ((maxValue - min) / (max - min)) * 100;
 
     const background = `linear-gradient(
       ${rtl ? '-90deg' : '90deg'},
