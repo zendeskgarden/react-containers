@@ -13,7 +13,6 @@ import { IUseSliderProps, IUseSliderReturnValue } from './types';
 export const SLIDER_MIN = 0;
 export const SLIDER_MAX = 100;
 export const SLIDER_STEP = 1;
-export const SLIDER_JUMP = 1;
 
 export function useSlider<T extends Element = Element, M extends HTMLElement = HTMLElement>({
   trackRef,
@@ -27,7 +26,7 @@ export function useSlider<T extends Element = Element, M extends HTMLElement = H
   maxValue,
   onChange = () => undefined,
   step = SLIDER_STEP,
-  jump = SLIDER_JUMP,
+  jump = step,
   disabled,
   rtl,
   environment
@@ -171,46 +170,47 @@ export function useSlider<T extends Element = Element, M extends HTMLElement = H
       ({ onKeyDown, onMouseDown, ...other }) => {
         const handleKeyDown = (event: KeyboardEvent) => {
           if (!disabled) {
+            let value;
+
             switch (event.key) {
               case KEYS.RIGHT:
+                value =
+                  (thumb === 'min' ? position.minValue : position.maxValue) + (rtl ? -step : step);
+                break;
+
               case KEYS.UP:
-                event.stopPropagation();
-                setThumbPosition(thumb)(
-                  (thumb === 'min' ? position.minValue : position.maxValue) + (rtl ? -step : step)
-                );
+                value = (thumb === 'min' ? position.minValue : position.maxValue) + step;
                 break;
 
               case KEYS.LEFT:
+                value =
+                  (thumb === 'min' ? position.minValue : position.maxValue) - (rtl ? -step : step);
+                break;
+
               case KEYS.DOWN:
-                event.stopPropagation();
-                setThumbPosition(thumb)(
-                  (thumb === 'min' ? position.minValue : position.maxValue) - (rtl ? -step : step)
-                );
+                value = (thumb === 'min' ? position.minValue : position.maxValue) - step;
                 break;
 
               case KEYS.PAGE_UP:
-                event.stopPropagation();
-                setThumbPosition(thumb)(
-                  (thumb === 'min' ? position.minValue : position.maxValue) + (rtl ? -jump : jump)
-                );
+                value = (thumb === 'min' ? position.minValue : position.maxValue) + jump;
                 break;
 
               case KEYS.PAGE_DOWN:
-                event.stopPropagation();
-                setThumbPosition(thumb)(
-                  (thumb === 'min' ? position.minValue : position.maxValue) - (rtl ? -jump : jump)
-                );
+                value = (thumb === 'min' ? position.minValue : position.maxValue) - jump;
                 break;
 
               case KEYS.HOME:
-                event.stopPropagation();
-                setThumbPosition(thumb)(min);
+                value = min;
                 break;
 
               case KEYS.END:
-                event.stopPropagation();
-                setThumbPosition(thumb)(max);
+                value = max;
                 break;
+            }
+
+            if (value) {
+              event.stopPropagation();
+              setThumbPosition(thumb)(value);
             }
           }
         };

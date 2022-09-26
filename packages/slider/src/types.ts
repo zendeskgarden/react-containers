@@ -35,7 +35,7 @@ export interface IUseSliderProps<T = Element, M = HTMLElement> {
   max?: number;
   /** Defines the stepping interval */
   step?: number;
-  /** Defines the jumping interval for page up/down keyboard navigation */
+  /** Defines the jumping interval for keyboard page up/down navigation. Defaults to `step`. */
   jump?: number;
   /** Indicates that the slider is not interactive */
   disabled?: boolean;

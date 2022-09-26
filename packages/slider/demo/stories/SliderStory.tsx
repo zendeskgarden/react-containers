@@ -86,6 +86,7 @@ const Component = forwardRef<HTMLDivElement, IComponentProps>(
         <div
           className={thumbClassName}
           {...getMinThumbProps({ 'aria-label': 'Minimum range value' })}
+          dir={rtl ? 'rtl' : 'ltr'}
           style={{ [rtl ? 'right' : 'left']: `calc(${minPosition}% - 18px)` }}
           ref={minThumbRef}
         >

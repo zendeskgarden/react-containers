@@ -7,7 +7,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { SLIDER_JUMP, SLIDER_MAX, SLIDER_MIN, SLIDER_STEP, useSlider } from './useSlider';
+import { SLIDER_MAX, SLIDER_MIN, SLIDER_STEP, useSlider } from './useSlider';
 import { ISliderContainerProps } from './types';
 
 export const SliderContainer: React.FC<ISliderContainerProps> = ({
@@ -41,6 +41,5 @@ SliderContainer.propTypes = {
 SliderContainer.defaultProps = {
   min: SLIDER_MIN,
   max: SLIDER_MAX,
-  step: SLIDER_STEP,
-  jump: SLIDER_JUMP
+  step: SLIDER_STEP
 };
