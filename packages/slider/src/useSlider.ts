@@ -208,7 +208,7 @@ export function useSlider<T extends Element = Element, M extends HTMLElement = H
                 break;
             }
 
-            if (value) {
+            if (value !== undefined) {
               event.stopPropagation();
               setThumbPosition(thumb)(value);
             }
