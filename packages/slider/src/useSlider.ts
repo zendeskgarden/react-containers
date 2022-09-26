@@ -33,15 +33,26 @@ export function useSlider<T extends Element = Element, M extends HTMLElement = H
 }: IUseSliderProps<T, M>): IUseSliderReturnValue {
   const doc = environment || document;
   const [trackRect, setTrackRect] = useState<DOMRect>({ width: 0 } as DOMRect);
-  const [state, setState] = useState({
-    minValue: defaultMinValue < min ? min : defaultMinValue,
-    maxValue: defaultMaxValue > max ? max : defaultMaxValue
-  });
+
+  const init = (initMinValue: number, initMaxValue: number) => {
+    const retVal = {
+      minValue: initMinValue < min ? min : initMinValue,
+      maxValue: initMaxValue > max ? max : initMaxValue
+    };
+
+    if (initMinValue > initMaxValue) {
+      retVal.minValue = initMaxValue;
+    } else if (initMaxValue < initMinValue) {
+      retVal.maxValue = initMinValue;
+    }
+
+    return retVal;
+  };
+
+  const [state, setState] = useState(init(defaultMinValue, defaultMaxValue));
   const isControlled =
     minValue !== undefined && minValue !== null && maxValue !== undefined && maxValue !== null;
-  const position = isControlled
-    ? { minValue: minValue < min ? min : minValue, maxValue: maxValue > max ? max : maxValue }
-    : state;
+  const position = isControlled ? init(minValue, maxValue) : state;
   const setPosition = isControlled ? onChange : setState;
 
   /*
