@@ -20,8 +20,8 @@ export function useSlider<T extends Element = Element, M extends HTMLElement = H
   maxThumbRef,
   min = SLIDER_MIN,
   max = SLIDER_MAX,
-  defaultMinValue = min,
-  defaultMaxValue = max,
+  defaultMinValue,
+  defaultMaxValue,
   minValue,
   maxValue,
   onChange = () => undefined,
@@ -34,16 +34,18 @@ export function useSlider<T extends Element = Element, M extends HTMLElement = H
   const doc = environment || document;
   const [trackRect, setTrackRect] = useState<DOMRect>({ width: 0 } as DOMRect);
 
-  const init = (initMinValue: number, initMaxValue: number) => {
+  const init = (initMinValue = min, initMaxValue = max) => {
     const retVal = {
       minValue: initMinValue < min ? min : initMinValue,
       maxValue: initMaxValue > max ? max : initMaxValue
     };
 
-    if (initMinValue > initMaxValue) {
-      retVal.minValue = initMaxValue;
-    } else if (initMaxValue < initMinValue) {
-      retVal.maxValue = initMinValue;
+    if (retVal.maxValue < min) {
+      retVal.maxValue = min;
+    }
+
+    if (retVal.minValue > retVal.maxValue) {
+      retVal.minValue = retVal.maxValue;
     }
 
     return retVal;
@@ -51,7 +53,7 @@ export function useSlider<T extends Element = Element, M extends HTMLElement = H
 
   const [state, setState] = useState(init(defaultMinValue, defaultMaxValue));
   const isControlled =
-    minValue !== undefined && minValue !== null && maxValue !== undefined && maxValue !== null;
+    (minValue !== undefined && minValue !== null) || (maxValue !== undefined && maxValue !== null);
   const position = isControlled ? init(minValue, maxValue) : state;
   const setPosition = isControlled ? onChange : setState;
 
