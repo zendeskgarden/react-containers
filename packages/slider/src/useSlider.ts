@@ -126,7 +126,7 @@ export function useSlider<T extends Element = Element, M extends HTMLElement = H
           }
         }
 
-        if (newMinValue !== position.minValue || newMaxValue !== position.maxValue) {
+        if (!isNaN(newMinValue) && !isNaN(newMaxValue)) {
           setPosition({ minValue: newMinValue, maxValue: newMaxValue });
         }
       }
