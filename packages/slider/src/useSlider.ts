@@ -84,7 +84,7 @@ export function useSlider<T extends Element = Element, M extends HTMLElement = H
    */
 
   const getTrackPosition = useCallback(
-    (event: MouseEvent) => {
+    (event: MouseEvent | Touch) => {
       let retVal = undefined;
 
       if (trackRect) {
@@ -182,7 +182,7 @@ export function useSlider<T extends Element = Element, M extends HTMLElement = H
     (
         thumb: 'min' | 'max'
       ): IUseSliderReturnValue['getMinThumbProps'] | IUseSliderReturnValue['getMaxThumbProps'] =>
-      ({ onKeyDown, onMouseDown, ...other }) => {
+      ({ onKeyDown, onMouseDown, onTouchStart, ...other }) => {
         const handleKeyDown = (event: KeyboardEvent) => {
           if (!disabled) {
             let value;
@@ -238,9 +238,22 @@ export function useSlider<T extends Element = Element, M extends HTMLElement = H
           }
         };
 
+        const handleTouchMove = (event: TouchEvent) => {
+          const value = getTrackPosition(event.targetTouches[0]);
+
+          if (value !== undefined) {
+            setThumbPosition(thumb)(value);
+          }
+        };
+
         const handleMouseUp = () => {
           doc.removeEventListener('mousemove', handleMouseMove);
           doc.removeEventListener('mouseup', handleMouseUp);
+        };
+
+        const handleTouchEnd = () => {
+          doc.removeEventListener('touchend', handleTouchEnd);
+          doc.removeEventListener('touchmove', handleTouchMove);
         };
 
         const handleMouseDown = (event: MouseEvent) => {
@@ -248,6 +261,15 @@ export function useSlider<T extends Element = Element, M extends HTMLElement = H
             event.stopPropagation();
             doc.addEventListener('mousemove', handleMouseMove);
             doc.addEventListener('mouseup', handleMouseUp);
+            event.target && (event.target as HTMLElement).focus();
+          }
+        };
+
+        const handleTouchStart = (event: TouchEvent) => {
+          if (!disabled) {
+            event.stopPropagation();
+            doc.addEventListener('touchmove', handleTouchMove);
+            doc.addEventListener('touchend', handleTouchEnd);
             event.target && (event.target as HTMLElement).focus();
           }
         };
@@ -262,6 +284,7 @@ export function useSlider<T extends Element = Element, M extends HTMLElement = H
           'aria-valuenow': thumb === 'min' ? position.minValue : position.maxValue,
           onKeyDown: composeEventHandlers(onKeyDown, handleKeyDown),
           onMouseDown: composeEventHandlers(onMouseDown, handleMouseDown),
+          onTouchStart: composeEventHandlers(onTouchStart, handleTouchStart),
           ...other
         };
       },
