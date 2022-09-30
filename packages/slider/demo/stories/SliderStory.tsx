@@ -182,7 +182,7 @@ interface IArgs extends ISliderContainerProps<HTMLDivElement, HTMLDivElement> {
 }
 
 export const SliderStory: Story<IArgs> = ({ as, ...args }) => {
-  const Splitter = () => {
+  const Slider = () => {
     const trackRef = createRef<HTMLDivElement>();
     const minThumbRef = createRef<HTMLDivElement>();
     const maxThumbRef = createRef<HTMLDivElement>();
@@ -206,5 +206,5 @@ export const SliderStory: Story<IArgs> = ({ as, ...args }) => {
     }
   };
 
-  return <Splitter />;
+  return <Slider />;
 };

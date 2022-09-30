@@ -179,7 +179,9 @@ export function useSlider<T extends Element = Element, M extends HTMLElement = H
   );
 
   const getThumbProps = useCallback(
-    (thumb: 'min' | 'max'): IUseSliderReturnValue['getMinThumbProps'] =>
+    (
+        thumb: 'min' | 'max'
+      ): IUseSliderReturnValue['getMinThumbProps'] | IUseSliderReturnValue['getMaxThumbProps'] =>
       ({ onKeyDown, onMouseDown, ...other }) => {
         const handleKeyDown = (event: KeyboardEvent) => {
           if (!disabled) {
