@@ -182,29 +182,25 @@ interface IArgs extends ISliderContainerProps<HTMLDivElement, HTMLDivElement> {
 }
 
 export const SliderStory: Story<IArgs> = ({ as, ...args }) => {
-  const Slider = () => {
-    const trackRef = createRef<HTMLDivElement>();
-    const minThumbRef = createRef<HTMLDivElement>();
-    const maxThumbRef = createRef<HTMLDivElement>();
+  const trackRef = createRef<HTMLDivElement>();
+  const minThumbRef = createRef<HTMLDivElement>();
+  const maxThumbRef = createRef<HTMLDivElement>();
 
-    switch (as) {
-      case 'container':
-        return (
-          <Container
-            {...args}
-            trackRef={trackRef}
-            minThumbRef={minThumbRef}
-            maxThumbRef={maxThumbRef}
-          />
-        );
+  switch (as) {
+    case 'container':
+      return (
+        <Container
+          {...args}
+          trackRef={trackRef}
+          minThumbRef={minThumbRef}
+          maxThumbRef={maxThumbRef}
+        />
+      );
 
-      case 'hook':
-      default:
-        return (
-          <Hook {...args} trackRef={trackRef} minThumbRef={minThumbRef} maxThumbRef={maxThumbRef} />
-        );
-    }
-  };
-
-  return <Slider />;
+    case 'hook':
+    default:
+      return (
+        <Hook {...args} trackRef={trackRef} minThumbRef={minThumbRef} maxThumbRef={maxThumbRef} />
+      );
+  }
 };
