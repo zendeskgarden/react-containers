@@ -6,9 +6,12 @@
  */
 
 import React, { createRef } from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { render, fireEvent, createEvent } from '@testing-library/react';
 import { IUseSliderProps, IUseSliderReturnValue } from './types';
 import { SliderContainer } from './SliderContainer';
+
+jest.mock('lodash.debounce', () => ({ default: (fn: any) => fn, __esModule: true }));
 
 type StandardKeyDownMatrix = [
   string,
@@ -20,6 +23,31 @@ type StandardKeyDownMatrix = [
 type GranularKeyDownMatrix = [...StandardKeyDownMatrix, number];
 
 describe('SliderContainer', () => {
+  let originalGetBoundingClientRect: any;
+
+  beforeEach(() => {
+    originalGetBoundingClientRect = Element.prototype.getBoundingClientRect;
+    Element.prototype.getBoundingClientRect = jest.fn(() => {
+      return {
+        width: 100,
+        height: 10,
+        top: 0,
+        left: 20,
+        bottom: 0,
+        right: 0,
+        x: 0,
+        y: 0,
+        toJSON: () => {
+          return undefined;
+        }
+      };
+    });
+  });
+
+  afterEach(() => {
+    Element.prototype.getBoundingClientRect = originalGetBoundingClientRect;
+  });
+
   const TestSlider = ({ min = 0, max = 100, ...props }: Partial<IUseSliderProps>) => {
     const trackRef = createRef<HTMLDivElement>();
     const minThumbRef = createRef<HTMLDivElement>();
@@ -76,6 +104,38 @@ describe('SliderContainer', () => {
 
         expect(track).toHaveAttribute('aria-disabled', 'true');
       });
+    });
+  });
+
+  describe('Slider selection', () => {
+    it('updates min value if slider is clicked near min thumb', () => {
+      const onChangeSpy = jest.fn();
+      const { getByTestId } = render(
+        <TestSlider minValue={15} maxValue={75} step={5} onChange={onChangeSpy} />
+      );
+
+      const track = getByTestId('track');
+      const mouseEvent = createEvent.mouseDown(track);
+
+      (mouseEvent as any).pageX = 45;
+      fireEvent(track, mouseEvent);
+
+      expect(onChangeSpy).toHaveBeenCalledWith({ minValue: 25, maxValue: 75 });
+    });
+
+    it('updates max value if slider is clicked near max thumb', () => {
+      const onChangeSpy = jest.fn();
+      const { getByTestId } = render(
+        <TestSlider minValue={15} maxValue={75} step={5} onChange={onChangeSpy} />
+      );
+
+      const track = getByTestId('track');
+      const mouseEvent = createEvent.mouseDown(track);
+
+      (mouseEvent as any).pageX = 100;
+      fireEvent(track, mouseEvent);
+
+      expect(onChangeSpy).toHaveBeenCalledWith({ minValue: 15, maxValue: 80 });
     });
   });
 
@@ -233,6 +293,69 @@ describe('SliderContainer', () => {
             expect(thumb).toHaveAttribute('aria-valuenow', '0');
             expect(otherThumb).toHaveAttribute('aria-valuemin', '0');
           });
+        });
+      });
+    });
+
+    describe('Drag Functionality', () => {
+      let onChangeSpy: jest.Mock;
+
+      beforeEach(() => {
+        onChangeSpy = jest.fn();
+      });
+
+      describe('document mousemove event', () => {
+        it('updates minValue on drag', () => {
+          const { container, getByTestId } = render(
+            <TestSlider minValue={15} maxValue={75} step={5} onChange={onChangeSpy} />
+          );
+          const thumb = getByTestId('min_thumb');
+
+          fireEvent.mouseDown(thumb);
+
+          const mouseEvent = new MouseEvent('mousemove', {
+            target: container.firstChild
+          } as any);
+
+          (mouseEvent as any).pageX = 30;
+
+          fireEvent(container.ownerDocument!, mouseEvent);
+
+          expect(onChangeSpy).toHaveBeenCalledWith({ minValue: 10, maxValue: 75 });
+        });
+
+        it('updates minValue on drag in RTL mode', () => {
+          const { container, getByTestId } = render(
+            <TestSlider rtl minValue={15} maxValue={75} step={5} onChange={onChangeSpy} />
+          );
+          const thumb = getByTestId('min_thumb');
+
+          fireEvent.mouseDown(thumb);
+
+          const mouseEvent = new MouseEvent('mousemove');
+
+          (mouseEvent as any).pageX = 30;
+
+          fireEvent(container.ownerDocument!, mouseEvent);
+
+          expect(onChangeSpy).toHaveBeenCalledWith({ minValue: 75, maxValue: 75 });
+        });
+
+        it('does not update minValue when disabled', () => {
+          const { container, getByTestId } = render(
+            <TestSlider disabled minValue={15} maxValue={75} step={5} onChange={onChangeSpy} />
+          );
+          const thumb = getByTestId('min_thumb');
+
+          userEvent.click(thumb);
+
+          const mouseEvent = new MouseEvent('mousemove');
+
+          (mouseEvent as any).pageX = 30;
+
+          fireEvent(container.ownerDocument!, mouseEvent);
+
+          expect(onChangeSpy).not.toHaveBeenCalled();
         });
       });
     });
@@ -396,6 +519,69 @@ describe('SliderContainer', () => {
             expect(thumb).toHaveAttribute('aria-valuenow', '100');
             expect(otherThumb).toHaveAttribute('aria-valuemax', '100');
           });
+        });
+      });
+    });
+
+    describe('Drag Functionality', () => {
+      let onChangeSpy: jest.Mock;
+
+      beforeEach(() => {
+        onChangeSpy = jest.fn();
+      });
+
+      describe('document mousemove event', () => {
+        it('updates maxValue on drag', () => {
+          const { container, getByTestId } = render(
+            <TestSlider minValue={15} maxValue={75} step={5} onChange={onChangeSpy} />
+          );
+          const thumb = getByTestId('max_thumb');
+
+          fireEvent.mouseDown(thumb);
+
+          const mouseEvent = new MouseEvent('mousemove', {
+            target: container.firstChild
+          } as any);
+
+          (mouseEvent as any).pageX = 30;
+
+          fireEvent(container.ownerDocument!, mouseEvent);
+
+          expect(onChangeSpy).toHaveBeenCalledWith({ minValue: 15, maxValue: 15 });
+        });
+
+        it('updates maxValue on drag in RTL mode', () => {
+          const { container, getByTestId } = render(
+            <TestSlider rtl minValue={15} maxValue={75} step={5} onChange={onChangeSpy} />
+          );
+          const thumb = getByTestId('max_thumb');
+
+          fireEvent.mouseDown(thumb);
+
+          const mouseEvent = new MouseEvent('mousemove');
+
+          (mouseEvent as any).pageX = 30;
+
+          fireEvent(container.ownerDocument!, mouseEvent);
+
+          expect(onChangeSpy).toHaveBeenCalledWith({ minValue: 15, maxValue: 90 });
+        });
+
+        it('does not update maxValue when disabled', () => {
+          const { container, getByTestId } = render(
+            <TestSlider disabled minValue={15} maxValue={75} step={5} onChange={onChangeSpy} />
+          );
+          const thumb = getByTestId('max_thumb');
+
+          userEvent.click(thumb);
+
+          const mouseEvent = new MouseEvent('mousemove');
+
+          (mouseEvent as any).pageX = 30;
+
+          fireEvent(container.ownerDocument!, mouseEvent);
+
+          expect(onChangeSpy).not.toHaveBeenCalled();
         });
       });
     });
