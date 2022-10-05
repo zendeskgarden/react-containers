@@ -44,68 +44,84 @@ describe('SliderContainer', () => {
     );
   };
 
-  describe('Track', () => {
-    describe('getTrackProps', () => {
-      it('renders with correct default attributes', () => {
-        const { getByTestId } = render(<TestSlider />);
-        const element = getByTestId('track');
+  describe('Slider', () => {
+    it('removes document event listeners on unmount', () => {
+      const originalRemoveEventListener = window.removeEventListener;
 
-        expect(element).toHaveAttribute('data-garden-container-id', 'containers.slider.track');
-        expect(element).toHaveAttribute('data-garden-container-version');
+      window.removeEventListener = jest.fn();
+
+      const { unmount } = render(<TestSlider />);
+
+      unmount();
+
+      expect(window.removeEventListener).toHaveBeenCalled();
+
+      window.removeEventListener = originalRemoveEventListener;
+    });
+  });
+
+  describe('Track', () => {
+    describe('Prop Getter (getTrackProps)', () => {
+      it('applies correct data attributes', () => {
+        const { getByTestId } = render(<TestSlider />);
+        const track = getByTestId('track');
+
+        expect(track).toHaveAttribute('data-garden-container-id', 'containers.slider.track');
+        expect(track).toHaveAttribute('data-garden-container-version');
       });
 
-      it('renders with the aria-disabled attribute, when disabled', () => {
+      it('applies correct accessibility values, when disabled', () => {
         const { getByTestId } = render(<TestSlider disabled />);
-        const element = getByTestId('track');
+        const track = getByTestId('track');
 
-        expect(element).toHaveAttribute('aria-disabled', 'true');
+        expect(track).toHaveAttribute('aria-disabled', 'true');
       });
     });
   });
 
   describe('Min Thumb', () => {
-    describe('getMinThumbProps', () => {
-      it('renders with correct default attributes', () => {
+    describe('Prop Getter (getMinThumbProps)', () => {
+      it('applies correct accessibility values', () => {
         const { getByTestId } = render(<TestSlider />);
-        const element = getByTestId('min_thumb');
+        const thumb = getByTestId('min_thumb');
 
-        expect(element).toHaveAttribute('data-garden-container-id', 'containers.slider.thumb');
-        expect(element).toHaveAttribute('data-garden-container-version');
-        expect(element).toHaveAttribute('tabindex', '0');
-        expect(element).toHaveAttribute('role', 'slider');
-        expect(element).toHaveAttribute('aria-valuenow', '0');
-        expect(element).toHaveAttribute('aria-valuemin', '0');
-        expect(element).toHaveAttribute('aria-valuemax', '100');
+        expect(thumb).toHaveAttribute('data-garden-container-id', 'containers.slider.thumb');
+        expect(thumb).toHaveAttribute('data-garden-container-version');
+        expect(thumb).toHaveAttribute('role', 'slider');
+        expect(thumb).toHaveAttribute('tabIndex', '0');
+        expect(thumb).toHaveAttribute('aria-valuemin', '0');
+        expect(thumb).toHaveAttribute('aria-valuemax', '100');
+        expect(thumb).toHaveAttribute('aria-valuenow', '0');
       });
 
-      it('renders with a -1 tabindex, when disabled', () => {
+      it('removes thumb from tab order when disabled', () => {
         const { getByTestId } = render(<TestSlider disabled />);
-        const element = getByTestId('min_thumb');
+        const thumb = getByTestId('min_thumb');
 
-        expect(element).toHaveAttribute('tabindex', '-1');
+        expect(thumb).toHaveAttribute('tabIndex', '-1');
       });
 
       describe('uncontrolled', () => {
         it('renders with default (starting) value', () => {
           const { getByTestId } = render(<TestSlider defaultMinValue={25} />);
-          const element = getByTestId('min_thumb');
+          const thumb = getByTestId('min_thumb');
 
-          expect(element).toHaveAttribute('aria-valuenow', '25');
+          expect(thumb).toHaveAttribute('aria-valuenow', '25');
         });
       });
 
       describe('controlled', () => {
-        it('accepts a passed in value', () => {
+        it('accepts a custom value', () => {
           const { getByTestId } = render(<TestSlider minValue={25} />);
-          const element = getByTestId('min_thumb');
+          const thumb = getByTestId('min_thumb');
 
-          expect(element).toHaveAttribute('aria-valuenow', '25');
+          expect(thumb).toHaveAttribute('aria-valuenow', '25');
         });
       });
     });
 
-    describe('Keyboard interactions', () => {
-      describe('ltr layout, default', () => {
+    describe('Keyboard Functionality', () => {
+      describe('Key Handlers (LTR)', () => {
         describe('basic behavior', () => {
           it.each<StandardKeyDownMatrix>([
             ['increment', 'ArrowUp', 0, 1],
@@ -114,13 +130,13 @@ describe('SliderContainer', () => {
             ['decrement', 'ArrowLeft', 1, 0]
           ])('should %s min thumb using %s key by 1', (action, key, start, end) => {
             const { getByTestId } = render(<TestSlider />);
-            const element = getByTestId('min_thumb');
-            const otherElement = getByTestId('max_thumb');
+            const thumb = getByTestId('min_thumb');
+            const otherThumb = getByTestId('max_thumb');
 
-            fireEvent.keyDown(element, { key });
+            fireEvent.keyDown(thumb, { key });
 
-            expect(element).toHaveAttribute('aria-valuenow', String(end));
-            expect(otherElement).toHaveAttribute('aria-valuemin', String(end));
+            expect(thumb).toHaveAttribute('aria-valuenow', String(end));
+            expect(otherThumb).toHaveAttribute('aria-valuemin', String(end));
           });
 
           describe('step', () => {
@@ -133,13 +149,13 @@ describe('SliderContainer', () => {
               'should %s min thumb with a custom step using %s key',
               (action, key, step, start, end) => {
                 const { getByTestId } = render(<TestSlider step={step} defaultMinValue={start} />);
-                const element = getByTestId('min_thumb');
-                const otherElement = getByTestId('max_thumb');
+                const thumb = getByTestId('min_thumb');
+                const otherThumb = getByTestId('max_thumb');
 
-                fireEvent.keyDown(element, { key });
+                fireEvent.keyDown(thumb, { key });
 
-                expect(element).toHaveAttribute('aria-valuenow', String(end));
-                expect(otherElement).toHaveAttribute('aria-valuemin', String(end));
+                expect(thumb).toHaveAttribute('aria-valuenow', String(end));
+                expect(otherThumb).toHaveAttribute('aria-valuemin', String(end));
               }
             );
           });
@@ -152,13 +168,13 @@ describe('SliderContainer', () => {
               'should %s min thumb with a custom jump using %s key',
               (action, key, jump, start, end) => {
                 const { getByTestId } = render(<TestSlider jump={jump} defaultMinValue={start} />);
-                const element = getByTestId('min_thumb');
-                const otherElement = getByTestId('max_thumb');
+                const thumb = getByTestId('min_thumb');
+                const otherThumb = getByTestId('max_thumb');
 
-                fireEvent.keyDown(element, { key });
+                fireEvent.keyDown(thumb, { key });
 
-                expect(element).toHaveAttribute('aria-valuenow', String(end));
-                expect(otherElement).toHaveAttribute('aria-valuemin', String(end));
+                expect(thumb).toHaveAttribute('aria-valuenow', String(end));
+                expect(otherThumb).toHaveAttribute('aria-valuemin', String(end));
               }
             );
           });
@@ -171,51 +187,51 @@ describe('SliderContainer', () => {
             ['decrement', 'PageDown', 50, 50]
           ])('should not %s min thumb below range min using %s key', (action, key, start, end) => {
             const { getByTestId } = render(<TestSlider defaultMinValue={start} min={end} />);
-            const element = getByTestId('min_thumb');
+            const thumb = getByTestId('min_thumb');
 
-            fireEvent.keyDown(element, { key });
+            fireEvent.keyDown(thumb, { key });
 
-            expect(element).toHaveAttribute('aria-valuenow', String(end));
+            expect(thumb).toHaveAttribute('aria-valuenow', String(end));
           });
         });
 
         it('should reset min thumb to range min using Home key', () => {
           const { getByTestId } = render(<TestSlider defaultMinValue={75} />);
-          const element = getByTestId('min_thumb');
+          const thumb = getByTestId('min_thumb');
 
-          fireEvent.keyDown(element, { key: 'Home' });
+          fireEvent.keyDown(thumb, { key: 'Home' });
 
-          expect(element).toHaveAttribute('aria-valuenow', '0');
+          expect(thumb).toHaveAttribute('aria-valuenow', '0');
         });
       });
 
-      describe('rtl layout', () => {
+      describe('Key Handlers (RTL)', () => {
         describe('basic behavior', () => {
           it.each<StandardKeyDownMatrix>([
             ['increment', 'ArrowLeft', 0, 1],
             ['decrement', 'ArrowRight', 1, 0]
           ])('should %s min thumb using %s key by 1', (action, key, start, end) => {
             const { getByTestId } = render(<TestSlider rtl />);
-            const element = getByTestId('min_thumb');
-            const otherElement = getByTestId('max_thumb');
+            const thumb = getByTestId('min_thumb');
+            const otherThumb = getByTestId('max_thumb');
 
-            fireEvent.keyDown(element, { key });
+            fireEvent.keyDown(thumb, { key });
 
-            expect(element).toHaveAttribute('aria-valuenow', String(end));
-            expect(otherElement).toHaveAttribute('aria-valuemin', String(end));
+            expect(thumb).toHaveAttribute('aria-valuenow', String(end));
+            expect(otherThumb).toHaveAttribute('aria-valuemin', String(end));
           });
         });
 
         describe('value stays within bounds', () => {
           it('should not decrement min thumb below range min using ArrowRight key', () => {
             const { getByTestId } = render(<TestSlider rtl />);
-            const element = getByTestId('min_thumb');
-            const otherElement = getByTestId('max_thumb');
+            const thumb = getByTestId('min_thumb');
+            const otherThumb = getByTestId('max_thumb');
 
-            fireEvent.keyDown(element, { key: 'ArrowRight' });
+            fireEvent.keyDown(thumb, { key: 'ArrowRight' });
 
-            expect(element).toHaveAttribute('aria-valuenow', '0');
-            expect(otherElement).toHaveAttribute('aria-valuemin', '0');
+            expect(thumb).toHaveAttribute('aria-valuenow', '0');
+            expect(otherThumb).toHaveAttribute('aria-valuemin', '0');
           });
         });
       });
@@ -223,48 +239,48 @@ describe('SliderContainer', () => {
   });
 
   describe('Max Thumb', () => {
-    describe('getMaxThumbProps', () => {
-      it('renders with correct default attributes', () => {
+    describe('Prop Geter (getMaxThumbProps)', () => {
+      it('applies correct accessibility values', () => {
         const { getByTestId } = render(<TestSlider />);
-        const element = getByTestId('max_thumb');
+        const thumb = getByTestId('max_thumb');
 
-        expect(element).toHaveAttribute('data-garden-container-id', 'containers.slider.thumb');
-        expect(element).toHaveAttribute('data-garden-container-version');
-        expect(element).toHaveAttribute('tabindex', '0');
-        expect(element).toHaveAttribute('role', 'slider');
-        expect(element).toHaveAttribute('aria-valuenow', '100');
-        expect(element).toHaveAttribute('aria-valuemin', '0');
-        expect(element).toHaveAttribute('aria-valuemax', '100');
+        expect(thumb).toHaveAttribute('data-garden-container-id', 'containers.slider.thumb');
+        expect(thumb).toHaveAttribute('data-garden-container-version');
+        expect(thumb).toHaveAttribute('role', 'slider');
+        expect(thumb).toHaveAttribute('tabIndex', '0');
+        expect(thumb).toHaveAttribute('aria-valuemin', '0');
+        expect(thumb).toHaveAttribute('aria-valuemax', '100');
+        expect(thumb).toHaveAttribute('aria-valuenow', '100');
       });
 
-      it('renders with a -1 tabindex, when disabled', () => {
+      it('removes thumb from tab order when disabled', () => {
         const { getByTestId } = render(<TestSlider disabled />);
-        const element = getByTestId('max_thumb');
+        const thumb = getByTestId('max_thumb');
 
-        expect(element).toHaveAttribute('tabindex', '-1');
+        expect(thumb).toHaveAttribute('tabIndex', '-1');
       });
 
       describe('uncontrolled', () => {
         it('renders with default (starting) value', () => {
           const { getByTestId } = render(<TestSlider defaultMaxValue={50} />);
-          const element = getByTestId('max_thumb');
+          const thumb = getByTestId('max_thumb');
 
-          expect(element).toHaveAttribute('aria-valuenow', '50');
+          expect(thumb).toHaveAttribute('aria-valuenow', '50');
         });
       });
 
       describe('controlled', () => {
         it('accepts a passed in value', () => {
           const { getByTestId } = render(<TestSlider maxValue={50} />);
-          const element = getByTestId('max_thumb');
+          const thumb = getByTestId('max_thumb');
 
-          expect(element).toHaveAttribute('aria-valuenow', '50');
+          expect(thumb).toHaveAttribute('aria-valuenow', '50');
         });
       });
     });
 
-    describe('Keyboard interactions', () => {
-      describe('ltr layout, default', () => {
+    describe('Keyboard Functionality', () => {
+      describe('Key Handlers (LTR)', () => {
         describe('basic behavior', () => {
           it.each<StandardKeyDownMatrix>([
             ['increment', 'ArrowUp', 99, 100],
@@ -273,13 +289,13 @@ describe('SliderContainer', () => {
             ['decrement', 'ArrowLeft', 100, 99]
           ])('should %s max thumb using %s key by 1', (action, key, start, end) => {
             const { getByTestId } = render(<TestSlider />);
-            const element = getByTestId('max_thumb');
-            const otherElement = getByTestId('min_thumb');
+            const thumb = getByTestId('max_thumb');
+            const otherThumb = getByTestId('min_thumb');
 
-            fireEvent.keyDown(element, { key });
+            fireEvent.keyDown(thumb, { key });
 
-            expect(element).toHaveAttribute('aria-valuenow', String(end));
-            expect(otherElement).toHaveAttribute('aria-valuemax', String(end));
+            expect(thumb).toHaveAttribute('aria-valuenow', String(end));
+            expect(otherThumb).toHaveAttribute('aria-valuemax', String(end));
           });
 
           describe('step', () => {
@@ -292,13 +308,13 @@ describe('SliderContainer', () => {
               'should %s max thumb with a custom step using %s key',
               (action, key, step, start, end) => {
                 const { getByTestId } = render(<TestSlider step={step} defaultMaxValue={start} />);
-                const element = getByTestId('max_thumb');
-                const otherElement = getByTestId('min_thumb');
+                const thumb = getByTestId('max_thumb');
+                const otherThumb = getByTestId('min_thumb');
 
-                fireEvent.keyDown(element, { key });
+                fireEvent.keyDown(thumb, { key });
 
-                expect(element).toHaveAttribute('aria-valuenow', String(end));
-                expect(otherElement).toHaveAttribute('aria-valuemax', String(end));
+                expect(thumb).toHaveAttribute('aria-valuenow', String(end));
+                expect(otherThumb).toHaveAttribute('aria-valuemax', String(end));
               }
             );
           });
@@ -311,13 +327,13 @@ describe('SliderContainer', () => {
               'should %s max thumb with a custom jump using %s key',
               (action, key, jump, start, end) => {
                 const { getByTestId } = render(<TestSlider jump={jump} defaultMaxValue={start} />);
-                const element = getByTestId('max_thumb');
-                const otherElement = getByTestId('min_thumb');
+                const thumb = getByTestId('max_thumb');
+                const otherThumb = getByTestId('min_thumb');
 
-                fireEvent.keyDown(element, { key });
+                fireEvent.keyDown(thumb, { key });
 
-                expect(element).toHaveAttribute('aria-valuenow', String(end));
-                expect(otherElement).toHaveAttribute('aria-valuemax', String(end));
+                expect(thumb).toHaveAttribute('aria-valuenow', String(end));
+                expect(otherThumb).toHaveAttribute('aria-valuemax', String(end));
               }
             );
           });
@@ -330,55 +346,55 @@ describe('SliderContainer', () => {
             ['increment', 'PageUp', 50, 50]
           ])('should not %s max thumb above range max using %s key', (action, key, start, end) => {
             const { getByTestId } = render(<TestSlider defaultMaxValue={start} max={end} />);
-            const element = getByTestId('max_thumb');
-            const otherElement = getByTestId('min_thumb');
+            const thumb = getByTestId('max_thumb');
+            const otherThumb = getByTestId('min_thumb');
 
-            fireEvent.keyDown(element, { key });
+            fireEvent.keyDown(thumb, { key });
 
-            expect(element).toHaveAttribute('aria-valuenow', String(end));
-            expect(otherElement).toHaveAttribute('aria-valuemax', String(end));
+            expect(thumb).toHaveAttribute('aria-valuenow', String(end));
+            expect(otherThumb).toHaveAttribute('aria-valuemax', String(end));
           });
         });
 
         it('should reset max thumb to range max using End key', () => {
           const { getByTestId } = render(<TestSlider defaultMaxValue={75} />);
-          const element = getByTestId('max_thumb');
-          const otherElement = getByTestId('min_thumb');
+          const thumb = getByTestId('max_thumb');
+          const otherThumb = getByTestId('min_thumb');
 
-          fireEvent.keyDown(element, { key: 'End' });
+          fireEvent.keyDown(thumb, { key: 'End' });
 
-          expect(element).toHaveAttribute('aria-valuenow', '100');
-          expect(otherElement).toHaveAttribute('aria-valuemax', '100');
+          expect(thumb).toHaveAttribute('aria-valuenow', '100');
+          expect(otherThumb).toHaveAttribute('aria-valuemax', '100');
         });
       });
 
-      describe('rtl layout', () => {
+      describe('Key Handlers (RTL)', () => {
         describe('basic behavior', () => {
           it.each<StandardKeyDownMatrix>([
             ['increment', 'ArrowLeft', 99, 100],
             ['decrement', 'ArrowRight', 100, 99]
           ])('should %s max thumb using %s key by 1', (action, key, start, end) => {
             const { getByTestId } = render(<TestSlider rtl />);
-            const element = getByTestId('max_thumb');
-            const otherElement = getByTestId('min_thumb');
+            const thumb = getByTestId('max_thumb');
+            const otherThumb = getByTestId('min_thumb');
 
-            fireEvent.keyDown(element, { key });
+            fireEvent.keyDown(thumb, { key });
 
-            expect(element).toHaveAttribute('aria-valuenow', String(end));
-            expect(otherElement).toHaveAttribute('aria-valuemax', String(end));
+            expect(thumb).toHaveAttribute('aria-valuenow', String(end));
+            expect(otherThumb).toHaveAttribute('aria-valuemax', String(end));
           });
         });
 
         describe('value stays within bounds', () => {
           it('should not increment max thumb above range max using ArrowLeft key', () => {
             const { getByTestId } = render(<TestSlider rtl />);
-            const element = getByTestId('max_thumb');
-            const otherElement = getByTestId('min_thumb');
+            const thumb = getByTestId('max_thumb');
+            const otherThumb = getByTestId('min_thumb');
 
-            fireEvent.keyDown(element, { key: 'ArrowLeft' });
+            fireEvent.keyDown(thumb, { key: 'ArrowLeft' });
 
-            expect(element).toHaveAttribute('aria-valuenow', '100');
-            expect(otherElement).toHaveAttribute('aria-valuemax', '100');
+            expect(thumb).toHaveAttribute('aria-valuenow', '100');
+            expect(otherThumb).toHaveAttribute('aria-valuemax', '100');
           });
         });
       });
