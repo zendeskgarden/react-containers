@@ -10,6 +10,15 @@ import { render, fireEvent } from '@testing-library/react';
 import { IUseSliderProps, IUseSliderReturnValue } from './types';
 import { SliderContainer } from './SliderContainer';
 
+type StandardKeyDownMatrix = [
+  string,
+  string,
+  IUseSliderProps['defaultMinValue'],
+  IUseSliderReturnValue['minValue']
+];
+
+type GranularKeyDownMatrix = [...StandardKeyDownMatrix, number];
+
 describe('SliderContainer', () => {
   const TestSlider = ({ min = 0, max = 100, ...props }: Partial<IUseSliderProps>) => {
     const trackRef = createRef<HTMLDivElement>();
@@ -35,7 +44,7 @@ describe('SliderContainer', () => {
     );
   };
 
-  describe('prop getters', () => {
+  describe('Track', () => {
     describe('getTrackProps', () => {
       it('renders with correct default attributes', () => {
         const { getByTestId } = render(<TestSlider />);
@@ -52,7 +61,9 @@ describe('SliderContainer', () => {
         expect(element).toHaveAttribute('aria-disabled', 'true');
       });
     });
+  });
 
+  describe('Min Thumb', () => {
     describe('getMinThumbProps', () => {
       it('renders with correct default attributes', () => {
         const { getByTestId } = render(<TestSlider />);
@@ -93,58 +104,7 @@ describe('SliderContainer', () => {
       });
     });
 
-    describe('getMaxThumbProps', () => {
-      it('renders with correct default attributes', () => {
-        const { getByTestId } = render(<TestSlider />);
-        const element = getByTestId('max_thumb');
-
-        expect(element).toHaveAttribute('data-garden-container-id', 'containers.slider.thumb');
-        expect(element).toHaveAttribute('data-garden-container-version');
-        expect(element).toHaveAttribute('tabindex', '0');
-        expect(element).toHaveAttribute('role', 'slider');
-        expect(element).toHaveAttribute('aria-valuenow', '100');
-        expect(element).toHaveAttribute('aria-valuemin', '0');
-        expect(element).toHaveAttribute('aria-valuemax', '100');
-      });
-
-      it('renders with a -1 tabindex, when disabled', () => {
-        const { getByTestId } = render(<TestSlider disabled />);
-        const element = getByTestId('max_thumb');
-
-        expect(element).toHaveAttribute('tabindex', '-1');
-      });
-
-      describe('uncontrolled', () => {
-        it('renders with default (starting) value', () => {
-          const { getByTestId } = render(<TestSlider defaultMaxValue={50} />);
-          const element = getByTestId('max_thumb');
-
-          expect(element).toHaveAttribute('aria-valuenow', '50');
-        });
-      });
-
-      describe('controlled', () => {
-        it('accepts a passed in value', () => {
-          const { getByTestId } = render(<TestSlider maxValue={50} />);
-          const element = getByTestId('max_thumb');
-
-          expect(element).toHaveAttribute('aria-valuenow', '50');
-        });
-      });
-    });
-  });
-
-  describe('keyboard interactions', () => {
-    type StandardKeyDownMatrix = [
-      string,
-      string,
-      IUseSliderProps['defaultMinValue'],
-      IUseSliderReturnValue['minValue']
-    ];
-
-    type GranularKeyDownMatrix = [...StandardKeyDownMatrix, number];
-
-    describe('min thumb', () => {
+    describe('Keyboard interactions', () => {
       describe('ltr layout, default', () => {
         describe('basic behavior', () => {
           it.each<StandardKeyDownMatrix>([
@@ -260,8 +220,50 @@ describe('SliderContainer', () => {
         });
       });
     });
+  });
 
-    describe('max thumb', () => {
+  describe('Max Thumb', () => {
+    describe('getMaxThumbProps', () => {
+      it('renders with correct default attributes', () => {
+        const { getByTestId } = render(<TestSlider />);
+        const element = getByTestId('max_thumb');
+
+        expect(element).toHaveAttribute('data-garden-container-id', 'containers.slider.thumb');
+        expect(element).toHaveAttribute('data-garden-container-version');
+        expect(element).toHaveAttribute('tabindex', '0');
+        expect(element).toHaveAttribute('role', 'slider');
+        expect(element).toHaveAttribute('aria-valuenow', '100');
+        expect(element).toHaveAttribute('aria-valuemin', '0');
+        expect(element).toHaveAttribute('aria-valuemax', '100');
+      });
+
+      it('renders with a -1 tabindex, when disabled', () => {
+        const { getByTestId } = render(<TestSlider disabled />);
+        const element = getByTestId('max_thumb');
+
+        expect(element).toHaveAttribute('tabindex', '-1');
+      });
+
+      describe('uncontrolled', () => {
+        it('renders with default (starting) value', () => {
+          const { getByTestId } = render(<TestSlider defaultMaxValue={50} />);
+          const element = getByTestId('max_thumb');
+
+          expect(element).toHaveAttribute('aria-valuenow', '50');
+        });
+      });
+
+      describe('controlled', () => {
+        it('accepts a passed in value', () => {
+          const { getByTestId } = render(<TestSlider maxValue={50} />);
+          const element = getByTestId('max_thumb');
+
+          expect(element).toHaveAttribute('aria-valuenow', '50');
+        });
+      });
+    });
+
+    describe('Keyboard interactions', () => {
       describe('ltr layout, default', () => {
         describe('basic behavior', () => {
           it.each<StandardKeyDownMatrix>([
