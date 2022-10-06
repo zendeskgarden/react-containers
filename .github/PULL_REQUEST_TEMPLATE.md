@@ -19,7 +19,10 @@
 
 ## Checklist
 
-- [ ] :globe_with_meridians: Storybook demo is up-to-date (`yarn start`)
-- [ ] :wheelchair: analyzed via [axe](https://www.deque.com/axe/) and evaluated using VoiceOver
+<!-- check the items below that will be completed prior to merge.
+     strikethrough any item text that does not apply to this PR. -->
+
+- [ ] :globe_with_meridians: demo is up-to-date (`yarn start`)
 - [ ] :guardsman: includes new unit tests
-- [ ] :memo: tested in Chrome, Firefox, Safari, Edge, and IE11
+- [ ] :wheelchair: tested for [WCAG 2.1](https://www.w3.org/TR/WCAG21) AA compliance
+- [ ] :memo: tested in Chrome, Firefox, Safari, and Edge
