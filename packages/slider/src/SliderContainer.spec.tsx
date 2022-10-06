@@ -13,15 +13,6 @@ import { SliderContainer } from './SliderContainer';
 
 jest.mock('lodash.debounce', () => ({ default: (fn: any) => fn, __esModule: true }));
 
-type StandardKeyDownMatrix = [
-  string,
-  string,
-  IUseSliderProps['defaultMinValue'],
-  IUseSliderReturnValue['minValue']
-];
-
-type GranularKeyDownMatrix = [...StandardKeyDownMatrix, number];
-
 describe('SliderContainer', () => {
   let originalGetBoundingClientRect: any;
 
@@ -63,9 +54,17 @@ describe('SliderContainer', () => {
         {...props}
       >
         {({ getTrackProps, getMinThumbProps, getMaxThumbProps }: IUseSliderReturnValue) => (
-          <div data-test-id="track" {...getTrackProps()}>
-            <div data-test-id="min_thumb" {...getMinThumbProps({ 'aria-label': 'min' })} />
-            <div data-test-id="max_thumb" {...getMaxThumbProps({ 'aria-label': 'max' })} />
+          <div data-test-id="track" ref={trackRef} {...getTrackProps()}>
+            <div
+              data-test-id="min_thumb"
+              ref={minThumbRef}
+              {...getMinThumbProps({ 'aria-label': 'min' })}
+            />
+            <div
+              data-test-id="max_thumb"
+              ref={maxThumbRef}
+              {...getMaxThumbProps({ 'aria-label': 'max' })}
+            />
           </div>
         )}
       </SliderContainer>
@@ -105,37 +104,37 @@ describe('SliderContainer', () => {
         expect(track).toHaveAttribute('aria-disabled', 'true');
       });
     });
-  });
 
-  describe('Slider selection', () => {
-    it('updates min value if slider is clicked near min thumb', () => {
-      const onChangeSpy = jest.fn();
-      const { getByTestId } = render(
-        <TestSlider minValue={15} maxValue={75} step={5} onChange={onChangeSpy} />
-      );
+    describe('Pointer Functionality', () => {
+      it('updates min value if slider is clicked near min thumb', () => {
+        const onChangeSpy = jest.fn();
+        const { getByTestId } = render(
+          <TestSlider minValue={15} maxValue={75} step={5} onChange={onChangeSpy} />
+        );
 
-      const track = getByTestId('track');
-      const mouseEvent = createEvent.mouseDown(track);
+        const track = getByTestId('track');
+        const mouseEvent = createEvent.mouseDown(track);
 
-      (mouseEvent as any).pageX = 45;
-      fireEvent(track, mouseEvent);
+        (mouseEvent as any).pageX = 45;
+        fireEvent(track, mouseEvent);
 
-      expect(onChangeSpy).toHaveBeenCalledWith({ minValue: 25, maxValue: 75 });
-    });
+        expect(onChangeSpy).toHaveBeenCalledWith({ minValue: 25, maxValue: 75 });
+      });
 
-    it('updates max value if slider is clicked near max thumb', () => {
-      const onChangeSpy = jest.fn();
-      const { getByTestId } = render(
-        <TestSlider minValue={15} maxValue={75} step={5} onChange={onChangeSpy} />
-      );
+      it('updates max value if slider is clicked near max thumb', () => {
+        const onChangeSpy = jest.fn();
+        const { getByTestId } = render(
+          <TestSlider minValue={15} maxValue={75} step={5} onChange={onChangeSpy} />
+        );
 
-      const track = getByTestId('track');
-      const mouseEvent = createEvent.mouseDown(track);
+        const track = getByTestId('track');
+        const mouseEvent = createEvent.mouseDown(track);
 
-      (mouseEvent as any).pageX = 100;
-      fireEvent(track, mouseEvent);
+        (mouseEvent as any).pageX = 100;
+        fireEvent(track, mouseEvent);
 
-      expect(onChangeSpy).toHaveBeenCalledWith({ minValue: 15, maxValue: 80 });
+        expect(onChangeSpy).toHaveBeenCalledWith({ minValue: 15, maxValue: 80 });
+      });
     });
   });
 
@@ -183,12 +182,14 @@ describe('SliderContainer', () => {
     describe('Keyboard Functionality', () => {
       describe('Key Handlers (LTR)', () => {
         describe('basic behavior', () => {
-          it.each<StandardKeyDownMatrix>([
-            ['increment', 'ArrowUp', 0, 1],
-            ['increment', 'ArrowRight', 0, 1],
-            ['decrement', 'ArrowDown', 1, 0],
-            ['decrement', 'ArrowLeft', 1, 0]
-          ])('should %s min thumb using %s key by 1', (action, key, start, end) => {
+          it.each<
+            [string, string, IUseSliderProps['defaultMinValue'], IUseSliderReturnValue['minValue']]
+          >([
+            ['increments', 'ArrowUp', 0, 1],
+            ['increments', 'ArrowRight', 0, 1],
+            ['decrements', 'ArrowDown', 1, 0],
+            ['decrements', 'ArrowLeft', 1, 0]
+          ])('%s min thumb using %s key by 1', (action, key, start, end) => {
             const { getByTestId } = render(<TestSlider />);
             const thumb = getByTestId('min_thumb');
             const otherThumb = getByTestId('max_thumb');
@@ -200,77 +201,105 @@ describe('SliderContainer', () => {
           });
 
           describe('step', () => {
-            it.each<GranularKeyDownMatrix>([
-              ['increment', 'ArrowUp', 10, 0, 10],
-              ['increment', 'ArrowRight', 10, 0, 10],
-              ['decrement', 'ArrowDown', 10, 10, 0],
-              ['decrement', 'ArrowLeft', 10, 10, 0]
-            ])(
-              'should %s min thumb with a custom step using %s key',
-              (action, key, step, start, end) => {
-                const { getByTestId } = render(<TestSlider step={step} defaultMinValue={start} />);
-                const thumb = getByTestId('min_thumb');
-                const otherThumb = getByTestId('max_thumb');
+            it.each<
+              [
+                string,
+                string,
+                IUseSliderProps['step'],
+                IUseSliderProps['defaultMinValue'],
+                IUseSliderReturnValue['minValue']
+              ]
+            >([
+              ['increments', 'ArrowUp', 10, 0, 10],
+              ['increments', 'ArrowRight', 10, 0, 10],
+              ['decrements', 'ArrowDown', 10, 10, 0],
+              ['decrements', 'ArrowLeft', 10, 10, 0]
+            ])('%s min thumb with a custom step using %s key', (action, key, step, start, end) => {
+              const { getByTestId } = render(<TestSlider step={step} defaultMinValue={start} />);
+              const thumb = getByTestId('min_thumb');
+              const otherThumb = getByTestId('max_thumb');
 
-                fireEvent.keyDown(thumb, { key });
+              fireEvent.keyDown(thumb, { key });
 
-                expect(thumb).toHaveAttribute('aria-valuenow', String(end));
-                expect(otherThumb).toHaveAttribute('aria-valuemin', String(end));
-              }
-            );
+              expect(thumb).toHaveAttribute('aria-valuenow', String(end));
+              expect(otherThumb).toHaveAttribute('aria-valuemin', String(end));
+            });
           });
 
           describe('jump', () => {
-            it.each<GranularKeyDownMatrix>([
-              ['increment', 'PageUp', 10, 0, 10],
-              ['decrement', 'PageDown', 10, 10, 0]
+            it.each<
+              [
+                string,
+                string,
+                IUseSliderProps['jump'],
+                IUseSliderProps['defaultMinValue'],
+                IUseSliderReturnValue['minValue']
+              ]
+            >([
+              ['increments', 'PageUp', 10, 0, 10],
+              ['decrements', 'PageDown', 10, 10, 0]
+            ])('%s min thumb with a custom jump using %s key', (action, key, jump, start, end) => {
+              const { getByTestId } = render(<TestSlider jump={jump} defaultMinValue={start} />);
+              const thumb = getByTestId('min_thumb');
+              const otherThumb = getByTestId('max_thumb');
+
+              fireEvent.keyDown(thumb, { key });
+
+              expect(thumb).toHaveAttribute('aria-valuenow', String(end));
+              expect(otherThumb).toHaveAttribute('aria-valuemin', String(end));
+            });
+          });
+
+          describe('new value stays within bounds', () => {
+            it.each<
+              [string, IUseSliderProps['defaultMinValue'], IUseSliderReturnValue['minValue']]
+            >([
+              ['ArrowDown', 0, 0],
+              ['ArrowLeft', 15, 15],
+              ['PageDown', 50, 50]
             ])(
-              'should %s min thumb with a custom jump using %s key',
-              (action, key, jump, start, end) => {
-                const { getByTestId } = render(<TestSlider jump={jump} defaultMinValue={start} />);
+              'prevents min thumb from decrementing below range min using %s key',
+              (key, start, end) => {
+                const { getByTestId } = render(<TestSlider defaultMinValue={start} min={end} />);
                 const thumb = getByTestId('min_thumb');
-                const otherThumb = getByTestId('max_thumb');
 
                 fireEvent.keyDown(thumb, { key });
 
                 expect(thumb).toHaveAttribute('aria-valuenow', String(end));
-                expect(otherThumb).toHaveAttribute('aria-valuemin', String(end));
               }
             );
           });
         });
 
-        describe('value stays within bounds', () => {
-          it.each<StandardKeyDownMatrix>([
-            ['decrement', 'ArrowDown', 0, 0],
-            ['decrement', 'ArrowLeft', 15, 15],
-            ['decrement', 'PageDown', 50, 50]
-          ])('should not %s min thumb below range min using %s key', (action, key, start, end) => {
-            const { getByTestId } = render(<TestSlider defaultMinValue={start} min={end} />);
-            const thumb = getByTestId('min_thumb');
-
-            fireEvent.keyDown(thumb, { key });
-
-            expect(thumb).toHaveAttribute('aria-valuenow', String(end));
-          });
-        });
-
-        it('should reset min thumb to range min using Home key', () => {
+        it('resets min thumb to its own min using Home key', () => {
           const { getByTestId } = render(<TestSlider defaultMinValue={75} />);
           const thumb = getByTestId('min_thumb');
 
           fireEvent.keyDown(thumb, { key: 'Home' });
 
           expect(thumb).toHaveAttribute('aria-valuenow', '0');
+          expect(thumb).toHaveAttribute('aria-valuemin', '0');
+        });
+
+        it('resets min thumb to its own max using End key', () => {
+          const { getByTestId } = render(<TestSlider />);
+          const thumb = getByTestId('min_thumb');
+
+          fireEvent.keyDown(thumb, { key: 'End' });
+
+          expect(thumb).toHaveAttribute('aria-valuenow', '100');
+          expect(thumb).toHaveAttribute('aria-valuemax', '100');
         });
       });
 
       describe('Key Handlers (RTL)', () => {
         describe('basic behavior', () => {
-          it.each<StandardKeyDownMatrix>([
-            ['increment', 'ArrowLeft', 0, 1],
-            ['decrement', 'ArrowRight', 1, 0]
-          ])('should %s min thumb using %s key by 1', (action, key, start, end) => {
+          it.each<
+            [string, string, IUseSliderProps['defaultMinValue'], IUseSliderReturnValue['minValue']]
+          >([
+            ['increments', 'ArrowLeft', 0, 1],
+            ['decrements', 'ArrowRight', 1, 0]
+          ])('%s min thumb using %s key by 1', (action, key, start, end) => {
             const { getByTestId } = render(<TestSlider rtl />);
             const thumb = getByTestId('min_thumb');
             const otherThumb = getByTestId('max_thumb');
@@ -280,18 +309,18 @@ describe('SliderContainer', () => {
             expect(thumb).toHaveAttribute('aria-valuenow', String(end));
             expect(otherThumb).toHaveAttribute('aria-valuemin', String(end));
           });
-        });
 
-        describe('value stays within bounds', () => {
-          it('should not decrement min thumb below range min using ArrowRight key', () => {
-            const { getByTestId } = render(<TestSlider rtl />);
-            const thumb = getByTestId('min_thumb');
-            const otherThumb = getByTestId('max_thumb');
+          describe('new value stays within bounds', () => {
+            it('prevents min thumb from decrementing below range min using ArrowRight key', () => {
+              const { getByTestId } = render(<TestSlider rtl />);
+              const thumb = getByTestId('min_thumb');
+              const otherThumb = getByTestId('max_thumb');
 
-            fireEvent.keyDown(thumb, { key: 'ArrowRight' });
+              fireEvent.keyDown(thumb, { key: 'ArrowRight' });
 
-            expect(thumb).toHaveAttribute('aria-valuenow', '0');
-            expect(otherThumb).toHaveAttribute('aria-valuemin', '0');
+              expect(thumb).toHaveAttribute('aria-valuenow', '0');
+              expect(otherThumb).toHaveAttribute('aria-valuemin', '0');
+            });
           });
         });
       });
@@ -405,12 +434,14 @@ describe('SliderContainer', () => {
     describe('Keyboard Functionality', () => {
       describe('Key Handlers (LTR)', () => {
         describe('basic behavior', () => {
-          it.each<StandardKeyDownMatrix>([
-            ['increment', 'ArrowUp', 99, 100],
-            ['increment', 'ArrowRight', 99, 100],
-            ['decrement', 'ArrowDown', 100, 99],
-            ['decrement', 'ArrowLeft', 100, 99]
-          ])('should %s max thumb using %s key by 1', (action, key, start, end) => {
+          it.each<
+            [string, string, IUseSliderProps['defaultMaxValue'], IUseSliderReturnValue['maxValue']]
+          >([
+            ['increments', 'ArrowUp', 99, 100],
+            ['increments', 'ArrowRight', 99, 100],
+            ['decrements', 'ArrowDown', 100, 99],
+            ['decrements', 'ArrowLeft', 100, 99]
+          ])('%s max thumb using %s key by 1', (action, key, start, end) => {
             const { getByTestId } = render(<TestSlider />);
             const thumb = getByTestId('max_thumb');
             const otherThumb = getByTestId('min_thumb');
@@ -422,34 +453,66 @@ describe('SliderContainer', () => {
           });
 
           describe('step', () => {
-            it.each<GranularKeyDownMatrix>([
-              ['increment', 'ArrowUp', 10, 90, 100],
-              ['increment', 'ArrowRight', 10, 90, 100],
-              ['decrement', 'ArrowDown', 10, 100, 90],
-              ['decrement', 'ArrowLeft', 10, 100, 90]
-            ])(
-              'should %s max thumb with a custom step using %s key',
-              (action, key, step, start, end) => {
-                const { getByTestId } = render(<TestSlider step={step} defaultMaxValue={start} />);
-                const thumb = getByTestId('max_thumb');
-                const otherThumb = getByTestId('min_thumb');
+            it.each<
+              [
+                string,
+                string,
+                IUseSliderProps['step'],
+                IUseSliderProps['defaultMaxValue'],
+                IUseSliderReturnValue['maxValue']
+              ]
+            >([
+              ['increments', 'ArrowUp', 10, 90, 100],
+              ['increments', 'ArrowRight', 10, 90, 100],
+              ['decrements', 'ArrowDown', 10, 100, 90],
+              ['decrements', 'ArrowLeft', 10, 100, 90]
+            ])('%s max thumb with a custom step using %s key', (action, key, step, start, end) => {
+              const { getByTestId } = render(<TestSlider step={step} defaultMaxValue={start} />);
+              const thumb = getByTestId('max_thumb');
+              const otherThumb = getByTestId('min_thumb');
 
-                fireEvent.keyDown(thumb, { key });
+              fireEvent.keyDown(thumb, { key });
 
-                expect(thumb).toHaveAttribute('aria-valuenow', String(end));
-                expect(otherThumb).toHaveAttribute('aria-valuemax', String(end));
-              }
-            );
+              expect(thumb).toHaveAttribute('aria-valuenow', String(end));
+              expect(otherThumb).toHaveAttribute('aria-valuemax', String(end));
+            });
           });
 
           describe('jump', () => {
-            it.each<GranularKeyDownMatrix>([
-              ['increment', 'PageUp', 10, 90, 100],
-              ['decrement', 'PageDown', 10, 100, 90]
+            it.each<
+              [
+                string,
+                string,
+                IUseSliderProps['jump'],
+                IUseSliderProps['defaultMaxValue'],
+                IUseSliderReturnValue['maxValue']
+              ]
+            >([
+              ['increments', 'PageUp', 10, 90, 100],
+              ['decrements', 'PageDown', 10, 100, 90]
+            ])('%s max thumb with a custom jump using %s key', (action, key, jump, start, end) => {
+              const { getByTestId } = render(<TestSlider jump={jump} defaultMaxValue={start} />);
+              const thumb = getByTestId('max_thumb');
+              const otherThumb = getByTestId('min_thumb');
+
+              fireEvent.keyDown(thumb, { key });
+
+              expect(thumb).toHaveAttribute('aria-valuenow', String(end));
+              expect(otherThumb).toHaveAttribute('aria-valuemax', String(end));
+            });
+          });
+
+          describe('new value stays within bounds', () => {
+            it.each<
+              [string, IUseSliderProps['defaultMaxValue'], IUseSliderReturnValue['maxValue']]
+            >([
+              ['ArrowUp', 100, 100],
+              ['ArrowRight', 85, 85],
+              ['PageUp', 50, 50]
             ])(
-              'should %s max thumb with a custom jump using %s key',
-              (action, key, jump, start, end) => {
-                const { getByTestId } = render(<TestSlider jump={jump} defaultMaxValue={start} />);
+              'prevents max thumb from incrementing above range max using %s key',
+              (key, start, end) => {
+                const { getByTestId } = render(<TestSlider defaultMaxValue={start} max={end} />);
                 const thumb = getByTestId('max_thumb');
                 const otherThumb = getByTestId('min_thumb');
 
@@ -462,41 +525,35 @@ describe('SliderContainer', () => {
           });
         });
 
-        describe('value stays within bounds', () => {
-          it.each<StandardKeyDownMatrix>([
-            ['increment', 'ArrowUp', 100, 100],
-            ['increment', 'ArrowRight', 85, 85],
-            ['increment', 'PageUp', 50, 50]
-          ])('should not %s max thumb above range max using %s key', (action, key, start, end) => {
-            const { getByTestId } = render(<TestSlider defaultMaxValue={start} max={end} />);
-            const thumb = getByTestId('max_thumb');
-            const otherThumb = getByTestId('min_thumb');
+        it('resets max thumb to its own min using Home key', () => {
+          const { getByTestId } = render(<TestSlider defaultMinValue={75} />);
+          const thumb = getByTestId('max_thumb');
 
-            fireEvent.keyDown(thumb, { key });
+          fireEvent.keyDown(thumb, { key: 'Home' });
 
-            expect(thumb).toHaveAttribute('aria-valuenow', String(end));
-            expect(otherThumb).toHaveAttribute('aria-valuemax', String(end));
-          });
+          expect(thumb).toHaveAttribute('aria-valuenow', '75');
+          expect(thumb).toHaveAttribute('aria-valuemin', '75');
         });
 
-        it('should reset max thumb to range max using End key', () => {
+        it('resets max thumb to its own max using End key', () => {
           const { getByTestId } = render(<TestSlider defaultMaxValue={75} />);
           const thumb = getByTestId('max_thumb');
-          const otherThumb = getByTestId('min_thumb');
 
           fireEvent.keyDown(thumb, { key: 'End' });
 
           expect(thumb).toHaveAttribute('aria-valuenow', '100');
-          expect(otherThumb).toHaveAttribute('aria-valuemax', '100');
+          expect(thumb).toHaveAttribute('aria-valuemax', '100');
         });
       });
 
       describe('Key Handlers (RTL)', () => {
         describe('basic behavior', () => {
-          it.each<StandardKeyDownMatrix>([
-            ['increment', 'ArrowLeft', 99, 100],
-            ['decrement', 'ArrowRight', 100, 99]
-          ])('should %s max thumb using %s key by 1', (action, key, start, end) => {
+          it.each<
+            [string, string, IUseSliderProps['defaultMaxValue'], IUseSliderReturnValue['maxValue']]
+          >([
+            ['increments', 'ArrowLeft', 99, 100],
+            ['decrements', 'ArrowRight', 100, 99]
+          ])('%s max thumb using %s key by 1', (action, key, start, end) => {
             const { getByTestId } = render(<TestSlider rtl />);
             const thumb = getByTestId('max_thumb');
             const otherThumb = getByTestId('min_thumb');
@@ -508,8 +565,8 @@ describe('SliderContainer', () => {
           });
         });
 
-        describe('value stays within bounds', () => {
-          it('should not increment max thumb above range max using ArrowLeft key', () => {
+        describe('new value stays within bounds', () => {
+          it('prevents max thumb from incrementing above range max using ArrowLeft key', () => {
             const { getByTestId } = render(<TestSlider rtl />);
             const thumb = getByTestId('max_thumb');
             const otherThumb = getByTestId('min_thumb');
