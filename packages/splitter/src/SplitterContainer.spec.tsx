@@ -157,14 +157,14 @@ describe('SplitterContainer', () => {
         </SplitterContainer>
       );
       expect(primaryPaneProps).toMatchInlineSnapshot(`
-        Object {
+        {
           "data-garden-container-id": "containers.splitter.primaryPane",
           "data-garden-container-version": "version",
           "id": "1--primary-pane",
         }
       `);
       expect(separatorProps).toMatchInlineSnapshot(`
-        Object {
+        {
           "aria-controls": "1--primary-pane",
           "aria-label": "flex-pane",
           "aria-orientation": "vertical",
