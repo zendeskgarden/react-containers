@@ -8,11 +8,11 @@
 import { HTMLProps, ReactNode } from 'react';
 
 export interface IUseFieldPropGetters {
-  getHintProps: <T>(options?: T) => T & HTMLProps<any>;
-  getMessageProps: <T>(options?: T) => T & HTMLProps<any>;
-  getLabelProps: <T>(options?: T) => T & HTMLProps<any>;
+  getHintProps: <T>(options?: T & HTMLProps<any>) => T & HTMLProps<any>;
+  getMessageProps: <T>(options?: T & HTMLProps<any>) => T & HTMLProps<any>;
+  getLabelProps: <T>(options?: T & HTMLProps<any>) => T & HTMLProps<any>;
   getInputProps: <T>(
-    options?: T,
+    options?: T & HTMLProps<any>,
     isDescribedOptions?: { isDescribed?: boolean; hasMessage?: boolean }
   ) => T & HTMLProps<any>;
 }
