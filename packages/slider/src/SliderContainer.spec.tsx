@@ -106,7 +106,7 @@ describe('SliderContainer', () => {
     });
 
     describe('Pointer Functionality', () => {
-      it('updates min value if slider is clicked near min thumb', () => {
+      it('updates min value if slider is clicked or touched near min thumb', () => {
         const onChangeSpy = jest.fn();
         const { getByTestId } = render(
           <TestSlider minValue={15} maxValue={75} step={5} onChange={onChangeSpy} />
@@ -121,7 +121,7 @@ describe('SliderContainer', () => {
         expect(onChangeSpy).toHaveBeenCalledWith({ minValue: 25, maxValue: 75 });
       });
 
-      it('updates max value if slider is clicked near max thumb', () => {
+      it('updates max value if slider is clicked or touched near max thumb', () => {
         const onChangeSpy = jest.fn();
         const { getByTestId } = render(
           <TestSlider minValue={15} maxValue={75} step={5} onChange={onChangeSpy} />
@@ -388,6 +388,74 @@ describe('SliderContainer', () => {
         });
       });
     });
+
+    describe('Touch Functionality', () => {
+      let onChangeSpy: jest.Mock;
+
+      beforeEach(() => {
+        onChangeSpy = jest.fn();
+      });
+
+      describe('document touchmove event', () => {
+        it('updates minValue on drag', () => {
+          const { container, getByTestId } = render(
+            <TestSlider minValue={15} maxValue={75} step={5} onChange={onChangeSpy} />
+          );
+          const thumb = getByTestId('min_thumb');
+
+          fireEvent.touchStart(thumb);
+
+          const touchEvent = new TouchEvent('touchmove', {
+            target: container.firstChild,
+            targetTouches: [{ pageX: 30 }]
+          } as any);
+
+          fireEvent(container.ownerDocument!, touchEvent);
+
+          fireEvent.touchEnd(document);
+
+          expect(onChangeSpy).toHaveBeenCalledWith({ minValue: 10, maxValue: 75 });
+        });
+
+        it('updates minValue on drag in RTL mode', () => {
+          const { container, getByTestId } = render(
+            <TestSlider rtl minValue={15} maxValue={75} step={5} onChange={onChangeSpy} />
+          );
+          const thumb = getByTestId('min_thumb');
+
+          fireEvent.touchStart(thumb);
+
+          const touchEvent = new TouchEvent('touchmove', {
+            targetTouches: [{ pageX: 30 }]
+          } as any);
+
+          fireEvent(container.ownerDocument!, touchEvent);
+
+          fireEvent.touchEnd(document);
+
+          expect(onChangeSpy).toHaveBeenCalledWith({ minValue: 75, maxValue: 75 });
+        });
+
+        it('does not update minValue when disabled', () => {
+          const { container, getByTestId } = render(
+            <TestSlider disabled minValue={15} maxValue={75} step={5} onChange={onChangeSpy} />
+          );
+          const thumb = getByTestId('min_thumb');
+
+          fireEvent.touchStart(thumb);
+
+          const touchEvent = new TouchEvent('touchmove', {
+            targetTouches: [{ pageX: 30 }]
+          } as any);
+
+          fireEvent(container.ownerDocument!, touchEvent);
+
+          fireEvent.touchEnd(document);
+
+          expect(onChangeSpy).not.toHaveBeenCalled();
+        });
+      });
+    });
   });
 
   describe('Max Thumb', () => {
@@ -637,6 +705,74 @@ describe('SliderContainer', () => {
           (mouseEvent as any).pageX = 30;
 
           fireEvent(container.ownerDocument!, mouseEvent);
+
+          expect(onChangeSpy).not.toHaveBeenCalled();
+        });
+      });
+    });
+
+    describe('Touch Functionality', () => {
+      let onChangeSpy: jest.Mock;
+
+      beforeEach(() => {
+        onChangeSpy = jest.fn();
+      });
+
+      describe('document touchmove event', () => {
+        it('updates maxValue on drag', () => {
+          const { container, getByTestId } = render(
+            <TestSlider minValue={15} maxValue={75} step={5} onChange={onChangeSpy} />
+          );
+          const thumb = getByTestId('max_thumb');
+
+          fireEvent.touchStart(thumb);
+
+          const touchEvent = new TouchEvent('touchmove', {
+            target: container.firstChild,
+            targetTouches: [{ pageX: 30 }]
+          } as any);
+
+          fireEvent(container.ownerDocument!, touchEvent);
+
+          fireEvent.touchEnd(document);
+
+          expect(onChangeSpy).toHaveBeenCalledWith({ minValue: 15, maxValue: 15 });
+        });
+
+        it('updates maxValue on drag in RTL mode', () => {
+          const { container, getByTestId } = render(
+            <TestSlider rtl minValue={15} maxValue={75} step={5} onChange={onChangeSpy} />
+          );
+          const thumb = getByTestId('max_thumb');
+
+          fireEvent.touchStart(thumb);
+
+          const touchEvent = new TouchEvent('touchmove', {
+            targetTouches: [{ pageX: 30 }]
+          } as any);
+
+          fireEvent(container.ownerDocument!, touchEvent);
+
+          fireEvent.touchEnd(document);
+
+          expect(onChangeSpy).toHaveBeenCalledWith({ minValue: 15, maxValue: 90 });
+        });
+
+        it('does not update maxValue when disabled', () => {
+          const { container, getByTestId } = render(
+            <TestSlider disabled minValue={15} maxValue={75} step={5} onChange={onChangeSpy} />
+          );
+          const thumb = getByTestId('max_thumb');
+
+          fireEvent.touchStart(thumb);
+
+          const touchEvent = new TouchEvent('touchmove', {
+            targetTouches: [{ pageX: 30 }]
+          } as any);
+
+          fireEvent(container.ownerDocument!, touchEvent);
+
+          fireEvent.touchEnd(document);
 
           expect(onChangeSpy).not.toHaveBeenCalled();
         });
