@@ -119,6 +119,12 @@ to install.
 [selection size link]: https://bundlephobia.com/result?p=@zendeskgarden/container-selection
 [selection dependency status]: https://flat.badgen.net/david/dep/zendeskgarden/react-containers/packages/selection
 [selection dependency link]: https://david-dm.org/zendeskgarden/react-containers?path=packages/selection
+[slider npm version]: https://flat.badgen.net/npm/v/@zendeskgarden/container-slider
+[slider npm link]: https://www.npmjs.com/package/@zendeskgarden/container-slider
+[slider size bundle]: https://flat.badgen.net/bundlephobia/minzip/@zendeskgarden/container-slider
+[slider size link]: https://bundlephobia.com/result?p=@zendeskgarden/container-slider
+[slider dependency status]: https://flat.badgen.net/david/dep/zendeskgarden/react-containers/packages/slider
+[slider dependency link]: https://david-dm.org/zendeskgarden/react-containers?path=packages/slider
 [splitter npm version]: https://flat.badgen.net/npm/v/@zendeskgarden/container-splitter
 [splitter npm link]: https://www.npmjs.com/package/@zendeskgarden/container-splitter
 [splitter size bundle]: https://flat.badgen.net/bundlephobia/minzip/@zendeskgarden/container-splitter
