@@ -76,6 +76,7 @@ export function useSlider<T extends Element = Element, M extends HTMLElement = H
 
     return () => {
       win.removeEventListener('resize', handleResize);
+      handleResize.cancel();
     };
   }, [doc, trackRef]);
 
