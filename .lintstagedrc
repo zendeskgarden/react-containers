@@ -1,7 +1,7 @@
 {
   "*.{js,ts,tsx}": [
     "eslint --max-warnings 0",
-    "jest --config=utils/test/jest.config.js --findRelatedTests",
+    "jest --config=utils/test/jest.config.js --findRelatedTests --passWithNoTests",
     "prettier --write"
   ],
   "!(*CHANGELOG).md": [
