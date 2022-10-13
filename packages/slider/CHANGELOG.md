@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.1](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-slider@0.1.0...@zendeskgarden/container-slider@0.1.1) (2022-10-13)
+
+
+### Bug Fixes
+
+* **slider:** prevent default screenreader cursor navigation ([#486](https://github.com/zendeskgarden/react-containers/issues/486)) ([0aa76d2](https://github.com/zendeskgarden/react-containers/commit/0aa76d2920302d04a43d878b7d6d2462a6fafdd3))
+
+
+
+
+
 # 0.1.0 (2022-10-10)
 
 
