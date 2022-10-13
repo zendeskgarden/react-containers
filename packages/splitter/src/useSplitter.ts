@@ -248,6 +248,10 @@ export const useSplitter = <T extends HTMLElement = HTMLElement>({
         }
       };
 
+      const ariaValueNow = ((separatorPosition - min) / (max - min)) * 100;
+      const ariaValueMin = isFinite(ariaValueNow) ? 0 : min;
+      const ariaValueMax = isFinite(ariaValueNow) ? 100 : max;
+
       return {
         role: role === null ? undefined : role,
         onMouseDown: composeEventHandlers(onMouseDown, handleMouseDown),
@@ -255,9 +259,9 @@ export const useSplitter = <T extends HTMLElement = HTMLElement>({
         onKeyDown: composeEventHandlers(onKeyDown, handleKeyDown),
         onClick: composeEventHandlers(onClick, handleClick),
         'aria-controls': primaryPaneId,
-        'aria-valuenow': separatorPosition,
-        'aria-valuemin': min,
-        'aria-valuemax': max,
+        'aria-valuenow': isFinite(ariaValueNow) ? ariaValueNow : separatorPosition,
+        'aria-valuemin': ariaValueMin,
+        'aria-valuemax': ariaValueMax,
         'aria-orientation': orientation,
         'data-garden-container-id': 'containers.splitter.separator',
         'data-garden-container-version': PACKAGE_VERSION,
