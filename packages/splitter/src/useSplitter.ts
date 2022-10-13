@@ -66,6 +66,7 @@ export const useSplitter = <T extends HTMLElement = HTMLElement>({
     bottom: 0
   });
   const separatorPosition = isControlled ? valueNow : state;
+  const [lastPosition, setLastPosition] = useState(separatorPosition);
   const doc = environment || document;
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -187,10 +188,15 @@ export const useSplitter = <T extends HTMLElement = HTMLElement>({
       const handleKeyDown = (event: React.KeyboardEvent) => {
         if (event.key === KEYS.ENTER) {
           if (separatorPosition === min) {
-            setSeparatorPosition(max);
+            setSeparatorPosition(lastPosition === min ? max : lastPosition);
           } else {
+            setLastPosition(separatorPosition);
             setSeparatorPosition(min);
           }
+        } else if (event.key === KEYS.HOME) {
+          setSeparatorPosition(min);
+        } else if (event.key === KEYS.END) {
+          setSeparatorPosition(max);
         } else if (!isFixed) {
           if (event.key === KEYS.RIGHT && orientation === 'vertical') {
             let position;
@@ -224,14 +230,17 @@ export const useSplitter = <T extends HTMLElement = HTMLElement>({
         }
       };
 
-      const handleClick = () => {
+      const handleClick = (event: MouseEvent) => {
         if (isFixed) {
           if (separatorPosition > min) {
             setSeparatorPosition(min);
           }
+
           if (separatorPosition < max) {
             setSeparatorPosition(max);
           }
+        } else if (event.detail === 2 /* double click */) {
+          handleKeyDown({ key: KEYS.ENTER } as React.KeyboardEvent);
         }
       };
 
@@ -257,6 +266,7 @@ export const useSplitter = <T extends HTMLElement = HTMLElement>({
       isFixed,
       isLeading,
       keyboardStep,
+      lastPosition,
       max,
       min,
       move,
