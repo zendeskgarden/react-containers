@@ -225,6 +225,7 @@ export function useSlider<T extends Element = Element, M extends HTMLElement = H
             }
 
             if (value !== undefined) {
+              event.preventDefault(); // prevent screenreader navigation
               event.stopPropagation();
               setThumbPosition(thumb)(value);
             }
