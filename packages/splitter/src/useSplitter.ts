@@ -208,6 +208,7 @@ export const useSplitter = <T extends HTMLElement = HTMLElement>({
             }
 
             setRangedSeparatorPosition(position);
+            event.preventDefault(); // prevent scroll
           } else if (event.key === KEYS.LEFT && orientation === 'vertical') {
             let position;
 
@@ -218,14 +219,17 @@ export const useSplitter = <T extends HTMLElement = HTMLElement>({
             }
 
             setRangedSeparatorPosition(position);
+            event.preventDefault(); // prevent scroll
           } else if (event.key === KEYS.UP && orientation === 'horizontal') {
             setRangedSeparatorPosition(
               separatorPosition + (isLeading ? keyboardStep : -keyboardStep)
             );
+            event.preventDefault(); // prevent scroll
           } else if (event.key === KEYS.DOWN && orientation === 'horizontal') {
             setRangedSeparatorPosition(
               separatorPosition + (isLeading ? -keyboardStep : keyboardStep)
             );
+            event.preventDefault(); // prevent scroll
           }
         }
       };
