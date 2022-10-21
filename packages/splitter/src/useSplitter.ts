@@ -82,15 +82,17 @@ export const useSplitter = <T extends HTMLElement = HTMLElement>({
 
   const setRangedSeparatorPosition = useCallback(
     (nextDimension: number) => {
-      if (nextDimension >= max) {
-        setSeparatorPosition(max);
-      } else if (nextDimension <= min) {
-        setSeparatorPosition(min);
-      } else {
-        setSeparatorPosition(nextDimension);
+      if (separatorRef.current) {
+        if (nextDimension >= max) {
+          setSeparatorPosition(max);
+        } else if (nextDimension <= min) {
+          setSeparatorPosition(min);
+        } else {
+          setSeparatorPosition(nextDimension);
+        }
       }
     },
-    [max, min, setSeparatorPosition]
+    [max, min, separatorRef, setSeparatorPosition]
   );
 
   const move = useCallback(
