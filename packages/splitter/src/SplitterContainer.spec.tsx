@@ -438,6 +438,16 @@ describe('SplitterContainer', () => {
 
         expect(element).toHaveAttribute('aria-valuenow', '50');
       });
+
+      it('should return from <home> to previous position on <enter>', () => {
+        const { getByRole } = render(<UncontrolledTestSplitter defaultValueNow={50} />);
+        const element = getByRole('separator');
+
+        fireEvent.keyDown(element, { key: 'Home' });
+        fireEvent.keyDown(element, { key: 'Enter' });
+
+        expect(element).toHaveAttribute('aria-valuenow', '50');
+      });
     });
 
     describe('controlled mode', () => {

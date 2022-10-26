@@ -196,6 +196,7 @@ export const useSplitter = <T extends HTMLElement = HTMLElement>({
             setSeparatorPosition(min);
           }
         } else if (event.key === KEYS.HOME) {
+          separatorPosition !== min && setLastPosition(separatorPosition);
           setSeparatorPosition(min);
         } else if (event.key === KEYS.END) {
           setSeparatorPosition(max);
