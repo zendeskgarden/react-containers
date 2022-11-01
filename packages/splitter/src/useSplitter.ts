@@ -66,6 +66,7 @@ export const useSplitter = <T extends HTMLElement = HTMLElement>({
     bottom: 0
   });
   const separatorPosition = isControlled ? valueNow : state;
+  const [lastPosition, setLastPosition] = useState(separatorPosition);
   const doc = environment || document;
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -81,15 +82,17 @@ export const useSplitter = <T extends HTMLElement = HTMLElement>({
 
   const setRangedSeparatorPosition = useCallback(
     (nextDimension: number) => {
-      if (nextDimension >= max) {
-        setSeparatorPosition(max);
-      } else if (nextDimension <= min) {
-        setSeparatorPosition(min);
-      } else {
-        setSeparatorPosition(nextDimension);
+      if (separatorRef.current) {
+        if (nextDimension >= max) {
+          setSeparatorPosition(max);
+        } else if (nextDimension <= min) {
+          setSeparatorPosition(min);
+        } else {
+          setSeparatorPosition(nextDimension);
+        }
       }
     },
-    [max, min, setSeparatorPosition]
+    [max, min, separatorRef, setSeparatorPosition]
   );
 
   const move = useCallback(
@@ -187,10 +190,16 @@ export const useSplitter = <T extends HTMLElement = HTMLElement>({
       const handleKeyDown = (event: React.KeyboardEvent) => {
         if (event.key === KEYS.ENTER) {
           if (separatorPosition === min) {
-            setSeparatorPosition(max);
+            setSeparatorPosition(lastPosition === min ? max : lastPosition);
           } else {
+            setLastPosition(separatorPosition);
             setSeparatorPosition(min);
           }
+        } else if (event.key === KEYS.HOME) {
+          separatorPosition !== min && setLastPosition(separatorPosition);
+          setSeparatorPosition(min);
+        } else if (event.key === KEYS.END) {
+          setSeparatorPosition(max);
         } else if (!isFixed) {
           if (event.key === KEYS.RIGHT && orientation === 'vertical') {
             let position;
@@ -202,6 +211,7 @@ export const useSplitter = <T extends HTMLElement = HTMLElement>({
             }
 
             setRangedSeparatorPosition(position);
+            event.preventDefault(); // prevent scroll
           } else if (event.key === KEYS.LEFT && orientation === 'vertical') {
             let position;
 
@@ -212,28 +222,38 @@ export const useSplitter = <T extends HTMLElement = HTMLElement>({
             }
 
             setRangedSeparatorPosition(position);
+            event.preventDefault(); // prevent scroll
           } else if (event.key === KEYS.UP && orientation === 'horizontal') {
             setRangedSeparatorPosition(
               separatorPosition + (isLeading ? keyboardStep : -keyboardStep)
             );
+            event.preventDefault(); // prevent scroll
           } else if (event.key === KEYS.DOWN && orientation === 'horizontal') {
             setRangedSeparatorPosition(
               separatorPosition + (isLeading ? -keyboardStep : keyboardStep)
             );
+            event.preventDefault(); // prevent scroll
           }
         }
       };
 
-      const handleClick = () => {
+      const handleClick = (event: MouseEvent) => {
         if (isFixed) {
           if (separatorPosition > min) {
             setSeparatorPosition(min);
           }
+
           if (separatorPosition < max) {
             setSeparatorPosition(max);
           }
+        } else if (event.detail === 2 /* double click */) {
+          handleKeyDown({ key: KEYS.ENTER } as React.KeyboardEvent);
         }
       };
+
+      const ariaValueNow = ((separatorPosition - min) / (max - min)) * 100;
+      const ariaValueMin = isFinite(ariaValueNow) ? 0 : min;
+      const ariaValueMax = isFinite(ariaValueNow) ? 100 : max;
 
       return {
         role: role === null ? undefined : role,
@@ -242,9 +262,9 @@ export const useSplitter = <T extends HTMLElement = HTMLElement>({
         onKeyDown: composeEventHandlers(onKeyDown, handleKeyDown),
         onClick: composeEventHandlers(onClick, handleClick),
         'aria-controls': primaryPaneId,
-        'aria-valuenow': separatorPosition,
-        'aria-valuemin': min,
-        'aria-valuemax': max,
+        'aria-valuenow': isFinite(ariaValueNow) ? ariaValueNow : separatorPosition,
+        'aria-valuemin': ariaValueMin,
+        'aria-valuemax': ariaValueMax,
         'aria-orientation': orientation,
         'data-garden-container-id': 'containers.splitter.separator',
         'data-garden-container-version': PACKAGE_VERSION,
@@ -257,6 +277,7 @@ export const useSplitter = <T extends HTMLElement = HTMLElement>({
       isFixed,
       isLeading,
       keyboardStep,
+      lastPosition,
       max,
       min,
       move,
