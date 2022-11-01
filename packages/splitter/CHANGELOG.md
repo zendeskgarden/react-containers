@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.2](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-splitter@2.0.1...@zendeskgarden/container-splitter@2.0.2) (2022-11-01)
+
+
+### Bug Fixes
+
+* **splitter:** use WAI-ARIA specified actions and values ([#487](https://github.com/zendeskgarden/react-containers/issues/487)) ([7173f46](https://github.com/zendeskgarden/react-containers/commit/7173f46f001f1ccecc5b406e578555d7c1697077))
+
+
+
+
+
 ## [2.0.1](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-splitter@2.0.0...@zendeskgarden/container-splitter@2.0.1) (2022-10-10)
 
 **Note:** Version bump only for package @zendeskgarden/container-splitter
