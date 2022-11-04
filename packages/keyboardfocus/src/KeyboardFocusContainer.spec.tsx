@@ -14,6 +14,8 @@ import { KeyboardFocusContainer } from './';
 jest.useFakeTimers();
 
 describe('KeyboardFocusContainer', () => {
+  const user = userEvent.setup({ delay: null });
+
   const BasicExample = () => (
     <KeyboardFocusContainer>
       {({ getFocusProps, keyboardFocused }) => (
@@ -24,33 +26,33 @@ describe('KeyboardFocusContainer', () => {
 
   describe('getFocusProps', () => {
     describe('onFocus', () => {
-      it('should not apply focused prop if focused by mouse', () => {
+      it('should not apply focused prop if focused by mouse', async () => {
         const { container, getByText } = render(<BasicExample />);
 
-        userEvent.click(container);
+        await user.click(container);
         jest.runOnlyPendingTimers();
         expect(getByText('trigger')).toHaveAttribute('data-focused', 'false');
       });
 
-      it('should apply focused prop if focused by keyboard', () => {
+      it('should apply focused prop if focused by keyboard', async () => {
         const { getByText } = render(<BasicExample />);
         const trigger = getByText('trigger');
 
-        userEvent.tab();
+        await user.tab();
         expect(trigger).toHaveAttribute('data-focused', 'true');
       });
 
-      it('should apply focused prop if focused by keyboard after mouse event', () => {
+      it('should apply focused prop if focused by keyboard after mouse event', async () => {
         const { getByText } = render(<BasicExample />);
         const trigger = getByText('trigger');
 
-        userEvent.click(trigger);
+        await user.click(trigger);
         jest.runOnlyPendingTimers();
 
         expect(trigger).toHaveAttribute('data-focused', 'false');
 
-        userEvent.tab({ shift: true });
-        userEvent.tab();
+        await user.tab({ shift: true });
+        await user.tab();
         expect(trigger).toHaveAttribute('data-focused', 'true');
       });
     });
@@ -68,13 +70,13 @@ describe('KeyboardFocusContainer', () => {
     });
 
     describe('onBlur', () => {
-      it('should remove focused prop if blurred', () => {
+      it('should remove focused prop if blurred', async () => {
         const { getByText } = render(<BasicExample />);
         const trigger = getByText('trigger');
 
-        userEvent.tab();
+        await user.tab();
         expect(trigger).toHaveAttribute('data-focused', 'true');
-        userEvent.tab();
+        await user.tab();
         expect(trigger).toHaveAttribute('data-focused', 'false');
       });
     });

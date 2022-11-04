@@ -136,6 +136,7 @@ const renderTestCase = ({
 
 const getParentNode = screen.getByTestId;
 const getEndNode = getParentNode;
+const user = userEvent.setup();
 
 describe('TreeView', () => {
   describe('shared behaviour', () => {
@@ -153,51 +154,51 @@ describe('TreeView', () => {
       expect(onClickMock).toHaveBeenCalledTimes(1);
     });
 
-    it('should call onChange with the new value on focus', () => {
+    it('should call onChange with the new value on focus', async () => {
       const { onFocusMock } = renderTestCase();
 
-      userEvent.tab();
+      await user.tab();
       expect(onFocusMock).toHaveBeenCalledTimes(1);
     });
   });
 });
 
 describe('uncontrolled usages', () => {
-  it('should focus on the first element by default', () => {
+  it('should focus on the first element by default', async () => {
     renderTestCase();
-    userEvent.tab();
+    await user.tab();
     expect(getParentNode('Fruits')).toHaveFocus();
   });
 
-  it('should not select the first element by default', () => {
+  it('should not select the first element by default', async () => {
     renderTestCase();
-    userEvent.tab();
+    await user.tab();
     expect(getParentNode('Fruits')).toHaveAttribute('aria-selected', 'false');
   });
 
-  it('should change selection and expanded states using keyboard and pointer', () => {
+  it('should change selection and expanded states using keyboard and pointer', async () => {
     renderTestCase();
 
-    userEvent.tab();
+    await user.tab();
     expect(getParentNode('Fruits')).toHaveAttribute('aria-selected', 'false');
 
-    userEvent.keyboard('{space}');
+    await user.keyboard('{space}');
     expect(getParentNode('Fruits')).toHaveAttribute('aria-selected', 'true');
     expect(getParentNode('Fruits')).toHaveAttribute('aria-expanded', 'false');
-    userEvent.keyboard('{enter}');
+    await user.keyboard('{enter}');
     expect(getParentNode('Fruits')).toHaveAttribute('aria-expanded', 'true');
 
-    userEvent.keyboard('{end}');
-    userEvent.keyboard('{space}');
+    await user.keyboard('{end}');
+    await user.keyboard('{space}');
     expect(getParentNode('Fruits')).toHaveAttribute('aria-selected', 'false');
     expect(getParentNode('Vegetables')).toHaveAttribute('aria-expanded', 'false');
-    userEvent.keyboard('{enter}');
+    await user.keyboard('{enter}');
     expect(getParentNode('Vegetables')).toHaveAttribute('aria-expanded', 'true');
 
-    userEvent.keyboard('{home}');
-    userEvent.keyboard('{space}');
+    await user.keyboard('{home}');
+    await user.keyboard('{space}');
     expect(getParentNode('Fruits')).toHaveAttribute('aria-selected', 'true');
-    userEvent.click(getParentNode('Apples'));
+    await user.click(getParentNode('Apples'));
     expect(getParentNode('Fruits')).toHaveAttribute('aria-expanded', 'true');
   });
 
@@ -209,58 +210,58 @@ describe('uncontrolled usages', () => {
     ${'horizontal'} | ${true}  | ${'{arrowright}'} | ${'{arrowleft}'}  | ${'{arrowdown}'}  | ${'{arrowup}'}
   `(
     'should change focus using arrow keys with orientation:$orientation and rtl:$rtl. Keybinding=> up:$up, down:$down, right:$right, left:$left',
-    ({ orientation, rtl, up, down, right, left }) => {
+    async ({ orientation, rtl, up, down, right, left }) => {
       renderTestCase({ orientation, rtl });
 
-      userEvent.tab();
+      await user.tab();
       expect(getParentNode('Fruits')).toHaveAttribute('aria-selected', 'false');
 
-      userEvent.keyboard(right);
+      await user.keyboard(right);
       expect(getParentNode('Fruits')).toHaveAttribute('aria-expanded', 'true');
 
-      userEvent.keyboard(right);
-      userEvent.keyboard('{space}');
+      await user.keyboard(right);
+      await user.keyboard('{space}');
       expect(getParentNode('Oranges')).toHaveAttribute('aria-selected', 'true');
-      userEvent.keyboard(down);
-      userEvent.keyboard('{space}');
+      await user.keyboard(down);
+      await user.keyboard('{space}');
       expect(getParentNode('Apples')).toHaveAttribute('aria-selected', 'true');
-      userEvent.keyboard(right);
-      userEvent.keyboard('{space}');
+      await user.keyboard(right);
+      await user.keyboard('{space}');
       expect(getParentNode('Apples')).toHaveAttribute('aria-expanded', 'true');
 
-      userEvent.keyboard(down);
-      userEvent.keyboard(down);
-      userEvent.keyboard(down);
-      userEvent.keyboard('{space}');
+      await user.keyboard(down);
+      await user.keyboard(down);
+      await user.keyboard(down);
+      await user.keyboard('{space}');
       expect(getParentNode('Vegetables')).toHaveAttribute('aria-selected', 'true');
 
-      userEvent.keyboard(right);
-      userEvent.keyboard('{space}');
+      await user.keyboard(right);
+      await user.keyboard('{space}');
       expect(getParentNode('Vegetables')).toHaveAttribute('aria-expanded', 'true');
 
-      userEvent.keyboard(right);
-      userEvent.keyboard(right);
-      userEvent.keyboard('{space}');
+      await user.keyboard(right);
+      await user.keyboard(right);
+      await user.keyboard('{space}');
       expect(getParentNode('Podded Vegetables')).toHaveAttribute('aria-selected', 'true');
       expect(getParentNode('Podded Vegetables')).toHaveAttribute('aria-expanded', 'true');
 
-      userEvent.keyboard(right);
-      userEvent.keyboard('{space}');
+      await user.keyboard(right);
+      await user.keyboard('{space}');
       expect(getParentNode('Lentil')).toHaveAttribute('aria-selected', 'true');
 
-      userEvent.keyboard(left);
-      userEvent.keyboard(left);
+      await user.keyboard(left);
+      await user.keyboard(left);
       expect(getParentNode('Podded Vegetables')).toHaveAttribute('aria-expanded', 'false');
 
-      userEvent.keyboard(left);
-      userEvent.keyboard(left);
-      userEvent.keyboard('{space}');
+      await user.keyboard(left);
+      await user.keyboard(left);
+      await user.keyboard('{space}');
       expect(getParentNode('Vegetables')).toHaveAttribute('aria-expanded', 'false');
       expect(getParentNode('Vegetables')).toHaveAttribute('aria-selected', 'true');
 
-      userEvent.keyboard(up);
-      userEvent.keyboard(up);
-      userEvent.keyboard('{space}');
+      await user.keyboard(up);
+      await user.keyboard(up);
+      await user.keyboard('{space}');
       expect(getParentNode('Macintosh')).toHaveAttribute('aria-selected', 'true');
     }
   );
@@ -274,17 +275,17 @@ describe('controlled usage', () => {
     expect(getParentNode('Apples')).toHaveAttribute('aria-expanded', 'true');
   });
 
-  it('should call onChange with a list of opened nodes including the initial nodes and the new one', () => {
+  it('should call onChange with a list of opened nodes including the initial nodes and the new one', async () => {
     const { onChangeMock } = renderTestCase({ openNodes: ['Fruits', 'Apples'] });
 
-    userEvent.click(getParentNode('Vegetables'));
+    await user.click(getParentNode('Vegetables'));
     expect(onChangeMock).toHaveBeenCalledWith(['Fruits', 'Apples', 'Vegetables']);
   });
 
-  it('should call onChange with a list of opened nodes without Apples', () => {
+  it('should call onChange with a list of opened nodes without Apples', async () => {
     const { onChangeMock } = renderTestCase({ openNodes: ['Fruits', 'Apples'] });
 
-    userEvent.click(getParentNode('Apples'));
+    await user.click(getParentNode('Apples'));
     expect(onChangeMock).toHaveBeenCalledWith(['Fruits']);
   });
 });

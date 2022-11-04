@@ -6,7 +6,7 @@
  */
 
 import React, { createRef } from 'react';
-import userEvent from '@testing-library/user-event';
+import TSliderState from '@testing-library/user-event';
 import { render } from '@testing-library/react';
 
 import { ButtonGroupContainer } from './';
@@ -75,7 +75,7 @@ describe('ButtonGroupContainer', () => {
       const { getAllByTestId } = render(<BasicExample />);
       const firstButton = getAllByTestId('button')[0];
 
-      userEvent.click(firstButton);
+      TSliderState.click(firstButton);
 
       expect(firstButton).toHaveAttribute('aria-pressed', 'true');
     });

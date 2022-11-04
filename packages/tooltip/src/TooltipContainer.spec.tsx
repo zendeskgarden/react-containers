@@ -16,6 +16,8 @@ import { TooltipContainer, ITooltipContainerProps } from './';
 jest.useFakeTimers();
 
 describe('TooltipContainer', () => {
+  const user = userEvent.setup({ delay: null });
+
   const TOOLTIP_ID = 'test';
 
   const BasicExample = (props: ITooltipContainerProps) => {
@@ -47,18 +49,18 @@ describe('TooltipContainer', () => {
     });
 
     describe('onFocus()', () => {
-      it('should not display tooltip immediately when focused', () => {
+      it('should not display tooltip immediately when focused', async () => {
         const { getByText } = render(<BasicExample />);
 
-        userEvent.tab();
+        await user.tab();
 
         expect(getByText('tooltip')).toHaveAttribute('aria-hidden', 'true');
       });
 
-      it('should display tooltip after delay when focused', () => {
+      it('should display tooltip after delay when focused', async () => {
         const { getByRole } = render(<BasicExample />);
 
-        userEvent.tab();
+        await user.tab();
         act(() => {
           jest.runOnlyPendingTimers();
         });
@@ -68,17 +70,17 @@ describe('TooltipContainer', () => {
     });
 
     describe('onBlur()', () => {
-      it('should close tooltip immediately after blur', () => {
+      it('should close tooltip immediately after blur', async () => {
         const { getByText, getByRole } = render(<BasicExample />);
 
-        userEvent.tab();
+        await user.tab();
         act(() => {
           jest.runOnlyPendingTimers();
         });
 
         expect(getByRole('tooltip')).toHaveAttribute('aria-hidden', 'false');
 
-        userEvent.tab();
+        await user.tab();
         act(() => {
           jest.runOnlyPendingTimers();
         });
@@ -88,18 +90,18 @@ describe('TooltipContainer', () => {
     });
 
     describe('onMouseEnter()', () => {
-      it('should not display tooltip immediately when clicked', () => {
+      it('should not display tooltip immediately when clicked', async () => {
         const { getByText } = render(<BasicExample />);
 
-        userEvent.hover(getByText('trigger'));
+        await user.hover(getByText('trigger'));
 
         expect(getByText('tooltip')).toHaveAttribute('aria-hidden', 'true');
       });
 
-      it('should display tooltip after delay when clicked', () => {
+      it('should display tooltip after delay when clicked', async () => {
         const { getByText, getByRole } = render(<BasicExample />);
 
-        userEvent.hover(getByText('trigger'));
+        await user.hover(getByText('trigger'));
         act(() => {
           jest.runOnlyPendingTimers();
         });
@@ -107,11 +109,11 @@ describe('TooltipContainer', () => {
         expect(getByRole('tooltip')).toHaveAttribute('aria-hidden', 'false');
       });
 
-      it('should clear open timeout if unmounted during interval', () => {
+      it('should clear open timeout if unmounted during interval', async () => {
         jest.spyOn(window, 'clearTimeout');
         const { getByText, unmount } = render(<BasicExample />);
 
-        userEvent.hover(getByText('trigger'));
+        await user.hover(getByText('trigger'));
 
         unmount();
         // 3 total clearTimeouts occur during this action
@@ -122,28 +124,28 @@ describe('TooltipContainer', () => {
     });
 
     describe('onMouseLeave()', () => {
-      it('should not hide tooltip immediately when mouseleaved', () => {
+      it('should not hide tooltip immediately when mouseleaved', async () => {
         const { getByText, getByRole } = render(<BasicExample />);
         const trigger = getByText('trigger');
 
-        userEvent.hover(trigger);
+        await user.hover(trigger);
         act(() => {
           jest.runOnlyPendingTimers();
         });
 
         expect(getByRole('tooltip')).toHaveAttribute('aria-hidden', 'false');
 
-        userEvent.unhover(trigger);
+        await user.unhover(trigger);
 
         expect(getByText('tooltip')).toHaveAttribute('aria-hidden', 'false');
       });
 
-      it('should hide tooltip after delay when mouseleaved', () => {
+      it('should hide tooltip after delay when mouseleaved', async () => {
         const { getByText } = render(<BasicExample />);
         const trigger = getByText('trigger');
 
-        userEvent.hover(trigger);
-        userEvent.unhover(trigger);
+        await user.hover(trigger);
+        await user.unhover(trigger);
         act(() => {
           jest.runOnlyPendingTimers();
         });
@@ -153,11 +155,11 @@ describe('TooltipContainer', () => {
     });
 
     describe('onKeyDown()', () => {
-      it('should hide tooltip when escape is pressed', () => {
+      it('should hide tooltip when escape is pressed', async () => {
         const { getByText } = render(<BasicExample />);
         const trigger = getByText('trigger');
 
-        userEvent.tab();
+        await user.tab();
         act(() => {
           jest.runOnlyPendingTimers();
         });
@@ -170,11 +172,11 @@ describe('TooltipContainer', () => {
         expect(getByText('tooltip')).toHaveAttribute('aria-hidden', 'true');
       });
 
-      it('should not hide tooltip if escape is not pressed', () => {
+      it('should not hide tooltip if escape is not pressed', async () => {
         const { getByText, getByRole } = render(<BasicExample />);
         const trigger = getByText('trigger');
 
-        userEvent.tab();
+        await user.tab();
         act(() => {
           jest.runOnlyPendingTimers();
         });
@@ -199,17 +201,17 @@ describe('TooltipContainer', () => {
       expect(tooltip).toHaveAttribute('id', TOOLTIP_ID);
     });
 
-    it('should not close tooltip if mouseenter during close delay period', () => {
+    it('should not close tooltip if mouseenter during close delay period', async () => {
       const { getByText, getByRole } = render(<BasicExample />);
       const trigger = getByText('trigger');
 
-      userEvent.hover(trigger);
+      await user.hover(trigger);
       act(() => {
         jest.runOnlyPendingTimers();
       });
 
-      userEvent.unhover(trigger);
-      userEvent.hover(trigger);
+      await user.unhover(trigger);
+      await user.hover(trigger);
       act(() => {
         jest.runOnlyPendingTimers();
       });
@@ -217,18 +219,18 @@ describe('TooltipContainer', () => {
       expect(getByRole('tooltip')).toHaveAttribute('aria-hidden', 'false');
     });
 
-    it('should close tooltip if mouseleaveed', () => {
+    it('should close tooltip if mouseleaveed', async () => {
       const { getByText, getByRole } = render(<BasicExample />);
       const trigger = getByText('trigger');
 
-      userEvent.hover(trigger);
+      await user.hover(trigger);
       act(() => {
         jest.runOnlyPendingTimers();
       });
 
       expect(getByRole('tooltip')).toHaveAttribute('aria-hidden', 'false');
 
-      userEvent.unhover(trigger);
+      await user.unhover(trigger);
       act(() => {
         jest.runOnlyPendingTimers();
       });

@@ -12,6 +12,8 @@ import { KEYS } from '@zendeskgarden/container-utilities';
 import { SelectionContainer, ISelectionContainerProps } from './';
 
 describe('SelectionContainer', () => {
+  const user = userEvent.setup();
+
   const itemValues = ['Item-1', 'Item-2', 'Item-3'];
 
   const BasicExample: React.FunctionComponent<
@@ -63,24 +65,24 @@ describe('SelectionContainer', () => {
 
   describe('controlled state', () => {
     describe('onFocus', () => {
-      it('should call onFocus callback', () => {
+      it('should call onFocus callback', async () => {
         const onFocusSpy = jest.fn();
 
         render(<BasicExample onFocus={onFocusSpy} />);
 
-        userEvent.tab();
+        await user.tab();
 
         expect(onFocusSpy).toHaveBeenCalledWith(itemValues[0]);
       });
     });
 
     describe('onSelect', () => {
-      it('should call onSelect callback', () => {
+      it('should call onSelect callback', async () => {
         const onSelectSpy = jest.fn();
         const { getByText } = render(<BasicExample onSelect={onSelectSpy} />);
         const item = getByText('Item-1');
 
-        userEvent.click(item);
+        await user.click(item);
 
         expect(onSelectSpy).toHaveBeenCalledWith(itemValues[0]);
       });
@@ -95,25 +97,25 @@ describe('SelectionContainer', () => {
       expect(container).toHaveAttribute('role', 'listbox');
     });
 
-    it('first item in container defaults as the only initial focusable item', () => {
+    it('first item in container defaults as the only initial focusable item', async () => {
       const { getByText } = render(<BasicExample />);
       const item = getByText('Item-1');
 
       expect(document.activeElement).not.toBe(item);
 
-      userEvent.tab();
+      await user.tab();
 
       expect(item).toHaveAttribute('tabIndex', '0');
       expect(document.activeElement).toBe(item);
     });
 
     describe('onFocus', () => {
-      it('focuses first item if no item is currently selected', () => {
+      it('focuses first item if no item is currently selected', async () => {
         const { getByText } = render(<BasicExample />);
         const item = getByText('Item-1');
 
         expect(document.activeElement).not.toBe(item);
-        userEvent.tab();
+        await user.tab();
         expect(document.activeElement).toBe(item);
       });
 
@@ -124,24 +126,24 @@ describe('SelectionContainer', () => {
         expect(lastItem).toHaveAttribute('tabIndex', '0');
       });
 
-      it('will focus currently selected item if available', () => {
+      it('will focus currently selected item if available', async () => {
         const { getByText } = render(<BasicExample />);
         const lastItem = getByText('Item-3');
 
-        userEvent.click(lastItem);
+        await user.click(lastItem);
         expect(lastItem).toHaveAttribute('tabIndex', '0');
       });
     });
 
     describe('onBlur', () => {
-      it('clears currently focused item', () => {
+      it('clears currently focused item', async () => {
         const { getByText } = render(<BasicExample />);
         const item = getByText('Item-1');
 
-        userEvent.tab();
+        await user.tab();
         expect(document.activeElement).toBe(item);
 
-        userEvent.tab();
+        await user.tab();
         expect(document.activeElement).not.toBe(item);
       });
     });
@@ -201,24 +203,24 @@ describe('SelectionContainer', () => {
       describe('while in horizontal mode', () => {
         describe('LEFT keyCode', () => {
           describe('when dir is LTR', () => {
-            it('focuses on the first item when triggered from second item', () => {
+            it('focuses on the first item when triggered from second item', async () => {
               const { getByText } = render(<BasicExample />);
               const item = getByText('Item-1');
               const secondItem = getByText('Item-2');
 
-              userEvent.click(secondItem);
+              await user.click(secondItem);
               fireEvent.keyDown(secondItem, { key: KEYS.LEFT });
 
               expect(document.activeElement).toBe(item);
               expect(item).toHaveAttribute('aria-selected', 'false');
             });
 
-            it('focuses on the last item after pressing left arrow key on first item', () => {
+            it('focuses on the last item after pressing left arrow key on first item', async () => {
               const { getByText } = render(<BasicExample />);
               const item = getByText('Item-1');
               const lastItem = getByText('Item-3');
 
-              userEvent.tab();
+              await user.tab();
               fireEvent.keyDown(item, { key: KEYS.LEFT });
 
               expect(document.activeElement).toBe(lastItem);
@@ -227,24 +229,24 @@ describe('SelectionContainer', () => {
           });
 
           describe('when dir is RTL', () => {
-            it('focuses on the second item when triggered from first item', () => {
+            it('focuses on the second item when triggered from first item', async () => {
               const { getByText } = render(<BasicExample rtl />);
               const item = getByText('Item-1');
               const secondItem = getByText('Item-2');
 
-              userEvent.tab();
+              await user.tab();
               fireEvent.keyDown(item, { key: KEYS.LEFT });
 
               expect(document.activeElement).toBe(secondItem);
               expect(secondItem).toHaveAttribute('aria-selected', 'false');
             });
 
-            it('focuses on the first item when triggered from last item', () => {
+            it('focuses on the first item when triggered from last item', async () => {
               const { getByText } = render(<BasicExample rtl />);
               const item = getByText('Item-1');
               const lastItem = getByText('Item-3');
 
-              userEvent.click(lastItem);
+              await user.click(lastItem);
               fireEvent.keyDown(lastItem, { key: KEYS.LEFT });
 
               expect(document.activeElement).toBe(item);
@@ -255,45 +257,45 @@ describe('SelectionContainer', () => {
 
         describe('RIGHT keyCode', () => {
           describe('when dir is LTR', () => {
-            it('focuses on the second next item when triggered from first item', () => {
+            it('focuses on the second next item when triggered from first item', async () => {
               const { getByText } = render(<BasicExample />);
               const item = getByText('Item-1');
               const secondItem = getByText('Item-2');
 
-              userEvent.click(item);
+              await user.click(item);
               fireEvent.keyDown(item, { key: KEYS.RIGHT });
               expect(secondItem).toBe(document.activeElement);
             });
 
-            it('focuses on the first item when triggered from last item', () => {
+            it('focuses on the first item when triggered from last item', async () => {
               const { getByText } = render(<BasicExample />);
               const item = getByText('Item-1');
               const lastItem = getByText('Item-3');
 
-              userEvent.click(lastItem);
+              await user.click(lastItem);
               fireEvent.keyDown(lastItem, { key: KEYS.RIGHT });
               expect(item).toBe(document.activeElement);
             });
           });
 
           describe('when dir is RTL', () => {
-            it('focuses on the first item when triggered from second item', () => {
+            it('focuses on the first item when triggered from second item', async () => {
               const { getByText } = render(<BasicExample rtl />);
               const item = getByText('Item-1');
               const secondItem = getByText('Item-2');
 
-              userEvent.click(secondItem);
+              await user.click(secondItem);
               fireEvent.keyDown(secondItem, { key: KEYS.RIGHT });
 
               expect(item).toBe(document.activeElement);
             });
 
-            it('focuses on the last item when triggered from first item', () => {
+            it('focuses on the last item when triggered from first item', async () => {
               const { getByText } = render(<BasicExample rtl />);
               const item = getByText('Item-1');
               const lastItem = getByText('Item-3');
 
-              userEvent.click(item);
+              await user.click(item);
               fireEvent.keyDown(item, { key: KEYS.RIGHT });
 
               expect(lastItem).toBe(document.activeElement);
@@ -302,11 +304,11 @@ describe('SelectionContainer', () => {
         });
 
         describe('UP keyCode', () => {
-          it('does not perform any action', () => {
+          it('does not perform any action', async () => {
             const { getByText } = render(<BasicExample />);
             const item = getByText('Item-1');
 
-            userEvent.click(item);
+            await user.click(item);
             expect(item).toBe(document.activeElement);
 
             fireEvent.keyDown(item, { key: KEYS.UP });
@@ -315,11 +317,11 @@ describe('SelectionContainer', () => {
         });
 
         describe('DOWN keyCode', () => {
-          it('does not perform any action', () => {
+          it('does not perform any action', async () => {
             const { getByText } = render(<BasicExample />);
             const item = getByText('Item-1');
 
-            userEvent.click(item);
+            await user.click(item);
             expect(item).toBe(document.activeElement);
 
             fireEvent.keyDown(item, { key: KEYS.DOWN });
@@ -330,34 +332,34 @@ describe('SelectionContainer', () => {
 
       describe('while using vertical direction', () => {
         describe('UP keyCode', () => {
-          it('focuses on the first item when triggered from second item', () => {
+          it('focuses on the first item when triggered from second item', async () => {
             const { getByText } = render(<BasicExample direction="vertical" />);
             const item = getByText('Item-1');
             const secondItem = getByText('Item-2');
 
-            userEvent.click(secondItem);
+            await user.click(secondItem);
             fireEvent.keyDown(secondItem, { key: KEYS.UP });
 
             expect(item).toBe(document.activeElement);
           });
 
-          it('focuses on the first item when triggered from second item in RTL', () => {
+          it('focuses on the first item when triggered from second item in RTL', async () => {
             const { getByText } = render(<BasicExample direction="vertical" rtl />);
             const item = getByText('Item-1');
             const secondItem = getByText('Item-2');
 
-            userEvent.click(secondItem);
+            await user.click(secondItem);
             fireEvent.keyDown(secondItem, { key: KEYS.UP });
 
             expect(item).toBe(document.activeElement);
           });
 
-          it('focuses on the last item when triggered from first item', () => {
+          it('focuses on the last item when triggered from first item', async () => {
             const { getByText } = render(<BasicExample direction="vertical" />);
             const item = getByText('Item-1');
             const lastItem = getByText('Item-3');
 
-            userEvent.click(item);
+            await user.click(item);
             fireEvent.keyDown(item, { key: KEYS.UP });
 
             expect(lastItem).toBe(document.activeElement);
@@ -365,34 +367,34 @@ describe('SelectionContainer', () => {
         });
 
         describe('DOWN keyCode', () => {
-          it('focuses on the second item when triggered from first item', () => {
+          it('focuses on the second item when triggered from first item', async () => {
             const { getByText } = render(<BasicExample direction="vertical" />);
             const item = getByText('Item-1');
             const secondItem = getByText('Item-2');
 
-            userEvent.click(item);
+            await user.click(item);
             fireEvent.keyDown(item, { key: KEYS.DOWN });
 
             expect(secondItem).toBe(document.activeElement);
           });
 
-          it('focuses on the second item when triggered from first item in RTL', () => {
+          it('focuses on the second item when triggered from first item in RTL', async () => {
             const { getByText } = render(<BasicExample direction="vertical" rtl />);
             const item = getByText('Item-1');
             const secondItem = getByText('Item-2');
 
-            userEvent.click(item);
+            await user.click(item);
             fireEvent.keyDown(item, { key: KEYS.DOWN });
 
             expect(secondItem).toBe(document.activeElement);
           });
 
-          it('focuses on the first item when triggered from last item', () => {
+          it('focuses on the first item when triggered from last item', async () => {
             const { getByText } = render(<BasicExample direction="vertical" />);
             const item = getByText('Item-1');
             const lastItem = getByText('Item-3');
 
-            userEvent.click(lastItem);
+            await user.click(lastItem);
             fireEvent.keyDown(lastItem, { key: KEYS.DOWN });
 
             expect(item).toBe(document.activeElement);
@@ -400,11 +402,11 @@ describe('SelectionContainer', () => {
         });
 
         describe('LEFT keyCode', () => {
-          it('does not perform any action', () => {
+          it('does not perform any action', async () => {
             const { getByText } = render(<BasicExample direction="vertical" />);
             const item = getByText('Item-1');
 
-            userEvent.click(item);
+            await user.click(item);
             expect(item).toBe(document.activeElement);
 
             fireEvent.keyDown(item, { key: KEYS.LEFT });
@@ -413,11 +415,11 @@ describe('SelectionContainer', () => {
         });
 
         describe('RIGHT keyCode', () => {
-          it('does not perform any action', () => {
+          it('does not perform any action', async () => {
             const { getByText } = render(<BasicExample direction="vertical" />);
             const item = getByText('Item-1');
 
-            userEvent.click(item);
+            await user.click(item);
             expect(item).toBe(document.activeElement);
 
             fireEvent.keyDown(item, { key: KEYS.RIGHT });
@@ -429,24 +431,24 @@ describe('SelectionContainer', () => {
       describe('while using both direction', () => {
         describe('LEFT keyCode', () => {
           describe('when dir is LTR', () => {
-            it('focuses on the first item when triggered from second item', () => {
+            it('focuses on the first item when triggered from second item', async () => {
               const { getByText } = render(<BasicExample />);
               const item = getByText('Item-1');
               const secondItem = getByText('Item-2');
 
-              userEvent.click(secondItem);
+              await user.click(secondItem);
               fireEvent.keyDown(secondItem, { key: KEYS.LEFT });
 
               expect(document.activeElement).toBe(item);
               expect(item).toHaveAttribute('aria-selected', 'false');
             });
 
-            it('focuses on the last item after pressing left arrow key on first item', () => {
+            it('focuses on the last item after pressing left arrow key on first item', async () => {
               const { getByText } = render(<BasicExample />);
               const item = getByText('Item-1');
               const lastItem = getByText('Item-3');
 
-              userEvent.tab();
+              await user.tab();
               fireEvent.keyDown(item, { key: KEYS.LEFT });
 
               expect(document.activeElement).toBe(lastItem);
@@ -455,24 +457,24 @@ describe('SelectionContainer', () => {
           });
 
           describe('when dir is RTL', () => {
-            it('focuses on the second item when triggered from first item', () => {
+            it('focuses on the second item when triggered from first item', async () => {
               const { getByText } = render(<BasicExample rtl />);
               const item = getByText('Item-1');
               const secondItem = getByText('Item-2');
 
-              userEvent.tab();
+              await user.tab();
               fireEvent.keyDown(item, { key: KEYS.LEFT });
 
               expect(document.activeElement).toBe(secondItem);
               expect(secondItem).toHaveAttribute('aria-selected', 'false');
             });
 
-            it('focuses on the first item when triggered from last item', () => {
+            it('focuses on the first item when triggered from last item', async () => {
               const { getByText } = render(<BasicExample rtl />);
               const item = getByText('Item-1');
               const lastItem = getByText('Item-3');
 
-              userEvent.click(lastItem);
+              await user.click(lastItem);
               fireEvent.keyDown(lastItem, { key: KEYS.LEFT });
 
               expect(document.activeElement).toBe(item);
@@ -483,45 +485,45 @@ describe('SelectionContainer', () => {
 
         describe('RIGHT keyCode', () => {
           describe('when dir is LTR', () => {
-            it('focuses on the second next item when triggered from first item', () => {
+            it('focuses on the second next item when triggered from first item', async () => {
               const { getByText } = render(<BasicExample />);
               const item = getByText('Item-1');
               const secondItem = getByText('Item-2');
 
-              userEvent.click(item);
+              await user.click(item);
               fireEvent.keyDown(item, { key: KEYS.RIGHT });
               expect(secondItem).toBe(document.activeElement);
             });
 
-            it('focuses on the first item when triggered from last item', () => {
+            it('focuses on the first item when triggered from last item', async () => {
               const { getByText } = render(<BasicExample />);
               const item = getByText('Item-1');
               const lastItem = getByText('Item-3');
 
-              userEvent.click(lastItem);
+              await user.click(lastItem);
               fireEvent.keyDown(lastItem, { key: KEYS.RIGHT });
               expect(item).toBe(document.activeElement);
             });
           });
 
           describe('when dir is RTL', () => {
-            it('focuses on the first item when triggered from second item', () => {
+            it('focuses on the first item when triggered from second item', async () => {
               const { getByText } = render(<BasicExample rtl />);
               const item = getByText('Item-1');
               const secondItem = getByText('Item-2');
 
-              userEvent.click(secondItem);
+              await user.click(secondItem);
               fireEvent.keyDown(secondItem, { key: KEYS.RIGHT });
 
               expect(item).toBe(document.activeElement);
             });
 
-            it('focuses on the last item when triggered from first item', () => {
+            it('focuses on the last item when triggered from first item', async () => {
               const { getByText } = render(<BasicExample rtl />);
               const item = getByText('Item-1');
               const lastItem = getByText('Item-3');
 
-              userEvent.click(item);
+              await user.click(item);
               fireEvent.keyDown(item, { key: KEYS.RIGHT });
 
               expect(lastItem).toBe(document.activeElement);
@@ -530,34 +532,34 @@ describe('SelectionContainer', () => {
         });
 
         describe('UP keyCode', () => {
-          it('focuses on the first item when triggered from second item', () => {
+          it('focuses on the first item when triggered from second item', async () => {
             const { getByText } = render(<BasicExample direction="vertical" />);
             const item = getByText('Item-1');
             const secondItem = getByText('Item-2');
 
-            userEvent.click(secondItem);
+            await user.click(secondItem);
             fireEvent.keyDown(secondItem, { key: KEYS.UP });
 
             expect(item).toBe(document.activeElement);
           });
 
-          it('focuses on the first item when triggered from second item in RTL', () => {
+          it('focuses on the first item when triggered from second item in RTL', async () => {
             const { getByText } = render(<BasicExample direction="vertical" rtl />);
             const item = getByText('Item-1');
             const secondItem = getByText('Item-2');
 
-            userEvent.click(secondItem);
+            await user.click(secondItem);
             fireEvent.keyDown(secondItem, { key: KEYS.UP });
 
             expect(item).toBe(document.activeElement);
           });
 
-          it('focuses on the last item when triggered from first item', () => {
+          it('focuses on the last item when triggered from first item', async () => {
             const { getByText } = render(<BasicExample direction="vertical" />);
             const item = getByText('Item-1');
             const lastItem = getByText('Item-3');
 
-            userEvent.click(item);
+            await user.click(item);
             fireEvent.keyDown(item, { key: KEYS.UP });
 
             expect(lastItem).toBe(document.activeElement);
@@ -565,34 +567,34 @@ describe('SelectionContainer', () => {
         });
 
         describe('DOWN keyCode', () => {
-          it('focuses on the second item when triggered from first item', () => {
+          it('focuses on the second item when triggered from first item', async () => {
             const { getByText } = render(<BasicExample direction="vertical" />);
             const item = getByText('Item-1');
             const secondItem = getByText('Item-2');
 
-            userEvent.click(item);
+            await user.click(item);
             fireEvent.keyDown(item, { key: KEYS.DOWN });
 
             expect(secondItem).toBe(document.activeElement);
           });
 
-          it('focuses on the second item when triggered from first item in RTL', () => {
+          it('focuses on the second item when triggered from first item in RTL', async () => {
             const { getByText } = render(<BasicExample direction="vertical" rtl />);
             const item = getByText('Item-1');
             const secondItem = getByText('Item-2');
 
-            userEvent.click(item);
+            await user.click(item);
             fireEvent.keyDown(item, { key: KEYS.DOWN });
 
             expect(secondItem).toBe(document.activeElement);
           });
 
-          it('focuses on the first item when triggered from last item', () => {
+          it('focuses on the first item when triggered from last item', async () => {
             const { getByText } = render(<BasicExample direction="vertical" />);
             const item = getByText('Item-1');
             const lastItem = getByText('Item-3');
 
-            userEvent.click(lastItem);
+            await user.click(lastItem);
             fireEvent.keyDown(lastItem, { key: KEYS.DOWN });
 
             expect(item).toBe(document.activeElement);
@@ -632,11 +634,11 @@ describe('SelectionContainer', () => {
     });
 
     describe('onClick', () => {
-      it('should select and focus item that was clicked', () => {
+      it('should select and focus item that was clicked', async () => {
         const { getByText } = render(<BasicExample />);
         const lastItem = getByText('Item-3');
 
-        userEvent.click(lastItem);
+        await user.click(lastItem);
 
         expect(lastItem).toHaveAttribute('aria-selected', 'true');
         expect(lastItem).toBe(document.activeElement);

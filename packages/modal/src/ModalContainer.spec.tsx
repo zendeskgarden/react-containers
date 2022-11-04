@@ -12,6 +12,8 @@ import { KEYS } from '@zendeskgarden/container-utilities';
 import { ModalContainer, IUseModalReturnValue } from './';
 
 describe('FocusJailContainer', () => {
+  const user = userEvent.setup();
+
   let onCloseSpy: jest.Mock;
   const MODAL_ID = 'TEST_ID';
   const modalRef: React.RefObject<HTMLDivElement> = createRef();
@@ -53,10 +55,10 @@ describe('FocusJailContainer', () => {
   });
 
   describe('getBackdropProps()', () => {
-    it('calls onClose when clicked', () => {
+    it('calls onClose when clicked', async () => {
       const { getByTestId } = render(<BasicExample onClose={onCloseSpy} />);
 
-      userEvent.click(getByTestId('backdrop'));
+      await user.click(getByTestId('backdrop'));
       expect(onCloseSpy).toHaveBeenCalled();
     });
 
@@ -81,10 +83,10 @@ describe('FocusJailContainer', () => {
       expect(modal).toHaveAttribute('aria-describedby', `${MODAL_ID}__content`);
     });
 
-    it('does not trigger onClose when clicked', () => {
+    it('does not trigger onClose when clicked', async () => {
       const { getByTestId } = render(<BasicExample onClose={onCloseSpy} />);
 
-      userEvent.click(getByTestId('modal'));
+      await user.click(getByTestId('modal'));
       expect(onCloseSpy).not.toHaveBeenCalled();
     });
 
@@ -128,19 +130,19 @@ describe('FocusJailContainer', () => {
       expect(getByLabelText('Close modal')).toBeVisible();
     });
 
-    it('closes modal onClick', () => {
+    it('closes modal onClick', async () => {
       const { getByLabelText } = render(<BasicExample onClose={onCloseSpy} />);
 
-      userEvent.click(getByLabelText('Close modal'));
+      await user.click(getByLabelText('Close modal'));
       expect(onCloseSpy).toHaveBeenCalled();
     });
   });
 
   describe('closeModal callback', () => {
-    it('triggers onClose if callback is triggered', () => {
+    it('triggers onClose if callback is triggered', async () => {
       const { getByText } = render(<BasicExample onClose={onCloseSpy} />);
 
-      userEvent.click(getByText('Additional close option'));
+      await user.click(getByText('Additional close option'));
       expect(onCloseSpy).toHaveBeenCalled();
     });
   });
