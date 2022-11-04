@@ -45,6 +45,6 @@ module.exports = {
     'garden-test-utils': '<rootDir>/utils/test/utilities.ts'
   },
   globals: {
-    PACKAGE_VERSION: 'test'
+    PACKAGE_VERSION: 'version'
   }
 };
