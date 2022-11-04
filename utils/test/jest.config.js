@@ -5,9 +5,6 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-const path = require('path');
-const fs = require('fs');
-
 module.exports = {
   rootDir: '../../',
   cacheDirectory: '<rootDir>/.cache/jest',
@@ -31,11 +28,16 @@ module.exports = {
   modulePathIgnorePatterns: ['./node_modules'],
   transformIgnorePatterns: ['\\/node_modules\\/(?!@zendeskgarden|@babel)'],
   transform: {
-    '^.+\\.(j|t)sx?$': [
-      'esbuild-jest',
+    '^.+\\.(t|j)sx?$': [
+      '@swc/jest',
       {
-        sourcemap: true,
-        tsconfigRaw: fs.readFileSync(path.resolve(__dirname, 'tsconfig.test.json'))
+        jsc: {
+          parser: {
+            syntax: 'typescript',
+            tsx: true,
+            preserveAllComments: false
+          }
+        }
       }
     ]
   },
@@ -43,6 +45,6 @@ module.exports = {
     'garden-test-utils': '<rootDir>/utils/test/utilities.ts'
   },
   globals: {
-    PACKAGE_VERSION: 'version'
+    PACKAGE_VERSION: 'test'
   }
 };
