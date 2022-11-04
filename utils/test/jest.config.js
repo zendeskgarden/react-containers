@@ -35,7 +35,7 @@ module.exports = {
           parser: {
             syntax: 'typescript',
             tsx: true,
-            preserveAllComments: false
+            preserveAllComments: true
           }
         }
       }
