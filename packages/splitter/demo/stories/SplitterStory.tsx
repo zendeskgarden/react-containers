@@ -62,7 +62,7 @@ const Component = forwardRef<HTMLDivElement, IComponentProps>(
         </div>
       </div>
       <div
-        className={classNames('flex', 'flex-none', {
+        className={classNames('flex', 'flex-none', 'select-none', {
           'cursor-pointer': isFixed,
           'cursor-col-resize': !isFixed && orientation === 'vertical',
           'cursor-row-resize': !isFixed && orientation === 'horizontal',

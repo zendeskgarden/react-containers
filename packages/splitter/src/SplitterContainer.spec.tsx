@@ -289,10 +289,10 @@ describe('SplitterContainer', () => {
       describe('fixed', () => {
         type MouseDownMatrix = [IUseSplitterProps['orientation'], number, number];
         it.each<MouseDownMatrix>([
-          ['vertical', 20, 100],
+          ['vertical', 20, 0],
           ['vertical', 0, 100],
           ['vertical', 100, 0],
-          ['horizontal', 20, 100],
+          ['horizontal', 20, 0],
           ['horizontal', 0, 100],
           ['horizontal', 100, 0]
         ])('should move %s splitter using mouse down from %i to %i', (orientation, start, end) => {
@@ -359,10 +359,10 @@ describe('SplitterContainer', () => {
       describe('fixed', () => {
         type TouchMatrix = [IUseSplitterProps['orientation'], number, number];
         it.each<TouchMatrix>([
-          ['vertical', 20, 100],
+          ['vertical', 20, 0],
           ['vertical', 0, 100],
           ['vertical', 100, 0],
-          ['horizontal', 20, 100],
+          ['horizontal', 20, 0],
           ['horizontal', 0, 100],
           ['horizontal', 100, 0]
         ])('should move %s splitter using touch from %i to %i', (orientation, start, end) => {

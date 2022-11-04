@@ -82,17 +82,15 @@ export const useSplitter = <T extends HTMLElement = HTMLElement>({
 
   const setRangedSeparatorPosition = useCallback(
     (nextDimension: number) => {
-      if (separatorRef.current) {
-        if (nextDimension >= max) {
-          setSeparatorPosition(max);
-        } else if (nextDimension <= min) {
-          setSeparatorPosition(min);
-        } else {
-          setSeparatorPosition(nextDimension);
-        }
+      if (nextDimension >= max) {
+        setSeparatorPosition(max);
+      } else if (nextDimension <= min) {
+        setSeparatorPosition(min);
+      } else {
+        setSeparatorPosition(nextDimension);
       }
     },
-    [max, min, separatorRef, setSeparatorPosition]
+    [max, min, setSeparatorPosition]
   );
 
   const move = useCallback(
@@ -238,15 +236,7 @@ export const useSplitter = <T extends HTMLElement = HTMLElement>({
       };
 
       const handleClick = (event: MouseEvent) => {
-        if (isFixed) {
-          if (separatorPosition > min) {
-            setSeparatorPosition(min);
-          }
-
-          if (separatorPosition < max) {
-            setSeparatorPosition(max);
-          }
-        } else if (event.detail === 2 /* double click */) {
+        if (isFixed || event.detail === 2 /* double click */) {
           handleKeyDown({ key: KEYS.ENTER } as React.KeyboardEvent);
         }
       };
