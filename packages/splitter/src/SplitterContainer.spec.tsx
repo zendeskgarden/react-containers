@@ -10,6 +10,7 @@ import { render, fireEvent } from '@testing-library/react';
 import { IUseSplitterProps, IUseSplitterReturnValue } from './types';
 import { SplitterContainer } from './';
 import { KEYBOARD_STEP } from './useSplitter';
+import userEvent from '@testing-library/user-event';
 
 const paneStyle: React.CSSProperties = {
   flexGrow: 0,
@@ -157,14 +158,14 @@ describe('SplitterContainer', () => {
         </SplitterContainer>
       );
       expect(primaryPaneProps).toMatchInlineSnapshot(`
-        Object {
+        {
           "data-garden-container-id": "containers.splitter.primaryPane",
           "data-garden-container-version": "version",
           "id": "1--primary-pane",
         }
       `);
       expect(separatorProps).toMatchInlineSnapshot(`
-        Object {
+        {
           "aria-controls": "1--primary-pane",
           "aria-label": "flex-pane",
           "aria-orientation": "vertical",
@@ -275,6 +276,16 @@ describe('SplitterContainer', () => {
         });
       });
 
+      it('should return from min to previous position on double click', () => {
+        const { getByRole } = render(<UncontrolledTestSplitter defaultValueNow={50} />);
+        const element = getByRole('separator');
+
+        userEvent.dblClick(element);
+        userEvent.dblClick(element);
+
+        expect(element).toHaveAttribute('aria-valuenow', '50');
+      });
+
       describe('fixed', () => {
         type MouseDownMatrix = [IUseSplitterProps['orientation'], number, number];
         it.each<MouseDownMatrix>([
@@ -376,10 +387,14 @@ describe('SplitterContainer', () => {
           ['vertical', 'ArrowLeft', 70, 70 - KEYBOARD_STEP],
           ['vertical', 'Enter', 20, 0],
           ['vertical', 'Enter', 0, 100],
+          ['vertical', 'Home', 100, 0],
+          ['vertical', 'End', 0, 100],
           ['horizontal', 'ArrowUp', 70, 70 - KEYBOARD_STEP],
           ['horizontal', 'ArrowDown', 20, 20 + KEYBOARD_STEP],
           ['horizontal', 'Enter', 20, 0],
-          ['horizontal', 'Enter', 0, 100]
+          ['horizontal', 'Enter', 0, 100],
+          ['horizontal', 'Home', 100, 0],
+          ['horizontal', 'End', 0, 100]
         ])('should move %s splitter using %s from %i to %i', (orientation, key, start, end) => {
           const { getByRole } = render(
             <UncontrolledTestSplitter orientation={orientation} defaultValueNow={start} />
@@ -396,8 +411,12 @@ describe('SplitterContainer', () => {
         it.each<KeyDownMatrix>([
           ['vertical', 'Enter', 20, 0],
           ['vertical', 'Enter', 0, 100],
+          ['vertical', 'Home', 100, 0],
+          ['vertical', 'End', 0, 100],
           ['horizontal', 'Enter', 20, 0],
-          ['horizontal', 'Enter', 0, 100]
+          ['horizontal', 'Enter', 0, 100],
+          ['horizontal', 'Home', 100, 0],
+          ['horizontal', 'End', 0, 100]
         ])('should move %s splitter using %s from %i to %i', (orientation, key, start, end) => {
           const { getByRole } = render(
             <UncontrolledTestSplitter isFixed orientation={orientation} defaultValueNow={start} />
@@ -408,6 +427,26 @@ describe('SplitterContainer', () => {
 
           expect(element).toHaveAttribute('aria-valuenow', String(end));
         });
+      });
+
+      it('should return from min to previous position on <enter>', () => {
+        const { getByRole } = render(<UncontrolledTestSplitter defaultValueNow={50} />);
+        const element = getByRole('separator');
+
+        fireEvent.keyDown(element, { key: 'Enter' });
+        fireEvent.keyDown(element, { key: 'Enter' });
+
+        expect(element).toHaveAttribute('aria-valuenow', '50');
+      });
+
+      it('should return from <home> to previous position on <enter>', () => {
+        const { getByRole } = render(<UncontrolledTestSplitter defaultValueNow={50} />);
+        const element = getByRole('separator');
+
+        fireEvent.keyDown(element, { key: 'Home' });
+        fireEvent.keyDown(element, { key: 'Enter' });
+
+        expect(element).toHaveAttribute('aria-valuenow', '50');
       });
     });
 

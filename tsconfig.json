@@ -23,6 +23,7 @@
       "@zendeskgarden/container-schedule": ["./packages/schedule/src/index.ts"],
       "@zendeskgarden/container-scrollregion": ["./packages/scrollregion/src/index.ts"],
       "@zendeskgarden/container-selection": ["./packages/selection/src/index.ts"],
+      "@zendeskgarden/container-slider": ["./packages/slider/src/index.ts"],
       "@zendeskgarden/container-splitter": ["./packages/splitter/src/index.ts"],
       "@zendeskgarden/container-tabs": ["./packages/tabs/src/index.ts"],
       "@zendeskgarden/container-tooltip": ["./packages/tooltip/src/index.ts"],

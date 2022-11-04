@@ -1,6 +1,6 @@
 {
   "name": "@zendeskgarden/container-modal",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Containers relating to modal in the Garden Design System",
   "license": "Apache-2.0",
   "author": "Zendesk Garden <garden@zendesk.com>",
@@ -21,8 +21,8 @@
   "types": "dist/typings/index.d.ts",
   "dependencies": {
     "@babel/runtime": "^7.8.4",
-    "@zendeskgarden/container-focusjail": "^2.0.0",
-    "@zendeskgarden/container-utilities": "^1.0.0"
+    "@zendeskgarden/container-focusjail": "^2.0.1",
+    "@zendeskgarden/container-utilities": "^1.0.1"
   },
   "peerDependencies": {
     "prop-types": "^15.6.1",

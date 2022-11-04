@@ -1,6 +1,6 @@
 {
   "name": "@zendeskgarden/container-scrollregion",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Containers relating to scroll region in the Garden Design System",
   "license": "Apache-2.0",
   "author": "Zendesk Garden <garden@zendesk.com>",
@@ -22,8 +22,7 @@
   "dependencies": {
     "@babel/runtime": "^7.8.4",
     "lodash.debounce": "^4.0.8",
-    "prop-types": "^15.7.2",
-    "react-merge-refs": "^1.1.0"
+    "prop-types": "^15.7.2"
   },
   "peerDependencies": {
     "react": ">=16.8.0",

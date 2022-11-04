@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.1](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-focusjail@2.0.0...@zendeskgarden/container-focusjail@2.0.1) (2022-10-10)
+
+
+### Bug Fixes
+
+* **deps:** update dependency tabbable to v6 ([#480](https://github.com/zendeskgarden/react-containers/issues/480)) ([b28beb3](https://github.com/zendeskgarden/react-containers/commit/b28beb335a3e81fe1702a15d5f063c09cd262804))
+
+
+
+
+
 # [2.0.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-focusjail@1.4.13...@zendeskgarden/container-focusjail@2.0.0) (2022-06-17)
 
 
