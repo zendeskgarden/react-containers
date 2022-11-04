@@ -323,12 +323,12 @@ describe('useGrid', () => {
       expect(onChange).toHaveBeenCalledTimes(1);
       expect(onChange).toHaveBeenCalledWith(1, 1);
 
-      await user.keyboard('{Control>}{home}');
+      await user.keyboard('{Control>}{home}{/Control}');
       expect(gridCell('#d1e8df')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(2);
       expect(onChange).toHaveBeenCalledWith(0, 0);
 
-      await user.keyboard('{Control>}{end}');
+      await user.keyboard('{Control>}{end}{/Control}');
       expect(gridCell('#adcce4')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(3);
       expect(onChange).toHaveBeenCalledWith(2, 1);
@@ -640,12 +640,12 @@ describe('useGrid', () => {
       expect(onChange).toHaveBeenCalledTimes(1);
       expect(onChange).toHaveBeenCalledWith(1, 1);
 
-      await user.keyboard('{Control>}{home}');
+      await user.keyboard('{Control>}{home}{/Control}');
       expect(gridCell('#d1e8df')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(2);
       expect(onChange).toHaveBeenCalledWith(0, 0);
 
-      await user.keyboard('{Control>}{end}');
+      await user.keyboard('{Control>}{end}{/Control}');
       expect(gridCell('#adcce4')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(3);
       expect(onChange).toHaveBeenCalledWith(2, 1);

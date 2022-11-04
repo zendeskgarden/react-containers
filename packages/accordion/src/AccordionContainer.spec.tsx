@@ -432,18 +432,21 @@ describe('AccordionContainer', () => {
       });
     });
 
-    it('disables sections as it expands', () => {
+    it('disables sections as it expands', async () => {
       const { getAllByTestId } = render(<BasicExample expandable collapsible={false} />);
 
       const triggers = getAllByTestId('trigger');
       const panels = getAllByTestId('panel');
 
-      triggers.forEach(async (trigger, index) => {
+      for (const trigger of triggers) {
+        const index = triggers.indexOf(trigger);
+
+        // eslint-disable-next-line no-await-in-loop
         await user.click(trigger);
         expect(trigger).toHaveAttribute('aria-disabled', 'true');
         expect(trigger).toHaveAttribute('aria-expanded', 'true');
         expect(panels[index]).toHaveAttribute('aria-hidden', 'false');
-      });
+      }
     });
 
     it('prevents collapse on an expanded section', async () => {
@@ -491,9 +494,13 @@ describe('AccordionContainer', () => {
       });
     });
 
-    it('only expand-disables section at a time', () => {
-      triggers.forEach(async (trigger, index) => {
+    it('only expand-disables section at a time', async () => {
+      for (const trigger of triggers) {
+        const index = triggers.indexOf(trigger);
+
+        // eslint-disable-next-line no-await-in-loop
         await user.click(trigger);
+        // eslint-disable-next-line @typescript-eslint/no-loop-func
         triggers.forEach((_trigger, _index) => {
           const expanded = _index === index ? 'true' : 'false';
           const hidden = _index === index ? 'false' : 'true';
@@ -502,7 +509,7 @@ describe('AccordionContainer', () => {
           expect(_trigger).toHaveAttribute('aria-disabled', expanded);
           expect(panels[_index]).toHaveAttribute('aria-hidden', hidden);
         });
-      });
+      }
     });
 
     it('prevents collapse on the expanded section', async () => {

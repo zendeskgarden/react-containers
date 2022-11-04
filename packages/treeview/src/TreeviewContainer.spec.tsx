@@ -8,6 +8,8 @@
 import React, { createRef } from 'react';
 import { render, RenderResult, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { KEYS } from '@zendeskgarden/container-utilities';
+
 import { TreeviewContainer } from './TreeviewContainer';
 import { IUseTreeviewProps, IUseTreeviewReturnValue } from './types';
 
@@ -181,22 +183,21 @@ describe('uncontrolled usages', () => {
 
     await user.tab();
     expect(getParentNode('Fruits')).toHaveAttribute('aria-selected', 'false');
-
-    await user.keyboard('{space}');
+    await user.keyboard(`{${KEYS.SPACE}}`);
     expect(getParentNode('Fruits')).toHaveAttribute('aria-selected', 'true');
     expect(getParentNode('Fruits')).toHaveAttribute('aria-expanded', 'false');
     await user.keyboard('{enter}');
     expect(getParentNode('Fruits')).toHaveAttribute('aria-expanded', 'true');
 
     await user.keyboard('{end}');
-    await user.keyboard('{space}');
+    await user.keyboard(`{${KEYS.SPACE}}`);
     expect(getParentNode('Fruits')).toHaveAttribute('aria-selected', 'false');
     expect(getParentNode('Vegetables')).toHaveAttribute('aria-expanded', 'false');
     await user.keyboard('{enter}');
     expect(getParentNode('Vegetables')).toHaveAttribute('aria-expanded', 'true');
 
     await user.keyboard('{home}');
-    await user.keyboard('{space}');
+    await user.keyboard(`{${KEYS.SPACE}}`);
     expect(getParentNode('Fruits')).toHaveAttribute('aria-selected', 'true');
     await user.click(getParentNode('Apples'));
     expect(getParentNode('Fruits')).toHaveAttribute('aria-expanded', 'true');
@@ -220,33 +221,33 @@ describe('uncontrolled usages', () => {
       expect(getParentNode('Fruits')).toHaveAttribute('aria-expanded', 'true');
 
       await user.keyboard(right);
-      await user.keyboard('{space}');
+      await user.keyboard(`{${KEYS.SPACE}}`);
       expect(getParentNode('Oranges')).toHaveAttribute('aria-selected', 'true');
       await user.keyboard(down);
-      await user.keyboard('{space}');
+      await user.keyboard(`{${KEYS.SPACE}}`);
       expect(getParentNode('Apples')).toHaveAttribute('aria-selected', 'true');
       await user.keyboard(right);
-      await user.keyboard('{space}');
+      await user.keyboard(`{${KEYS.SPACE}}`);
       expect(getParentNode('Apples')).toHaveAttribute('aria-expanded', 'true');
 
       await user.keyboard(down);
       await user.keyboard(down);
       await user.keyboard(down);
-      await user.keyboard('{space}');
+      await user.keyboard(`{${KEYS.SPACE}}`);
       expect(getParentNode('Vegetables')).toHaveAttribute('aria-selected', 'true');
 
       await user.keyboard(right);
-      await user.keyboard('{space}');
+      await user.keyboard(`{${KEYS.SPACE}}`);
       expect(getParentNode('Vegetables')).toHaveAttribute('aria-expanded', 'true');
 
       await user.keyboard(right);
       await user.keyboard(right);
-      await user.keyboard('{space}');
+      await user.keyboard(`{${KEYS.SPACE}}`);
       expect(getParentNode('Podded Vegetables')).toHaveAttribute('aria-selected', 'true');
       expect(getParentNode('Podded Vegetables')).toHaveAttribute('aria-expanded', 'true');
 
       await user.keyboard(right);
-      await user.keyboard('{space}');
+      await user.keyboard(`{${KEYS.SPACE}}`);
       expect(getParentNode('Lentil')).toHaveAttribute('aria-selected', 'true');
 
       await user.keyboard(left);
@@ -255,13 +256,13 @@ describe('uncontrolled usages', () => {
 
       await user.keyboard(left);
       await user.keyboard(left);
-      await user.keyboard('{space}');
+      await user.keyboard(`{${KEYS.SPACE}}`);
       expect(getParentNode('Vegetables')).toHaveAttribute('aria-expanded', 'false');
       expect(getParentNode('Vegetables')).toHaveAttribute('aria-selected', 'true');
 
       await user.keyboard(up);
       await user.keyboard(up);
-      await user.keyboard('{space}');
+      await user.keyboard(`{${KEYS.SPACE}}`);
       expect(getParentNode('Macintosh')).toHaveAttribute('aria-selected', 'true');
     }
   );

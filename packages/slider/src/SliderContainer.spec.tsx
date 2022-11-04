@@ -11,7 +11,18 @@ import { render, fireEvent, createEvent } from '@testing-library/react';
 import { IUseSliderProps, IUseSliderReturnValue } from './types';
 import { SliderContainer } from './SliderContainer';
 
-jest.mock('lodash.debounce', () => ({ default: (fn: any) => fn, __esModule: true }));
+jest.mock('lodash.debounce', () => {
+  const wrapWithCancel = (fn: any) => {
+    fn.cancel = jest.fn();
+
+    return fn;
+  };
+
+  return {
+    default: (fn: any) => wrapWithCancel(fn),
+    __esModule: true
+  };
+});
 
 describe('SliderContainer', () => {
   const user = userEvent.setup();
