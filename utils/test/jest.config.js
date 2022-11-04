@@ -12,7 +12,6 @@ module.exports = {
   rootDir: '../../',
   cacheDirectory: '<rootDir>/.cache/jest',
   coverageDirectory: '<rootDir>/.cache/coverage',
-  coverageProvider: 'v8',
   collectCoverageFrom: [
     '<rootDir>/packages/*/src/**/*.{js,jsx,ts,tsx}',
     '!<rootDir>/packages/*/src/index.{js,jsx,ts,tsx}',
