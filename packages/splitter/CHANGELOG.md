@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.3](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-splitter@2.0.2...@zendeskgarden/container-splitter@2.0.3) (2022-11-07)
+
+
+### Bug Fixes
+
+* **splitter:** update `isFixed` to leverage enter key handling ([#488](https://github.com/zendeskgarden/react-containers/issues/488)) ([05e1711](https://github.com/zendeskgarden/react-containers/commit/05e171174663d75125f2602ea003a21958a2c99c))
+
+
+
+
+
 ## [2.0.2](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-splitter@2.0.1...@zendeskgarden/container-splitter@2.0.2) (2022-11-01)
 
 
