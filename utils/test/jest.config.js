@@ -5,36 +5,46 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-const path = require('path');
-const { defaults } = require('jest-config');
-
 module.exports = {
-  testEnvironment: 'jsdom',
   rootDir: '../../',
-  preset: 'ts-jest/presets/js-with-babel',
-  modulePathIgnorePatterns: ['./node_modules'],
-  resolver: path.resolve(__dirname, 'jest.resolver.js'),
-  transform: {
-    '^.+\\.js$': 'babel-jest'
-  },
-  globals: {
-    PACKAGE_VERSION: 'version',
-    'ts-jest': {
-      tsconfig: path.resolve(__dirname, 'tsconfig.test.json')
-    }
-  },
-  moduleFileExtensions: [...defaults.moduleFileExtensions],
+  cacheDirectory: '<rootDir>/.cache/jest',
+  coverageDirectory: '<rootDir>/.cache/coverage',
+  collectCoverageFrom: [
+    '<rootDir>/packages/*/src/**/*.{js,jsx,ts,tsx}',
+    '!<rootDir>/packages/*/src/index.{js,jsx,ts,tsx}',
+    '!<rootDir>/packages/*/src/types.{js,jsx,ts,tsx}',
+    '!<rootDir>/packages/.template/**',
+    '!**/node_modules/**',
+    '!**/vendor/**',
+    // constant files that are not tested
+    '!<rootDir>/packages/utilities/src/utils/DocumentPosition.ts',
+    '!<rootDir>/packages/utilities/src/utils/KeyboardEventValues.ts',
+    '!<rootDir>/packages/utilities/src/utils/useId.ts'
+  ],
+  testMatch: ['<rootDir>/packages/*/src/**/?(*.)+(spec|test).[jt]s?(x)'],
+  testPathIgnorePatterns: ['/node_modules/', '<rootDir>/packages/.template'],
+  testEnvironment: 'jest-environment-jsdom',
   setupFilesAfterEnv: ['<rootDir>/utils/test/jest.setup.js'],
+  modulePathIgnorePatterns: ['./node_modules'],
+  transformIgnorePatterns: ['\\/node_modules\\/(?!@zendeskgarden|@babel)'],
+  transform: {
+    '^.+\\.(t|j)sx?$': [
+      '@swc/jest',
+      {
+        jsc: {
+          parser: {
+            syntax: 'typescript',
+            tsx: true,
+            preserveAllComments: true
+          }
+        }
+      }
+    ]
+  },
   moduleNameMapper: {
     'garden-test-utils': '<rootDir>/utils/test/utilities.ts'
   },
-  collectCoverageFrom: [
-    '<rootDir>/packages/*/src/**/*.{js,jsx,ts,tsx}',
-    '!<rootDir>/packages/*/src/index.{js,ts}',
-    '!<rootDir>/packages/.template/**',
-    '!**/node_modules/**',
-    '!**/vendor/**'
-  ],
-  coverageDirectory: '<rootDir>/utils/storybook/coverage',
-  testPathIgnorePatterns: ['/node_modules/', '<rootDir>/packages/.template']
+  globals: {
+    PACKAGE_VERSION: 'version'
+  }
 };

@@ -14,7 +14,9 @@ module.exports = {
         loose: true
       }
     ],
-    '@babel/preset-react'
+    '@babel/preset-react',
+    // used for testing with jest
+    ['@babel/preset-typescript', { onlyRemoveTypeImports: true }]
   ],
   plugins: [
     [
