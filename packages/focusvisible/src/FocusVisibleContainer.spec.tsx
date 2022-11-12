@@ -14,6 +14,8 @@ import { FocusVisibleContainer, useFocusVisible } from './';
 jest.useFakeTimers();
 
 describe('FocusVisibleContainer', () => {
+  const user = userEvent.setup({ delay: null });
+
   const Example = () => {
     return (
       <FocusVisibleContainer>
@@ -46,20 +48,20 @@ describe('FocusVisibleContainer', () => {
     console.error = originalError;
   });
 
-  it('leaves element intact if blured when not showing focus treatment', () => {
+  it('leaves element intact if blured when not showing focus treatment', async () => {
     const { getByTestId } = render(<Example />);
     const button = getByTestId('button');
 
-    userEvent.tab();
+    await user.tab();
 
     expect(button).toHaveAttribute('data-garden-focus-visible');
 
-    userEvent.tab();
+    await user.tab();
 
     expect(button).not.toHaveAttribute('data-garden-focus-visible');
   });
 
-  it('does not apply focus treatment if keyed with navigation keys', () => {
+  it('does not apply focus treatment if keyed with navigation keys', async () => {
     const { getByTestId } = render(<Example />);
     const button = getByTestId('button');
 
@@ -70,37 +72,37 @@ describe('FocusVisibleContainer', () => {
       expect(button).not.toHaveAttribute('data-garden-focus-visible');
     });
 
-    userEvent.tab();
+    await user.tab();
 
     expect(button).toHaveAttribute('data-garden-focus-visible');
   });
 
-  it('does not apply focus treatment if pointer is used', () => {
+  it('does not apply focus treatment if pointer is used', async () => {
     const { getByTestId } = render(<Example />);
     const button = getByTestId('button');
 
-    userEvent.click(button);
+    await user.click(button);
 
     expect(button).not.toHaveAttribute('data-garden-focus-visible');
   });
 
   describe('Pointer Interaction', () => {
-    it('does not allow focus treatment of provided scope', () => {
+    it('does not allow focus treatment of provided scope', async () => {
       const { getByTestId } = render(<Example />);
       const wrapper = getByTestId('wrapper');
 
-      userEvent.click(wrapper);
+      await user.click(wrapper);
 
       expect(wrapper).not.toHaveAttribute('data-garden-focus-visible');
     });
 
-    it('applies focus treatment if keyed while focused', () => {
+    it('applies focus treatment if keyed while focused', async () => {
       const { getByTestId } = render(<Example />);
       const button = getByTestId('button');
 
       expect(button).not.toHaveAttribute('data-garden-focus-visible');
 
-      userEvent.tab();
+      await user.tab();
 
       expect(button).toHaveAttribute('data-garden-focus-visible');
     });
@@ -127,36 +129,36 @@ describe('FocusVisibleContainer', () => {
       expect(button).toHaveAttribute('data-garden-focus-visible');
     });
 
-    it('retains focus treatment if focused multiple times', () => {
+    it('retains focus treatment if focused multiple times', async () => {
       const { getByTestId } = render(<Example />);
       const button = getByTestId('button');
 
       expect(button).not.toHaveAttribute('data-garden-focus-visible');
 
-      userEvent.tab();
+      await user.tab();
 
       expect(button).toHaveAttribute('data-garden-focus-visible');
 
-      userEvent.tab({ shift: true });
+      await user.tab({ shift: true });
 
       expect(button).not.toHaveAttribute('data-garden-focus-visible');
 
-      userEvent.tab();
+      await user.tab();
 
       expect(button).toHaveAttribute('data-garden-focus-visible');
     });
 
-    it('removes focus treatment if blured', () => {
+    it('removes focus treatment if blured', async () => {
       const { getByTestId } = render(<Example />);
       const button = getByTestId('button');
 
       expect(button).not.toHaveAttribute('data-garden-focus-visible');
 
-      userEvent.tab();
+      await user.tab();
 
       expect(button).toHaveAttribute('data-garden-focus-visible');
 
-      userEvent.tab();
+      await user.tab();
       jest.runOnlyPendingTimers();
 
       expect(button).not.toHaveAttribute('data-garden-focus-visible');
@@ -202,14 +204,14 @@ describe('FocusVisibleContainer', () => {
       expect(textarea).toHaveAttribute('data-garden-focus-visible');
     });
 
-    it('does not apply focus-visible when element is not reachable via sequential keyboard navigation', () => {
+    it('does not apply focus-visible when element is not reachable via sequential keyboard navigation', async () => {
       const { getByText } = render(
         <KeyboardModalityExample>
           <button tabIndex={-1}>click</button>
         </KeyboardModalityExample>
       );
 
-      userEvent.tab();
+      await user.tab();
 
       expect(getByText('click')).not.toHaveAttribute('data-garden-focus-visible');
     });

@@ -13,6 +13,8 @@ import { ScrollRegionContainer } from './index';
 jest.useFakeTimers();
 
 describe('ScrollRegionContainer', () => {
+  const user = userEvent.setup({ delay: null });
+
   const Example = () => {
     const containerRef = useRef<HTMLDivElement>(null);
 
@@ -27,7 +29,7 @@ describe('ScrollRegionContainer', () => {
     );
   };
 
-  it('allows keyboard focus when region has overflow', () => {
+  it('allows keyboard focus when region has overflow', async () => {
     render(<Example />);
 
     const container = screen.getByTestId('container');
@@ -43,13 +45,13 @@ describe('ScrollRegionContainer', () => {
       jest.runAllTimers();
     });
 
-    userEvent.tab();
+    await user.tab();
 
     expect(container).toHaveFocus();
     expect(container).toHaveAttribute('tabIndex', '0');
   });
 
-  it('does not allow keyboard focus when region does not overflow', () => {
+  it('does not allow keyboard focus when region does not overflow', async () => {
     render(<Example />);
 
     const container = screen.getByTestId('container');
@@ -65,7 +67,7 @@ describe('ScrollRegionContainer', () => {
       jest.runAllTimers();
     });
 
-    userEvent.tab();
+    await user.tab();
 
     expect(container).not.toHaveFocus();
     expect(container).not.toHaveAttribute('tabIndex');

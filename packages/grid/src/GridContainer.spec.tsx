@@ -19,6 +19,8 @@ interface IExample extends IUseGridProps {
 }
 
 describe('useGrid', () => {
+  const user = userEvent.setup();
+
   const idPrefix = 'some-id-prefix';
 
   const Example = ({ rtl, matrix, onFocus, onClick, ...props }: IExample) => (
@@ -50,7 +52,7 @@ describe('useGrid', () => {
     </GridContainer>
   );
 
-  test('composes gridcell onClick handler', () => {
+  test('composes gridcell onClick handler', async () => {
     const onClick = jest.fn();
     const matrix = [
       ['#d1e8df', '#aecfc2'],
@@ -59,11 +61,11 @@ describe('useGrid', () => {
 
     render(<Example matrix={matrix} onClick={onClick} />);
 
-    userEvent.click(gridCell('#f5b5ba'));
+    await user.click(gridCell('#f5b5ba'));
     expect(onClick).toHaveBeenCalledTimes(1);
   });
 
-  test('composes gridcell onFocus handler', () => {
+  test('composes gridcell onFocus handler', async () => {
     const onFocus = jest.fn();
     const matrix = [
       ['#d1e8df', '#aecfc2'],
@@ -72,12 +74,12 @@ describe('useGrid', () => {
 
     render(<Example matrix={matrix} onFocus={onFocus} />);
 
-    userEvent.tab();
+    await user.tab();
     expect(onFocus).toHaveBeenCalledTimes(1);
   });
 
   describe('uncontrolled usages', () => {
-    test('sets a default focused cell', () => {
+    test('sets a default focused cell', async () => {
       const matrix = [
         ['#d1e8df', '#aecfc2'],
         ['#f5d5d8', '#f5b5ba']
@@ -85,11 +87,11 @@ describe('useGrid', () => {
 
       render(<Example matrix={matrix} defaultRowIndex={1} defaultColIndex={1} />);
 
-      userEvent.tab();
+      await user.tab();
       expect(gridCell('#f5b5ba')).toHaveFocus();
     });
 
-    test('focus moves when arrow keys are pressed', () => {
+    test('focus moves when arrow keys are pressed', async () => {
       const onChange = jest.fn();
       const matrix = [
         ['#d1e8df', '#aecfc2', '#5eae91'],
@@ -98,58 +100,58 @@ describe('useGrid', () => {
 
       render(<Example matrix={matrix} onChange={onChange} />);
 
-      userEvent.tab();
+      await user.tab();
       expect(gridCell('#d1e8df')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(1);
       expect(onChange).toHaveBeenCalledWith(0, 0);
 
-      userEvent.keyboard('{arrowright}');
+      await user.keyboard('{arrowright}');
       expect(gridCell('#aecfc2')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(2);
       expect(onChange).toHaveBeenCalledWith(0, 1);
 
-      userEvent.keyboard('{arrowright}');
+      await user.keyboard('{arrowright}');
       expect(gridCell('#5eae91')).toHaveFocus();
 
-      userEvent.keyboard('{arrowright}');
+      await user.keyboard('{arrowright}');
       expect(gridCell('#5eae91')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(3);
       expect(onChange).toHaveBeenCalledWith(0, 2);
 
-      userEvent.keyboard('{arrowleft}');
+      await user.keyboard('{arrowleft}');
       expect(gridCell('#aecfc2')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(4);
       expect(onChange).toHaveBeenCalledWith(0, 1);
 
-      userEvent.keyboard('{arrowdown}');
+      await user.keyboard('{arrowdown}');
       expect(gridCell('#f5b5ba')).toHaveFocus();
 
-      userEvent.keyboard('{arrowdown}');
+      await user.keyboard('{arrowdown}');
       expect(gridCell('#f5b5ba')).toHaveFocus();
 
-      userEvent.keyboard('{arrowright}');
+      await user.keyboard('{arrowright}');
       expect(gridCell('#f5b5ba')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(5);
       expect(onChange).toHaveBeenCalledWith(1, 1);
 
-      userEvent.keyboard('{arrowleft}');
+      await user.keyboard('{arrowleft}');
       expect(gridCell('#f5d5d8')).toHaveFocus();
 
-      userEvent.keyboard('{arrowleft}');
+      await user.keyboard('{arrowleft}');
       expect(gridCell('#f5d5d8')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(6);
       expect(onChange).toHaveBeenCalledWith(1, 0);
 
-      userEvent.keyboard('{arrowup}');
+      await user.keyboard('{arrowup}');
       expect(gridCell('#d1e8df')).toHaveFocus();
 
-      userEvent.keyboard('{arrowup}');
+      await user.keyboard('{arrowup}');
       expect(gridCell('#d1e8df')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(7);
       expect(onChange).toHaveBeenCalledWith(0, 0);
     });
 
-    test('focus moves with wrapped navigation when arrow keys are pressed', () => {
+    test('focus moves with wrapped navigation when arrow keys are pressed', async () => {
       const onChange = jest.fn();
       const matrix = [
         ['#d1e8df', '#aecfc2', '#5eae91', '#228f67'],
@@ -158,59 +160,59 @@ describe('useGrid', () => {
 
       render(<Example wrap matrix={matrix} onChange={onChange} />);
 
-      userEvent.tab();
+      await user.tab();
       expect(gridCell('#d1e8df')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(1);
       expect(onChange).toHaveBeenCalledWith(0, 0);
 
-      userEvent.keyboard('{arrowup}');
+      await user.keyboard('{arrowup}');
       expect(gridCell('#d1e8df')).toHaveFocus();
 
-      userEvent.keyboard('{arrowleft}');
+      await user.keyboard('{arrowleft}');
       expect(gridCell('#d1e8df')).toHaveFocus();
 
-      userEvent.keyboard('{arrowright}');
+      await user.keyboard('{arrowright}');
       expect(gridCell('#aecfc2')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(2);
       expect(onChange).toHaveBeenCalledWith(0, 1);
 
-      userEvent.keyboard('{arrowright}');
+      await user.keyboard('{arrowright}');
       expect(gridCell('#5eae91')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(3);
       expect(onChange).toHaveBeenCalledWith(0, 2);
 
-      userEvent.keyboard('{arrowdown}');
+      await user.keyboard('{arrowdown}');
       expect(gridCell('#228f67')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(4);
       expect(onChange).toHaveBeenCalledWith(0, 3);
 
-      userEvent.keyboard('{arrowright}');
+      await user.keyboard('{arrowright}');
       expect(gridCell('#f5d5d8')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(5);
       expect(onChange).toHaveBeenCalledWith(1, 0);
 
-      userEvent.keyboard('{arrowleft}');
+      await user.keyboard('{arrowleft}');
       expect(gridCell('#228f67')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(6);
       expect(onChange).toHaveBeenCalledWith(0, 3);
 
-      userEvent.keyboard('{arrowup}');
+      await user.keyboard('{arrowup}');
       expect(gridCell('#5eae91')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(7);
       expect(onChange).toHaveBeenCalledWith(0, 2);
 
-      userEvent.keyboard('{arrowup}');
+      await user.keyboard('{arrowup}');
       expect(gridCell('#f5b5ba')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(8);
       expect(onChange).toHaveBeenCalledWith(1, 1);
 
-      userEvent.keyboard('{arrowdown}');
+      await user.keyboard('{arrowdown}');
       expect(gridCell('#5eae91')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(9);
       expect(onChange).toHaveBeenCalledWith(0, 2);
     });
 
-    test('focus moves when arrow keys are pressed in RTL', () => {
+    test('focus moves when arrow keys are pressed in RTL', async () => {
       const onChange = jest.fn();
       const matrix = [
         ['#d1e8df', '#aecfc2', '#5eae91'],
@@ -221,23 +223,23 @@ describe('useGrid', () => {
         <Example rtl matrix={matrix} onChange={onChange} defaultRowIndex={0} defaultColIndex={1} />
       );
 
-      userEvent.tab();
+      await user.tab();
       expect(gridCell('#aecfc2')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(1);
       expect(onChange).toHaveBeenCalledWith(0, 1);
 
-      userEvent.keyboard('{arrowleft}');
+      await user.keyboard('{arrowleft}');
       expect(gridCell('#5eae91')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(2);
       expect(onChange).toHaveBeenCalledWith(0, 2);
 
-      userEvent.keyboard('{arrowright}');
+      await user.keyboard('{arrowright}');
       expect(gridCell('#aecfc2')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(3);
       expect(onChange).toHaveBeenCalledWith(0, 1);
     });
 
-    test('focus moves with wrapped navigation when arrow keys are pressed in RTL', () => {
+    test('focus moves with wrapped navigation when arrow keys are pressed in RTL', async () => {
       const onChange = jest.fn();
       const matrix = [
         ['#d1e8df', '#aecfc2', '#5eae91'],
@@ -255,28 +257,28 @@ describe('useGrid', () => {
         />
       );
 
-      userEvent.tab();
+      await user.tab();
       expect(gridCell('#aecfc2')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(1);
       expect(onChange).toHaveBeenCalledWith(0, 1);
 
-      userEvent.keyboard('{arrowleft}');
+      await user.keyboard('{arrowleft}');
       expect(gridCell('#5eae91')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(2);
       expect(onChange).toHaveBeenCalledWith(0, 2);
 
-      userEvent.keyboard('{arrowleft}');
+      await user.keyboard('{arrowleft}');
       expect(gridCell('#f5d5d8')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(3);
       expect(onChange).toHaveBeenCalledWith(1, 0);
 
-      userEvent.keyboard('{arrowright}');
+      await user.keyboard('{arrowright}');
       expect(gridCell('#5eae91')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(4);
       expect(onChange).toHaveBeenCalledWith(0, 2);
     });
 
-    test('focus moves to the first/last cell on the focused row when home/end keys are pressed', () => {
+    test('focus moves to the first/last cell on the focused row when home/end keys are pressed', async () => {
       const onChange = jest.fn();
       const matrix = [
         ['#d1e8df', '#aecfc2', '#5eae91'],
@@ -288,23 +290,23 @@ describe('useGrid', () => {
         <Example matrix={matrix} onChange={onChange} defaultRowIndex={1} defaultColIndex={1} />
       );
 
-      userEvent.tab();
+      await user.tab();
       expect(gridCell('#f5b5ba')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(1);
       expect(onChange).toHaveBeenCalledWith(1, 1);
 
-      userEvent.keyboard('{home}');
+      await user.keyboard('{home}');
       expect(gridCell('#f5d5d8')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(2);
       expect(onChange).toHaveBeenCalledWith(1, 0);
 
-      userEvent.keyboard('{end}');
+      await user.keyboard('{end}');
       expect(gridCell('#e35b66')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(3);
       expect(onChange).toHaveBeenCalledWith(1, 2);
     });
 
-    test('focus moves to the first/last cell of the first/last row when control + home/end keys are pressed', () => {
+    test('focus moves to the first/last cell of the first/last row when control + home/end keys are pressed', async () => {
       const onChange = jest.fn();
       const matrix = [
         ['#d1e8df', '#aecfc2', '#5eae91'],
@@ -316,23 +318,23 @@ describe('useGrid', () => {
         <Example matrix={matrix} onChange={onChange} defaultRowIndex={1} defaultColIndex={1} />
       );
 
-      userEvent.tab();
+      await user.tab();
       expect(gridCell('#f5b5ba')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(1);
       expect(onChange).toHaveBeenCalledWith(1, 1);
 
-      userEvent.keyboard('{Control>}{home}');
+      await user.keyboard('{Control>}{home}{/Control}');
       expect(gridCell('#d1e8df')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(2);
       expect(onChange).toHaveBeenCalledWith(0, 0);
 
-      userEvent.keyboard('{Control>}{end}');
+      await user.keyboard('{Control>}{end}{/Control}');
       expect(gridCell('#adcce4')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(3);
       expect(onChange).toHaveBeenCalledWith(2, 1);
     });
 
-    test('focus wraps non-balanced grid when up arrow is pressed', () => {
+    test('focus wraps non-balanced grid when up arrow is pressed', async () => {
       const onChange = jest.fn();
       const matrix = [
         ['#d1e8df', '#aecfc2', '#5eae91', '#228f67', '#0b3b29'],
@@ -343,37 +345,37 @@ describe('useGrid', () => {
         <Example wrap matrix={matrix} onChange={onChange} defaultRowIndex={0} defaultColIndex={4} />
       );
 
-      userEvent.tab();
+      await user.tab();
       expect(gridCell('#0b3b29')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(1);
       expect(onChange).toHaveBeenCalledWith(0, 4);
 
-      userEvent.keyboard('{arrowup}');
+      await user.keyboard('{arrowup}');
       expect(gridCell('#228f67')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(2);
       expect(onChange).toHaveBeenCalledWith(0, 3);
 
-      userEvent.keyboard('{arrowup}');
+      await user.keyboard('{arrowup}');
       expect(gridCell('#5eae91')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(3);
       expect(onChange).toHaveBeenCalledWith(0, 2);
 
-      userEvent.keyboard('{arrowup}');
+      await user.keyboard('{arrowup}');
       expect(gridCell('#f5b5ba')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(4);
       expect(onChange).toHaveBeenCalledWith(1, 1);
 
-      userEvent.keyboard('{arrowup}');
+      await user.keyboard('{arrowup}');
       expect(gridCell('#aecfc2')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(5);
       expect(onChange).toHaveBeenCalledWith(0, 1);
 
-      userEvent.keyboard('{arrowup}');
+      await user.keyboard('{arrowup}');
       expect(gridCell('#f5d5d8')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(6);
       expect(onChange).toHaveBeenCalledWith(1, 0);
 
-      userEvent.keyboard('{arrowup}');
+      await user.keyboard('{arrowup}');
       expect(gridCell('#d1e8df')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(7);
       expect(onChange).toHaveBeenCalledWith(0, 0);
@@ -408,7 +410,7 @@ describe('useGrid', () => {
       );
     };
 
-    test('sets the focused cell', () => {
+    test('sets the focused cell', async () => {
       const matrix = [
         ['#d1e8df', '#aecfc2', '#5eae91'],
         ['#f5d5d8', '#f5b5ba']
@@ -417,11 +419,11 @@ describe('useGrid', () => {
       render(<Controlled matrix={matrix} rowIndex={0} colIndex={1} />);
 
       expect(gridCell('#aecfc2')).not.toHaveFocus();
-      userEvent.tab();
+      await user.tab();
       expect(gridCell('#aecfc2')).toHaveFocus();
     });
 
-    test('focus moves when arrow keys are pressed', () => {
+    test('focus moves when arrow keys are pressed', async () => {
       const onChange = jest.fn();
       const matrix = [
         ['#d1e8df', '#aecfc2', '#5eae91'],
@@ -430,58 +432,58 @@ describe('useGrid', () => {
 
       render(<Controlled matrix={matrix} onChange={onChange} />);
 
-      userEvent.tab();
+      await user.tab();
       expect(gridCell('#d1e8df')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(1);
       expect(onChange).toHaveBeenCalledWith(0, 0);
 
-      userEvent.keyboard('{arrowright}');
+      await user.keyboard('{arrowright}');
       expect(gridCell('#aecfc2')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(2);
       expect(onChange).toHaveBeenCalledWith(0, 1);
 
-      userEvent.keyboard('{arrowright}');
+      await user.keyboard('{arrowright}');
       expect(gridCell('#5eae91')).toHaveFocus();
 
-      userEvent.keyboard('{arrowright}');
+      await user.keyboard('{arrowright}');
       expect(gridCell('#5eae91')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(3);
       expect(onChange).toHaveBeenCalledWith(0, 2);
 
-      userEvent.keyboard('{arrowleft}');
+      await user.keyboard('{arrowleft}');
       expect(gridCell('#aecfc2')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(4);
       expect(onChange).toHaveBeenCalledWith(0, 1);
 
-      userEvent.keyboard('{arrowdown}');
+      await user.keyboard('{arrowdown}');
       expect(gridCell('#f5b5ba')).toHaveFocus();
 
-      userEvent.keyboard('{arrowdown}');
+      await user.keyboard('{arrowdown}');
       expect(gridCell('#f5b5ba')).toHaveFocus();
 
-      userEvent.keyboard('{arrowright}');
+      await user.keyboard('{arrowright}');
       expect(gridCell('#f5b5ba')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(5);
       expect(onChange).toHaveBeenCalledWith(1, 1);
 
-      userEvent.keyboard('{arrowleft}');
+      await user.keyboard('{arrowleft}');
       expect(gridCell('#f5d5d8')).toHaveFocus();
 
-      userEvent.keyboard('{arrowleft}');
+      await user.keyboard('{arrowleft}');
       expect(gridCell('#f5d5d8')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(6);
       expect(onChange).toHaveBeenCalledWith(1, 0);
 
-      userEvent.keyboard('{arrowup}');
+      await user.keyboard('{arrowup}');
       expect(gridCell('#d1e8df')).toHaveFocus();
 
-      userEvent.keyboard('{arrowup}');
+      await user.keyboard('{arrowup}');
       expect(gridCell('#d1e8df')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(7);
       expect(onChange).toHaveBeenCalledWith(0, 0);
     });
 
-    test('focus moves with wrapped navigation when arrow keys are pressed', () => {
+    test('focus moves with wrapped navigation when arrow keys are pressed', async () => {
       const onChange = jest.fn();
       const matrix = [
         ['#d1e8df', '#aecfc2', '#5eae91', '#228f67'],
@@ -490,59 +492,59 @@ describe('useGrid', () => {
 
       render(<Controlled wrap matrix={matrix} rowIndex={0} colIndex={0} onChange={onChange} />);
 
-      userEvent.tab();
+      await user.tab();
       expect(gridCell('#d1e8df')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(1);
       expect(onChange).toHaveBeenCalledWith(0, 0);
 
-      userEvent.keyboard('{arrowup}');
+      await user.keyboard('{arrowup}');
       expect(gridCell('#d1e8df')).toHaveFocus();
 
-      userEvent.keyboard('{arrowleft}');
+      await user.keyboard('{arrowleft}');
       expect(gridCell('#d1e8df')).toHaveFocus();
 
-      userEvent.keyboard('{arrowright}');
+      await user.keyboard('{arrowright}');
       expect(gridCell('#aecfc2')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(2);
       expect(onChange).toHaveBeenCalledWith(0, 1);
 
-      userEvent.keyboard('{arrowright}');
+      await user.keyboard('{arrowright}');
       expect(gridCell('#5eae91')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(3);
       expect(onChange).toHaveBeenCalledWith(0, 2);
 
-      userEvent.keyboard('{arrowdown}');
+      await user.keyboard('{arrowdown}');
       expect(gridCell('#228f67')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(4);
       expect(onChange).toHaveBeenCalledWith(0, 3);
 
-      userEvent.keyboard('{arrowright}');
+      await user.keyboard('{arrowright}');
       expect(gridCell('#f5d5d8')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(5);
       expect(onChange).toHaveBeenCalledWith(1, 0);
 
-      userEvent.keyboard('{arrowleft}');
+      await user.keyboard('{arrowleft}');
       expect(gridCell('#228f67')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(6);
       expect(onChange).toHaveBeenCalledWith(0, 3);
 
-      userEvent.keyboard('{arrowup}');
+      await user.keyboard('{arrowup}');
       expect(gridCell('#5eae91')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(7);
       expect(onChange).toHaveBeenCalledWith(0, 2);
 
-      userEvent.keyboard('{arrowup}');
+      await user.keyboard('{arrowup}');
       expect(gridCell('#f5b5ba')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(8);
       expect(onChange).toHaveBeenCalledWith(1, 1);
 
-      userEvent.keyboard('{arrowdown}');
+      await user.keyboard('{arrowdown}');
       expect(gridCell('#5eae91')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(9);
       expect(onChange).toHaveBeenCalledWith(0, 2);
     });
 
-    test('focus moves when arrow keys are pressed in RTL', () => {
+    test('focus moves when arrow keys are pressed in RTL', async () => {
       const onChange = jest.fn();
       const matrix = [
         ['#d1e8df', '#aecfc2', '#5eae91'],
@@ -551,23 +553,23 @@ describe('useGrid', () => {
 
       render(<Controlled rtl matrix={matrix} onChange={onChange} rowIndex={0} colIndex={1} />);
 
-      userEvent.tab();
+      await user.tab();
       expect(gridCell('#aecfc2')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(1);
       expect(onChange).toHaveBeenCalledWith(0, 1);
 
-      userEvent.keyboard('{arrowleft}');
+      await user.keyboard('{arrowleft}');
       expect(gridCell('#5eae91')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(2);
       expect(onChange).toHaveBeenCalledWith(0, 2);
 
-      userEvent.keyboard('{arrowright}');
+      await user.keyboard('{arrowright}');
       expect(gridCell('#aecfc2')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(3);
       expect(onChange).toHaveBeenCalledWith(0, 1);
     });
 
-    test('focus moves with wrapped navigation when arrow keys are pressed in RTL', () => {
+    test('focus moves with wrapped navigation when arrow keys are pressed in RTL', async () => {
       const onChange = jest.fn();
       const matrix = [
         ['#d1e8df', '#aecfc2', '#5eae91'],
@@ -576,28 +578,28 @@ describe('useGrid', () => {
 
       render(<Controlled rtl wrap matrix={matrix} onChange={onChange} rowIndex={0} colIndex={1} />);
 
-      userEvent.tab();
+      await user.tab();
       expect(gridCell('#aecfc2')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(1);
       expect(onChange).toHaveBeenCalledWith(0, 1);
 
-      userEvent.keyboard('{arrowleft}');
+      await user.keyboard('{arrowleft}');
       expect(gridCell('#5eae91')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(2);
       expect(onChange).toHaveBeenCalledWith(0, 2);
 
-      userEvent.keyboard('{arrowleft}');
+      await user.keyboard('{arrowleft}');
       expect(gridCell('#f5d5d8')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(3);
       expect(onChange).toHaveBeenCalledWith(1, 0);
 
-      userEvent.keyboard('{arrowright}');
+      await user.keyboard('{arrowright}');
       expect(gridCell('#5eae91')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(4);
       expect(onChange).toHaveBeenCalledWith(0, 2);
     });
 
-    test('focus moves to the first/last cell on the focused row when home/end keys are pressed', () => {
+    test('focus moves to the first/last cell on the focused row when home/end keys are pressed', async () => {
       const onChange = jest.fn();
       const matrix = [
         ['#d1e8df', '#aecfc2', '#5eae91'],
@@ -607,23 +609,23 @@ describe('useGrid', () => {
 
       render(<Controlled wrap rowIndex={1} colIndex={1} matrix={matrix} onChange={onChange} />);
 
-      userEvent.tab();
+      await user.tab();
       expect(gridCell('#f5b5ba')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(1);
       expect(onChange).toHaveBeenCalledWith(1, 1);
 
-      userEvent.keyboard('{home}');
+      await user.keyboard('{home}');
       expect(gridCell('#f5d5d8')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(2);
       expect(onChange).toHaveBeenCalledWith(1, 0);
 
-      userEvent.keyboard('{end}');
+      await user.keyboard('{end}');
       expect(gridCell('#e35b66')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(3);
       expect(onChange).toHaveBeenCalledWith(1, 2);
     });
 
-    test('focus moves to the first/last cell of the first/last row when control + home/end keys are pressed', () => {
+    test('focus moves to the first/last cell of the first/last row when control + home/end keys are pressed', async () => {
       const onChange = jest.fn();
       const matrix = [
         ['#d1e8df', '#aecfc2', '#5eae91'],
@@ -633,23 +635,23 @@ describe('useGrid', () => {
 
       render(<Controlled wrap rowIndex={1} colIndex={1} matrix={matrix} onChange={onChange} />);
 
-      userEvent.tab();
+      await user.tab();
       expect(gridCell('#f5b5ba')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(1);
       expect(onChange).toHaveBeenCalledWith(1, 1);
 
-      userEvent.keyboard('{Control>}{home}');
+      await user.keyboard('{Control>}{home}{/Control}');
       expect(gridCell('#d1e8df')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(2);
       expect(onChange).toHaveBeenCalledWith(0, 0);
 
-      userEvent.keyboard('{Control>}{end}');
+      await user.keyboard('{Control>}{end}{/Control}');
       expect(gridCell('#adcce4')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(3);
       expect(onChange).toHaveBeenCalledWith(2, 1);
     });
 
-    test('focus wraps non-balanced grid when up arrow is pressed', () => {
+    test('focus wraps non-balanced grid when up arrow is pressed', async () => {
       const onChange = jest.fn();
       const matrix = [
         ['#d1e8df', '#aecfc2', '#5eae91', '#228f67', '#0b3b29'],
@@ -658,37 +660,37 @@ describe('useGrid', () => {
 
       render(<Controlled wrap rowIndex={0} colIndex={4} matrix={matrix} onChange={onChange} />);
 
-      userEvent.tab();
+      await user.tab();
       expect(gridCell('#0b3b29')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(1);
       expect(onChange).toHaveBeenCalledWith(0, 4);
 
-      userEvent.keyboard('{arrowup}');
+      await user.keyboard('{arrowup}');
       expect(gridCell('#228f67')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(2);
       expect(onChange).toHaveBeenCalledWith(0, 3);
 
-      userEvent.keyboard('{arrowup}');
+      await user.keyboard('{arrowup}');
       expect(gridCell('#5eae91')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(3);
       expect(onChange).toHaveBeenCalledWith(0, 2);
 
-      userEvent.keyboard('{arrowup}');
+      await user.keyboard('{arrowup}');
       expect(gridCell('#f5b5ba')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(4);
       expect(onChange).toHaveBeenCalledWith(1, 1);
 
-      userEvent.keyboard('{arrowup}');
+      await user.keyboard('{arrowup}');
       expect(gridCell('#aecfc2')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(5);
       expect(onChange).toHaveBeenCalledWith(0, 1);
 
-      userEvent.keyboard('{arrowup}');
+      await user.keyboard('{arrowup}');
       expect(gridCell('#f5d5d8')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(6);
       expect(onChange).toHaveBeenCalledWith(1, 0);
 
-      userEvent.keyboard('{arrowup}');
+      await user.keyboard('{arrowup}');
       expect(gridCell('#d1e8df')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(7);
       expect(onChange).toHaveBeenCalledWith(0, 0);

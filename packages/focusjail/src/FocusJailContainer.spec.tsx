@@ -16,6 +16,7 @@ interface IBasicExampleProps extends Omit<IUseFocusJailProps, 'containerRef'> {
 }
 
 describe('FocusJailContainer', () => {
+  const user = userEvent.setup();
   let focusSpy: jest.Mock;
   let containerReference: React.RefObject<HTMLElement> | null;
 
@@ -155,8 +156,8 @@ describe('FocusJailContainer', () => {
         expect(focusSpy).toHaveBeenLastCalledWith(container);
       });
 
-      it("doesn't intercept tab key if not the first or last tabbable item", () => {
-        const { getByTestId } = render(
+      it("doesn't intercept tab key if not the first or last tabbable item", async () => {
+        render(
           <BasicExample
             focusElem={() => undefined}
             restoreFocus={false}
@@ -171,26 +172,25 @@ describe('FocusJailContainer', () => {
           />
         );
 
-        const focusJailContainer = getByTestId('container');
         const firstButton = screen.getByRole('button', { name: /First button/iu });
         const secondButton = screen.getByRole('button', { name: /Second button/iu });
         const lastButton = screen.getByRole('button', { name: /Last button/iu });
 
         expect(document.body).toHaveFocus();
 
-        userEvent.tab({ focusTrap: focusJailContainer });
+        await user.tab();
         expect(firstButton).toHaveFocus();
 
-        userEvent.tab({ shift: true, focusTrap: focusJailContainer });
+        await user.tab({ shift: true });
         expect(firstButton).toHaveFocus();
 
-        userEvent.tab({ focusTrap: focusJailContainer });
+        await user.tab();
         expect(secondButton).toHaveFocus();
 
-        userEvent.tab({ focusTrap: focusJailContainer });
+        await user.tab();
         expect(lastButton).toHaveFocus();
 
-        userEvent.tab({ focusTrap: focusJailContainer });
+        await user.tab();
         expect(lastButton).toHaveFocus();
       });
 
@@ -255,20 +255,20 @@ describe('FocusJailContainer', () => {
     };
 
     it('can restore focus after unmounting', async () => {
-      const { queryByText, getByText, getByTestId } = render(<RestoreFocusExample />);
+      const { queryByText, getByText } = render(<RestoreFocusExample />);
       const openButton = getByText('open');
 
       expect(openButton).not.toHaveFocus();
 
-      userEvent.click(openButton);
+      await user.click(openButton);
 
       expect(getByText('close')).not.toHaveFocus();
 
-      userEvent.tab({ focusTrap: getByTestId('container') });
+      await user.tab();
 
       expect(getByText('close')).toHaveFocus();
 
-      userEvent.click(getByText('close'));
+      await user.click(getByText('close'));
 
       await waitFor(() => expect(queryByText('close')).not.toBeInTheDocument());
 

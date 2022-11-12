@@ -11,6 +11,8 @@ import { render } from '@testing-library/react';
 import { TabsContainer, ITabsContainerProps } from './';
 
 describe('TabsContainer', () => {
+  const user = userEvent.setup();
+
   const idPrefix = 'test_id';
   const tabs = ['tab-1', 'tab-2', 'tab-3'];
   const tabRefs = tabs.map(() => createRef<HTMLDivElement>());
@@ -57,12 +59,12 @@ describe('TabsContainer', () => {
     </TabsContainer>
   );
 
-  it('calls onSelect with selectedItem when Tab is selected', () => {
+  it('calls onSelect with selectedItem when Tab is selected', async () => {
     const onSelectSpy = jest.fn();
     const { getAllByTestId } = render(<BasicExample onSelect={onSelectSpy} />);
     const [tab] = getAllByTestId('tab');
 
-    userEvent.click(tab);
+    await user.click(tab);
 
     expect(onSelectSpy).toHaveBeenCalledWith('tab-1');
   });
@@ -117,23 +119,23 @@ describe('TabsContainer', () => {
     });
 
     describe('when tab selected', () => {
-      it('enables hidden if tab is currently not selected', () => {
+      it('enables hidden if tab is currently not selected', async () => {
         const { getAllByTestId } = render(<BasicExample />);
         const [, , tab] = getAllByTestId('tab');
         const [firstPanel, secondPanel] = getAllByTestId('tab-panel');
 
-        userEvent.click(tab);
+        await user.click(tab);
 
         expect(firstPanel).toHaveAttribute('hidden');
         expect(secondPanel).toHaveAttribute('hidden');
       });
 
-      it('disables hidden if tab is currently selected', () => {
+      it('disables hidden if tab is currently selected', async () => {
         const { getAllByTestId } = render(<BasicExample />);
         const [, tab] = getAllByTestId('tab');
         const [, tabPanel] = getAllByTestId('tab-panel');
 
-        userEvent.click(tab);
+        await user.click(tab);
 
         expect(tabPanel).not.toHaveAttribute('hidden');
       });

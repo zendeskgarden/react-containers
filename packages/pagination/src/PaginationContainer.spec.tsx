@@ -11,6 +11,8 @@ import { render } from '@testing-library/react';
 import { PaginationContainer } from './';
 
 describe('PaginationContainer', () => {
+  const user = userEvent.setup();
+
   const pages = [1, 2, 3, 4, 5];
 
   const BasicExample = () => {
@@ -167,7 +169,7 @@ describe('PaginationContainer', () => {
       expect(getByTestId('page')).toHaveAttribute('aria-label', 'Page 1');
     });
 
-    it('applies correct accessibility attributes if current page', () => {
+    it('applies correct accessibility attributes if current page', async () => {
       const { getByTestId } = pageProps({
         'aria-label': 'Current page, Page 1',
         item: 1,
@@ -175,7 +177,7 @@ describe('PaginationContainer', () => {
       });
       const page = getByTestId('page');
 
-      userEvent.click(page);
+      await user.click(page);
       expect(page).toHaveAttribute('aria-label', 'Current page, Page 1');
     });
 

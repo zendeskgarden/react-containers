@@ -64,6 +64,8 @@ class ExtendedMouseEvent extends MouseEvent implements MouseEventInit {
 }
 
 describe('SplitterContainer', () => {
+  const user = userEvent.setup();
+
   const UncontrolledTestSplitter = ({
     min = 0,
     max = 100,
@@ -276,12 +278,12 @@ describe('SplitterContainer', () => {
         });
       });
 
-      it('should return from min to previous position on double click', () => {
+      it('should return from min to previous position on double click', async () => {
         const { getByRole } = render(<UncontrolledTestSplitter defaultValueNow={50} />);
         const element = getByRole('separator');
 
-        userEvent.dblClick(element);
-        userEvent.dblClick(element);
+        await user.dblClick(element);
+        await user.dblClick(element);
 
         expect(element).toHaveAttribute('aria-valuenow', '50');
       });

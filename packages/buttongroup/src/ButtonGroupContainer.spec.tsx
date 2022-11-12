@@ -12,6 +12,8 @@ import { render } from '@testing-library/react';
 import { ButtonGroupContainer } from './';
 
 describe('ButtonGroupContainer', () => {
+  const user = userEvent.setup();
+
   const buttons = ['button-1', 'button-2', 'button-3'];
   const buttonRefs = buttons.map(() => createRef<HTMLDivElement>());
 
@@ -71,11 +73,11 @@ describe('ButtonGroupContainer', () => {
       expect(getAllByTestId('button')[0]).toHaveAttribute('aria-pressed', 'false');
     });
 
-    it('applies the correct accessibility selected value when selected', () => {
+    it('applies the correct accessibility selected value when selected', async () => {
       const { getAllByTestId } = render(<BasicExample />);
       const firstButton = getAllByTestId('button')[0];
 
-      userEvent.click(firstButton);
+      await user.click(firstButton);
 
       expect(firstButton).toHaveAttribute('aria-pressed', 'true');
     });

@@ -11,9 +11,22 @@ import { render, fireEvent, createEvent } from '@testing-library/react';
 import { IUseSliderProps, IUseSliderReturnValue } from './types';
 import { SliderContainer } from './SliderContainer';
 
-jest.mock('lodash.debounce', () => ({ default: (fn: any) => fn, __esModule: true }));
+jest.mock('lodash.debounce', () => {
+  const wrapWithCancel = (fn: any) => {
+    fn.cancel = jest.fn();
+
+    return fn;
+  };
+
+  return {
+    default: (fn: any) => wrapWithCancel(fn),
+    __esModule: true
+  };
+});
 
 describe('SliderContainer', () => {
+  const user = userEvent.setup();
+
   let originalGetBoundingClientRect: any;
 
   beforeEach(() => {
@@ -370,13 +383,13 @@ describe('SliderContainer', () => {
           expect(onChangeSpy).toHaveBeenCalledWith({ minValue: 75, maxValue: 75 });
         });
 
-        it('does not update minValue when disabled', () => {
+        it('does not update minValue when disabled', async () => {
           const { container, getByTestId } = render(
             <TestSlider disabled minValue={15} maxValue={75} step={5} onChange={onChangeSpy} />
           );
           const thumb = getByTestId('min_thumb');
 
-          userEvent.click(thumb);
+          await user.click(thumb);
 
           const mouseEvent = new MouseEvent('mousemove');
 
@@ -692,13 +705,13 @@ describe('SliderContainer', () => {
           expect(onChangeSpy).toHaveBeenCalledWith({ minValue: 15, maxValue: 90 });
         });
 
-        it('does not update maxValue when disabled', () => {
+        it('does not update maxValue when disabled', async () => {
           const { container, getByTestId } = render(
             <TestSlider disabled minValue={15} maxValue={75} step={5} onChange={onChangeSpy} />
           );
           const thumb = getByTestId('max_thumb');
 
-          userEvent.click(thumb);
+          await user.click(thumb);
 
           const mouseEvent = new MouseEvent('mousemove');
 
