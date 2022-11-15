@@ -55,16 +55,18 @@ const withStrictMode = (Story, context) =>
 export const decorators = [withGlobalStyle, withStrictMode];
 
 export const globalTypes = {
-  strictMode: {
-    name: 'strictMode',
-    description: 'Strict mode',
-    defaultValue: 'disabled',
-    toolbar: {
-      icon: 'alert',
-      items: [
-        { value: 'disabled', title: 'Strict mode disabled' },
-        { value: 'enabled', title: 'Strict mode enabled' }
-      ]
+  ...(process.env.NODE_ENV === 'development' && {
+    strictMode: {
+      name: 'strictMode',
+      description: 'Strict mode',
+      defaultValue: 'disabled',
+      toolbar: {
+        icon: 'alert',
+        items: [
+          { value: 'disabled', title: 'Strict mode disabled' },
+          { value: 'enabled', title: 'Strict mode enabled' }
+        ]
+      }
     }
-  }
+  })
 };
