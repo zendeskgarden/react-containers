@@ -13,6 +13,7 @@
       "@zendeskgarden/container-accordion": ["./packages/accordion/src/index.ts"],
       "@zendeskgarden/container-breadcrumb": ["./packages/breadcrumb/src/index.ts"],
       "@zendeskgarden/container-buttongroup": ["./packages/buttongroup/src/index.ts"],
+      "@zendeskgarden/container-combobox": ["./packages/combobox/src/index.ts"],
       "@zendeskgarden/container-field": ["./packages/field/src/index.ts"],
       "@zendeskgarden/container-focusjail": ["./packages/focusjail/src/index.ts"],
       "@zendeskgarden/container-focusvisible": ["./packages/focusvisible/src/index.ts"],

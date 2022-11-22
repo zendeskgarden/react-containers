@@ -1,0 +1,27 @@
+import { Meta, ArgsTable, Canvas, Story } from '@storybook/addon-docs';
+import { ComboboxContainer } from '@zendeskgarden/container-combobox';
+import { ComboboxStory } from './stories/ComboboxStory';
+
+<Meta
+  title="Packages/Combobox"
+  component={ComboboxContainer}
+  args={{
+    as: 'hook',
+    layout: 'Garden',
+    values: ['Option 1', 'Option 2', 'Option 3', 'Option 4', 'Option 5']
+  }}
+  argTypes={{
+    as: { options: ['container', 'hook'], control: 'radio', table: { category: 'Story' } },
+    layout: { options: ['Garden', 'Downshift'], control: 'radio', table: { category: 'Story' } }
+  }}
+/>
+
+# API
+
+<ArgsTable />
+
+# Demo
+
+<Canvas>
+  <Story name="Combobox">{args => <ComboboxStory {...args} />}</Story>
+</Canvas>
