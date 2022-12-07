@@ -19,6 +19,12 @@ export const ComboboxContainer: React.FC<IComboboxContainerProps> = props => {
 ComboboxContainer.propTypes = {
   children: PropTypes.func,
   render: PropTypes.func,
-  values: PropTypes.arrayOf(PropTypes.string),
-  onOpenChange: PropTypes.func
+  triggerRef: PropTypes.any.isRequired,
+  inputRef: PropTypes.any.isRequired,
+  listboxRef: PropTypes.any.isRequired,
+  isMultiselectable: PropTypes.bool,
+  values: PropTypes.arrayOf(PropTypes.string).isRequired,
+  selectedValue: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
+  transformValue: PropTypes.func,
+  onExpansionChange: PropTypes.func
 };

@@ -25,6 +25,7 @@ const Component = ({
   layout,
   isExpanded,
   activeValue,
+  selectedValue,
   getTriggerProps,
   getInputProps,
   getListboxProps,
@@ -33,9 +34,15 @@ const Component = ({
 }: IComponentProps) => (
   <>
     {layout === 'Garden' && (
-      <div className="border border-solid p-1" {...getTriggerProps()}>
+      <div className="inline-block border border-solid p-1" {...getTriggerProps()}>
+        {Array.isArray(selectedValue) &&
+          selectedValue.map((value, index) => (
+            <button key={index} className="mr-1 px-1">
+              {value}
+            </button>
+          ))}
         <input className="border-none" {...getInputProps()} />
-        <button className="ml-1" tabIndex={-1}>
+        <button className="ml-1 px-1" tabIndex={-1}>
           &#9660;
         </button>
       </div>
@@ -43,7 +50,7 @@ const Component = ({
     {layout === 'Downshift' && (
       <>
         <input {...getInputProps()} />
-        <button className="ml-1" {...getTriggerProps()} type="button">
+        <button className="ml-1 px-1" {...getTriggerProps()} type="button">
           &#9660;
         </button>
       </>
@@ -58,6 +65,9 @@ const Component = ({
           className={classNames({ 'bg-blue-100': value === activeValue })}
           {...getOptionProps({ value })}
         >
+          {(Array.isArray(selectedValue)
+            ? selectedValue.includes(value)
+            : selectedValue === value) && '✓ '}
           {value}
         </li>
       ))}

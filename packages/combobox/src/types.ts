@@ -9,19 +9,27 @@ import { HTMLProps, ReactNode, RefObject } from 'react';
 
 export type OptionValue = string;
 
+interface IComboboxState {
+  isExpanded: boolean;
+  activeIndex: number;
+  inputValue: string;
+  selectedOption: OptionValue | null;
+}
+
+interface IComboboxStateChange extends Partial<IComboboxState> {
+  type: string;
+}
+
 export interface IUseComboboxProps<T = Element, L = Element> {
   triggerRef: RefObject<T>;
   inputRef: RefObject<HTMLInputElement>;
   listboxRef: RefObject<L>;
+  isMultiselectable?: boolean;
   /** Provides an ordered list of option values */
   values: OptionValue[];
-  onExpandedChange?: (changes: {
-    isExpanded: boolean;
-    type: string;
-    activeIndex?: number;
-    inputValue?: string;
-    selectedOption?: OptionValue | null;
-  }) => void;
+  selectedValue?: OptionValue | OptionValue[];
+  transformValue?: (value: OptionValue | null) => string;
+  onExpansionChange?: (changes: IComboboxStateChange) => void;
 }
 
 export interface IUseComboboxReturnValue {
@@ -45,6 +53,7 @@ export interface IUseComboboxReturnValue {
   ) => HTMLProps<T>;
   isExpanded: boolean;
   activeValue: OptionValue;
+  selectedValue?: OptionValue | OptionValue[];
 }
 
 export interface IComboboxContainerProps<T = Element, L = Element> extends IUseComboboxProps<T, L> {
