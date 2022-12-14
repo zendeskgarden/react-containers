@@ -19,9 +19,9 @@
     }
   },
   "index.cjs.js": {
-    "bundled": 2619,
-    "minified": 1435,
-    "gzipped": 632
+    "bundled": 2202,
+    "minified": 1103,
+    "gzipped": 524
   },
   "index.esm.js": {
     "bundled": 2149,
