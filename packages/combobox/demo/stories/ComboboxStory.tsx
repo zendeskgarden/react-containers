@@ -107,16 +107,25 @@ export const ComboboxStory: Story<IArgs> = ({ as, ...props }) => {
   const inputRef = createRef<HTMLInputElement>();
   const listboxRef = createRef<HTMLUListElement>();
 
-  switch (as) {
-    case 'container':
-      return (
-        <Container {...props} triggerRef={triggerRef} inputRef={inputRef} listboxRef={listboxRef} />
-      );
+  const Combobox = () => {
+    switch (as) {
+      case 'container':
+        return (
+          <Container
+            {...props}
+            triggerRef={triggerRef}
+            inputRef={inputRef}
+            listboxRef={listboxRef}
+          />
+        );
 
-    case 'hook':
-    default:
-      return (
-        <Hook {...props} triggerRef={triggerRef} inputRef={inputRef} listboxRef={listboxRef} />
-      );
-  }
+      case 'hook':
+      default:
+        return (
+          <Hook {...props} triggerRef={triggerRef} inputRef={inputRef} listboxRef={listboxRef} />
+        );
+    }
+  };
+
+  return <Combobox />;
 };

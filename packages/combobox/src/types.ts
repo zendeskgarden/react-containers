@@ -29,6 +29,7 @@ export interface IUseComboboxProps<T = Element, L = Element> {
   values: OptionValue[];
   selectedValue?: OptionValue | OptionValue[];
   transformValue?: (value: OptionValue | null) => string;
+  defaultExpanded?: boolean;
   onExpansionChange?: (changes: IComboboxStateChange) => void;
 }
 

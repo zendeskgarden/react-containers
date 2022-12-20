@@ -25,6 +25,7 @@ export const useCombobox = ({
   values,
   selectedValue,
   transformValue = value => value || '',
+  defaultExpanded,
   onExpansionChange
 }: IUseComboboxProps): IUseComboboxReturnValue => {
   /*
@@ -74,25 +75,36 @@ export const useCombobox = ({
 
   const stateReducer: IUseDownshiftProps<OptionValue>['stateReducer'] = (
     state,
-    { changes, ...action }
+    { type, changes }
   ) => {
-    if (isMultiselectable && state.selectedItem !== changes.selectedItem) {
-      if (selectedValueState) {
-        if (selectedValueState.includes(changes.selectedItem!)) {
-          setSelectedValueState(
-            (selectedValueState as OptionValue[]).filter(value => value !== changes.selectedItem)
-          );
-        } else {
-          setSelectedValueState([...selectedValueState, changes.selectedItem!]);
-        }
-      } else {
-        setSelectedValueState([changes.selectedItem!]);
+    if (isMultiselectable) {
+      if (
+        type === useDownshift.stateChangeTypes.ItemClick ||
+        type === useDownshift.stateChangeTypes.InputKeyDownEnter
+      ) {
+        // A multiselectable combobox remains expanded on selection.
+        changes.isOpen = state.isOpen;
+        changes.highlightedIndex = state.highlightedIndex;
       }
 
-      delete changes.selectedItem;
-      changes.inputValue = '';
-    } else if (!isMultiselectable && changes.selectedItem) {
-      setSelectedValueState(changes.selectedItem);
+      if (state.selectedItem !== changes.selectedItem) {
+        if (selectedValueState) {
+          if (selectedValueState.includes(changes.selectedItem!)) {
+            setSelectedValueState(
+              (selectedValueState as OptionValue[]).filter(value => value !== changes.selectedItem)
+            );
+          } else {
+            setSelectedValueState([...selectedValueState, changes.selectedItem!]);
+          }
+        } else {
+          setSelectedValueState([changes.selectedItem!]);
+        }
+
+        delete changes.selectedItem;
+        changes.inputValue = '';
+      } else if (!isMultiselectable && changes.selectedItem) {
+        setSelectedValueState(changes.selectedItem);
+      }
     }
 
     return changes;
@@ -109,6 +121,7 @@ export const useCombobox = ({
   } = useDownshift<OptionValue>({
     items: values,
     itemToString: transformValue,
+    defaultIsOpen: defaultExpanded,
     onIsOpenChange: handleDownshiftOpenChange,
     onStateChange: handleDownshiftStateChange,
     stateReducer
@@ -214,13 +227,18 @@ export const useCombobox = ({
         return optionProps;
       }
 
+      const ariaSelected = Array.isArray(selectedValueState)
+        ? selectedValueState?.includes(value)
+        : selectedValueState === value;
+
       return getDownshiftOptionProps({
         item: value,
         index: values.indexOf(value),
+        'aria-selected': ariaSelected,
         ...optionProps
       } as IDownshiftOptionProps<OptionValue>);
     },
-    [getDownshiftOptionProps, values]
+    [getDownshiftOptionProps, values, selectedValueState]
   );
 
   return useMemo<IUseComboboxReturnValue>(

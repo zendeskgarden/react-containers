@@ -26,5 +26,6 @@ ComboboxContainer.propTypes = {
   values: PropTypes.arrayOf(PropTypes.string).isRequired,
   selectedValue: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
   transformValue: PropTypes.func,
+  defaultExpanded: PropTypes.bool,
   onExpansionChange: PropTypes.func
 };
