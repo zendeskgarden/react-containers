@@ -24,9 +24,14 @@ export const useCombobox = ({
   isMultiselectable,
   values,
   selectedValue,
+  inputValue,
   transformValue = value => value || '',
+  onSelectionChange,
+  isExpanded,
   defaultExpanded,
-  onExpansionChange
+  onExpansionChange,
+  activeIndex,
+  onActiveIndexChange
 }: IUseComboboxProps): IUseComboboxReturnValue => {
   /*
    * Validation
@@ -50,24 +55,31 @@ export const useCombobox = ({
   const handleDownshiftOpenChange: IUseDownshiftProps<OptionValue>['onIsOpenChange'] = ({
     type,
     isOpen,
-    highlightedIndex,
-    inputValue,
+    inputValue: _inputValue,
     selectedItem
   }) => {
     triggerContainsInput && setOpenChangeType(type);
 
     if (onExpansionChange) {
       return onExpansionChange({
-        isExpanded: isOpen || false,
         type,
-        activeIndex: highlightedIndex,
-        inputValue,
-        selectedOption: selectedItem
+        isExpanded: isOpen || false,
+        inputValue: _inputValue || ''
       });
     }
 
     return undefined;
   };
+
+  const handleDownshiftHighlightedIndexChange: IUseDownshiftProps<OptionValue>['onHighlightedIndexChange'] =
+    ({ type, highlightedIndex }) =>
+      onActiveIndexChange
+        ? onActiveIndexChange({ type, activeIndex: highlightedIndex! })
+        : undefined;
+
+  const handleDownshiftSelectedItemChange: IUseDownshiftProps<OptionValue>['onSelectedItemChange'] =
+    ({ type, selectedItem }) =>
+      onSelectionChange ? onSelectionChange({ type, selectedValue: selectedItem }) : undefined;
 
   const handleDownshiftStateChange: IUseDownshiftProps<OptionValue>['onStateChange'] = changes => {
     // console.log(changes);
@@ -111,8 +123,8 @@ export const useCombobox = ({
   };
 
   const {
-    isOpen: isExpanded,
-    highlightedIndex: activeIndex,
+    isOpen: _isExpanded,
+    highlightedIndex: _activeIndex,
     getToggleButtonProps: getDownshiftTriggerProps,
     getInputProps: getDownshiftInputProps,
     getMenuProps: getDownshiftListboxProps,
@@ -120,9 +132,15 @@ export const useCombobox = ({
     closeMenu
   } = useDownshift<OptionValue>({
     items: values,
+    selectedItem: selectedValue,
+    inputValue,
     itemToString: transformValue,
+    isOpen: isExpanded,
     defaultIsOpen: defaultExpanded,
+    highlightedIndex: activeIndex,
     onIsOpenChange: handleDownshiftOpenChange,
+    onHighlightedIndexChange: handleDownshiftHighlightedIndexChange,
+    onSelectedItemChange: handleDownshiftSelectedItemChange,
     onStateChange: handleDownshiftStateChange,
     stateReducer
   });
@@ -243,8 +261,8 @@ export const useCombobox = ({
 
   return useMemo<IUseComboboxReturnValue>(
     () => ({
-      isExpanded,
-      activeValue: values[activeIndex],
+      isExpanded: _isExpanded,
+      activeValue: values[_activeIndex],
       selectedValue: selectedValueState,
       getTriggerProps,
       getInputProps,
@@ -254,8 +272,8 @@ export const useCombobox = ({
     [
       values,
       selectedValueState,
-      isExpanded,
-      activeIndex,
+      _isExpanded,
+      _activeIndex,
       getTriggerProps,
       getInputProps,
       getListboxProps,

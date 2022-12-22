@@ -9,17 +9,6 @@ import { HTMLProps, ReactNode, RefObject } from 'react';
 
 export type OptionValue = string;
 
-interface IComboboxState {
-  isExpanded: boolean;
-  activeIndex: number;
-  inputValue: string;
-  selectedOption: OptionValue | null;
-}
-
-interface IComboboxStateChange extends Partial<IComboboxState> {
-  type: string;
-}
-
 export interface IUseComboboxProps<T = Element, L = Element> {
   triggerRef: RefObject<T>;
   inputRef: RefObject<HTMLInputElement>;
@@ -28,9 +17,17 @@ export interface IUseComboboxProps<T = Element, L = Element> {
   /** Provides an ordered list of option values */
   values: OptionValue[];
   selectedValue?: OptionValue | OptionValue[];
+  inputValue?: string;
   transformValue?: (value: OptionValue | null) => string;
+  onSelectionChange?: (changes: {
+    type: string;
+    selectedValue: OptionValue | OptionValue[];
+  }) => void;
+  isExpanded?: boolean;
   defaultExpanded?: boolean;
-  onExpansionChange?: (changes: IComboboxStateChange) => void;
+  onExpansionChange?: (changes: { type: string; isExpanded: boolean; inputValue: string }) => void;
+  activeIndex?: number;
+  onActiveIndexChange?: (changes: { type: string; activeIndex: number }) => void;
 }
 
 export interface IUseComboboxReturnValue {
@@ -53,7 +50,7 @@ export interface IUseComboboxReturnValue {
     }
   ) => HTMLProps<T>;
   isExpanded: boolean;
-  activeValue: OptionValue;
+  activeValue?: OptionValue;
   selectedValue?: OptionValue | OptionValue[];
 }
 
@@ -72,7 +69,7 @@ export interface IComboboxContainerProps<T = Element, L = Element> extends IUseC
     getInputProps: IUseComboboxReturnValue['getInputProps'];
     getListboxProps: IUseComboboxReturnValue['getListboxProps'];
     getOptionProps: IUseComboboxReturnValue['getOptionProps'];
-    activeValue: IUseComboboxReturnValue['activeValue'];
+    activeValue?: IUseComboboxReturnValue['activeValue'];
   }) => ReactNode;
   /** @ignore */
   children?: (options: IUseComboboxReturnValue) => ReactNode;

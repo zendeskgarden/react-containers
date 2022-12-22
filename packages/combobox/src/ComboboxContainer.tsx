@@ -25,7 +25,12 @@ ComboboxContainer.propTypes = {
   isMultiselectable: PropTypes.bool,
   values: PropTypes.arrayOf(PropTypes.string).isRequired,
   selectedValue: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
+  inputValue: PropTypes.string,
   transformValue: PropTypes.func,
+  onSelectionChange: PropTypes.func,
+  isExpanded: PropTypes.bool,
   defaultExpanded: PropTypes.bool,
-  onExpansionChange: PropTypes.func
+  onExpansionChange: PropTypes.func,
+  activeIndex: PropTypes.number,
+  onActiveIndexChange: PropTypes.func
 };

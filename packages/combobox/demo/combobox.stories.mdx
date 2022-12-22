@@ -1,4 +1,5 @@
 import { Meta, ArgsTable, Canvas, Story } from '@storybook/addon-docs';
+import { useArgs } from '@storybook/client-api';
 import { ComboboxContainer } from '@zendeskgarden/container-combobox';
 import { ComboboxStory } from './stories/ComboboxStory';
 
@@ -22,6 +23,37 @@ import { ComboboxStory } from './stories/ComboboxStory';
 
 # Demo
 
+## Uncontrolled
+
 <Canvas>
-  <Story name="Combobox">{args => <ComboboxStory {...args} />}</Story>
+  <Story name="Uncontrolled" argTypes={{ isExpanded: { control: false } }}>
+    {args => <ComboboxStory {...args} />}
+  </Story>
+</Canvas>
+
+## Controlled
+
+<Canvas>
+  <Story
+    name="Controlled"
+    args={{ isExpanded: false, inputValue: '', activeIndex: -1 }}
+    argTypes={{ defaultExpanded: { control: false } }}
+  >
+    {args => {
+      const updateArgs = useArgs()[1];
+      const handleExpansionChange = ({ isExpanded, inputValue }) =>
+        updateArgs({ isExpanded, inputValue });
+      const handleActiveIndexChange = ({ activeIndex }) => updateArgs({ activeIndex });
+      const handleSelectionChange = ({ selectedValue }) => updateArgs({ selectedValue });
+      return (
+        <ComboboxStory
+          {...args}
+          selectedValue={args.isMultiselectable ? [] : ''}
+          onExpansionChange={handleExpansionChange}
+          onActiveIndexChange={handleActiveIndexChange}
+          onSelectionChange={handleSelectionChange}
+        />
+      );
+    }}
+  </Story>
 </Canvas>
