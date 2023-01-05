@@ -55,77 +55,78 @@ export const useCombobox = ({
 
   const [triggerContainsInput, setTriggerContainsInput] = useState<boolean>();
   const [openChangeType, setOpenChangeType] = useState<string>();
-  const [selectionState, setSelectionState] = useState(defaultSelectionValue);
-  const isControlled = selectionValue !== undefined;
-  const _selectionValue = isControlled ? selectionValue : selectionState;
-  const setSelectionValue = isControlled ? onSelectionChange : setSelectionState;
 
   /*
    * Handlers
    */
 
-  const handleDownshiftOpenChange: IUseDownshiftProps<OptionValue>['onIsOpenChange'] = ({
-    type,
-    isOpen
-  }) => {
+  const handleDownshiftOpenChange: IUseDownshiftProps<
+    OptionValue | OptionValue[]
+  >['onIsOpenChange'] = ({ type, isOpen }) => {
     triggerContainsInput && setOpenChangeType(type);
 
     return onExpansionChange(isOpen || false);
   };
 
-  const handleDownshiftHighlightedIndexChange: IUseDownshiftProps<OptionValue>['onHighlightedIndexChange'] =
-    ({ highlightedIndex }) => onActiveIndexChange(highlightedIndex!);
+  const handleDownshiftHighlightedIndexChange: IUseDownshiftProps<
+    OptionValue | OptionValue[]
+  >['onHighlightedIndexChange'] = ({ highlightedIndex }) => onActiveIndexChange(highlightedIndex!);
 
-  const handleDownshiftInputValueChange: IUseDownshiftProps<OptionValue>['onInputValueChange'] = ({
-    inputValue: _inputValue
-  }) => onInputChange(_inputValue || '');
+  const handleDownshiftInputValueChange: IUseDownshiftProps<
+    OptionValue | OptionValue[]
+  >['onInputValueChange'] = ({ inputValue: _inputValue }) => onInputChange(_inputValue || '');
 
-  const handleDownshiftStateChange: IUseDownshiftProps<OptionValue>['onStateChange'] = changes => {
+  const handleDownshiftSelectedItemChange: IUseDownshiftProps<
+    OptionValue | OptionValue[]
+  >['onSelectedItemChange'] = ({ selectedItem }) => onSelectionChange(selectedItem || null);
+
+  const handleDownshiftStateChange: IUseDownshiftProps<
+    OptionValue | OptionValue[]
+  >['onStateChange'] = changes => {
     console.log(changes);
   };
 
-  const stateReducer: IUseDownshiftProps<OptionValue>['stateReducer'] = (
-    state,
-    { type, changes }
-  ) => {
-    if (
-      isMultiselectable &&
-      (type === useDownshift.stateChangeTypes.ItemClick ||
-        type === useDownshift.stateChangeTypes.InputKeyDownEnter)
-    ) {
-      // A multiselectable combobox remains expanded on selection.
-      changes.isOpen = state.isOpen;
-      changes.highlightedIndex = state.highlightedIndex;
-      changes.inputValue = '';
-    }
-
-    if (state.selectedItem !== changes.selectedItem) {
-      let newSelectionValue;
-
-      if (isMultiselectable) {
-        if (_selectionValue) {
-          if (_selectionValue.includes(changes.selectedItem!)) {
-            newSelectionValue = (_selectionValue as OptionValue[]).filter(
-              value => value !== changes.selectedItem
-            );
-          } else {
-            newSelectionValue = [..._selectionValue, changes.selectedItem!];
-          }
-        } else {
-          newSelectionValue = [changes.selectedItem!];
-        }
-      } else {
-        newSelectionValue = changes.selectedItem || null;
+  const stateReducer: IUseDownshiftProps<any /* vs. state/changes `selectedItem` type flipping */>['stateReducer'] =
+    (state, { type, changes }) => {
+      if (
+        isMultiselectable &&
+        (type === useDownshift.stateChangeTypes.ItemClick ||
+          type === useDownshift.stateChangeTypes.InputKeyDownEnter ||
+          type === useDownshift.stateChangeTypes.ControlledPropUpdatedSelectedItem)
+      ) {
+        // A multiselectable combobox remains expanded on selection.
+        changes.isOpen = state.isOpen;
+        changes.highlightedIndex = state.highlightedIndex;
+        changes.inputValue = '';
       }
 
-      setSelectionValue(newSelectionValue);
-      (changes.selectedItem as IUseComboboxProps['selectionValue']) = newSelectionValue;
-    }
+      if (state.selectedItem !== changes.selectedItem) {
+        let newSelectionValue;
 
-    return changes;
-  };
+        if (isMultiselectable) {
+          if (state.selectedItem) {
+            if (state.selectedItem.includes(changes.selectedItem)) {
+              newSelectionValue = (state.selectedItem as OptionValue[]).filter(
+                value => value !== changes.selectedItem
+              );
+            } else {
+              newSelectionValue = [...state.selectedItem, changes.selectedItem];
+            }
+          } else {
+            newSelectionValue = [changes.selectedItem];
+          }
+        } else {
+          newSelectionValue = changes.selectedItem || null;
+        }
+
+        changes.selectedItem = newSelectionValue;
+      }
+
+      return changes;
+    };
 
   const {
+    selectedItem: _selectionValue,
     isOpen: _isExpanded,
     highlightedIndex: _activeIndex,
     getToggleButtonProps: getDownshiftTriggerProps,
@@ -133,13 +134,16 @@ export const useCombobox = ({
     getMenuProps: getDownshiftListboxProps,
     getItemProps: getDownshiftOptionProps,
     closeMenu
-  } = useDownshift<OptionValue>({
+  } = useDownshift<OptionValue | OptionValue[]>({
     items: values,
     inputValue,
-    itemToString: transformValue,
+    itemToString: transformValue as any /* HACK around Downshift's generic type over-application */,
+    selectedItem: selectionValue,
+    defaultSelectedItem: defaultSelectionValue,
     isOpen: isExpanded,
     defaultIsOpen: defaultExpanded,
     highlightedIndex: activeIndex,
+    onSelectedItemChange: handleDownshiftSelectedItemChange,
     onIsOpenChange: handleDownshiftOpenChange,
     onHighlightedIndexChange: handleDownshiftHighlightedIndexChange,
     onInputValueChange: handleDownshiftInputValueChange,
