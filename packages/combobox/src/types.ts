@@ -16,18 +16,17 @@ export interface IUseComboboxProps<T = Element, L = Element> {
   isMultiselectable?: boolean;
   /** Provides an ordered list of option values */
   values: OptionValue[];
-  selectedValue?: OptionValue | OptionValue[];
-  inputValue?: string;
   transformValue?: (value: OptionValue | null) => string;
-  onSelectionChange?: (changes: {
-    type: string;
-    selectedValue: OptionValue | OptionValue[];
-  }) => void;
+  inputValue?: string;
+  onInputChange?: (inputValue: string) => void;
+  selectionValue?: OptionValue | OptionValue[] | null;
+  defaultSelectionValue?: OptionValue | OptionValue[] | null;
+  onSelectionChange?: (selectionValue: OptionValue | OptionValue[] | null) => void;
   isExpanded?: boolean;
   defaultExpanded?: boolean;
-  onExpansionChange?: (changes: { type: string; isExpanded: boolean; inputValue: string }) => void;
+  onExpansionChange?: (isExpanded: boolean) => void;
   activeIndex?: number;
-  onActiveIndexChange?: (changes: { type: string; activeIndex: number }) => void;
+  onActiveIndexChange?: (activeIndex: number) => void;
 }
 
 export interface IUseComboboxReturnValue {
@@ -51,7 +50,7 @@ export interface IUseComboboxReturnValue {
   ) => HTMLProps<T>;
   isExpanded: boolean;
   activeValue?: OptionValue;
-  selectedValue?: OptionValue | OptionValue[];
+  selectionValue?: OptionValue | OptionValue[] | null;
 }
 
 export interface IComboboxContainerProps<T = Element, L = Element> extends IUseComboboxProps<T, L> {

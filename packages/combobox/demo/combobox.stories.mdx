@@ -13,7 +13,10 @@ import { ComboboxStory } from './stories/ComboboxStory';
   }}
   argTypes={{
     as: { options: ['container', 'hook'], control: 'radio', table: { category: 'Story' } },
-    layout: { options: ['Downshift', 'Garden'], control: 'radio', table: { category: 'Story' } }
+    layout: { options: ['Downshift', 'Garden'], control: 'radio', table: { category: 'Story' } },
+    inputRef: { control: false },
+    listboxRef: { control: false },
+    triggerRef: { control: false }
   }}
 />
 
@@ -36,21 +39,21 @@ import { ComboboxStory } from './stories/ComboboxStory';
 <Canvas>
   <Story
     name="Controlled"
-    args={{ isExpanded: false, inputValue: '', activeIndex: -1 }}
+    args={{ isExpanded: false, inputValue: '', activeIndex: -1, selectionValue: null }}
     argTypes={{ defaultExpanded: { control: false } }}
   >
     {args => {
       const updateArgs = useArgs()[1];
-      const handleExpansionChange = ({ isExpanded, inputValue }) =>
-        updateArgs({ isExpanded, inputValue });
-      const handleActiveIndexChange = ({ activeIndex }) => updateArgs({ activeIndex });
-      const handleSelectionChange = ({ selectedValue }) => updateArgs({ selectedValue });
+      const handleExpansionChange = isExpanded => updateArgs({ isExpanded });
+      const handleActiveIndexChange = activeIndex => updateArgs({ activeIndex });
+      const handleInputChange = inputValue => updateArgs({ inputValue });
+      const handleSelectionChange = selectionValue => updateArgs({ selectionValue });
       return (
         <ComboboxStory
           {...args}
-          selectedValue={args.isMultiselectable ? [] : ''}
           onExpansionChange={handleExpansionChange}
           onActiveIndexChange={handleActiveIndexChange}
+          onInputChange={handleInputChange}
           onSelectionChange={handleSelectionChange}
         />
       );
