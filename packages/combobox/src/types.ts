@@ -27,9 +27,20 @@ export interface IUseComboboxProps<T = Element, L = Element> {
   onExpansionChange?: (isExpanded: boolean) => void;
   activeIndex?: number;
   onActiveIndexChange?: (activeIndex: number) => void;
+  onChange?: (changes: {
+    type: string;
+    isExpanded?: boolean;
+    selectionValue?: OptionValue | OptionValue[] | null;
+    inputValue?: string;
+    activeIndex?: number;
+  }) => void;
 }
 
 export interface IUseComboboxReturnValue {
+  isExpanded: boolean;
+  activeValue?: OptionValue;
+  selectionValue?: OptionValue | OptionValue[] | null;
+  inputValue?: string;
   getTriggerProps: <T extends Element>(props?: HTMLProps<T>) => HTMLProps<T>;
   getInputProps: (
     props?: Omit<HTMLProps<HTMLInputElement>, 'role'> & {
@@ -48,9 +59,10 @@ export interface IUseComboboxReturnValue {
       value?: OptionValue;
     }
   ) => HTMLProps<T>;
-  isExpanded: boolean;
-  activeValue?: OptionValue;
-  selectionValue?: OptionValue | OptionValue[] | null;
+  setExpansion: (isExpanded: boolean) => void;
+  setSelectionValue: (selectionValue: OptionValue | OptionValue[] | null) => void;
+  setActiveIndex: (activeIndex: number) => void;
+  setInputValue: (inputValue: string) => void;
 }
 
 export interface IComboboxContainerProps<T = Element, L = Element> extends IUseComboboxProps<T, L> {

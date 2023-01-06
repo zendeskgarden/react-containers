@@ -37,7 +37,11 @@ const Component = ({
       <div className="inline-block border border-solid p-1" {...getTriggerProps()}>
         {Array.isArray(selectionValue) &&
           selectionValue.map((value, index) => (
-            <button key={index} className="mr-1 px-1">
+            <button
+              key={index}
+              className="mr-1 px-1"
+              onClick={event => !isExpanded && event.stopPropagation()}
+            >
               {value}
             </button>
           ))}
@@ -49,6 +53,12 @@ const Component = ({
     )}
     {layout === 'Downshift' && (
       <>
+        {Array.isArray(selectionValue) &&
+          selectionValue.map((value, index) => (
+            <button key={index} className="mr-1 px-1">
+              {value}
+            </button>
+          ))}
         <input {...getInputProps()} />
         <button className="ml-1 px-1" {...getTriggerProps()} type="button">
           &#9660;

@@ -6,6 +6,7 @@
  */
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { composeEventHandlers } from '@zendeskgarden/container-utilities';
 import {
   useCombobox as useDownshift,
   UseComboboxGetInputPropsOptions as IDownshiftInputProps,
@@ -15,7 +16,7 @@ import {
   UseComboboxProps as IUseDownshiftProps
 } from 'downshift';
 import { IUseComboboxProps, IUseComboboxReturnValue, OptionValue } from './types';
-import { composeEventHandlers } from '@zendeskgarden/container-utilities';
+import { toType } from './utils';
 
 export const useCombobox = ({
   triggerRef,
@@ -33,7 +34,8 @@ export const useCombobox = ({
   defaultExpanded,
   onExpansionChange = () => undefined,
   activeIndex,
-  onActiveIndexChange = () => undefined
+  onActiveIndexChange = () => undefined,
+  onChange = () => undefined
 }: IUseComboboxProps): IUseComboboxReturnValue => {
   /*
    * Validation
@@ -82,44 +84,59 @@ export const useCombobox = ({
 
   const handleDownshiftStateChange: IUseDownshiftProps<
     OptionValue | OptionValue[]
-  >['onStateChange'] = changes => {
-    console.log(changes);
+  >['onStateChange'] = ({
+    type,
+    isOpen,
+    selectedItem,
+    inputValue: _inputValue,
+    highlightedIndex
+  }) => {
+    onChange({
+      type: toType(type),
+      isExpanded: isOpen,
+      selectionValue: selectedItem,
+      inputValue: _inputValue,
+      activeIndex: highlightedIndex
+    });
   };
 
   const stateReducer: IUseDownshiftProps<any /* vs. state/changes `selectedItem` type flipping */>['stateReducer'] =
     (state, { type, changes }) => {
-      if (
-        isMultiselectable &&
-        (type === useDownshift.stateChangeTypes.ItemClick ||
-          type === useDownshift.stateChangeTypes.InputKeyDownEnter ||
-          type === useDownshift.stateChangeTypes.ControlledPropUpdatedSelectedItem)
-      ) {
-        // A multiselectable combobox remains expanded on selection.
-        changes.isOpen = state.isOpen;
-        changes.highlightedIndex = state.highlightedIndex;
-        changes.inputValue = '';
+      if (type === useDownshift.stateChangeTypes.ControlledPropUpdatedSelectedItem) {
+        // Prevent Downshift from overriding the `inputValue`.
+        return state;
       }
 
-      if (state.selectedItem !== changes.selectedItem) {
-        let newSelectionValue;
+      if (isMultiselectable) {
+        if (
+          type === useDownshift.stateChangeTypes.ItemClick ||
+          type === useDownshift.stateChangeTypes.InputKeyDownEnter
+        ) {
+          // A multiselectable combobox remains expanded on selection.
+          changes.isOpen = state.isOpen;
+          changes.highlightedIndex = state.highlightedIndex;
+          changes.inputValue = '';
+        }
 
-        if (isMultiselectable) {
+        if (type === useDownshift.stateChangeTypes.InputBlur) {
+          // Prevent Downshift from backfilling `selectedItem` & `inputValue`.
+          changes.selectedItem = state.selectedItem;
+          changes.inputValue = state.inputValue;
+        }
+
+        if (state.selectedItem !== changes.selectedItem) {
           if (state.selectedItem) {
             if (state.selectedItem.includes(changes.selectedItem)) {
-              newSelectionValue = (state.selectedItem as OptionValue[]).filter(
+              changes.selectedItem = (state.selectedItem as OptionValue[]).filter(
                 value => value !== changes.selectedItem
               );
             } else {
-              newSelectionValue = [...state.selectedItem, changes.selectedItem];
+              changes.selectedItem = [...state.selectedItem, changes.selectedItem];
             }
           } else {
-            newSelectionValue = [changes.selectedItem];
+            changes.selectedItem = [changes.selectedItem];
           }
-        } else {
-          newSelectionValue = changes.selectedItem || null;
         }
-
-        changes.selectedItem = newSelectionValue;
       }
 
       return changes;
@@ -129,15 +146,20 @@ export const useCombobox = ({
     selectedItem: _selectionValue,
     isOpen: _isExpanded,
     highlightedIndex: _activeIndex,
+    inputValue: _inputValue,
     getToggleButtonProps: getDownshiftTriggerProps,
     getInputProps: getDownshiftInputProps,
     getMenuProps: getDownshiftListboxProps,
     getItemProps: getDownshiftOptionProps,
-    closeMenu
+    closeMenu: closeListbox,
+    openMenu: openListbox,
+    selectItem: setSelectionValue,
+    setHighlightedIndex: setActiveIndex,
+    setInputValue
   } = useDownshift<OptionValue | OptionValue[]>({
     items: values,
     inputValue,
-    itemToString: transformValue as any /* HACK around Downshift's generic type over-application */,
+    itemToString: transformValue as any /* HACK around Downshift's generic type overuse */,
     selectedItem: selectionValue,
     defaultSelectedItem: defaultSelectionValue,
     isOpen: isExpanded,
@@ -178,19 +200,16 @@ export const useCombobox = ({
       } as IDownshiftTriggerProps);
 
       if (triggerContainsInput) {
-        const handleBlur = (event: FocusEvent) => {
-          if (
-            event.relatedTarget === null ||
-            !(event.currentTarget as Node)?.contains(event.relatedTarget as Node)
-          ) {
-            closeMenu();
+        const handleBlur = (event: React.FocusEvent) => {
+          if (event.relatedTarget === null || !event.currentTarget?.contains(event.relatedTarget)) {
+            closeListbox();
           }
         };
 
         const handleClick = (event: MouseEvent) => {
           if (openChangeType === useDownshift.stateChangeTypes.InputBlur) {
             setOpenChangeType(useDownshift.stateChangeTypes.ToggleButtonClick);
-            closeMenu();
+            closeListbox();
           } else {
             getDownshiftTriggerProps().onClick(event);
           }
@@ -205,11 +224,29 @@ export const useCombobox = ({
 
       return triggerProps;
     },
-    [getDownshiftTriggerProps, triggerRef, openChangeType, closeMenu, triggerContainsInput]
+    [getDownshiftTriggerProps, triggerRef, openChangeType, closeListbox, triggerContainsInput]
   );
 
   const getInputProps = useCallback<IUseComboboxReturnValue['getInputProps']>(
-    ({ role = 'combobox', 'aria-labelledby': ariaLabeledBy = null, onClick, ...other } = {}) => {
+    ({
+      role = 'combobox',
+      'aria-labelledby': ariaLabeledBy = null,
+      onBlur,
+      onFocus,
+      onClick,
+      ...other
+    } = {}) => {
+      const handleBlur = (event: React.FocusEvent) => {
+        // Prevent selection on blur.
+        (event.nativeEvent as any).preventDownshiftDefault = true;
+        // TODO [fix] the following close action re-renders a controlled component
+        // such that natural <tab> key focus is lost.
+        closeListbox();
+      };
+      const handleFocus = (event: React.FocusEvent) => {
+        // Prevent expansion on focus.
+        (event.nativeEvent as any).preventDownshiftDefault = true;
+      };
       const handleClick = (event: MouseEvent) => triggerContainsInput && event.stopPropagation();
 
       return getDownshiftInputProps({
@@ -218,11 +255,13 @@ export const useCombobox = ({
         ref: inputRef,
         role,
         'aria-labelledby': ariaLabeledBy,
+        onBlur: composeEventHandlers(onBlur, handleBlur),
+        onFocus: composeEventHandlers(onFocus, handleFocus),
         onClick: composeEventHandlers(onClick, handleClick),
         ...other
       } as IDownshiftInputProps);
     },
-    [getDownshiftInputProps, inputRef, triggerContainsInput]
+    [closeListbox, getDownshiftInputProps, inputRef, triggerContainsInput]
   );
 
   const getListboxProps = useCallback<IUseComboboxReturnValue['getListboxProps']>(
@@ -265,25 +304,43 @@ export const useCombobox = ({
     [getDownshiftOptionProps, values, _selectionValue]
   );
 
+  const setExpansion = useCallback(
+    (isOpen: boolean) => (isOpen ? openListbox() : closeListbox()),
+    [openListbox, closeListbox]
+  );
+
   return useMemo<IUseComboboxReturnValue>(
     () => ({
+      /* state */
       isExpanded: _isExpanded,
       activeValue: values[_activeIndex],
       selectionValue: _selectionValue,
+      inputValue: _inputValue,
+      /* prop getters */
       getTriggerProps,
       getInputProps,
       getListboxProps,
-      getOptionProps
+      getOptionProps,
+      /* state setters */
+      setExpansion,
+      setSelectionValue,
+      setActiveIndex,
+      setInputValue
     }),
     [
       values,
       _selectionValue,
       _isExpanded,
       _activeIndex,
+      _inputValue,
       getTriggerProps,
       getInputProps,
       getListboxProps,
-      getOptionProps
+      getOptionProps,
+      setExpansion,
+      setSelectionValue,
+      setActiveIndex,
+      setInputValue
     ]
   );
 };
