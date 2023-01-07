@@ -10,6 +10,8 @@ import { HTMLProps, ReactNode, RefObject } from 'react';
 export type OptionValue = string;
 
 export interface IUseComboboxProps<T = Element, L = Element> {
+  /** Prefixes IDs for the combobox */
+  idPrefix?: string;
   triggerRef: RefObject<T>;
   inputRef: RefObject<HTMLInputElement>;
   listboxRef: RefObject<L>;
@@ -18,14 +20,20 @@ export interface IUseComboboxProps<T = Element, L = Element> {
   values: OptionValue[];
   transformValue?: (value: OptionValue | null) => string;
   inputValue?: string;
+  defaultInputValue?: string;
+  initialInputValue?: string;
   onInputChange?: (inputValue: string) => void;
   selectionValue?: OptionValue | OptionValue[] | null;
   defaultSelectionValue?: OptionValue | OptionValue[] | null;
+  initialSelectionValue?: OptionValue | OptionValue[] | null;
   onSelectionChange?: (selectionValue: OptionValue | OptionValue[] | null) => void;
   isExpanded?: boolean;
   defaultExpanded?: boolean;
+  initialExpanded?: boolean;
   onExpansionChange?: (isExpanded: boolean) => void;
   activeIndex?: number;
+  defaultActiveIndex?: number;
+  initialActiveIndex?: number;
   onActiveIndexChange?: (activeIndex: number) => void;
   onChange?: (changes: {
     type: string;
@@ -34,6 +42,8 @@ export interface IUseComboboxProps<T = Element, L = Element> {
     inputValue?: string;
     activeIndex?: number;
   }) => void;
+  /** Sets the environment where the combobox is rendered */
+  environment?: Document;
 }
 
 export interface IUseComboboxReturnValue {
