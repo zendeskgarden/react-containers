@@ -2,6 +2,7 @@
   "extends": ["config:base"],
   "rebaseStalePrs": true,
   "schedule": ["on Monday every 9 weeks of the year starting on the 3rd week"],
+  "postUpdateOptions": ["yarnDedupeHighest"],
   "packageRules": [
     {
       "matchFiles": ["package.json"],
