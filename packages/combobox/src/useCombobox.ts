@@ -322,16 +322,16 @@ export const useCombobox = ({
 
   return useMemo<IUseComboboxReturnValue>(
     () => ({
-      /* state */
-      isExpanded: _isExpanded,
-      activeValue: values[_activeIndex],
-      selectionValue: _selectionValue,
-      inputValue: _inputValue,
       /* prop getters */
       getTriggerProps,
       getInputProps,
       getListboxProps,
       getOptionProps,
+      /* state */
+      isExpanded: _isExpanded,
+      activeValue: values[_activeIndex],
+      selectionValue: _selectionValue,
+      inputValue: _inputValue,
       /* state setters */
       setExpansion,
       setSelectionValue,
