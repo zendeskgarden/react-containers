@@ -1,5 +1,6 @@
 {
   "index.cjs.js": {
+<<<<<<< HEAD
     "bundled": 8078,
     "minified": 3305,
     "gzipped": 1317
@@ -8,6 +9,16 @@
     "bundled": 7768,
     "minified": 2996,
     "gzipped": 1299,
+=======
+    "bundled": 7384,
+    "minified": 3231,
+    "gzipped": 1546
+  },
+  "index.esm.js": {
+    "bundled": 7334,
+    "minified": 3186,
+    "gzipped": 1535,
+>>>>>>> 0d4e3b5b (fix: update snapshots)
     "treeshaked": {
       "rollup": {
         "code": 230,
