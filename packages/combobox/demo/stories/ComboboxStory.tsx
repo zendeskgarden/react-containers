@@ -18,11 +18,13 @@ import {
 
 interface IComponentProps extends IUseComboboxReturnValue {
   layout: IArgs['layout'];
+  isAutocomplete?: IUseComboboxProps['isAutocomplete'];
   values: IUseComboboxProps['values'];
 }
 
 const Component = ({
   layout,
+  isAutocomplete,
   isExpanded,
   activeValue,
   selectionValue,
@@ -34,7 +36,13 @@ const Component = ({
 }: IComponentProps) => (
   <>
     {layout === 'Garden' && (
-      <div className="inline-block border border-solid p-1" {...getTriggerProps()}>
+      <div
+        className={classNames('inline-block', 'border', 'border-solid', 'p-1', {
+          'cursor-pointer': isAutocomplete,
+          'cursor-text': !isAutocomplete
+        })}
+        {...getTriggerProps()}
+      >
         {Array.isArray(selectionValue) &&
           selectionValue.map((value, index) => (
             <button
@@ -46,9 +54,11 @@ const Component = ({
             </button>
           ))}
         <input className="border-none" {...getInputProps()} />
-        <button className="ml-1 px-1" tabIndex={-1}>
-          &#9660;
-        </button>
+        {isAutocomplete && (
+          <button className="ml-1 px-1" tabIndex={-1}>
+            &#9660;
+          </button>
+        )}
       </div>
     )}
     {layout === 'Downshift' && (
@@ -60,9 +70,11 @@ const Component = ({
             </button>
           ))}
         <input {...getInputProps()} />
-        <button className="ml-1 px-1" {...getTriggerProps()} type="button">
-          &#9660;
-        </button>
+        {isAutocomplete && (
+          <button className="ml-1 px-1" {...getTriggerProps()} type="button">
+            &#9660;
+          </button>
+        )}
       </>
     )}
     <ul

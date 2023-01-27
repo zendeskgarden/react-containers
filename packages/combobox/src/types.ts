@@ -18,6 +18,8 @@ export interface IUseComboboxProps<T = Element, L = Element> {
   inputRef: RefObject<HTMLInputElement>;
   /** Provides ref access to the underlying listbox element */
   listboxRef: RefObject<L>;
+  /** Indicates that the combobox provides autocompletion  */
+  isAutocomplete?: boolean;
   /** Determines whether multiple option values can be selected */
   isMultiselectable?: boolean;
   /** Provides an ordered list of option values */

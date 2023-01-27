@@ -23,6 +23,7 @@ export const useCombobox = ({
   triggerRef,
   inputRef,
   listboxRef,
+  isAutocomplete,
   isMultiselectable,
   values,
   transformValue = value => value || '',
@@ -238,11 +239,15 @@ export const useCombobox = ({
         };
 
         const handleClick = (event: MouseEvent) => {
-          if (openChangeType === useDownshift.stateChangeTypes.InputBlur) {
-            setOpenChangeType(useDownshift.stateChangeTypes.ToggleButtonClick);
-            closeListbox();
+          if (isAutocomplete) {
+            if (openChangeType === useDownshift.stateChangeTypes.InputBlur) {
+              setOpenChangeType(useDownshift.stateChangeTypes.ToggleButtonClick);
+              closeListbox();
+            } else {
+              getDownshiftTriggerProps().onClick(event);
+            }
           } else {
-            getDownshiftTriggerProps().onClick(event);
+            inputRef.current?.focus();
           }
         };
 
@@ -268,11 +273,12 @@ export const useCombobox = ({
         ref: inputRef,
         role,
         'aria-labelledby': ariaLabeledBy,
+        'aria-autocomplete': isAutocomplete ? 'list' : undefined,
         onClick: composeEventHandlers(onClick, handleClick),
         ...other
       } as IDownshiftInputProps);
     },
-    [getDownshiftInputProps, inputRef, triggerContainsInput]
+    [getDownshiftInputProps, inputRef, triggerContainsInput, isAutocomplete]
   );
 
   const getListboxProps = useCallback<IUseComboboxReturnValue['getListboxProps']>(

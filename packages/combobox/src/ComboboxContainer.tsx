@@ -23,6 +23,7 @@ ComboboxContainer.propTypes = {
   triggerRef: PropTypes.any.isRequired,
   inputRef: PropTypes.any.isRequired,
   listboxRef: PropTypes.any.isRequired,
+  isAutocomplete: PropTypes.bool,
   isMultiselectable: PropTypes.bool,
   values: PropTypes.arrayOf(PropTypes.string).isRequired,
   inputValue: PropTypes.string,
@@ -50,4 +51,8 @@ ComboboxContainer.propTypes = {
   onActiveIndexChange: PropTypes.func,
   onChange: PropTypes.func,
   environment: PropTypes.any
+};
+
+ComboboxContainer.defaultProps = {
+  isAutocomplete: true
 };
