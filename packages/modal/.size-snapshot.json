@@ -19,9 +19,9 @@
     }
   },
   "index.cjs.js": {
-    "bundled": 4271,
-    "minified": 2436,
-    "gzipped": 900
+    "bundled": 3754,
+    "minified": 2019,
+    "gzipped": 790
   },
   "index.esm.js": {
     "bundled": 3584,
@@ -33,7 +33,7 @@
         "import_statements": 126
       },
       "webpack": {
-        "code": 2813
+        "code": 1989
       }
     }
   }

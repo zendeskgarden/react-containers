@@ -11,7 +11,7 @@ import replace from '@rollup/plugin-replace';
 import nodeResolve from '@rollup/plugin-node-resolve';
 import typescript from 'rollup-plugin-typescript2';
 import babel from 'rollup-plugin-babel';
-import { sizeSnapshot } from 'rollup-plugin-size-snapshot';
+import { sizeSnapshot } from '@brodybits/rollup-plugin-size-snapshot';
 import analyze from 'rollup-plugin-analyzer';
 import license from 'rollup-plugin-license';
 import cleanup from 'rollup-plugin-cleanup';
@@ -68,7 +68,7 @@ export default [
       /**
        * Replace PACKAGE_VERSION constant with the current package version
        */
-      replace({ PACKAGE_VERSION: `'${pkg.version}'` }),
+      replace({ PACKAGE_VERSION: `'${pkg.version}'`, preventAssignment: true }),
       /**
        * Remove comments from source files
        */

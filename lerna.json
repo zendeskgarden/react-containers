@@ -1,6 +1,7 @@
 {
   "npmClient": "yarn",
   "version": "independent",
+  "useNx": false,
   "ignoreChanges": ["*.md", "*.spec.js"],
   "command": {
     "publish": {
