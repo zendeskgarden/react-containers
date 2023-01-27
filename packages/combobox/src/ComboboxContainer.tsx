@@ -19,6 +19,7 @@ export const ComboboxContainer: React.FC<IComboboxContainerProps> = props => {
 ComboboxContainer.propTypes = {
   children: PropTypes.func,
   render: PropTypes.func,
+  idPrefix: PropTypes.string,
   triggerRef: PropTypes.any.isRequired,
   inputRef: PropTypes.any.isRequired,
   listboxRef: PropTypes.any.isRequired,
