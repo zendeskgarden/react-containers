@@ -19,6 +19,7 @@ import {
 interface IComponentProps extends IUseComboboxReturnValue {
   layout: IArgs['layout'];
   isAutocomplete?: IUseComboboxProps['isAutocomplete'];
+  disabled?: IUseComboboxProps['disabled'];
   values: IUseComboboxProps['values'];
 }
 
@@ -26,6 +27,7 @@ const Component = ({
   layout,
   isAutocomplete,
   isExpanded,
+  disabled,
   activeValue,
   selectionValue,
   getTriggerProps,
@@ -38,8 +40,11 @@ const Component = ({
     {layout === 'Garden' && (
       <div
         className={classNames('inline-block', 'border', 'border-solid', 'p-1', {
-          'cursor-pointer': isAutocomplete,
-          'cursor-text': !isAutocomplete
+          'cursor-default': disabled,
+          'cursor-pointer': isAutocomplete && !disabled,
+          'cursor-text': !(isAutocomplete || disabled),
+          'bg-grey-100': disabled,
+          'border-grey-200': disabled
         })}
         {...getTriggerProps()}
       >
@@ -53,9 +58,14 @@ const Component = ({
               {value}
             </button>
           ))}
-        <input className="border-none" {...getInputProps()} />
+        <input className={classNames('border-none', 'bg-transparent')} {...getInputProps()} />
         {isAutocomplete && (
-          <button className="ml-1 px-1" tabIndex={-1}>
+          <button
+            className={classNames('ml-1', 'px-1', { 'cursor-default': disabled })}
+            disabled={disabled}
+            tabIndex={-1}
+            type="button"
+          >
             &#9660;
           </button>
         )}
@@ -71,7 +81,11 @@ const Component = ({
           ))}
         <input {...getInputProps()} />
         {isAutocomplete && (
-          <button className="ml-1 px-1" {...getTriggerProps()} type="button">
+          <button
+            className="ml-1 px-1"
+            {...getTriggerProps({ 'aria-label': 'Options' })}
+            type="button"
+          >
             &#9660;
           </button>
         )}

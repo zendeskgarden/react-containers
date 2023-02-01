@@ -25,6 +25,7 @@ ComboboxContainer.propTypes = {
   listboxRef: PropTypes.any.isRequired,
   isAutocomplete: PropTypes.bool,
   isMultiselectable: PropTypes.bool,
+  disabled: PropTypes.bool,
   values: PropTypes.arrayOf(PropTypes.string).isRequired,
   inputValue: PropTypes.string,
   initialInputValue: PropTypes.string,

@@ -22,7 +22,9 @@ export interface IUseComboboxProps<T = Element, L = Element> {
   isAutocomplete?: boolean;
   /** Determines whether multiple option values can be selected */
   isMultiselectable?: boolean;
-  /** Provides an ordered list of option values */
+  /** Indicates that the element is not interactive */
+  disabled?: boolean;
+  /** Provides an ordered list of enabled option values */
   values: OptionValue[];
   /**
    * Transforms option values to human-readable text

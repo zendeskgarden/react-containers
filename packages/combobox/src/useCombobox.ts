@@ -25,6 +25,7 @@ export const useCombobox = ({
   listboxRef,
   isAutocomplete,
   isMultiselectable,
+  disabled,
   values,
   transformValue = value => value || '',
   inputValue,
@@ -228,6 +229,7 @@ export const useCombobox = ({
         'data-garden-container-id': 'containers.combobox',
         'data-garden-container-version': PACKAGE_VERSION,
         ref: triggerRef,
+        disabled,
         ...other
       } as IDownshiftTriggerProps);
 
@@ -239,7 +241,9 @@ export const useCombobox = ({
         };
 
         const handleClick = (event: MouseEvent) => {
-          if (isAutocomplete) {
+          if (disabled) {
+            event.preventDefault();
+          } else if (isAutocomplete) {
             if (openChangeType === useDownshift.stateChangeTypes.InputBlur) {
               setOpenChangeType(useDownshift.stateChangeTypes.ToggleButtonClick);
               closeListbox();
@@ -254,13 +258,28 @@ export const useCombobox = ({
         return {
           ...triggerProps,
           onBlur: composeEventHandlers(onBlur, handleBlur),
-          onClick: composeEventHandlers(onClick, handleClick)
+          onClick: composeEventHandlers(onClick, handleClick),
+          /* Knock out ARIA for non-autocomplete Garden layout trigger */
+          'aria-controls': isAutocomplete ? triggerProps['aria-controls'] : undefined,
+          'aria-expanded': isAutocomplete ? triggerProps['aria-expanded'] : undefined,
+          /* Handle disabled for Garden layout */
+          'aria-disabled': disabled || undefined,
+          disabled: undefined
         };
       }
 
       return triggerProps;
     },
-    [getDownshiftTriggerProps, triggerRef, openChangeType, closeListbox, triggerContainsInput]
+    [
+      getDownshiftTriggerProps,
+      triggerRef,
+      disabled,
+      openChangeType,
+      closeListbox,
+      triggerContainsInput,
+      isAutocomplete,
+      inputRef
+    ]
   );
 
   const getInputProps = useCallback<IUseComboboxReturnValue['getInputProps']>(
@@ -271,6 +290,7 @@ export const useCombobox = ({
         'data-garden-container-id': 'containers.combobox.input',
         'data-garden-container-version': PACKAGE_VERSION,
         ref: inputRef,
+        disabled,
         role,
         'aria-labelledby': ariaLabeledBy,
         'aria-autocomplete': isAutocomplete ? 'list' : undefined,
@@ -278,7 +298,7 @@ export const useCombobox = ({
         ...other
       } as IDownshiftInputProps);
     },
-    [getDownshiftInputProps, inputRef, triggerContainsInput, isAutocomplete]
+    [getDownshiftInputProps, inputRef, triggerContainsInput, disabled, isAutocomplete]
   );
 
   const getListboxProps = useCallback<IUseComboboxReturnValue['getListboxProps']>(
