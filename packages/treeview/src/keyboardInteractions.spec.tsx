@@ -55,7 +55,7 @@ describe('treeview keyboard control utils', () => {
     it('should focus on the parent node', () => {
       onFocusMock = jest.fn();
       render(
-        <div role="treeitem" aria-expanded tabIndex={0} onFocus={onFocusMock}>
+        <div role="treeitem" aria-selected="false" aria-expanded tabIndex={0} onFocus={onFocusMock}>
           <p data-test-id="test">foobar</p>
         </div>
       );
@@ -100,8 +100,10 @@ describe('treeview keyboard control utils', () => {
       onFocusMock = jest.fn();
       render(
         <div onFocus={onFocusMock} role="tree">
-          <button role="treeitem">first</button>
-          <button data-test-id="test" role="treeitem">
+          <button role="treeitem" aria-selected="false">
+            first
+          </button>
+          <button data-test-id="test" role="treeitem" aria-selected="false">
             second
           </button>
         </div>
@@ -117,10 +119,12 @@ describe('treeview keyboard control utils', () => {
       onFocusMock = jest.fn();
       render(
         <div onFocus={onFocusMock} role="tree">
-          <button data-test-id="test" role="treeitem" aria-expanded>
+          <button data-test-id="test" role="treeitem" aria-selected="false" aria-expanded>
             first
           </button>
-          <button role="treeitem">second</button>
+          <button role="treeitem" aria-selected="false">
+            second
+          </button>
         </div>
       );
 
@@ -137,10 +141,12 @@ describe('treeview keyboard control utils', () => {
       render(
         <div role="tree">
           <p data-test-id="test">foobar</p>
-          <button role="treeitem" onFocus={onFocusMock}>
+          <button role="treeitem" aria-selected="false" onFocus={onFocusMock}>
             first
           </button>
-          <button role="treeitem">second</button>
+          <button role="treeitem" aria-selected="false">
+            second
+          </button>
         </div>
       );
 
@@ -185,8 +191,10 @@ describe('treeview keyboard control utils', () => {
       render(
         <div role="tree">
           <p data-test-id="test">foobar</p>
-          <button role="treeitem">first</button>
-          <button role="treeitem" onFocus={onFocusMock}>
+          <button role="treeitem" aria-selected="false">
+            first
+          </button>
+          <button role="treeitem" aria-selected="false" onFocus={onFocusMock}>
             second
           </button>
         </div>
@@ -230,8 +238,10 @@ describe('treeview keyboard control utils', () => {
       onFocusMock = jest.fn();
       render(
         <div role="tree" onFocus={onFocusMock}>
-          <button role="treeitem">first</button>
-          <button role="treeitem" data-test-id="test">
+          <button role="treeitem" aria-selected="false">
+            first
+          </button>
+          <button role="treeitem" aria-selected="false" data-test-id="test">
             second
           </button>
         </div>
