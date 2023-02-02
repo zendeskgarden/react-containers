@@ -20,7 +20,7 @@ interface IComponentProps extends IUseComboboxReturnValue {
   layout: IArgs['layout'];
   isAutocomplete?: IUseComboboxProps['isAutocomplete'];
   disabled?: IUseComboboxProps['disabled'];
-  values: IUseComboboxProps['values'];
+  options: IUseComboboxProps['options'];
 }
 
 const Component = ({
@@ -34,7 +34,7 @@ const Component = ({
   getInputProps,
   getListboxProps,
   getOptionProps,
-  values
+  options
 }: IComponentProps) => (
   <>
     {layout === 'Garden' && (
@@ -95,16 +95,19 @@ const Component = ({
       className={classNames('mt-1', 'border', 'border-solid', { invisible: !isExpanded })}
       {...getListboxProps({ 'aria-label': 'Options' })}
     >
-      {values.map((value, index) => (
+      {options.map((option, index) => (
         <li
           key={index}
-          className={classNames({ 'bg-blue-100': value === activeValue })}
-          {...getOptionProps({ value })}
+          className={classNames({
+            'bg-blue-100': option.value === activeValue,
+            'text-grey-400': option.disabled
+          })}
+          {...getOptionProps({ value: option.value })}
         >
           {(Array.isArray(selectionValue)
-            ? selectionValue.includes(value)
-            : selectionValue === value) && '✓ '}
-          {value}
+            ? selectionValue.includes(option.value)
+            : selectionValue === option.value) && '✓ '}
+          {option.label || option.value}
         </li>
       ))}
     </ul>

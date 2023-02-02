@@ -26,21 +26,20 @@ ComboboxContainer.propTypes = {
   isAutocomplete: PropTypes.bool,
   isMultiselectable: PropTypes.bool,
   disabled: PropTypes.bool,
-  values: PropTypes.arrayOf(PropTypes.string).isRequired,
+  options: PropTypes.arrayOf(
+    PropTypes.shape({
+      value: PropTypes.any.isRequired,
+      label: PropTypes.string,
+      disabled: PropTypes.bool
+    })
+  ).isRequired,
   inputValue: PropTypes.string,
   initialInputValue: PropTypes.string,
   defaultInputValue: PropTypes.string,
   onInputChange: PropTypes.func,
   selectionValue: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
-  defaultSelectionValue: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.arrayOf(PropTypes.string)
-  ]),
-  initialSelectionValue: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.arrayOf(PropTypes.string)
-  ]),
-  transformValue: PropTypes.func,
+  defaultSelectionValue: PropTypes.oneOfType([PropTypes.any, PropTypes.arrayOf(PropTypes.any)]),
+  initialSelectionValue: PropTypes.oneOfType([PropTypes.any, PropTypes.arrayOf(PropTypes.any)]),
   onSelectionChange: PropTypes.func,
   isExpanded: PropTypes.bool,
   defaultExpanded: PropTypes.bool,

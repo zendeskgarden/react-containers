@@ -7,7 +7,7 @@
 
 import { HTMLProps, ReactNode, RefObject } from 'react';
 
-export type OptionValue = string;
+export type OptionValue = any;
 
 export interface IUseComboboxProps<T = Element, L = Element> {
   /** Prefixes IDs for the combobox */
@@ -24,14 +24,18 @@ export interface IUseComboboxProps<T = Element, L = Element> {
   isMultiselectable?: boolean;
   /** Indicates that the element is not interactive */
   disabled?: boolean;
-  /** Provides an ordered list of enabled option values */
-  values: OptionValue[];
   /**
-   * Transforms option values to human-readable text
+   * Provides an ordered list of options
    *
-   * @param {string} value The value to transform
+   * @param {OptionValue} option.value Unique option value
+   * @param {string} option.label Optional human-readable text (defaults to `option.value`)
+   * @param {boolean} option.disabled Indicates that the option is not interactive
    */
-  transformValue?: (value: OptionValue | null) => string;
+  options: {
+    value: OptionValue;
+    label?: string;
+    disabled?: boolean;
+  }[];
   /** Sets the input value in a controlled combobox */
   inputValue?: string;
   /** Sets the default input value in an uncontrolled combobox */
@@ -53,7 +57,7 @@ export interface IUseComboboxProps<T = Element, L = Element> {
   /**
    * Handles selection value changes
    *
-   * @param {string|string[]} selectionValue The updated selection value(s)
+   * @param {OptionValue|OptionValue[]} selectionValue The updated selection value(s)
    */
   onSelectionChange?: (selectionValue: OptionValue | OptionValue[] | null) => void;
   /** Determines listbox expansion in a controlled combobox */
@@ -85,7 +89,7 @@ export interface IUseComboboxProps<T = Element, L = Element> {
    *
    * @param {string} changes.type The event type that triggered the change
    * @param {boolean} [changes.isExpanded] The updated listbox expansion
-   * @param {string|string[]} [changes.selectionValue] The updated selection value(s)
+   * @param {OptionValue|OptionValue[]} [changes.selectionValue] The updated selection value(s)
    * @param {string} [changes.inputValue] The updated input value
    * @param {number} [changes.activeIndex] The updated active option index
    */
@@ -138,8 +142,8 @@ export interface IComboboxContainerProps<T = Element, L = Element> extends IUseC
    * @param {function} [options.getListboxProps] Listbox props getter
    * @param {function} [options.getOptionProps] Option props getter
    * @param {boolean} options.isExpanded Current listbox expansion
-   * @param {string} [options.activeValue] Current active option value
-   * @param {string|string[]} [options.selectionValue] Current selection value(s)
+   * @param {OptionValue} [options.activeValue] Current active option value
+   * @param {OptionValue|OptionValue[]} [options.selectionValue] Current selection value(s)
    * @param {string} [options.inputValue] Current input value
    * @param {function} [options.setExpansion] Listbox expansion setter
    * @param {function} [options.setSelectionValue] Selection value(s) setter

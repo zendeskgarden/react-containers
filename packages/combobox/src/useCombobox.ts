@@ -26,8 +26,7 @@ export const useCombobox = ({
   isAutocomplete,
   isMultiselectable,
   disabled,
-  values,
-  transformValue = value => value || '',
+  options = [],
   inputValue,
   defaultInputValue,
   initialInputValue,
@@ -70,6 +69,15 @@ export const useCombobox = ({
   const prefix = `${useId(idPrefix)}-`;
   const [triggerContainsInput, setTriggerContainsInput] = useState<boolean>();
   const [openChangeType, setOpenChangeType] = useState<string>();
+  const values = options.filter(option => !option.disabled).map(option => option.value);
+  const disabledValues = options.filter(option => option.disabled).map(option => option.value);
+  const labels: Record<OptionValue, string> = options.reduce(
+    (previous, current) => ({
+      ...previous,
+      [current.value]: current.label || current.value
+    }),
+    {}
+  );
 
   /*
    * Handlers
@@ -163,6 +171,8 @@ export const useCombobox = ({
 
       return changes;
     };
+
+  const transformValue = (value: OptionValue | null) => (value ? labels[value] : '');
 
   const {
     selectedItem: _selectionValue,
@@ -316,14 +326,16 @@ export const useCombobox = ({
 
   const getOptionProps = useCallback<IUseComboboxReturnValue['getOptionProps']>(
     ({ role = 'option', value, ...other } = {}) => {
+      const ariaDisabled = disabledValues.includes(value);
       const optionProps = {
         'data-garden-container-id': 'containers.combobox.option',
         'data-garden-container-version': PACKAGE_VERSION,
         role,
+        'aria-disabled': ariaDisabled,
         ...other
       };
 
-      if (other['aria-disabled'] || value === undefined || value === null) {
+      if (ariaDisabled || value === undefined || value === null) {
         return optionProps;
       }
 
@@ -338,7 +350,7 @@ export const useCombobox = ({
         ...optionProps
       } as IDownshiftOptionProps<OptionValue>);
     },
-    [getDownshiftOptionProps, values, _selectionValue]
+    [disabledValues, getDownshiftOptionProps, values, _selectionValue]
   );
 
   const setExpansion = useCallback(
