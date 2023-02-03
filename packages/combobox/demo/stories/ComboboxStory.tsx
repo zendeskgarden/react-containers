@@ -49,15 +49,20 @@ const Component = ({
         {...getTriggerProps()}
       >
         {Array.isArray(selectionValue) &&
-          selectionValue.map((value, index) => (
-            <button
-              key={index}
-              className="mr-1 px-1"
-              onClick={event => !isExpanded && event.stopPropagation()}
-            >
-              {value}
-            </button>
-          ))}
+          selectionValue.map((value, index) => {
+            const option = options.find(current => current.value === value);
+
+            return (
+              <button
+                key={index}
+                className="mr-1 px-1"
+                disabled={option?.disabled}
+                onClick={event => !isExpanded && event.stopPropagation()}
+              >
+                {option?.label || option?.value}
+              </button>
+            );
+          })}
         <input className={classNames('border-none', 'bg-transparent')} {...getInputProps()} />
         {isAutocomplete && (
           <button
@@ -74,11 +79,15 @@ const Component = ({
     {layout === 'Downshift' && (
       <>
         {Array.isArray(selectionValue) &&
-          selectionValue.map((value, index) => (
-            <button key={index} className="mr-1 px-1">
-              {value}
-            </button>
-          ))}
+          selectionValue.map((value, index) => {
+            const option = options.find(current => current.value === value);
+
+            return (
+              <button key={index} className="mr-1 px-1" disabled={option?.disabled}>
+                {option?.label || option?.value}
+              </button>
+            );
+          })}
         <input {...getInputProps()} />
         {isAutocomplete && (
           <button
