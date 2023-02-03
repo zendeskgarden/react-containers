@@ -28,12 +28,8 @@ export const useCombobox = ({
   disabled,
   options = [],
   inputValue,
-  defaultInputValue,
-  initialInputValue,
   onInputChange = () => undefined,
   selectionValue,
-  defaultSelectionValue,
-  initialSelectionValue,
   onSelectionChange = () => undefined,
   isExpanded,
   defaultExpanded,
@@ -49,8 +45,51 @@ export const useCombobox = ({
   const doc = environment || document;
 
   /*
+   * State
+   */
+
+  const prefix = `${useId(idPrefix)}-`;
+  const [triggerContainsInput, setTriggerContainsInput] = useState<boolean>();
+  const [openChangeType, setOpenChangeType] = useState<string>();
+  const labels: Record<OptionValue, string> = useMemo(
+    () => ({}),
+    [
+      /* deps */
+    ]
+  );
+  const selectedValues: OptionValue[] = useMemo(
+    () => [],
+    [
+      /* deps */
+    ]
+  );
+  const values = useMemo(() => {
+    const retVal: OptionValue[] = [];
+
+    options.forEach(option => {
+      if (!option.disabled) {
+        retVal.push(option.value);
+      }
+
+      if (option.selected) {
+        selectedValues.push(option.value);
+      }
+
+      labels[option.value] = option.label || option.value;
+    });
+
+    return retVal;
+  }, [options, selectedValues, labels]);
+
+  /*
    * Validation
    */
+
+  if (selectionValue === undefined || selectionValue === null) {
+    if (!isMultiselectable && selectedValues.length > 1) {
+      throw new Error('Error: expected useCombobox `options` to have no more than one selected.');
+    }
+  }
 
   if (selectionValue !== undefined && selectionValue !== null) {
     if (isMultiselectable && !Array.isArray(selectionValue)) {
@@ -61,23 +100,6 @@ export const useCombobox = ({
       throw new Error('Error: expected useCombobox `selectionValue` to be a string.');
     }
   }
-
-  /*
-   * State
-   */
-
-  const prefix = `${useId(idPrefix)}-`;
-  const [triggerContainsInput, setTriggerContainsInput] = useState<boolean>();
-  const [openChangeType, setOpenChangeType] = useState<string>();
-  const values = options.filter(option => !option.disabled).map(option => option.value);
-  const disabledValues = options.filter(option => option.disabled).map(option => option.value);
-  const labels: Record<OptionValue, string> = options.reduce(
-    (previous, current) => ({
-      ...previous,
-      [current.value]: current.label || current.value
-    }),
-    {}
-  );
 
   /*
    * Handlers
@@ -173,6 +195,8 @@ export const useCombobox = ({
     };
 
   const transformValue = (value: OptionValue | null) => (value ? labels[value] : '');
+  const initialSelectionValue = isMultiselectable ? selectedValues : selectedValues[0];
+  const initialInputValue = isMultiselectable ? '' : labels[initialSelectionValue];
 
   const {
     selectedItem: _selectionValue,
@@ -195,11 +219,9 @@ export const useCombobox = ({
     getItemId: index => `${prefix}-option-${index}`,
     items: values,
     inputValue,
-    defaultInputValue,
     initialInputValue,
     itemToString: transformValue as any /* HACK around Downshift's generic type overuse */,
     selectedItem: selectionValue,
-    defaultSelectedItem: defaultSelectionValue,
     initialSelectedItem: initialSelectionValue,
     isOpen: isExpanded,
     defaultIsOpen: defaultExpanded,
@@ -325,32 +347,31 @@ export const useCombobox = ({
   );
 
   const getOptionProps = useCallback<IUseComboboxReturnValue['getOptionProps']>(
-    ({ role = 'option', value, ...other } = {}) => {
-      const ariaDisabled = disabledValues.includes(value);
+    ({ role = 'option', option, ...other } = {}) => {
       const optionProps = {
         'data-garden-container-id': 'containers.combobox.option',
         'data-garden-container-version': PACKAGE_VERSION,
         role,
-        'aria-disabled': ariaDisabled,
+        'aria-disabled': option?.disabled,
         ...other
       };
 
-      if (ariaDisabled || value === undefined || value === null) {
+      if (option === undefined || option.disabled) {
         return optionProps;
       }
 
       const ariaSelected = Array.isArray(_selectionValue)
-        ? _selectionValue?.includes(value)
-        : _selectionValue === value;
+        ? _selectionValue?.includes(option.value)
+        : _selectionValue === option.value;
 
       return getDownshiftOptionProps({
-        item: value,
-        index: values.indexOf(value),
+        item: option.value,
+        index: values.indexOf(option.value),
         'aria-selected': ariaSelected,
         ...optionProps
       } as IDownshiftOptionProps<OptionValue>);
     },
-    [disabledValues, getDownshiftOptionProps, values, _selectionValue]
+    [getDownshiftOptionProps, values, _selectionValue]
   );
 
   const setExpansion = useCallback(

@@ -102,7 +102,7 @@ const Component = ({
             'bg-blue-100': option.value === activeValue,
             'text-grey-400': option.disabled
           })}
-          {...getOptionProps({ value: option.value })}
+          {...getOptionProps({ option })}
         >
           {(Array.isArray(selectionValue)
             ? selectionValue.includes(option.value)

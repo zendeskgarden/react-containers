@@ -29,19 +29,17 @@ export interface IUseComboboxProps<T = Element, L = Element> {
    *
    * @param {OptionValue} option.value Unique option value
    * @param {string} option.label Optional human-readable text (defaults to `option.value`)
+   * @param {boolean} option.selected Sets initial selection for the option
    * @param {boolean} option.disabled Indicates that the option is not interactive
    */
   options: {
     value: OptionValue;
     label?: string;
+    selected?: boolean;
     disabled?: boolean;
   }[];
   /** Sets the input value in a controlled combobox */
   inputValue?: string;
-  /** Sets the default input value in an uncontrolled combobox */
-  defaultInputValue?: string;
-  /** Sets the input value on combobox initialization */
-  initialInputValue?: string;
   /**
    * Handles input value changes
    *
@@ -50,10 +48,6 @@ export interface IUseComboboxProps<T = Element, L = Element> {
   onInputChange?: (inputValue: string) => void;
   /** Sets the selection value (or `isMultiselectable` values) in a controlled combobox */
   selectionValue?: OptionValue | OptionValue[] | null;
-  /** Sets the default selection value (or `isMultiselectable` values) in an uncontrolled combobox */
-  defaultSelectionValue?: OptionValue | OptionValue[] | null;
-  /** Sets the selection value (or `isMultiselectable` values) on combobox initialization */
-  initialSelectionValue?: OptionValue | OptionValue[] | null;
   /**
    * Handles selection value changes
    *
@@ -124,7 +118,12 @@ export interface IUseComboboxReturnValue {
   getOptionProps: <T extends Element>(
     props?: Omit<HTMLProps<T>, 'role'> & {
       role?: 'option' | null;
-      value?: OptionValue;
+      option?: {
+        value: OptionValue;
+        label?: string;
+        selected?: boolean;
+        disabled?: boolean;
+      };
     }
   ) => HTMLProps<T>;
   setExpansion: (isExpanded: boolean) => void;
