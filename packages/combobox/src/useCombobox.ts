@@ -131,7 +131,6 @@ export const useCombobox = ({
   const stateReducer: IUseDownshiftProps<any /* vs. state/changes `selectedItem` type flipping */>['stateReducer'] =
     (state, { type, changes }) => {
       switch (type) {
-        // TODO [fix] Downshift re-renders a controlled component such that natural <tab> key focus is lost.
         case useDownshift.stateChangeTypes.ControlledPropUpdatedSelectedItem:
           // Prevent Downshift from overriding the `inputValue`.
           return state;
@@ -156,12 +155,13 @@ export const useCombobox = ({
 
           break;
 
-        // TODO [feat] add isInputClearedOnEscape prop.
+        // TODO [feat] add isInputResetOnEscape prop.
         case useDownshift.stateChangeTypes.InputKeyDownEscape:
           // Prevent clear on escape.
           return { ...state, isOpen: false };
       }
 
+      // Handle multiselectable state changes
       if (isMultiselectable && state.selectedItem !== changes.selectedItem) {
         if (state.selectedItem && changes.selectedItem) {
           if (state.selectedItem.includes(changes.selectedItem)) {
