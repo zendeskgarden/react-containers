@@ -29,7 +29,7 @@ const Component = ({
   isExpanded,
   disabled,
   activeValue,
-  selectionValue,
+  selection,
   getTriggerProps,
   getInputProps,
   getListboxProps,
@@ -48,21 +48,17 @@ const Component = ({
         })}
         {...getTriggerProps()}
       >
-        {Array.isArray(selectionValue) &&
-          selectionValue.map((value, index) => {
-            const option = options.find(current => current.value === value);
-
-            return (
-              <button
-                key={index}
-                className="mr-1 px-1"
-                disabled={option?.disabled}
-                onClick={event => !isExpanded && event.stopPropagation()}
-              >
-                {option?.label || option?.value}
-              </button>
-            );
-          })}
+        {Array.isArray(selection) &&
+          selection.map((value, index) => (
+            <button
+              key={index}
+              className="mr-1 px-1"
+              disabled={value.disabled}
+              onClick={event => !isExpanded && event.stopPropagation()}
+            >
+              {value.label || value.value}
+            </button>
+          ))}
         <input className={classNames('border-none', 'bg-transparent')} {...getInputProps()} />
         {isAutocomplete && (
           <button
@@ -78,16 +74,12 @@ const Component = ({
     )}
     {layout === 'Downshift' && (
       <>
-        {Array.isArray(selectionValue) &&
-          selectionValue.map((value, index) => {
-            const option = options.find(current => current.value === value);
-
-            return (
-              <button key={index} className="mr-1 px-1" disabled={option?.disabled}>
-                {option?.label || option?.value}
-              </button>
-            );
-          })}
+        {Array.isArray(selection) &&
+          selection.map((value, index) => (
+            <button key={index} className="mr-1 px-1" disabled={value.disabled}>
+              {value.label || value.value}
+            </button>
+          ))}
         <input {...getInputProps()} />
         {isAutocomplete && (
           <button
@@ -113,9 +105,9 @@ const Component = ({
           })}
           {...getOptionProps({ option })}
         >
-          {(Array.isArray(selectionValue)
-            ? selectionValue.includes(option.value)
-            : selectionValue === option.value) && '✓ '}
+          {(Array.isArray(selection)
+            ? selection.find(value => value.value === option.value) !== undefined
+            : selection.value === option.value) && '✓ '}
           {option.label || option.value}
         </li>
       ))}

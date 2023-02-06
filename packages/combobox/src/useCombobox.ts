@@ -63,11 +63,19 @@ export const useCombobox = ({
       /* deps */
     ]
   );
+  const disabledValues: OptionValue[] = useMemo(
+    () => [],
+    [
+      /* deps */
+    ]
+  );
   const values = useMemo(() => {
     const retVal: OptionValue[] = [];
 
     options.forEach(option => {
-      if (!option.disabled) {
+      if (option.disabled) {
+        disabledValues.push(option.value);
+      } else {
         retVal.push(option.value);
       }
 
@@ -79,7 +87,7 @@ export const useCombobox = ({
     });
 
     return retVal;
-  }, [options, selectedValues, labels]);
+  }, [options, disabledValues, selectedValues, labels]);
 
   /*
    * Validation
@@ -133,7 +141,7 @@ export const useCombobox = ({
     selectedItem,
     inputValue: _inputValue,
     highlightedIndex
-  }) => {
+  }) =>
     onChange({
       type: toType(type),
       isExpanded: isOpen,
@@ -141,7 +149,6 @@ export const useCombobox = ({
       inputValue: _inputValue,
       activeIndex: highlightedIndex
     });
-  };
 
   const stateReducer: IUseDownshiftProps<any /* vs. state/changes `selectedItem` type flipping */>['stateReducer'] =
     (state, { type, changes }) => {
@@ -379,18 +386,35 @@ export const useCombobox = ({
     [openListbox, closeListbox]
   );
 
+  const selection = useMemo(
+    () =>
+      Array.isArray(_selectionValue)
+        ? _selectionValue.map(value => ({
+            value,
+            label: labels[value],
+            disabled: disabledValues.includes(value)
+          }))
+        : {
+            value: _selectionValue,
+            label: labels[_selectionValue],
+            disabled: disabledValues.includes(_selectionValue)
+          },
+    [_selectionValue, disabledValues, labels]
+  );
+
   return useMemo<IUseComboboxReturnValue>(
     () => ({
+      /* state */
+      isExpanded: _isExpanded,
+      activeValue: values[_activeIndex],
+      selectionValue: _selectionValue,
+      selection,
+      inputValue: _inputValue,
       /* prop getters */
       getTriggerProps,
       getInputProps,
       getListboxProps,
       getOptionProps,
-      /* state */
-      isExpanded: _isExpanded,
-      activeValue: values[_activeIndex],
-      selectionValue: _selectionValue,
-      inputValue: _inputValue,
       /* state setters */
       setExpansion,
       setSelectionValue,
@@ -400,6 +424,7 @@ export const useCombobox = ({
     [
       values,
       _selectionValue,
+      selection,
       _isExpanded,
       _activeIndex,
       _inputValue,

@@ -101,7 +101,9 @@ export interface IUseComboboxProps<T = Element, L = Element> {
 export interface IUseComboboxReturnValue {
   isExpanded: boolean;
   activeValue?: OptionValue;
-  selectionValue?: OptionValue | OptionValue[] | null;
+  selection:
+    | { value?: OptionValue | null; label?: string; disabled?: boolean }
+    | { value: OptionValue; label?: string; disabled?: boolean }[];
   inputValue?: string;
   getTriggerProps: <T extends Element>(props?: HTMLProps<T>) => HTMLProps<T>;
   getInputProps: (
@@ -142,7 +144,7 @@ export interface IComboboxContainerProps<T = Element, L = Element> extends IUseC
    * @param {function} [options.getOptionProps] Option props getter
    * @param {boolean} options.isExpanded Current listbox expansion
    * @param {OptionValue} [options.activeValue] Current active option value
-   * @param {OptionValue|OptionValue[]} [options.selectionValue] Current selection value(s)
+   * @param {object|object[]} options.selection Current selection
    * @param {string} [options.inputValue] Current input value
    * @param {function} [options.setExpansion] Listbox expansion setter
    * @param {function} [options.setSelectionValue] Selection value(s) setter
@@ -158,7 +160,7 @@ export interface IComboboxContainerProps<T = Element, L = Element> extends IUseC
     /* state */
     isExpanded: IUseComboboxReturnValue['isExpanded'];
     activeValue?: IUseComboboxReturnValue['activeValue'];
-    selectionValue?: IUseComboboxReturnValue['selectionValue'];
+    selection: IUseComboboxReturnValue['selection'];
     inputValue?: IUseComboboxReturnValue['inputValue'];
     /* state setters */
     setExpansion: IUseComboboxReturnValue['setExpansion'];
