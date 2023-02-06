@@ -35,17 +35,13 @@ ComboboxContainer.propTypes = {
     })
   ).isRequired,
   inputValue: PropTypes.string,
-  onInputChange: PropTypes.func,
   selectionValue: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
-  onSelectionChange: PropTypes.func,
   isExpanded: PropTypes.bool,
   defaultExpanded: PropTypes.bool,
   initialExpanded: PropTypes.bool,
-  onExpansionChange: PropTypes.func,
   activeIndex: PropTypes.number,
   defaultActiveIndex: PropTypes.number,
   initialActiveIndex: PropTypes.number,
-  onActiveIndexChange: PropTypes.func,
   onChange: PropTypes.func,
   environment: PropTypes.any
 };

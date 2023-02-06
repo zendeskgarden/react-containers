@@ -40,44 +40,20 @@ export interface IUseComboboxProps<T = Element, L = Element> {
   }[];
   /** Sets the input value in a controlled combobox */
   inputValue?: string;
-  /**
-   * Handles input value changes
-   *
-   * @param {string} inputValue The updated input value
-   */
-  onInputChange?: (inputValue: string) => void;
   /** Sets the selection value (or `isMultiselectable` values) in a controlled combobox */
   selectionValue?: OptionValue | OptionValue[] | null;
-  /**
-   * Handles selection value changes
-   *
-   * @param {OptionValue|OptionValue[]} selectionValue The updated selection value(s)
-   */
-  onSelectionChange?: (selectionValue: OptionValue | OptionValue[] | null) => void;
   /** Determines listbox expansion in a controlled combobox */
   isExpanded?: boolean;
   /** Determines default listbox expansion in an uncontrolled combobox */
   defaultExpanded?: boolean;
   /** Determines listbox expansion on combobox initialization */
   initialExpanded?: boolean;
-  /**
-   * Handles listbox expansion changes
-   *
-   * @param {boolean} isExpanded The updated listbox expansion state
-   */
-  onExpansionChange?: (isExpanded: boolean) => void;
   /** Sets the currently active option index in a controlled combobox */
   activeIndex?: number;
   /** Sets the default active option index in an uncontrolled combobox */
   defaultActiveIndex?: number;
   /** Sets the active option index on combobox initialization */
   initialActiveIndex?: number;
-  /**
-   * Handles active option index changes
-   *
-   * @param {number} activeIndex The updated active option index
-   */
-  onActiveIndexChange?: (activeIndex: number) => void;
   /**
    * Handles combobox state changes
    *

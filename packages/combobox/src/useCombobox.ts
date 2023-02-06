@@ -28,17 +28,13 @@ export const useCombobox = ({
   disabled,
   options = [],
   inputValue,
-  onInputChange = () => undefined,
   selectionValue,
-  onSelectionChange = () => undefined,
   isExpanded,
   defaultExpanded,
   initialExpanded,
-  onExpansionChange = () => undefined,
   activeIndex,
   defaultActiveIndex,
   initialActiveIndex,
-  onActiveIndexChange = () => undefined,
   onChange = () => undefined,
   environment
 }: IUseComboboxProps): IUseComboboxReturnValue => {
@@ -88,6 +84,8 @@ export const useCombobox = ({
 
     return retVal;
   }, [options, disabledValues, selectedValues, labels]);
+  const initialSelectionValue = isMultiselectable ? selectedValues : selectedValues[0];
+  const initialInputValue = isMultiselectable ? '' : labels[initialSelectionValue];
 
   /*
    * Validation
@@ -112,26 +110,6 @@ export const useCombobox = ({
   /*
    * Handlers
    */
-
-  const handleDownshiftOpenChange: IUseDownshiftProps<
-    OptionValue | OptionValue[]
-  >['onIsOpenChange'] = ({ type, isOpen }) => {
-    triggerContainsInput && setOpenChangeType(type);
-
-    return onExpansionChange(isOpen || false);
-  };
-
-  const handleDownshiftHighlightedIndexChange: IUseDownshiftProps<
-    OptionValue | OptionValue[]
-  >['onHighlightedIndexChange'] = ({ highlightedIndex }) => onActiveIndexChange(highlightedIndex!);
-
-  const handleDownshiftInputValueChange: IUseDownshiftProps<
-    OptionValue | OptionValue[]
-  >['onInputValueChange'] = ({ inputValue: _inputValue }) => onInputChange(_inputValue || '');
-
-  const handleDownshiftSelectedItemChange: IUseDownshiftProps<
-    OptionValue | OptionValue[]
-  >['onSelectedItemChange'] = ({ selectedItem }) => onSelectionChange(selectedItem || null);
 
   const handleDownshiftStateChange: IUseDownshiftProps<
     OptionValue | OptionValue[]
@@ -202,8 +180,6 @@ export const useCombobox = ({
     };
 
   const transformValue = (value: OptionValue | null) => (value ? labels[value] : '');
-  const initialSelectionValue = isMultiselectable ? selectedValues : selectedValues[0];
-  const initialInputValue = isMultiselectable ? '' : labels[initialSelectionValue];
 
   const {
     selectedItem: _selectionValue,
@@ -232,10 +208,6 @@ export const useCombobox = ({
     highlightedIndex: activeIndex,
     defaultHighlightedIndex: defaultActiveIndex,
     initialHighlightedIndex: initialActiveIndex,
-    onSelectedItemChange: handleDownshiftSelectedItemChange,
-    onIsOpenChange: handleDownshiftOpenChange,
-    onHighlightedIndexChange: handleDownshiftHighlightedIndexChange,
-    onInputValueChange: handleDownshiftInputValueChange,
     onStateChange: handleDownshiftStateChange,
     stateReducer,
     environment: doc.defaultView || window

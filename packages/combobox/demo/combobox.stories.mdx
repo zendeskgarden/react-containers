@@ -54,21 +54,16 @@ import { OPTIONS } from './stories/data';
   >
     {args => {
       const updateArgs = useArgs()[1];
-      const handleExpansionChange = isExpanded => updateArgs({ isExpanded });
-      const handleActiveIndexChange = activeIndex => updateArgs({ activeIndex });
-      const handleInputChange = inputValue => updateArgs({ inputValue });
-      const handleSelectionChange = selectionValue => updateArgs({ selectionValue });
-      const handleChange = changes => console.log(changes);
-      return (
-        <ComboboxStory
-          {...args}
-          onExpansionChange={handleExpansionChange}
-          onActiveIndexChange={handleActiveIndexChange}
-          onInputChange={handleInputChange}
-          onSelectionChange={handleSelectionChange}
-          onChange={handleChange}
-        />
-      );
+      const handleChange = changes => {
+        const state = {
+          ...(changes.isExpanded !== undefined && { isExpanded: changes.isExpanded }),
+          ...(changes.selectionValue !== undefined && { selectionValue: changes.selectionValue }),
+          ...(changes.inputValue !== undefined && { inputValue: changes.inputValue }),
+          ...(changes.activeIndex !== undefined && { activeIndex: changes.activeIndex })
+        };
+        updateArgs(state);
+      };
+      return <ComboboxStory {...args} onChange={handleChange} />;
     }}
   </Story>
 </Canvas>
