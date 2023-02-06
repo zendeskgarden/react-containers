@@ -214,11 +214,7 @@ export const useCombobox = ({
     getInputProps: getDownshiftInputProps,
     getMenuProps: getDownshiftListboxProps,
     getItemProps: getDownshiftOptionProps,
-    closeMenu: closeListbox,
-    openMenu: openListbox,
-    selectItem: setSelectionValue,
-    setHighlightedIndex: setActiveIndex,
-    setInputValue
+    closeMenu: closeListbox
   } = useDownshift<OptionValue | OptionValue[]>({
     id: prefix,
     toggleButtonId: `${prefix}-trigger`,
@@ -381,11 +377,6 @@ export const useCombobox = ({
     [getDownshiftOptionProps, values, _selectionValue]
   );
 
-  const setExpansion = useCallback(
-    (isOpen: boolean) => (isOpen ? openListbox() : closeListbox()),
-    [openListbox, closeListbox]
-  );
-
   const selection = useMemo(
     () =>
       Array.isArray(_selectionValue)
@@ -404,26 +395,19 @@ export const useCombobox = ({
 
   return useMemo<IUseComboboxReturnValue>(
     () => ({
-      /* state */
-      isExpanded: _isExpanded,
-      activeValue: values[_activeIndex],
-      selectionValue: _selectionValue,
-      selection,
-      inputValue: _inputValue,
       /* prop getters */
       getTriggerProps,
       getInputProps,
       getListboxProps,
       getOptionProps,
-      /* state setters */
-      setExpansion,
-      setSelectionValue,
-      setActiveIndex,
-      setInputValue
+      /* state */
+      selection,
+      isExpanded: _isExpanded,
+      activeValue: values[_activeIndex],
+      inputValue: _inputValue
     }),
     [
       values,
-      _selectionValue,
       selection,
       _isExpanded,
       _activeIndex,
@@ -431,11 +415,7 @@ export const useCombobox = ({
       getTriggerProps,
       getInputProps,
       getListboxProps,
-      getOptionProps,
-      setExpansion,
-      setSelectionValue,
-      setActiveIndex,
-      setInputValue
+      getOptionProps
     ]
   );
 };

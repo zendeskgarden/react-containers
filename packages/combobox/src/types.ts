@@ -128,10 +128,6 @@ export interface IUseComboboxReturnValue {
       };
     }
   ) => HTMLProps<T>;
-  setExpansion: (isExpanded: boolean) => void;
-  setSelectionValue: (selectionValue: OptionValue | OptionValue[] | null) => void;
-  setActiveIndex: (activeIndex: number) => void;
-  setInputValue: (inputValue: string) => void;
 }
 
 export interface IComboboxContainerProps<T = Element, L = Element> extends IUseComboboxProps<T, L> {
@@ -146,10 +142,6 @@ export interface IComboboxContainerProps<T = Element, L = Element> extends IUseC
    * @param {OptionValue} [options.activeValue] Current active option value
    * @param {object|object[]} options.selection Current selection
    * @param {string} [options.inputValue] Current input value
-   * @param {function} [options.setExpansion] Listbox expansion setter
-   * @param {function} [options.setSelectionValue] Selection value(s) setter
-   * @param {function} [options.setActiveIndex] Active option index setter
-   * @param {function} [options.setInputValue] Input value setter
    */
   render?: (options: {
     /* prop getters */
@@ -162,11 +154,6 @@ export interface IComboboxContainerProps<T = Element, L = Element> extends IUseC
     activeValue?: IUseComboboxReturnValue['activeValue'];
     selection: IUseComboboxReturnValue['selection'];
     inputValue?: IUseComboboxReturnValue['inputValue'];
-    /* state setters */
-    setExpansion: IUseComboboxReturnValue['setExpansion'];
-    setSelectionValue: IUseComboboxReturnValue['setSelectionValue'];
-    setActiveIndex: IUseComboboxReturnValue['setActiveIndex'];
-    setInputValue: IUseComboboxReturnValue['setInputValue'];
   }) => ReactNode;
   /** @ignore */
   children?: (options: IUseComboboxReturnValue) => ReactNode;
