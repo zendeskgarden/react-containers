@@ -55,13 +55,8 @@ import { OPTIONS } from './stories/data';
     {args => {
       const updateArgs = useArgs()[1];
       const handleChange = changes => {
-        const state = {
-          ...(changes.isExpanded !== undefined && { isExpanded: changes.isExpanded }),
-          ...(changes.selectionValue !== undefined && { selectionValue: changes.selectionValue }),
-          ...(changes.inputValue !== undefined && { inputValue: changes.inputValue }),
-          ...(changes.activeIndex !== undefined && { activeIndex: changes.activeIndex })
-        };
-        updateArgs(state);
+        const { type, ...args } = changes;
+        updateArgs(args);
       };
       return <ComboboxStory {...args} onChange={handleChange} />;
     }}

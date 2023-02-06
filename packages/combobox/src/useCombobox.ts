@@ -122,10 +122,10 @@ export const useCombobox = ({
   }) =>
     onChange({
       type: toType(type),
-      isExpanded: isOpen,
-      selectionValue: selectedItem,
-      inputValue: _inputValue,
-      activeIndex: highlightedIndex
+      ...(isOpen !== undefined && { isExpanded: isOpen }),
+      ...(selectedItem !== undefined && { selectionValue: selectedItem }),
+      ...(_inputValue !== undefined && { inputValue: _inputValue }),
+      ...(highlightedIndex !== undefined && { activeIndex: highlightedIndex })
     });
 
   const stateReducer: IUseDownshiftProps<any /* vs. state/changes `selectedItem` type flipping */>['stateReducer'] =
