@@ -159,6 +159,11 @@ export const useCombobox = ({
         case useDownshift.stateChangeTypes.InputKeyDownEscape:
           // Prevent clear on escape.
           return { ...state, isOpen: false };
+
+        case useDownshift.stateChangeTypes.InputKeyDownPageDown:
+        case useDownshift.stateChangeTypes.InputKeyDownPageUp:
+          // Prevent Downshift option jump.
+          return state;
       }
 
       // Handle multiselectable state changes
