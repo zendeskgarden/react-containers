@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React, { createRef } from 'react';
+import React, { createRef, useState } from 'react';
 import { Story } from '@storybook/react';
 import classNames from 'classnames';
 import {
@@ -15,6 +15,7 @@ import {
   ComboboxContainer,
   useCombobox
 } from '@zendeskgarden/container-combobox';
+import { composeEventHandlers } from '@zendeskgarden/container-utilities';
 
 interface IComponentProps extends IUseComboboxReturnValue {
   layout: IArgs['layout'];
@@ -36,7 +37,7 @@ const Component = ({
   getOptionProps,
   options
 }: IComponentProps) => (
-  <>
+  <div className="relative">
     {layout === 'Garden' && (
       <div
         className={classNames('inline-block', 'border', 'border-solid', 'p-1', {
@@ -93,26 +94,34 @@ const Component = ({
       </>
     )}
     <ul
-      className={classNames('mt-1', 'border', 'border-solid', { invisible: !isExpanded })}
+      className={classNames('mt-1', 'border', 'border-solid', 'absolute', 'w-full', {
+        invisible: !isExpanded
+      })}
       {...getListboxProps({ 'aria-label': 'Options' })}
     >
-      {options.map((option, index) => (
-        <li
-          key={index}
-          className={classNames({
-            'bg-blue-100': option.value === activeValue,
-            'text-grey-400': option.disabled
-          })}
-          {...getOptionProps({ option })}
-        >
-          {(Array.isArray(selection)
-            ? selection.find(value => value.value === option.value) !== undefined
-            : selection.value === option.value) && '✓ '}
-          {option.label || option.value}
+      {options.length === 0 ? (
+        <li className="text-grey-400" {...getOptionProps({ 'aria-disabled': true })}>
+          No matches found
         </li>
-      ))}
+      ) : (
+        options.map((option, index) => (
+          <li
+            key={index}
+            className={classNames({
+              'bg-blue-100': option.value === activeValue,
+              'text-grey-400': option.disabled
+            })}
+            {...getOptionProps({ option })}
+          >
+            {(Array.isArray(selection)
+              ? selection.find(value => value.value === option.value) !== undefined
+              : selection.value === option.value) && '✓ '}
+            {option.label || option.value}
+          </li>
+        ))
+      )}
     </ul>
-  </>
+  </div>
 );
 
 Component.displayName = 'Component';
@@ -146,17 +155,48 @@ export const ComboboxStory: Story<IArgs> = ({ as, ...props }) => {
   const triggerRef = createRef<HTMLDivElement>();
   const inputRef = createRef<HTMLInputElement>();
   const listboxRef = createRef<HTMLUListElement>();
+  const [options, setOptions] = useState(props.options);
+  const onChange: IUseComboboxProps['onChange'] = changes => {
+    if (props.isAutocomplete && changes.inputValue !== undefined) {
+      const value = changes.inputValue;
+
+      if (value === '') {
+        setOptions(props.options);
+      } else {
+        setOptions(
+          options.filter(option => (option.label || option.value).match(new RegExp(value, 'gui')))
+        );
+      }
+    }
+  };
+  const defaultActiveIndex = props.isAutocomplete ? 0 : undefined;
 
   switch (as) {
     case 'container':
       return (
-        <Container {...props} triggerRef={triggerRef} inputRef={inputRef} listboxRef={listboxRef} />
+        <Container
+          defaultActiveIndex={defaultActiveIndex}
+          {...props}
+          triggerRef={triggerRef}
+          inputRef={inputRef}
+          listboxRef={listboxRef}
+          options={options}
+          onChange={composeEventHandlers(onChange, props.onChange)}
+        />
       );
 
     case 'hook':
     default:
       return (
-        <Hook {...props} triggerRef={triggerRef} inputRef={inputRef} listboxRef={listboxRef} />
+        <Hook
+          defaultActiveIndex={defaultActiveIndex}
+          {...props}
+          triggerRef={triggerRef}
+          inputRef={inputRef}
+          listboxRef={listboxRef}
+          options={options}
+          onChange={composeEventHandlers(onChange, props.onChange)}
+        />
       );
   }
 };
