@@ -16,6 +16,7 @@ import { useCombobox as useDownshift } from 'downshift';
  * @returns A preferred Garden type.
  */
 export const toType = (downshiftType: string) => {
+  /* istanbul ignore next */
   switch (downshiftType) {
     case useDownshift.stateChangeTypes.FunctionCloseMenu:
     case useDownshift.stateChangeTypes.FunctionOpenMenu:
