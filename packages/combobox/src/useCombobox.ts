@@ -14,8 +14,8 @@ import {
   UseComboboxGetMenuPropsOptions as IDownshiftListboxProps,
   UseComboboxGetToggleButtonPropsOptions as IDownshiftTriggerProps,
   UseComboboxProps as IUseDownshiftProps,
-  UseComboboxState,
-  UseComboboxStateChangeTypes
+  UseComboboxState as IDownshiftState,
+  UseComboboxStateChangeTypes as IDownshiftStateChangeType
 } from 'downshift';
 import { IUseComboboxProps, IUseComboboxReturnValue, OptionValue } from './types';
 import { toType } from './utils';
@@ -46,8 +46,8 @@ export const useCombobox = ({
    * State
    */
 
-  interface IPreviousState extends UseComboboxState<OptionValue> {
-    type: UseComboboxStateChangeTypes;
+  interface IPreviousState extends IDownshiftState<OptionValue> {
+    type: IDownshiftStateChangeType;
     altKey?: boolean;
   }
 
@@ -55,31 +55,20 @@ export const useCombobox = ({
   const [triggerContainsInput, setTriggerContainsInput] = useState<boolean>();
   const [openChangeType, setOpenChangeType] = useState<string>();
   const previousStateRef = useRef<IPreviousState>();
-  const labels: Record<OptionValue, string> = useMemo(
-    () => ({}),
-    [
-      /* deps */
-    ]
-  );
-  const selectedValues: OptionValue[] = useMemo(
-    () => [],
-    [options /* eslint-disable-line react-hooks/exhaustive-deps */]
-  );
-  const disabledValues: OptionValue[] = useMemo(
-    () => [],
-    [options /* eslint-disable-line react-hooks/exhaustive-deps */]
-  );
+  const labels: Record<OptionValue, string> = useMemo(() => ({}), []);
+  const selectedValues: OptionValue[] = useMemo(() => [], []);
+  const disabledValues: OptionValue[] = useMemo(() => [], []);
   const values = useMemo(() => {
     const retVal: OptionValue[] = [];
 
     options.forEach(option => {
-      if (option.disabled) {
+      if (option.disabled && !disabledValues.includes(option.value)) {
         disabledValues.push(option.value);
       } else {
         retVal.push(option.value);
       }
 
-      if (option.selected) {
+      if (option.selected && !selectedValues.includes(option.value)) {
         selectedValues.push(option.value);
       }
 
