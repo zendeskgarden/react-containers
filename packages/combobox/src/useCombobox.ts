@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { composeEventHandlers, useId } from '@zendeskgarden/container-utilities';
 import {
   useCombobox as useDownshift,
@@ -13,7 +13,9 @@ import {
   UseComboboxGetItemPropsOptions as IDownshiftOptionProps,
   UseComboboxGetMenuPropsOptions as IDownshiftListboxProps,
   UseComboboxGetToggleButtonPropsOptions as IDownshiftTriggerProps,
-  UseComboboxProps as IUseDownshiftProps
+  UseComboboxProps as IUseDownshiftProps,
+  UseComboboxState,
+  UseComboboxStateChangeTypes
 } from 'downshift';
 import { IUseComboboxProps, IUseComboboxReturnValue, OptionValue } from './types';
 import { toType } from './utils';
@@ -44,9 +46,15 @@ export const useCombobox = ({
    * State
    */
 
+  interface IPreviousState extends UseComboboxState<OptionValue> {
+    type: UseComboboxStateChangeTypes;
+    altKey?: boolean;
+  }
+
   const prefix = `${useId(idPrefix)}-`;
   const [triggerContainsInput, setTriggerContainsInput] = useState<boolean>();
   const [openChangeType, setOpenChangeType] = useState<string>();
+  const previousStateRef = useRef<IPreviousState>();
   const labels: Record<OptionValue, string> = useMemo(
     () => ({}),
     [
@@ -55,15 +63,11 @@ export const useCombobox = ({
   );
   const selectedValues: OptionValue[] = useMemo(
     () => [],
-    [
-      /* deps */
-    ]
+    [options /* eslint-disable-line react-hooks/exhaustive-deps */]
   );
   const disabledValues: OptionValue[] = useMemo(
     () => [],
-    [
-      /* deps */
-    ]
+    [options /* eslint-disable-line react-hooks/exhaustive-deps */]
   );
   const values = useMemo(() => {
     const retVal: OptionValue[] = [];
@@ -129,11 +133,19 @@ export const useCombobox = ({
     });
 
   const stateReducer: IUseDownshiftProps<any /* vs. state/changes `selectedItem` type flipping */>['stateReducer'] =
-    (state, { type, changes }) => {
+    (state, { type, changes, altKey }) => {
       switch (type) {
         case useDownshift.stateChangeTypes.ControlledPropUpdatedSelectedItem:
           // Prevent Downshift from overriding the `inputValue`.
           return state;
+
+        case useDownshift.stateChangeTypes.FunctionSetHighlightedIndex:
+          if (previousStateRef.current?.altKey) {
+            // Prevent option activation for autocomplete selection override.
+            changes.highlightedIndex = -1;
+          }
+
+          break;
 
         case useDownshift.stateChangeTypes.FunctionCloseMenu:
         case useDownshift.stateChangeTypes.InputBlur:
@@ -181,6 +193,8 @@ export const useCombobox = ({
         }
       }
 
+      previousStateRef.current = { type, altKey, ...state };
+
       return changes;
     };
 
@@ -195,7 +209,8 @@ export const useCombobox = ({
     getInputProps: getDownshiftInputProps,
     getMenuProps: getDownshiftListboxProps,
     getItemProps: getDownshiftOptionProps,
-    closeMenu: closeListbox
+    closeMenu: closeListbox,
+    setHighlightedIndex: setActiveIndex
   } = useDownshift<OptionValue | OptionValue[]>({
     id: prefix,
     toggleButtonId: `${prefix}-trigger`,
@@ -230,6 +245,33 @@ export const useCombobox = ({
     () => setTriggerContainsInput(triggerRef.current?.contains(inputRef.current)),
     [triggerRef, inputRef]
   );
+
+  useLayoutEffect(() => {
+    // Trigger autocomplete selection override. Use layout effect to prevent
+    // `defaultActiveIndex` flash.
+    if (isAutocomplete && _isExpanded && _selectionValue) {
+      const value = Array.isArray(_selectionValue)
+        ? _selectionValue[
+            _selectionValue.length - 1 // multiselectable most recent
+          ]
+        : _selectionValue;
+      const index = values.findIndex(current => current === value);
+
+      if (index !== -1) {
+        setActiveIndex(index);
+      } else if (defaultActiveIndex !== undefined) {
+        setActiveIndex(defaultActiveIndex);
+      }
+    }
+  }, [
+    isAutocomplete,
+    _isExpanded,
+    _selectionValue,
+    _inputValue,
+    values,
+    defaultActiveIndex,
+    setActiveIndex
+  ]);
 
   /*
    * Prop getters

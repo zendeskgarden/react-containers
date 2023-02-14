@@ -164,7 +164,9 @@ export const ComboboxStory: Story<IArgs> = ({ as, ...props }) => {
         setOptions(props.options);
       } else {
         setOptions(
-          options.filter(option => (option.label || option.value).match(new RegExp(value, 'gui')))
+          props.options.filter(option =>
+            (option.label || option.value).match(new RegExp(value, 'gui'))
+          )
         );
       }
     }
