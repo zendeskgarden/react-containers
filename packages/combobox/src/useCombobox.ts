@@ -62,10 +62,18 @@ export const useCombobox = ({
     const retVal: OptionValue[] = [];
 
     options.forEach(option => {
-      if (option.disabled && !disabledValues.includes(option.value)) {
-        disabledValues.push(option.value);
+      if (option.disabled) {
+        if (!disabledValues.includes(option.value)) {
+          disabledValues.push(option.value);
+        }
       } else {
         retVal.push(option.value);
+
+        const index = disabledValues.indexOf(option.value);
+
+        if (index !== -1) {
+          disabledValues.splice(index, 1);
+        }
       }
 
       if (option.selected && !selectedValues.includes(option.value)) {
