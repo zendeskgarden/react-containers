@@ -53,7 +53,6 @@ export const useCombobox = ({
 
   const prefix = `${useId(idPrefix)}-`;
   const [triggerContainsInput, setTriggerContainsInput] = useState<boolean>();
-  const [openChangeType, setOpenChangeType] = useState<string>();
   const previousStateRef = useRef<IPreviousState>();
   const labels: Record<OptionValue, string> = useMemo(() => ({}), []);
   const selectedValues: OptionValue[] = useMemo(() => [], []);
@@ -295,12 +294,7 @@ export const useCombobox = ({
           if (disabled) {
             event.preventDefault();
           } else if (isAutocomplete) {
-            if (openChangeType === useDownshift.stateChangeTypes.InputBlur) {
-              setOpenChangeType(useDownshift.stateChangeTypes.ToggleButtonClick);
-              closeListbox();
-            } else {
-              getDownshiftTriggerProps().onClick(event);
-            }
+            triggerProps.onClick(event);
           } else {
             inputRef.current?.focus();
           }
@@ -325,7 +319,6 @@ export const useCombobox = ({
       getDownshiftTriggerProps,
       triggerRef,
       disabled,
-      openChangeType,
       closeListbox,
       triggerContainsInput,
       isAutocomplete,
@@ -360,9 +353,10 @@ export const useCombobox = ({
         ref: listboxRef,
         role,
         'aria-labelledby': ariaLabeledBy,
+        'aria-multiselectable': isMultiselectable ? true : undefined,
         ...other
       } as IDownshiftListboxProps),
-    [getDownshiftListboxProps, listboxRef]
+    [getDownshiftListboxProps, listboxRef, isMultiselectable]
   );
 
   const getOptionProps = useCallback<IUseComboboxReturnValue['getOptionProps']>(
