@@ -10,13 +10,14 @@ import { Story } from '@storybook/react';
 import {
   FieldContainer,
   IFieldContainerProps,
-  IUseFieldPropGetters,
+  IUseFieldProps,
+  IUseFieldReturnValue,
   useField
 } from '@zendeskgarden/container-field';
 
-interface IComponentProps extends IUseFieldPropGetters {
-  isDescribed: boolean;
-  hasMessage: boolean;
+interface IComponentProps extends IUseFieldReturnValue {
+  hasHint?: boolean;
+  hasMessage?: boolean;
 }
 
 const Component = ({
@@ -24,46 +25,32 @@ const Component = ({
   getHintProps,
   getInputProps,
   getMessageProps,
-  isDescribed,
+  hasHint,
   hasMessage
 }: IComponentProps) => (
   /* eslint-disable jsx-a11y/label-has-associated-control */
   <>
     <label {...getLabelProps()}>Label</label>
-    {isDescribed && <div {...getHintProps()}>Hint</div>}
-    <input {...getInputProps({}, { isDescribed, hasMessage })} />
-    {hasMessage && (
-      <div role="alert" {...getMessageProps()}>
-        Message
-      </div>
-    )}
+    {hasHint && <div {...getHintProps()}>Hint</div>}
+    <input {...getInputProps()} />
+    {hasMessage && <div {...getMessageProps()}>Message</div>}
   </>
 );
 
-interface IProps {
-  id?: NonNullable<IFieldContainerProps['id']>;
-  isDescribed: boolean;
-  hasMessage: boolean;
-}
-
-const Container = ({ id, isDescribed, hasMessage }: IProps) => (
-  <FieldContainer id={id}>
-    {containerProps => (
-      <Component isDescribed={isDescribed} hasMessage={hasMessage} {...containerProps} />
-    )}
+const Container = ({ hasHint, hasMessage, ...props }: IFieldContainerProps) => (
+  <FieldContainer hasHint={hasHint} hasMessage={hasMessage} {...props}>
+    {containerProps => <Component {...containerProps} hasHint={hasHint} hasMessage={hasMessage} />}
   </FieldContainer>
 );
 
-const Hook = ({ id, isDescribed, hasMessage }: IProps) => {
-  const hookProps = useField(id);
+const Hook = ({ hasHint, hasMessage, ...props }: IUseFieldProps) => {
+  const hookProps = useField({ hasHint, hasMessage, ...props });
 
-  return <Component isDescribed={isDescribed} hasMessage={hasMessage} {...hookProps} />;
+  return <Component {...hookProps} hasHint={hasHint} hasMessage={hasMessage} />;
 };
 
 interface IArgs extends IFieldContainerProps {
   as: 'hook' | 'container';
-  isDescribed: boolean;
-  hasMessage: boolean;
 }
 
 export const FieldStory: Story<IArgs> = ({ as, ...props }) => {

@@ -31,10 +31,10 @@ export interface IFieldContainerProps extends IUseFieldProps {
   /**
    * Provides field render prop functions
    *
-   * @param {function} [options.getLabelProps] Backdrop props getter
-   * @param {function} [options.getHintProps] Modal dialog props getter
-   * @param {function} [options.getInputProps] Modal close button props getter
-   * @param {function} [options.getMessageProps] Modal title props getter
+   * @param {function} [options.getLabelProps] Field label props getter
+   * @param {function} [options.getHintProps] Field hint props getter
+   * @param {function} [options.getInputProps] Field input props getter
+   * @param {function} [options.getMessageProps] Field message getter
    */
   render?: (options: {
     getLabelProps: IUseFieldReturnValue['getLabelProps'];
