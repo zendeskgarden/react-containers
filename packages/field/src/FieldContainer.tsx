@@ -7,20 +7,21 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-
-import { IFieldContainerProps } from './types';
 import { useField } from './useField';
+import { IFieldContainerProps } from './types';
 
-export const FieldContainer: React.FunctionComponent<IFieldContainerProps> = ({
+export const FieldContainer: React.FC<IFieldContainerProps> = ({
   children,
   render = children,
-  id
+  ...options
 }) => {
-  return <>{render!(useField(id)) as React.ReactElement}</>;
+  return <>{render!(useField(options))}</>;
 };
 
 FieldContainer.propTypes = {
   children: PropTypes.func,
   render: PropTypes.func,
-  id: PropTypes.string
+  idPrefix: PropTypes.string,
+  hasHint: PropTypes.bool,
+  hasMessage: PropTypes.bool
 };

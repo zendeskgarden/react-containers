@@ -7,21 +7,41 @@
 
 import { HTMLProps, ReactNode } from 'react';
 
-export interface IUseFieldPropGetters {
-  getHintProps: <T>(options?: T & HTMLProps<any>) => T & HTMLProps<any>;
-  getMessageProps: <T>(options?: T & HTMLProps<any>) => T & HTMLProps<any>;
-  getLabelProps: <T>(options?: T & HTMLProps<any>) => T & HTMLProps<any>;
-  getInputProps: <T>(
-    options?: T & HTMLProps<any>,
-    isDescribedOptions?: { isDescribed?: boolean; hasMessage?: boolean }
-  ) => T & HTMLProps<any>;
+export interface IUseFieldProps {
+  /** Prefixes IDs for field elements */
+  idPrefix?: string;
+  /** Indicates the field has a hint */
+  hasHint?: boolean;
+  /** Indicates the field has a message */
+  hasMessage?: boolean;
 }
 
-export interface IFieldContainerProps {
-  /** A render prop function which receives field prop getters */
-  render?: (options: IUseFieldPropGetters) => ReactNode;
-  /** A children render prop function which receives field prop getters */
-  children?: (options: IUseFieldPropGetters) => ReactNode;
-  /** An identifer for the field input elements */
-  id?: string;
+export interface IUseFieldReturnValue {
+  getLabelProps: <T extends Element>(props?: HTMLProps<T>) => HTMLProps<T>;
+  getHintProps: <T extends Element>(props?: HTMLProps<T>) => HTMLProps<T>;
+  getInputProps: <T extends Element>(props?: HTMLProps<T>) => HTMLProps<T>;
+  getMessageProps: <T extends Element>(
+    props?: Omit<HTMLProps<T>, 'role'> & {
+      role?: 'alert' | null;
+    }
+  ) => HTMLProps<T>;
+}
+
+export interface IFieldContainerProps extends IUseFieldProps {
+  /**
+   * Provides field render prop functions
+   *
+   * @param {function} [options.getLabelProps] Backdrop props getter
+   * @param {function} [options.getHintProps] Modal dialog props getter
+   * @param {function} [options.getInputProps] Modal close button props getter
+   * @param {function} [options.getMessageProps] Modal title props getter
+   */
+  render?: (options: {
+    getLabelProps: IUseFieldReturnValue['getLabelProps'];
+    getHintProps: IUseFieldReturnValue['getHintProps'];
+    getInputProps: IUseFieldReturnValue['getInputProps'];
+    getMessageProps: IUseFieldReturnValue['getMessageProps'];
+  }) => ReactNode;
+  /** @ignore */
+  children?: (options: IUseFieldReturnValue) => ReactNode;
 }
