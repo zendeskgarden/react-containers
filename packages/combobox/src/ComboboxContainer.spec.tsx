@@ -638,7 +638,7 @@ describe('ComboboxContainer', () => {
       expect(trigger).toHaveAttribute('aria-expanded', 'false');
     });
 
-    it('handles listbox expansion on input blur', async () => {
+    it('handles listbox collapse on input blur', async () => {
       const { getByTestId } = render(<TestCombobox layout="Garden" options={[]} />);
       const input = getByTestId('input');
       const trigger = getByTestId('trigger');
@@ -647,6 +647,16 @@ describe('ComboboxContainer', () => {
       await user.keyboard('{Tab}');
 
       expect(input).not.toHaveFocus();
+      expect(trigger).toHaveAttribute('aria-expanded', 'false');
+    });
+
+    it('handles listbox collapse on unrelated focus', async () => {
+      const { getByTestId } = render(<TestCombobox layout="Garden" options={[]} />);
+      const trigger = getByTestId('trigger');
+
+      await user.click(trigger);
+      await user.click(document.body);
+
       expect(trigger).toHaveAttribute('aria-expanded', 'false');
     });
 
