@@ -58,7 +58,7 @@ export const useField = ({
         'data-garden-container-version': PACKAGE_VERSION,
         id,
         'aria-labelledby': labelId,
-        'aria-describedby': describedBy ? describedBy.join(' ') : undefined,
+        'aria-describedby': describedBy.length > 0 ? describedBy.join(' ') : undefined,
         ...other
       };
     },

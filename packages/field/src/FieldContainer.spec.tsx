@@ -14,13 +14,19 @@ describe('FieldContainer', () => {
   const CONTAINER_ID = 'test';
 
   const BasicExample = () => (
-    <FieldContainer id={CONTAINER_ID}>
+    <FieldContainer idPrefix={CONTAINER_ID}>
       {({ getLabelProps, getInputProps, getHintProps, getMessageProps }) => (
         <div>
-          <label {...getLabelProps({ 'data-test-id': 'label' })}>Label</label>
-          <div {...getHintProps({ 'data-test-id': 'hint' })}>Hint</div>
-          <input {...getInputProps({ 'data-test-id': 'input' })} />
-          <div {...getMessageProps({ 'data-test-id': 'message' })}>Message</div>
+          <label data-test-id="label" {...getLabelProps()}>
+            Label
+          </label>
+          <div data-test-id="hint" {...getHintProps()}>
+            Hint
+          </div>
+          <input data-test-id="input" {...getInputProps()} />
+          <div data-test-id="message" {...getMessageProps()}>
+            Message
+          </div>
         </div>
       )}
     </FieldContainer>
@@ -48,14 +54,14 @@ describe('FieldContainer', () => {
 
     it.each([
       ['options', true, true],
-      ['isDescribed', true, false],
+      ['hasHint', true, false],
       ['hasMessage', false, true]
-    ])(`includes aria-describedby if %s is provided`, (_, isDescribed, hasMessage) => {
+    ])(`includes aria-describedby if %s is provided`, (_, hasHint, hasMessage) => {
       const { getByTestId } = render(
-        <FieldContainer id={CONTAINER_ID}>
+        <FieldContainer idPrefix={CONTAINER_ID} hasHint={hasHint} hasMessage={hasMessage}>
           {({ getInputProps }) => (
             <div>
-              <input {...getInputProps({ 'data-test-id': 'input' }, { isDescribed, hasMessage })} />
+              <input data-test-id="input" {...getInputProps()} />
             </div>
           )}
         </FieldContainer>
@@ -63,7 +69,7 @@ describe('FieldContainer', () => {
 
       expect(getByTestId('input')).toHaveAttribute(
         'aria-describedby',
-        [isDescribed ? `${CONTAINER_ID}--hint` : '', hasMessage ? `${CONTAINER_ID}--message` : '']
+        [hasHint ? `${CONTAINER_ID}--hint` : '', hasMessage ? `${CONTAINER_ID}--message` : '']
           .join(' ')
           .trim()
       );
