@@ -7,8 +7,8 @@
 
 /* Hooks */
 export { useGrid } from './useGrid';
-export type { IUseGridProps, IUseGridReturnValue } from './useGrid';
 
 /* Render-props */
 export { GridContainer } from './GridContainer';
-export type { IGridContainerProps } from './GridContainer';
+
+export type { IUseGridProps, IUseGridReturnValue, IGridContainerProps } from './types';

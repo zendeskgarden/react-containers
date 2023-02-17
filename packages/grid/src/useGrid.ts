@@ -5,42 +5,11 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import { useState, HTMLProps, HTMLAttributes, KeyboardEventHandler } from 'react';
+import { useState, KeyboardEventHandler } from 'react';
 import { composeEventHandlers, KEYS } from '@zendeskgarden/container-utilities';
+import { IUseGridProps, IUseGridReturnValue } from './types';
 
 const GRID_KEYS = [KEYS.LEFT, KEYS.RIGHT, KEYS.UP, KEYS.DOWN, KEYS.HOME, KEYS.END];
-
-export interface IUseGridProps {
-  /** Determines if navigation uses right-to-left direction */
-  rtl?: boolean;
-  /** Enables wrapped keyboard navigation  */
-  wrap?: boolean;
-  /** Sets the two-dimension array to render the grid */
-  matrix: any[][];
-  /** Prefixes IDs for the grid and cells  */
-  idPrefix?: string;
-  /** Sets the focused row index in a controlled grid */
-  rowIndex?: number;
-  /** Sets the focused column index in a controlled grid */
-  colIndex?: number;
-  /** Sets the default focused row index in a uncontrolled grid */
-  defaultRowIndex?: number;
-  /** Sets the default focused column index in a uncontrolled grid */
-  defaultColIndex?: number;
-  /** Handles grid change event */
-  onChange?: (rowIndex: number, colIndex: number) => void;
-  /** The environment where the grid is rendered */
-  environment?: Document;
-}
-
-interface IGetGridCellProps extends HTMLProps<any> {
-  rowIdx: number;
-  colIdx: number;
-}
-
-export interface IUseGridReturnValue {
-  getGridCellProps: (options: IGetGridCellProps) => HTMLAttributes<any>;
-}
 
 export function useGrid({
   rtl,
@@ -48,12 +17,13 @@ export function useGrid({
   matrix,
   idPrefix,
   onChange,
-  environment = document,
+  environment,
   rowIndex: controlledRowIndex,
   colIndex: controlledColIndex,
   defaultRowIndex,
   defaultColIndex
 }: IUseGridProps): IUseGridReturnValue {
+  const doc = environment || document;
   const [uncontrolledRowIndex, setUncontrolledRowIndex] = useState(
     defaultRowIndex !== null && defaultRowIndex !== undefined ? defaultRowIndex : 0
   );
@@ -187,7 +157,7 @@ export function useGrid({
 
       if (row !== rowIndex || col !== colIndex) {
         const id = `${idPrefix}-${row}-${col}`;
-        const element = environment.getElementById(id);
+        const element = doc.getElementById(id);
 
         element?.focus();
       }
