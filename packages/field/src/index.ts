@@ -11,4 +11,4 @@ export { useField } from './useField';
 /* Render-props */
 export { FieldContainer } from './FieldContainer';
 
-export type { IUseFieldPropGetters, IFieldContainerProps } from './types';
+export type { IFieldContainerProps, IUseFieldProps, IUseFieldReturnValue } from './types';
