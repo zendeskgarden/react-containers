@@ -21,6 +21,8 @@ interface IComponentProps extends IUseComboboxReturnValue {
   layout: IArgs['layout'];
   isAutocomplete?: IUseComboboxProps['isAutocomplete'];
   disabled?: IUseComboboxProps['disabled'];
+  hasHint?: IUseComboboxProps['hasHint'];
+  hasMessage?: IUseComboboxProps['hasMessage'];
   options: IUseComboboxProps['options'];
 }
 
@@ -29,18 +31,26 @@ const Component = ({
   isAutocomplete,
   isExpanded,
   disabled,
+  hasHint,
+  hasMessage,
   activeValue,
   selection,
+  getLabelProps,
+  getHintProps,
   getTriggerProps,
   getInputProps,
   getListboxProps,
   getOptionProps,
+  getMessageProps,
   options
 }: IComponentProps) => (
+  /* eslint-disable jsx-a11y/label-has-associated-control */
   <div className="relative">
+    <label {...getLabelProps()}>Label</label>
+    {hasHint && <div {...getHintProps()}>Hint</div>}
     {layout === 'Garden' && (
       <div
-        className={classNames('inline-block', 'border', 'border-solid', 'p-1', {
+        className={classNames('border', 'border-solid', 'p-1', {
           'cursor-default': disabled,
           'cursor-pointer': isAutocomplete && !disabled,
           'cursor-text': !(isAutocomplete || disabled),
@@ -74,7 +84,7 @@ const Component = ({
       </div>
     )}
     {layout === 'Downshift' && (
-      <>
+      <div>
         {Array.isArray(selection) &&
           selection.map((value, index) => (
             <button key={index} className="mr-1 px-1" disabled={value.disabled}>
@@ -91,8 +101,9 @@ const Component = ({
             &#9660;
           </button>
         )}
-      </>
+      </div>
     )}
+    {hasMessage && <div {...getMessageProps()}>Message</div>}
     <ul
       className={classNames('mt-1', 'border', 'border-solid', 'absolute', 'w-full', {
         invisible: !isExpanded

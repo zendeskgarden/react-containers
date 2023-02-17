@@ -19,6 +19,7 @@ import {
 } from 'downshift';
 import { IUseComboboxProps, IUseComboboxReturnValue, OptionValue } from './types';
 import { toType } from './utils';
+import { useField } from '@zendeskgarden/container-field';
 
 export const useCombobox = ({
   idPrefix,
@@ -28,6 +29,8 @@ export const useCombobox = ({
   isAutocomplete,
   isMultiselectable,
   disabled,
+  hasHint,
+  hasMessage,
   options = [],
   inputValue,
   selectionValue,
@@ -229,6 +232,13 @@ export const useCombobox = ({
     environment: doc.defaultView || window
   });
 
+  const {
+    getLabelProps,
+    getHintProps,
+    getInputProps: getFieldInputProps,
+    getMessageProps
+  } = useField({ idPrefix, hasHint, hasMessage });
+
   /*
    * Effects
    */
@@ -339,10 +349,18 @@ export const useCombobox = ({
         'aria-labelledby': ariaLabeledBy,
         'aria-autocomplete': isAutocomplete ? 'list' : undefined,
         onClick: composeEventHandlers(onClick, handleClick),
+        ...getFieldInputProps(),
         ...other
       } as IDownshiftInputProps);
     },
-    [getDownshiftInputProps, inputRef, triggerContainsInput, disabled, isAutocomplete]
+    [
+      getDownshiftInputProps,
+      getFieldInputProps,
+      inputRef,
+      triggerContainsInput,
+      disabled,
+      isAutocomplete
+    ]
   );
 
   const getListboxProps = useCallback<IUseComboboxReturnValue['getListboxProps']>(
@@ -406,10 +424,13 @@ export const useCombobox = ({
   return useMemo<IUseComboboxReturnValue>(
     () => ({
       /* prop getters */
+      getLabelProps,
+      getHintProps,
       getTriggerProps,
       getInputProps,
       getListboxProps,
       getOptionProps,
+      getMessageProps,
       /* state */
       selection,
       isExpanded: _isExpanded,
@@ -422,10 +443,13 @@ export const useCombobox = ({
       _isExpanded,
       _activeIndex,
       _inputValue,
+      getLabelProps,
+      getHintProps,
       getTriggerProps,
       getInputProps,
       getListboxProps,
-      getOptionProps
+      getOptionProps,
+      getMessageProps
     ]
   );
 };

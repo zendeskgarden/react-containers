@@ -26,6 +26,8 @@ ComboboxContainer.propTypes = {
   isAutocomplete: PropTypes.bool,
   isMultiselectable: PropTypes.bool,
   disabled: PropTypes.bool,
+  hasHint: PropTypes.bool,
+  hasMessage: PropTypes.bool,
   options: PropTypes.arrayOf(
     PropTypes.shape({
       value: PropTypes.any.isRequired,
