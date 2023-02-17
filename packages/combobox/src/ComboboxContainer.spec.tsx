@@ -17,10 +17,13 @@ interface ITestComboboxProps
     'triggerRef' | 'inputRef' | 'listboxRef'
   > {
   layout: 'Garden' | 'Downshift';
+  labelTestId?: string;
+  hintTestId?: string;
   inputTestId?: string;
   triggerTestId?: string;
   listboxTestId?: string;
   optionTestIdPrefix?: string;
+  messageTestId?: string;
 }
 
 describe('ComboboxContainer', () => {
@@ -28,10 +31,15 @@ describe('ComboboxContainer', () => {
   const TestCombobox = ({
     layout,
     options,
+    hasHint = true,
+    hasMessage = true,
+    labelTestId = 'label',
+    hintTestId = 'hint',
     inputTestId = 'input',
     triggerTestId = 'trigger',
     listboxTestId = 'listbox',
     optionTestIdPrefix = 'option',
+    messageTestId = 'message',
     ...props
   }: ITestComboboxProps) => {
     const triggerRef = createRef<HTMLDivElement>();
@@ -44,10 +52,28 @@ describe('ComboboxContainer', () => {
         inputRef={inputRef}
         listboxRef={listboxRef}
         options={options}
+        hasHint={hasHint}
+        hasMessage={hasMessage}
         {...props}
       >
-        {({ getTriggerProps, getInputProps, getListboxProps, getOptionProps }) => (
+        {({
+          getLabelProps,
+          getHintProps,
+          getTriggerProps,
+          getInputProps,
+          getListboxProps,
+          getOptionProps,
+          getMessageProps
+        }) => (
           <>
+            <label data-test-id={labelTestId} {...getLabelProps()}>
+              Label
+            </label>
+            {hasHint && (
+              <div data-test-id={hintTestId} {...getHintProps()}>
+                Hint
+              </div>
+            )}
             {layout === 'Garden' ? (
               <div data-test-id={triggerTestId} {...getTriggerProps()}>
                 <input data-test-id={inputTestId} {...getInputProps()} />
@@ -57,6 +83,11 @@ describe('ComboboxContainer', () => {
                 <input data-test-id={inputTestId} {...getInputProps()} />
                 <button data-test-id={triggerTestId} {...getTriggerProps()} type="button" />
               </>
+            )}
+            {hasMessage && (
+              <div data-test-id={messageTestId} {...getMessageProps()}>
+                Message
+              </div>
             )}
             <ul data-test-id={listboxTestId} {...getListboxProps({ 'aria-label': 'Options' })}>
               {options.map((option, index) => (
@@ -86,19 +117,28 @@ describe('ComboboxContainer', () => {
 
       it('applies correct accessibility attributes', () => {
         const { getByTestId } = render(<TestCombobox layout={layout} options={options} />);
+        const label = getByTestId('label');
+        const hint = getByTestId('hint');
         const trigger = getByTestId('trigger');
         const input = getByTestId('input');
+        const message = getByTestId('message');
         const listbox = getByTestId('listbox');
         const listboxId = listbox.getAttribute('id');
         const option = getByTestId('option-1');
 
+        expect(label).toHaveAttribute('for', input.getAttribute('id'));
         expect(trigger).toHaveAttribute('aria-controls', listboxId);
         expect(trigger).toHaveAttribute('aria-expanded', 'false');
         expect(input).toHaveAttribute('role', 'combobox');
         expect(input).toHaveAttribute('aria-activedescendant');
         expect(input).toHaveAttribute('aria-autocomplete', 'list');
         expect(input).toHaveAttribute('aria-controls', listboxId);
+        expect(input).toHaveAttribute(
+          'aria-describedby',
+          `${hint.getAttribute('id')} ${message.getAttribute('id')}`
+        );
         expect(input).toHaveAttribute('aria-expanded', 'false');
+        expect(input).toHaveAttribute('aria-labelledby', label.getAttribute('id'));
         expect(input).toHaveAttribute('autocomplete', 'off');
         expect(listbox).toHaveAttribute('role', 'listbox');
         expect(listbox).toHaveAttribute('aria-label', 'Options');
