@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-field@2.1.2...@zendeskgarden/container-field@3.0.0) (2023-02-17)
+
+- fix!(field): refactored interface types for enhanced accessibility (#516) ([81153fc](https://github.com/zendeskgarden/react-containers/commit/81153fc78430134174d927bf88659b3ec895ab44)), closes [#516](https://github.com/zendeskgarden/react-containers/issues/516)
+
+### BREAKING CHANGES
+
+- props for `useField` and `FieldContainer` have been updated for consistency (`{idPrefix, hasHint, hasMessage}`). As a result `getInputProps` no longer accepts 2nd `{isDescribed, hasMessage}` parameter.
+
 ## [2.1.2](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-field@2.1.1...@zendeskgarden/container-field@2.1.2) (2023-02-17)
 
 **Note:** Version bump only for package @zendeskgarden/container-field
