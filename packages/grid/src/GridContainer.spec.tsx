@@ -28,17 +28,18 @@ describe('useGrid', () => {
       {({ getGridCellProps }: IUseGridReturnValue) => (
         <table role="grid">
           <tbody>
-            {matrix.map((row: string[], rowIdx: number) => (
-              <tr key={row[0]}>
-                {row.map((rowItem: string, colIdx: number) => (
-                  <td role="presentation" key={rowItem}>
+            {matrix.map((row, rowIndex: number) => (
+              <tr key={row[0] as string}>
+                {row.map((rowItem, colIndex: number) => (
+                  <td role="presentation" key={rowItem as string}>
                     <button
                       {...getGridCellProps({
-                        colIdx,
-                        rowIdx,
+                        colIndex,
+                        rowIndex,
                         onFocus,
                         onClick
                       })}
+                      type="button"
                     >
                       {rowItem}
                     </button>
