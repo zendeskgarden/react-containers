@@ -5,64 +5,84 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import { useMemo } from 'react';
-import { useUIDSeed } from 'react-uid';
+import { useCallback, useMemo } from 'react';
+import { useId } from '@zendeskgarden/container-utilities';
+import { IUseFieldProps, IUseFieldReturnValue } from './types';
 
-import { IUseFieldPropGetters } from './types';
-
-export function useField(idPrefix?: string): IUseFieldPropGetters {
-  const seed = useUIDSeed();
-  const prefix = useMemo(() => idPrefix || seed(`field_${PACKAGE_VERSION}`), [idPrefix, seed]);
+export const useField = ({
+  idPrefix,
+  hasHint,
+  hasMessage
+}: IUseFieldProps): IUseFieldReturnValue => {
+  const prefix = useId(idPrefix);
   const inputId = `${prefix}--input`;
   const labelId = `${prefix}--label`;
   const hintId = `${prefix}--hint`;
   const messageId = `${prefix}--message`;
 
-  const getLabelProps = ({ id = labelId, htmlFor = inputId, ...other } = {}) => {
-    return {
+  const getLabelProps = useCallback<IUseFieldReturnValue['getLabelProps']>(
+    ({ id = labelId, htmlFor = inputId, ...other } = {}) => ({
+      'data-garden-container-id': 'containers.field.label',
+      'data-garden-container-version': PACKAGE_VERSION,
       id,
       htmlFor,
-      'data-garden-container-id': 'containers.field',
+      ...other
+    }),
+    [labelId, inputId]
+  );
+
+  const getHintProps = useCallback<IUseFieldReturnValue['getInputProps']>(
+    ({ id = hintId, ...other } = {}) => ({
+      'data-garden-container-id': 'containers.field.hint',
       'data-garden-container-version': PACKAGE_VERSION,
-      ...other
-    } as any;
-  };
-
-  const getInputProps = (
-    { id = inputId, ...other } = {},
-    { isDescribed = false, hasMessage = false } = {}
-  ) => {
-    return {
-      id,
-      'aria-labelledby': labelId,
-      'aria-describedby':
-        isDescribed || hasMessage
-          ? ([] as string[])
-              .concat(isDescribed ? hintId : [], hasMessage ? messageId : [])
-              .join(' ')
-          : null,
-      ...other
-    } as any;
-  };
-
-  const getHintProps = ({ id = hintId, ...other } = {}) => {
-    return {
       id,
       ...other
-    } as any;
-  };
+    }),
+    [hintId]
+  );
 
-  const getMessageProps = ({ id = messageId, ...other } = {}) => {
-    return {
+  const getInputProps = useCallback<IUseFieldReturnValue['getInputProps']>(
+    ({ id = inputId, ...other } = {}) => {
+      const describedBy = [];
+
+      if (hasHint) {
+        describedBy.push(hintId);
+      }
+
+      if (hasMessage) {
+        describedBy.push(messageId);
+      }
+
+      return {
+        'data-garden-container-id': 'containers.field.input',
+        'data-garden-container-version': PACKAGE_VERSION,
+        id,
+        'aria-labelledby': labelId,
+        'aria-describedby': describedBy.length > 0 ? describedBy.join(' ') : undefined,
+        ...other
+      };
+    },
+    [inputId, labelId, hintId, messageId, hasHint, hasMessage]
+  );
+
+  const getMessageProps = useCallback<IUseFieldReturnValue['getMessageProps']>(
+    ({ id = messageId, role = 'alert', ...other } = {}) => ({
+      'data-garden-container-id': 'containers.field.message',
+      'data-garden-container-version': PACKAGE_VERSION,
+      role: role === null ? undefined : role,
       id,
       ...other
-    } as any;
-  };
+    }),
+    [messageId]
+  );
 
-  return {
-    getLabelProps,
-    getInputProps,
-    getHintProps,
-    getMessageProps
-  };
-}
+  return useMemo<IUseFieldReturnValue>(
+    () => ({
+      getLabelProps,
+      getHintProps,
+      getInputProps,
+      getMessageProps
+    }),
+    [getLabelProps, getHintProps, getInputProps, getMessageProps]
+  );
+};
