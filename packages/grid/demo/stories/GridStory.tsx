@@ -22,20 +22,29 @@ interface IComponent extends IUseGridProps, IUseGridReturnValue {
 const Component = ({ rtl, matrix, layout, getGridCellProps }: IComponent) => (
   <table role="grid" style={{ direction: rtl ? 'rtl' : 'ltr' }}>
     <tbody>
-      {matrix.map((row, rowIdx) => (
-        <tr key={rowIdx}>
-          {row.map((column, colIdx) => {
-            const { role, ...props } = getGridCellProps({ rowIdx, colIdx });
-
+      {matrix.map((row, rowIndex) => (
+        <tr key={rowIndex}>
+          {row.map((column, colIndex) => {
             switch (layout) {
-              case 'text':
+              case 'text': {
+                const { role, ...props } = getGridCellProps<HTMLTableCellElement>({
+                  rowIndex,
+                  colIndex
+                });
+
                 return (
-                  <td key={colIdx} className="w-5 h-5 text-center" role={role} {...props}>
-                    {matrix[rowIdx][colIdx]}
+                  <td key={colIndex} className="w-5 h-5 text-center" role={role} {...props}>
+                    {matrix[rowIndex][colIndex]}
                   </td>
                 );
+              }
 
               case 'radio': {
+                const { role, ...props } = getGridCellProps<HTMLInputElement>({
+                  rowIndex,
+                  colIndex
+                });
+
                 const handleBlur: FocusEventHandler<HTMLInputElement> = event => {
                   /**
                    * When the grid loses focus, reset the roving tab index to
@@ -60,9 +69,9 @@ const Component = ({ rtl, matrix, layout, getGridCellProps }: IComponent) => (
                 };
 
                 return (
-                  <td key={colIdx} role={role}>
+                  <td key={colIndex} role={role}>
                     <label>
-                      <span className="sr-only">{matrix[rowIdx][colIdx]}</span>
+                      <span className="sr-only">{matrix[rowIndex][colIndex]}</span>
                       <input
                         className="w-5 h-5"
                         name="demo"
@@ -76,14 +85,20 @@ const Component = ({ rtl, matrix, layout, getGridCellProps }: IComponent) => (
               }
 
               case 'button':
-              default:
+              default: {
+                const { role, ...props } = getGridCellProps<HTMLButtonElement>({
+                  rowIndex,
+                  colIndex
+                });
+
                 return (
-                  <td key={colIdx} role={role}>
-                    <button className="h-7 w-7" type="button" {...props}>
-                      {matrix[rowIdx][colIdx]}
+                  <td key={colIndex} role={role}>
+                    <button className="h-7 w-7" {...props} type="button">
+                      {matrix[rowIndex][colIndex]}
                     </button>
                   </td>
                 );
+              }
             }
           })}
         </tr>

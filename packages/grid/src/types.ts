@@ -9,7 +9,7 @@ import { HTMLProps, ReactNode } from 'react';
 
 export interface IUseGridProps {
   /** Sets the two-dimension array to render the grid */
-  matrix: any[][];
+  matrix: unknown[][];
   /** Determines if navigation uses right-to-left direction */
   rtl?: boolean;
   /** Enables wrapped keyboard navigation  */
@@ -34,6 +34,8 @@ export interface IUseGridReturnValue {
   getGridCellProps: <T extends Element>(
     props?: Omit<HTMLProps<T>, 'role'> & {
       role?: 'gridcell' | null;
+      rowIndex: number;
+      colIndex: number;
     }
   ) => HTMLProps<T>;
 }
