@@ -6,6 +6,7 @@
  */
 
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useField } from '@zendeskgarden/container-field';
 import { composeEventHandlers, useId } from '@zendeskgarden/container-utilities';
 import {
   useCombobox as useDownshift,
@@ -19,7 +20,6 @@ import {
 } from 'downshift';
 import { IUseComboboxProps, IUseComboboxReturnValue, OptionValue } from './types';
 import { toType } from './utils';
-import { useField } from '@zendeskgarden/container-field';
 
 export const useCombobox = ({
   idPrefix,
@@ -209,7 +209,8 @@ export const useCombobox = ({
     getMenuProps: getDownshiftListboxProps,
     getItemProps: getDownshiftOptionProps,
     closeMenu: closeListbox,
-    setHighlightedIndex: setActiveIndex
+    setHighlightedIndex: setActiveIndex,
+    selectItem: setSelection
   } = useDownshift<OptionValue | OptionValue[]>({
     id: prefix,
     toggleButtonId: `${prefix}-trigger`,
@@ -421,6 +422,31 @@ export const useCombobox = ({
     [_selectionValue, disabledValues, labels]
   );
 
+  const removeSelection = useCallback<IUseComboboxReturnValue['removeSelection']>(
+    value => {
+      if (value === undefined) {
+        // Clear selection
+        setSelection(null);
+      } else {
+        const removeValue = typeof value === 'object' ? value.value : value;
+
+        if (Array.isArray(selection)) {
+          // Multiselectable removal
+          setSelection(selection.filter(_selection => _selection.value !== removeValue));
+        } else if (removeValue === selection.value) {
+          // Single select removal
+          setSelection(null);
+        } else if (process.env.NODE_ENV === 'development') {
+          // eslint-disable-next-line no-console
+          console.warn(
+            `Warning: useCombobox \`selection\` does not contain '${removeValue}' for removal.`
+          );
+        }
+      }
+    },
+    [selection, setSelection]
+  );
+
   return useMemo<IUseComboboxReturnValue>(
     () => ({
       /* prop getters */
@@ -435,7 +461,9 @@ export const useCombobox = ({
       selection,
       isExpanded: _isExpanded,
       activeValue: values[_activeIndex],
-      inputValue: _inputValue
+      inputValue: _inputValue,
+      /* actions */
+      removeSelection
     }),
     [
       values,
@@ -449,7 +477,8 @@ export const useCombobox = ({
       getInputProps,
       getListboxProps,
       getOptionProps,
-      getMessageProps
+      getMessageProps,
+      removeSelection
     ]
   );
 };

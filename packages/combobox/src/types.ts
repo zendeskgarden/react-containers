@@ -83,7 +83,7 @@ export interface IUseComboboxReturnValue {
   isExpanded: boolean;
   activeValue?: OptionValue;
   selection:
-    | { value?: OptionValue | null; label?: string; disabled?: boolean }
+    | { value: OptionValue; label?: string; disabled?: boolean }
     | { value: OptionValue; label?: string; disabled?: boolean }[];
   inputValue?: string;
   getLabelProps: IUseFieldReturnValue['getLabelProps'];
@@ -112,11 +112,14 @@ export interface IUseComboboxReturnValue {
     }
   ) => HTMLProps<T>;
   getMessageProps: IUseFieldReturnValue['getMessageProps'];
+  removeSelection: (
+    value?: { value: OptionValue; label?: string; disabled?: boolean } | OptionValue
+  ) => void;
 }
 
 export interface IComboboxContainerProps<T = Element, L = Element> extends IUseComboboxProps<T, L> {
   /**
-   * Provides combobox render prop functions and values
+   * Provides combobox render prop functions, state, and actions
    *
    * @param {function} [options.getLabelProps] Label props getter
    * @param {function} [options.getHintProps] Hint props getter
@@ -129,6 +132,7 @@ export interface IComboboxContainerProps<T = Element, L = Element> extends IUseC
    * @param {OptionValue} [options.activeValue] Current active option value
    * @param {object|object[]} options.selection Current selection
    * @param {string} [options.inputValue] Current input value
+   * @param {function} [options.removeSelection] Remove the specified selection value or all values if unspecified
    */
   render?: (options: {
     /* prop getters */
@@ -144,6 +148,8 @@ export interface IComboboxContainerProps<T = Element, L = Element> extends IUseC
     activeValue?: IUseComboboxReturnValue['activeValue'];
     selection: IUseComboboxReturnValue['selection'];
     inputValue?: IUseComboboxReturnValue['inputValue'];
+    /* actions */
+    removeSelection: IUseComboboxReturnValue['removeSelection'];
   }) => ReactNode;
   /** @ignore */
   children?: (options: IUseComboboxReturnValue) => ReactNode;
