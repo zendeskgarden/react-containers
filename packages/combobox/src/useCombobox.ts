@@ -157,6 +157,7 @@ export const useCombobox = ({
 
         case useDownshift.stateChangeTypes.InputKeyDownEnter:
         case useDownshift.stateChangeTypes.ItemClick:
+        case useDownshift.stateChangeTypes.FunctionSelectItem:
           if (isMultiselectable) {
             // A multiselectable combobox remains expanded on selection.
             changes.isOpen = state.isOpen;
@@ -210,7 +211,7 @@ export const useCombobox = ({
     getItemProps: getDownshiftOptionProps,
     closeMenu: closeListbox,
     setHighlightedIndex: setActiveIndex,
-    selectItem: setSelection
+    selectItem: toggleDownshiftSelection
   } = useDownshift<OptionValue | OptionValue[]>({
     id: prefix,
     toggleButtonId: `${prefix}-trigger`,
@@ -426,16 +427,15 @@ export const useCombobox = ({
     value => {
       if (value === undefined) {
         // Clear selection
-        setSelection(null);
+        toggleDownshiftSelection(null);
       } else {
         const removeValue = typeof value === 'object' ? value.value : value;
 
-        if (Array.isArray(selection)) {
-          // Multiselectable removal
-          setSelection(selection.filter(_selection => _selection.value !== removeValue));
-        } else if (removeValue === selection.value) {
-          // Single select removal
-          setSelection(null);
+        if (
+          (Array.isArray(_selectionValue) && _selectionValue.includes(removeValue)) ||
+          _selectionValue === removeValue
+        ) {
+          toggleDownshiftSelection(removeValue);
         } else if (process.env.NODE_ENV === 'development') {
           // eslint-disable-next-line no-console
           console.warn(
@@ -444,7 +444,7 @@ export const useCombobox = ({
         }
       }
     },
-    [selection, setSelection]
+    [_selectionValue, toggleDownshiftSelection]
   );
 
   return useMemo<IUseComboboxReturnValue>(

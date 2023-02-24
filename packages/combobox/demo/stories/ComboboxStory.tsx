@@ -28,8 +28,18 @@ interface IComponentProps extends IUseComboboxReturnValue {
   options: IUseComboboxProps['options'];
 }
 
-const Tags = ({ layout, selection, isExpanded }: Partial<IComponentProps>) => {
+const Tags = ({ layout, selection, isExpanded, removeSelection }: Partial<IComponentProps>) => {
   const { getGridCellProps } = useGrid({ matrix: Array.isArray(selection) ? [selection] : [] });
+  const handleClick = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    value: IUseComboboxReturnValue['selection']
+  ) => {
+    removeSelection!(value);
+
+    if (layout === 'Garden' && !isExpanded) {
+      event.stopPropagation();
+    }
+  };
 
   return (
     <table role="grid" className="inline align-top">
@@ -47,7 +57,7 @@ const Tags = ({ layout, selection, isExpanded }: Partial<IComponentProps>) => {
                   <button
                     className="mr-1 px-1"
                     disabled={value.disabled}
-                    onClick={event => layout === 'Garden' && !isExpanded && event.stopPropagation()}
+                    onClick={event => handleClick(event, value)}
                     {...props}
                     type="button"
                   >
@@ -72,6 +82,7 @@ const Component = ({
   hasMessage,
   activeValue,
   selection,
+  removeSelection,
   getLabelProps,
   getHintProps,
   getTriggerProps,
@@ -97,7 +108,14 @@ const Component = ({
           })}
           {...getTriggerProps()}
         >
-          {isMultiselectable && <Tags layout={layout} selection={selection} isExpanded />}
+          {isMultiselectable && (
+            <Tags
+              layout={layout}
+              selection={selection}
+              isExpanded
+              removeSelection={removeSelection}
+            />
+          )}
           <input className={classNames('border-none', 'bg-transparent')} {...getInputProps()} />
           {isAutocomplete && (
             <button
@@ -113,7 +131,7 @@ const Component = ({
       )}
       {layout === 'Downshift' && (
         <div>
-          {isMultiselectable && <Tags selection={selection} />}
+          {isMultiselectable && <Tags selection={selection} removeSelection={removeSelection} />}
           <input {...getInputProps()} />
           {isAutocomplete && (
             <button
