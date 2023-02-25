@@ -7,7 +7,7 @@
 
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useField } from '@zendeskgarden/container-field';
-import { composeEventHandlers, useId } from '@zendeskgarden/container-utilities';
+import { composeEventHandlers, KEYS, useId } from '@zendeskgarden/container-utilities';
 import {
   useCombobox as useDownshift,
   UseComboboxGetInputPropsOptions as IDownshiftInputProps,
@@ -148,21 +148,34 @@ export const useCombobox = ({
 
         case useDownshift.stateChangeTypes.FunctionCloseMenu:
         case useDownshift.stateChangeTypes.InputBlur:
-          // Prevent selection on blur.
-          return { ...state, isOpen: false };
+          // Prevent selection on blur; retain expansion on multiselectable value focus.
+          return {
+            ...state,
+            isOpen:
+              (type === useDownshift.stateChangeTypes.InputBlur &&
+                triggerContainsInput &&
+                isMultiselectable &&
+                state.isOpen) ||
+              false
+          };
 
         case useDownshift.stateChangeTypes.InputFocus:
           // Prevent expansion on focus.
           return { ...state, isOpen: false };
 
         case useDownshift.stateChangeTypes.InputKeyDownEnter:
-        case useDownshift.stateChangeTypes.ItemClick:
         case useDownshift.stateChangeTypes.FunctionSelectItem:
+        case useDownshift.stateChangeTypes.ItemClick:
           if (isMultiselectable) {
             // A multiselectable combobox remains expanded on selection.
             changes.isOpen = state.isOpen;
             changes.highlightedIndex = state.highlightedIndex;
             changes.inputValue = '';
+
+            if (type === useDownshift.stateChangeTypes.FunctionSelectItem) {
+              // Keep input focused on selection removal.
+              inputRef.current?.focus();
+            }
           }
 
           break;
@@ -199,6 +212,8 @@ export const useCombobox = ({
     };
 
   const transformValue = (value: OptionValue | null) => (value ? labels[value] : '');
+
+  /** Hooks */
 
   const {
     selectedItem: _selectionValue,
@@ -365,6 +380,37 @@ export const useCombobox = ({
     ]
   );
 
+  const getTagProps = useCallback<IUseComboboxReturnValue['getTagProps']>(
+    ({ option, onClick, onKeyDown, ...other } = { option: { value: null } }) => {
+      const handleClick = (event: MouseEvent) => {
+        if (triggerContainsInput) {
+          // Prevent tag click from affecting expansion.
+          event.stopPropagation();
+        }
+      };
+
+      const handleKeyDown = (event: KeyboardEvent) => {
+        if (event.key === KEYS.BACKSPACE || event.key === KEYS.DELETE) {
+          toggleDownshiftSelection(option.value);
+        } else if (event.key === KEYS.DOWN || event.key === KEYS.UP || event.key === KEYS.ESCAPE) {
+          const inputProps = getDownshiftInputProps();
+
+          inputRef.current?.focus();
+          inputProps.onKeyDown(event);
+        }
+      };
+
+      return {
+        'data-garden-container-id': 'containers.combobox.tag',
+        'data-garden-container-version': PACKAGE_VERSION,
+        onClick: composeEventHandlers(onClick, handleClick),
+        onKeyDown: composeEventHandlers(onKeyDown, handleKeyDown),
+        ...other
+      };
+    },
+    [triggerContainsInput, toggleDownshiftSelection, getDownshiftInputProps, inputRef]
+  );
+
   const getListboxProps = useCallback<IUseComboboxReturnValue['getListboxProps']>(
     ({ role = 'listbox', 'aria-labelledby': ariaLabeledBy = null, ...other }) =>
       getDownshiftListboxProps({
@@ -407,21 +453,7 @@ export const useCombobox = ({
     [getDownshiftOptionProps, values, _selectionValue]
   );
 
-  const selection = useMemo(
-    () =>
-      Array.isArray(_selectionValue)
-        ? _selectionValue.map(value => ({
-            value,
-            label: labels[value],
-            disabled: disabledValues.includes(value)
-          }))
-        : {
-            value: _selectionValue,
-            label: labels[_selectionValue],
-            disabled: disabledValues.includes(_selectionValue)
-          },
-    [_selectionValue, disabledValues, labels]
-  );
+  /** Actions */
 
   const removeSelection = useCallback<IUseComboboxReturnValue['removeSelection']>(
     value => {
@@ -447,6 +479,22 @@ export const useCombobox = ({
     [_selectionValue, toggleDownshiftSelection]
   );
 
+  const selection = useMemo(
+    () =>
+      Array.isArray(_selectionValue)
+        ? _selectionValue.map(value => ({
+            value,
+            label: labels[value],
+            disabled: disabledValues.includes(value)
+          }))
+        : {
+            value: _selectionValue,
+            label: labels[_selectionValue],
+            disabled: disabledValues.includes(_selectionValue)
+          },
+    [_selectionValue, disabledValues, labels]
+  );
+
   return useMemo<IUseComboboxReturnValue>(
     () => ({
       /* prop getters */
@@ -454,6 +502,7 @@ export const useCombobox = ({
       getHintProps,
       getTriggerProps,
       getInputProps,
+      getTagProps,
       getListboxProps,
       getOptionProps,
       getMessageProps,
@@ -475,6 +524,7 @@ export const useCombobox = ({
       getHintProps,
       getTriggerProps,
       getInputProps,
+      getTagProps,
       getListboxProps,
       getOptionProps,
       getMessageProps,

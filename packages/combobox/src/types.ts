@@ -94,6 +94,15 @@ export interface IUseComboboxReturnValue {
       role?: 'combobox' | null;
     }
   ) => HTMLProps<HTMLInputElement>;
+  getTagProps: <T extends Element>(
+    props?: HTMLProps<T> & {
+      option: {
+        value: OptionValue;
+        label?: string;
+        disabled?: boolean;
+      };
+    }
+  ) => HTMLProps<T>;
   getListboxProps: <T extends Element>(
     props: Omit<HTMLProps<T>, 'role' | 'aria-label'> & {
       role?: 'listbox' | null;
@@ -125,6 +134,7 @@ export interface IComboboxContainerProps<T = Element, L = Element> extends IUseC
    * @param {function} [options.getHintProps] Hint props getter
    * @param {function} [options.getTriggerProps] Trigger props getter
    * @param {function} [options.getInputProps] Input props getter
+   * @param {function} [options.getTagProps] Tag (multiselectable value) props getter
    * @param {function} [options.getListboxProps] Listbox props getter
    * @param {function} [options.getOptionProps] Option props getter
    * @param {function} [options.getMessageProps] Message props getter
@@ -140,6 +150,7 @@ export interface IComboboxContainerProps<T = Element, L = Element> extends IUseC
     getHintProps: IUseComboboxReturnValue['getHintProps'];
     getTriggerProps: IUseComboboxReturnValue['getTriggerProps'];
     getInputProps: IUseComboboxReturnValue['getInputProps'];
+    getTagProps: IUseComboboxReturnValue['getTagProps'];
     getListboxProps: IUseComboboxReturnValue['getListboxProps'];
     getOptionProps: IUseComboboxReturnValue['getOptionProps'];
     getMessageProps: IUseComboboxReturnValue['getMessageProps'];

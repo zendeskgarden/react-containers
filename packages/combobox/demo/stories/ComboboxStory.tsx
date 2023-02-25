@@ -8,6 +8,7 @@
 import React, { createRef, useState } from 'react';
 import { Story } from '@storybook/react';
 import classNames from 'classnames';
+import { composeEventHandlers } from '@zendeskgarden/container-utilities';
 import {
   IComboboxContainerProps,
   IUseComboboxProps,
@@ -15,8 +16,48 @@ import {
   ComboboxContainer,
   useCombobox
 } from '@zendeskgarden/container-combobox';
-import { composeEventHandlers } from '@zendeskgarden/container-utilities';
 import { useGrid } from '@zendeskgarden/container-grid';
+
+interface ITagsProps {
+  getTagProps: IUseComboboxReturnValue['getTagProps'];
+  selection: IUseComboboxReturnValue['selection'];
+}
+
+const Tags = ({ selection, getTagProps }: ITagsProps) => {
+  const { getGridCellProps } = useGrid({ matrix: Array.isArray(selection) ? [selection] : [] });
+
+  return (
+    <table role="grid" className="inline align-top">
+      <tbody className="inline">
+        <tr className="inline">
+          {Array.isArray(selection) &&
+            selection.map((option, index) => {
+              const tagProps = getTagProps<HTMLButtonElement>({ option });
+              const previousDisabledOptions = selection.filter(
+                (_option, _index) => _option.disabled && _index < index
+              );
+              const { role = undefined, ...props } = option.disabled
+                ? tagProps
+                : getGridCellProps<HTMLButtonElement>({
+                    rowIndex: 0,
+                    colIndex: index - previousDisabledOptions.length,
+                    ...{ ...tagProps, role: undefined }
+                  });
+
+              return (
+                <td key={index} role={role} className="inline">
+                  <button className="mr-1 px-1" disabled={option.disabled} {...props} type="button">
+                    {option.label || option.value}
+                    {!option.disabled && ' ⓧ'}
+                  </button>
+                </td>
+              );
+            })}
+        </tr>
+      </tbody>
+    </table>
+  );
+};
 
 interface IComponentProps extends IUseComboboxReturnValue {
   layout: IArgs['layout'];
@@ -28,50 +69,6 @@ interface IComponentProps extends IUseComboboxReturnValue {
   options: IUseComboboxProps['options'];
 }
 
-const Tags = ({ layout, selection, isExpanded, removeSelection }: Partial<IComponentProps>) => {
-  const { getGridCellProps } = useGrid({ matrix: Array.isArray(selection) ? [selection] : [] });
-  const handleClick = (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    value: IUseComboboxReturnValue['selection']
-  ) => {
-    removeSelection!(value);
-
-    if (layout === 'Garden' && !isExpanded) {
-      event.stopPropagation();
-    }
-  };
-
-  return (
-    <table role="grid" className="inline align-top">
-      <tbody className="inline">
-        <tr className="inline">
-          {Array.isArray(selection) &&
-            selection.map((value, index) => {
-              const { role, ...props } = getGridCellProps<HTMLButtonElement>({
-                rowIndex: 0,
-                colIndex: index
-              });
-
-              return (
-                <td key={index} role={role} className="inline">
-                  <button
-                    className="mr-1 px-1"
-                    disabled={value.disabled}
-                    onClick={event => handleClick(event, value)}
-                    {...props}
-                    type="button"
-                  >
-                    {value.label || value.value}
-                  </button>
-                </td>
-              );
-            })}
-        </tr>
-      </tbody>
-    </table>
-  );
-};
-
 const Component = ({
   layout,
   isAutocomplete,
@@ -82,11 +79,11 @@ const Component = ({
   hasMessage,
   activeValue,
   selection,
-  removeSelection,
   getLabelProps,
   getHintProps,
   getTriggerProps,
   getInputProps,
+  getTagProps,
   getListboxProps,
   getOptionProps,
   getMessageProps,
@@ -108,14 +105,7 @@ const Component = ({
           })}
           {...getTriggerProps()}
         >
-          {isMultiselectable && (
-            <Tags
-              layout={layout}
-              selection={selection}
-              isExpanded
-              removeSelection={removeSelection}
-            />
-          )}
+          {isMultiselectable && <Tags selection={selection} getTagProps={getTagProps} />}
           <input className={classNames('border-none', 'bg-transparent')} {...getInputProps()} />
           {isAutocomplete && (
             <button
@@ -131,7 +121,7 @@ const Component = ({
       )}
       {layout === 'Downshift' && (
         <div>
-          {isMultiselectable && <Tags selection={selection} removeSelection={removeSelection} />}
+          {isMultiselectable && <Tags selection={selection} getTagProps={getTagProps} />}
           <input {...getInputProps()} />
           {isAutocomplete && (
             <button
