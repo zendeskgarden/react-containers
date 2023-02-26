@@ -7,7 +7,7 @@ import { MATRIX } from './stories/data';
 <Meta
   title="Packages/Grid"
   component={GridContainer}
-  args={{ as: 'hook', layout: 'button', matrix: MATRIX }}
+  args={{ as: 'hook', layout: 'button', matrix: MATRIX, 'aria-label': 'Grid' }}
   argTypes={{
     as: { options: ['container', 'hook'], control: 'radio', table: { category: 'Story' } },
     layout: { options: ['button', 'radio', 'text'], control: 'radio', table: { category: 'Story' } }

@@ -25,8 +25,8 @@ describe('useGrid', () => {
 
   const Example = ({ rtl, matrix, onFocus, onClick, ...props }: IExample) => (
     <GridContainer rtl={rtl} matrix={matrix} idPrefix={idPrefix} {...props}>
-      {({ getGridCellProps }: IUseGridReturnValue) => (
-        <table role="grid">
+      {({ getGridProps, getGridCellProps }: IUseGridReturnValue) => (
+        <table {...getGridProps({ 'aria-label': 'test' })}>
           <tbody>
             {matrix.map((row, rowIndex: number) => (
               <tr key={row[0] as string}>
@@ -52,6 +52,15 @@ describe('useGrid', () => {
       )}
     </GridContainer>
   );
+
+  test('renders grid as expected', () => {
+    const { getByRole } = render(<Example matrix={[[]]} />);
+
+    const table = getByRole('grid');
+
+    expect(table.nodeName).toBe('TABLE');
+    expect(table).toHaveAttribute('aria-label', 'test');
+  });
 
   test('composes gridcell onClick handler', async () => {
     const onClick = jest.fn();
@@ -380,6 +389,40 @@ describe('useGrid', () => {
       expect(gridCell('#d1e8df')).toHaveFocus();
       expect(onChange).toHaveBeenCalledTimes(7);
       expect(onChange).toHaveBeenCalledWith(0, 0);
+    });
+
+    test('handles matrix mutation', async () => {
+      const onChange = jest.fn();
+      let matrix = [
+        ['1', '2', '3'],
+        ['4', '5', '6'],
+        ['7', '8', '9']
+      ];
+
+      const { rerender } = render(<Example matrix={matrix} onChange={onChange} />);
+
+      await user.click(gridCell('9'));
+      expect(gridCell('9')).toHaveFocus();
+
+      matrix = [
+        ['1', '2'],
+        ['3', '4']
+      ];
+
+      rerender(<Example matrix={matrix} onChange={onChange} />);
+      expect(onChange).toHaveBeenCalled();
+      expect(onChange).toHaveBeenCalledWith(1, 1);
+      expect(gridCell('4')).toHaveAttribute('tabIndex', '0');
+
+      await user.click(gridCell('4'));
+      expect(gridCell('4')).toHaveFocus();
+
+      matrix = [['1', '2']];
+
+      rerender(<Example matrix={matrix} onChange={onChange} />);
+      expect(onChange).toHaveBeenCalled();
+      expect(onChange).toHaveBeenCalledWith(0, 1);
+      expect(gridCell('2')).toHaveAttribute('tabIndex', '0');
     });
   });
 
