@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import { useState, KeyboardEventHandler, useCallback, useMemo } from 'react';
+import { useState, KeyboardEventHandler, useCallback, useMemo, useEffect } from 'react';
 import { composeEventHandlers, KEYS, useId } from '@zendeskgarden/container-utilities';
 import { IUseGridProps, IUseGridReturnValue } from './types';
 import { getCellDown, getCellLeft, getCellRight, getCellUp, getId } from './utils';
@@ -39,6 +39,26 @@ export function useGrid({
     controlledColIndex !== undefined;
   const rowIndex = isControlled ? controlledRowIndex : uncontrolledRowIndex;
   const colIndex = isControlled ? controlledColIndex : uncontrolledColIndex;
+
+  useEffect(() => {
+    // Handle dynamic matrix mutation by ensuring roving tab index is valid.
+    const rowCount = matrix.length;
+    const colCount = matrix[0].length;
+    const isRowIndexInvalid = rowIndex >= rowCount;
+    const isColIndexInvalid = colIndex >= colCount;
+
+    if (isRowIndexInvalid || isColIndexInvalid) {
+      const _rowIndex = isRowIndexInvalid ? rowCount - 1 : rowIndex;
+      const _colIndex = isColIndexInvalid ? colCount - 1 : colIndex;
+
+      if (!isControlled) {
+        setUncontrolledRowIndex(_rowIndex);
+        setUncontrolledColIndex(_colIndex);
+      }
+
+      onChange(_rowIndex, _colIndex);
+    }
+  }, [matrix, rowIndex, colIndex, isControlled, setUncontrolledColIndex, onChange]);
 
   const getGridCellProps: IUseGridReturnValue['getGridCellProps'] = useCallback(
     (
