@@ -24,10 +24,12 @@ interface ITagsProps {
 }
 
 const Tags = ({ selection, getTagProps }: ITagsProps) => {
-  const { getGridCellProps } = useGrid({ matrix: Array.isArray(selection) ? [selection] : [] });
+  const { getGridProps, getGridCellProps } = useGrid({
+    matrix: Array.isArray(selection) ? [selection] : [[]]
+  });
 
   return (
-    <table role="grid" className="inline align-top">
+    <table className="inline align-top" {...getGridProps({ 'aria-label': 'Tag values' })}>
       <tbody className="inline">
         <tr className="inline">
           {Array.isArray(selection) &&
@@ -208,7 +210,7 @@ export const ComboboxStory: Story<IArgs> = ({ as, ...props }) => {
       } else {
         setOptions(
           props.options.filter(option =>
-            (option.label || option.value).match(new RegExp(value, 'gui'))
+            (option.label || option.value).match(new RegExp(value.replace(/\\/gu, '\\\\'), 'gui'))
           )
         );
       }

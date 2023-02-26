@@ -171,11 +171,6 @@ export const useCombobox = ({
             changes.isOpen = state.isOpen;
             changes.highlightedIndex = state.highlightedIndex;
             changes.inputValue = '';
-
-            if (type === useDownshift.stateChangeTypes.FunctionSelectItem) {
-              // Keep input focused on selection removal.
-              inputRef.current?.focus();
-            }
           }
 
           break;
@@ -268,6 +263,13 @@ export const useCombobox = ({
     () => setTriggerContainsInput(triggerRef.current?.contains(inputRef.current)),
     [triggerRef, inputRef]
   );
+
+  useEffect(() => {
+    if (previousStateRef.current?.type === useDownshift.stateChangeTypes.FunctionSelectItem) {
+      // Keep input focused on selection removal.
+      inputRef.current?.focus();
+    }
+  });
 
   useLayoutEffect(() => {
     // Trigger autocomplete selection override. Use layout effect to prevent
