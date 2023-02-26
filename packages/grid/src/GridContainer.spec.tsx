@@ -25,8 +25,8 @@ describe('useGrid', () => {
 
   const Example = ({ rtl, matrix, onFocus, onClick, ...props }: IExample) => (
     <GridContainer rtl={rtl} matrix={matrix} idPrefix={idPrefix} {...props}>
-      {({ getGridCellProps }: IUseGridReturnValue) => (
-        <table role="grid">
+      {({ getGridProps, getGridCellProps }: IUseGridReturnValue) => (
+        <table {...getGridProps({ 'aria-label': 'test' })}>
           <tbody>
             {matrix.map((row, rowIndex: number) => (
               <tr key={row[0] as string}>
@@ -52,6 +52,15 @@ describe('useGrid', () => {
       )}
     </GridContainer>
   );
+
+  test('renders grid as expected', () => {
+    const { getByRole } = render(<Example matrix={[[]]} />);
+
+    const table = getByRole('grid');
+
+    expect(table.nodeName).toBe('TABLE');
+    expect(table).toHaveAttribute('aria-label', 'test');
+  });
 
   test('composes gridcell onClick handler', async () => {
     const onClick = jest.fn();

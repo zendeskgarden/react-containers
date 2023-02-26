@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React, { FocusEventHandler } from 'react';
+import React, { FocusEventHandler, HTMLProps } from 'react';
 import { Story } from '@storybook/react';
 import {
   GridContainer,
@@ -17,10 +17,18 @@ import {
 
 interface IComponent extends IUseGridProps, IUseGridReturnValue {
   layout: IArgs['layout'];
+  'aria-label': IArgs['aria-label'];
 }
 
-const Component = ({ rtl, matrix, layout, getGridCellProps }: IComponent) => (
-  <table role="grid" style={{ direction: rtl ? 'rtl' : 'ltr' }}>
+const Component = ({
+  rtl,
+  matrix,
+  layout,
+  'aria-label': ariaLabel,
+  getGridProps,
+  getGridCellProps
+}: IComponent) => (
+  <table style={{ direction: rtl ? 'rtl' : 'ltr' }} {...getGridProps({ 'aria-label': ariaLabel })}>
     <tbody>
       {matrix.map((row, rowIndex) => (
         <tr key={rowIndex}>
@@ -109,32 +117,34 @@ const Component = ({ rtl, matrix, layout, getGridCellProps }: IComponent) => (
 
 interface IProps extends IGridContainerProps {
   layout: IArgs['layout'];
+  'aria-label': IArgs['aria-label'];
 }
 
-const Container = (props: IProps) => (
+const Container = ({ 'aria-label': ariaLabel, ...props }: IProps) => (
   <GridContainer {...props}>
-    {containerProps => <Component {...containerProps} {...props} />}
+    {containerProps => <Component aria-label={ariaLabel} {...containerProps} {...props} />}
   </GridContainer>
 );
 
-const Hook = (props: IProps) => {
+const Hook = ({ 'aria-label': ariaLabel, ...props }: IProps) => {
   const hookProps = useGrid(props);
 
-  return <Component {...hookProps} {...props} />;
+  return <Component aria-label={ariaLabel} {...hookProps} {...props} />;
 };
 
 interface IArgs extends IGridContainerProps {
   as: 'hook' | 'container';
   layout: 'button' | 'radio' | 'text';
+  'aria-label': NonNullable<HTMLProps<HTMLDivElement>['aria-label']>;
 }
 
-export const GridStory: Story<IArgs> = ({ as, ...props }) => {
+export const GridStory: Story<IArgs> = ({ as, 'aria-label': ariaLabel, ...props }) => {
   switch (as) {
     case 'container':
-      return <Container {...props} />;
+      return <Container aria-label={ariaLabel} {...props} />;
 
     case 'hook':
     default:
-      return <Hook {...props} />;
+      return <Hook aria-label={ariaLabel} {...props} />;
   }
 };

@@ -60,6 +60,16 @@ export function useGrid({
     }
   }, [matrix, rowIndex, colIndex, isControlled, setUncontrolledColIndex, onChange]);
 
+  const getGridProps: IUseGridReturnValue['getGridProps'] = useCallback(
+    ({ role = 'grid', ...other }) => ({
+      'data-garden-container-id': 'containers.grid',
+      'data-garden-container-version': PACKAGE_VERSION,
+      role: role === null ? undefined : role,
+      ...other
+    }),
+    []
+  );
+
   const getGridCellProps: IUseGridReturnValue['getGridCellProps'] = useCallback(
     (
       {
@@ -134,6 +144,8 @@ export function useGrid({
       };
 
       return {
+        'data-garden-container-id': 'containers.grid.cell',
+        'data-garden-container-version': PACKAGE_VERSION,
         id: getId(prefix!, _rowIndex, _colIndex),
         role: role === null ? undefined : role,
         tabIndex: rowIndex === _rowIndex && colIndex === _colIndex ? 0 : -1,
@@ -147,8 +159,9 @@ export function useGrid({
 
   return useMemo<IUseGridReturnValue>(
     () => ({
+      getGridProps,
       getGridCellProps
     }),
-    [getGridCellProps]
+    [getGridProps, getGridCellProps]
   );
 }

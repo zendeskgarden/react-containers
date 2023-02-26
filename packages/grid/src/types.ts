@@ -31,6 +31,12 @@ export interface IUseGridProps {
 }
 
 export interface IUseGridReturnValue {
+  getGridProps: <T extends Element>(
+    props: Omit<HTMLProps<T>, 'role' | 'aria-label'> & {
+      role?: 'grid' | null;
+      'aria-label': NonNullable<HTMLProps<T>['aria-label']>;
+    }
+  ) => HTMLProps<T>;
   getGridCellProps: <T extends Element>(
     props?: Omit<HTMLProps<T>, 'role'> & {
       role?: 'gridcell' | null;
@@ -44,9 +50,13 @@ export interface IGridContainerProps extends IUseGridProps {
   /**
    * Provides grid render prop functions
    *
+   * @param {function} [options.getGridProps] Grid props getter
    * @param {function} [options.getGridCellProps] Grid cell props getter
    */
-  render?: (options: { getGridCellProps: IUseGridReturnValue['getGridCellProps'] }) => ReactNode;
+  render?: (options: {
+    getGridProps: IUseGridReturnValue['getGridProps'];
+    getGridCellProps: IUseGridReturnValue['getGridCellProps'];
+  }) => ReactNode;
   /** @ignore */
   children?: (options: IUseGridReturnValue) => ReactNode;
 }
