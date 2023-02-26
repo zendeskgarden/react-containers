@@ -383,7 +383,7 @@ export const useCombobox = ({
   );
 
   const getTagProps = useCallback<IUseComboboxReturnValue['getTagProps']>(
-    ({ option, onClick, onKeyDown, ...other } = { option: { value: null } }) => {
+    ({ option, onClick, onKeyDown, ...other }) => {
       const handleClick = (event: MouseEvent) => {
         if (triggerContainsInput) {
           // Prevent tag click from affecting expansion.

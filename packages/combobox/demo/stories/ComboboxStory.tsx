@@ -34,7 +34,10 @@ const Tags = ({ selection, getTagProps }: ITagsProps) => {
         <tr className="inline">
           {Array.isArray(selection) &&
             selection.map((option, index) => {
-              const tagProps = getTagProps<HTMLButtonElement>({ option });
+              const tagProps = getTagProps<HTMLButtonElement>({
+                option,
+                'aria-label': 'Press delete or backspace to remove'
+              });
               const previousDisabledOptions = selection.filter(
                 (_option, _index) => _option.disabled && _index < index
               );
@@ -50,7 +53,6 @@ const Tags = ({ selection, getTagProps }: ITagsProps) => {
                 <td key={index} role={role} className="inline">
                   <button className="mr-1 px-1" disabled={option.disabled} {...props} type="button">
                     {option.label || option.value}
-                    {!option.disabled && ' ⓧ'}
                   </button>
                 </td>
               );

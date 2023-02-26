@@ -95,12 +95,13 @@ export interface IUseComboboxReturnValue {
     }
   ) => HTMLProps<HTMLInputElement>;
   getTagProps: <T extends Element>(
-    props?: HTMLProps<T> & {
+    props: Omit<HTMLProps<T>, 'aria-label'> & {
       option: {
         value: OptionValue;
         label?: string;
         disabled?: boolean;
       };
+      'aria-label': NonNullable<HTMLProps<T>['aria-label']>;
     }
   ) => HTMLProps<T>;
   getListboxProps: <T extends Element>(
