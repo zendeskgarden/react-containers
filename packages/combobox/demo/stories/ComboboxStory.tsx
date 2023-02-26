@@ -25,7 +25,7 @@ interface ITagsProps {
 
 const Tags = ({ selection, getTagProps }: ITagsProps) => {
   const { getGridProps, getGridCellProps } = useGrid({
-    matrix: Array.isArray(selection) ? [selection] : [[]]
+    matrix: Array.isArray(selection) ? [selection.filter(value => !value.disabled)] : [[]]
   });
 
   return (
