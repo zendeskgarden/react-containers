@@ -48,8 +48,16 @@ export function useGrid({
     const isColIndexInvalid = colIndex >= colCount;
 
     if (isRowIndexInvalid || isColIndexInvalid) {
-      const _rowIndex = isRowIndexInvalid ? rowCount - 1 : rowIndex;
-      const _colIndex = isColIndexInvalid ? colCount - 1 : colIndex;
+      let _rowIndex = rowIndex;
+      let _colIndex = colIndex;
+
+      if (isRowIndexInvalid) {
+        _rowIndex = rowCount > 0 ? rowCount - 1 : 0;
+      }
+
+      if (isColIndexInvalid) {
+        _colIndex = colCount > 0 ? colCount - 1 : 0;
+      }
 
       if (!isControlled) {
         setUncontrolledRowIndex(_rowIndex);

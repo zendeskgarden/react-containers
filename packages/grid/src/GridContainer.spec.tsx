@@ -423,6 +423,11 @@ describe('useGrid', () => {
       expect(onChange).toHaveBeenCalled();
       expect(onChange).toHaveBeenCalledWith(0, 1);
       expect(gridCell('2')).toHaveAttribute('tabIndex', '0');
+
+      matrix = [[]];
+      rerender(<Example matrix={matrix} onChange={onChange} />);
+      expect(onChange).toHaveBeenCalled();
+      expect(onChange).toHaveBeenCalledWith(0, 0);
     });
   });
 
