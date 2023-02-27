@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-grid@2.0.2...@zendeskgarden/container-grid@3.0.0) (2023-02-27)
+
+- fix!(grid): refactored interface types for enhanced accessibility and provide missing ID generation (#519) ([db4fedb](https://github.com/zendeskgarden/react-containers/commit/db4fedb357bebcd9395a6d9c7ae436815f37d5af)), closes [#519](https://github.com/zendeskgarden/react-containers/issues/519)
+
+### BREAKING CHANGES
+
+- updated `rowIndex` & `colIndex` naming for `getGridCellProps` and narrowed `HTMLProps` interface typing with `Element` extension generics.
+
 ## [2.0.2](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-grid@2.0.1...@zendeskgarden/container-grid@2.0.2) (2023-02-17)
 
 **Note:** Version bump only for package @zendeskgarden/container-grid
