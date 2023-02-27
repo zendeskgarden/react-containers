@@ -1,13 +1,8 @@
 {
   "index.cjs.js": {
     "bundled": 11019,
-<<<<<<< HEAD
-    "minified": 5432,
-    "gzipped": 2180
-=======
     "minified": 5445,
-    "gzipped": 2181
->>>>>>> 0d4e3b5b (fix: update snapshots)
+    "gzipped": 2182
   },
   "index.esm.js": {
     "bundled": 10959,
