@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.0.1](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-field@3.0.0...@zendeskgarden/container-field@3.0.1) (2023-02-27)
+
+### Bug Fixes
+
+- **field:** update yarn.lock ([#518](https://github.com/zendeskgarden/react-containers/issues/518)) ([890b5cb](https://github.com/zendeskgarden/react-containers/commit/890b5cb0fdc7a1749ded0d14a0a15a7570967a3d))
+
 # [3.0.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-field@2.1.2...@zendeskgarden/container-field@3.0.0) (2023-02-17)
 
 - fix!(field): refactored interface types for enhanced accessibility (#516) ([81153fc](https://github.com/zendeskgarden/react-containers/commit/81153fc78430134174d927bf88659b3ec895ab44)), closes [#516](https://github.com/zendeskgarden/react-containers/issues/516)
