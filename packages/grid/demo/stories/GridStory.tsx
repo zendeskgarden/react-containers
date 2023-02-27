@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React, { FocusEventHandler } from 'react';
+import React, { FocusEventHandler, HTMLProps } from 'react';
 import { Story } from '@storybook/react';
 import {
   GridContainer,
@@ -17,25 +17,42 @@ import {
 
 interface IComponent extends IUseGridProps, IUseGridReturnValue {
   layout: IArgs['layout'];
+  'aria-label': IArgs['aria-label'];
 }
 
-const Component = ({ rtl, matrix, layout, getGridCellProps }: IComponent) => (
-  <table role="grid" style={{ direction: rtl ? 'rtl' : 'ltr' }}>
+const Component = ({
+  rtl,
+  matrix,
+  layout,
+  'aria-label': ariaLabel,
+  getGridProps,
+  getGridCellProps
+}: IComponent) => (
+  <table style={{ direction: rtl ? 'rtl' : 'ltr' }} {...getGridProps({ 'aria-label': ariaLabel })}>
     <tbody>
-      {matrix.map((row, rowIdx) => (
-        <tr key={rowIdx}>
-          {row.map((column, colIdx) => {
-            const { role, ...props } = getGridCellProps({ rowIdx, colIdx });
-
+      {matrix.map((row, rowIndex) => (
+        <tr key={rowIndex}>
+          {row.map((column, colIndex) => {
             switch (layout) {
-              case 'text':
+              case 'text': {
+                const { role, ...props } = getGridCellProps<HTMLTableCellElement>({
+                  rowIndex,
+                  colIndex
+                });
+
                 return (
-                  <td key={colIdx} className="w-5 h-5 text-center" role={role} {...props}>
-                    {matrix[rowIdx][colIdx]}
+                  <td key={colIndex} className="w-5 h-5 text-center" role={role} {...props}>
+                    {matrix[rowIndex][colIndex]}
                   </td>
                 );
+              }
 
               case 'radio': {
+                const { role, ...props } = getGridCellProps<HTMLInputElement>({
+                  rowIndex,
+                  colIndex
+                });
+
                 const handleBlur: FocusEventHandler<HTMLInputElement> = event => {
                   /**
                    * When the grid loses focus, reset the roving tab index to
@@ -60,9 +77,9 @@ const Component = ({ rtl, matrix, layout, getGridCellProps }: IComponent) => (
                 };
 
                 return (
-                  <td key={colIdx} role={role}>
+                  <td key={colIndex} role={role}>
                     <label>
-                      <span className="sr-only">{matrix[rowIdx][colIdx]}</span>
+                      <span className="sr-only">{matrix[rowIndex][colIndex]}</span>
                       <input
                         className="w-5 h-5"
                         name="demo"
@@ -76,14 +93,20 @@ const Component = ({ rtl, matrix, layout, getGridCellProps }: IComponent) => (
               }
 
               case 'button':
-              default:
+              default: {
+                const { role, ...props } = getGridCellProps<HTMLButtonElement>({
+                  rowIndex,
+                  colIndex
+                });
+
                 return (
-                  <td key={colIdx} role={role}>
-                    <button className="h-7 w-7" type="button" {...props}>
-                      {matrix[rowIdx][colIdx]}
+                  <td key={colIndex} role={role}>
+                    <button className="h-7 w-7" {...props} type="button">
+                      {matrix[rowIndex][colIndex]}
                     </button>
                   </td>
                 );
+              }
             }
           })}
         </tr>
@@ -94,32 +117,34 @@ const Component = ({ rtl, matrix, layout, getGridCellProps }: IComponent) => (
 
 interface IProps extends IGridContainerProps {
   layout: IArgs['layout'];
+  'aria-label': IArgs['aria-label'];
 }
 
-const Container = (props: IProps) => (
+const Container = ({ 'aria-label': ariaLabel, ...props }: IProps) => (
   <GridContainer {...props}>
-    {containerProps => <Component {...containerProps} {...props} />}
+    {containerProps => <Component aria-label={ariaLabel} {...containerProps} {...props} />}
   </GridContainer>
 );
 
-const Hook = (props: IProps) => {
+const Hook = ({ 'aria-label': ariaLabel, ...props }: IProps) => {
   const hookProps = useGrid(props);
 
-  return <Component {...hookProps} {...props} />;
+  return <Component aria-label={ariaLabel} {...hookProps} {...props} />;
 };
 
 interface IArgs extends IGridContainerProps {
   as: 'hook' | 'container';
   layout: 'button' | 'radio' | 'text';
+  'aria-label': NonNullable<HTMLProps<HTMLDivElement>['aria-label']>;
 }
 
-export const GridStory: Story<IArgs> = ({ as, ...props }) => {
+export const GridStory: Story<IArgs> = ({ as, 'aria-label': ariaLabel, ...props }) => {
   switch (as) {
     case 'container':
-      return <Container {...props} />;
+      return <Container aria-label={ariaLabel} {...props} />;
 
     case 'hook':
     default:
-      return <Hook {...props} />;
+      return <Hook aria-label={ariaLabel} {...props} />;
   }
 };

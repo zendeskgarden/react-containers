@@ -5,55 +5,27 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import { useState, HTMLProps, HTMLAttributes, KeyboardEventHandler } from 'react';
-import { composeEventHandlers, KEYS } from '@zendeskgarden/container-utilities';
+import { useState, KeyboardEventHandler, useCallback, useMemo, useEffect } from 'react';
+import { composeEventHandlers, KEYS, useId } from '@zendeskgarden/container-utilities';
+import { IUseGridProps, IUseGridReturnValue } from './types';
+import { getCellDown, getCellLeft, getCellRight, getCellUp, getId } from './utils';
 
 const GRID_KEYS = [KEYS.LEFT, KEYS.RIGHT, KEYS.UP, KEYS.DOWN, KEYS.HOME, KEYS.END];
-
-export interface IUseGridProps {
-  /** Determines if navigation uses right-to-left direction */
-  rtl?: boolean;
-  /** Enables wrapped keyboard navigation  */
-  wrap?: boolean;
-  /** Sets the two-dimension array to render the grid */
-  matrix: any[][];
-  /** Prefixes IDs for the grid and cells  */
-  idPrefix?: string;
-  /** Sets the focused row index in a controlled grid */
-  rowIndex?: number;
-  /** Sets the focused column index in a controlled grid */
-  colIndex?: number;
-  /** Sets the default focused row index in a uncontrolled grid */
-  defaultRowIndex?: number;
-  /** Sets the default focused column index in a uncontrolled grid */
-  defaultColIndex?: number;
-  /** Handles grid change event */
-  onChange?: (rowIndex: number, colIndex: number) => void;
-  /** The environment where the grid is rendered */
-  environment?: Document;
-}
-
-interface IGetGridCellProps extends HTMLProps<any> {
-  rowIdx: number;
-  colIdx: number;
-}
-
-export interface IUseGridReturnValue {
-  getGridCellProps: (options: IGetGridCellProps) => HTMLAttributes<any>;
-}
 
 export function useGrid({
   rtl,
   wrap,
   matrix,
   idPrefix,
-  onChange,
-  environment = document,
+  onChange = () => undefined,
+  environment,
   rowIndex: controlledRowIndex,
   colIndex: controlledColIndex,
   defaultRowIndex,
   defaultColIndex
 }: IUseGridProps): IUseGridReturnValue {
+  const doc = environment || document;
+  const prefix = useId(idPrefix);
   const [uncontrolledRowIndex, setUncontrolledRowIndex] = useState(
     defaultRowIndex !== null && defaultRowIndex !== undefined ? defaultRowIndex : 0
   );
@@ -67,156 +39,137 @@ export function useGrid({
     controlledColIndex !== undefined;
   const rowIndex = isControlled ? controlledRowIndex : uncontrolledRowIndex;
   const colIndex = isControlled ? controlledColIndex : uncontrolledColIndex;
-  const rowCount = matrix.length;
-  const colCount = matrix[0].length;
 
-  const getCellRight = () => {
-    let retVal: number[] = [];
-    const lastRowIndex = rowCount - 1;
-    const lastColIndex = matrix[lastRowIndex].length - 1;
-    const isLastCellFocused = rowIndex === lastRowIndex && colIndex === lastColIndex;
+  useEffect(() => {
+    // Handle dynamic matrix mutation by ensuring roving tab index is valid.
+    const rowCount = matrix.length;
+    const colCount = matrix[0].length;
+    const isRowIndexInvalid = rowIndex >= rowCount;
+    const isColIndexInvalid = colIndex >= colCount;
 
-    if (!isLastCellFocused) {
-      if (colIndex === colCount - 1 /* last col is focused */) {
-        if (wrap) {
-          retVal = [rowIndex + 1, 0]; // first cell of next row
-        }
-      } else {
-        retVal = [rowIndex, colIndex + 1]; // next cell
-      }
-    }
+    if (isRowIndexInvalid || isColIndexInvalid) {
+      let _rowIndex = rowIndex;
+      let _colIndex = colIndex;
 
-    return retVal;
-  };
-
-  const getCellLeft = () => {
-    let retVal: number[] = [];
-    const isFirstCellFocused = rowIndex === 0 && colIndex === 0;
-
-    if (!isFirstCellFocused) {
-      if (colIndex === 0 /* first col is focused */) {
-        if (wrap) {
-          retVal = [rowIndex - 1, colCount - 1]; // last cell of previous row
-        }
-      } else {
-        retVal = [rowIndex, colIndex - 1]; // previous cell
-      }
-    }
-
-    return retVal;
-  };
-
-  const getCellDown = () => {
-    let retVal: number[] = [];
-    const lastRowLength = matrix[rowCount - 1].length;
-    const isLastCellFocused =
-      rowIndex === rowCount - (colCount > lastRowLength ? 2 : 1) && colIndex === colCount - 1;
-
-    if (!isLastCellFocused) {
-      if (rowIndex === rowCount - (colIndex >= lastRowLength ? 2 : 1) /* last row is focused */) {
-        if (wrap) {
-          retVal = [0, colIndex + 1]; // top cell of next col
-        }
-      } else {
-        retVal = [rowIndex + 1, colIndex]; // cell below
-      }
-    }
-
-    return retVal;
-  };
-
-  const getCellUp = () => {
-    let retVal: number[] = [];
-    const isFirstCellFocused = rowIndex === 0 && colIndex === 0;
-
-    if (!isFirstCellFocused) {
-      if (rowIndex === 0 /* first row is focused */) {
-        if (wrap) {
-          const lastRowLength = matrix[rowCount - 1].length;
-          const col = colIndex - 1;
-          const row = rowCount - (col >= lastRowLength ? 2 : 1);
-
-          retVal = [row, col]; // bottom cell of previous col
-        }
-      } else {
-        retVal = [rowIndex - 1, colIndex]; // cell above
-      }
-    }
-
-    return retVal;
-  };
-
-  const handleKeyDown: KeyboardEventHandler = event => {
-    if (GRID_KEYS.includes(event.key)) {
-      event.preventDefault();
-
-      let row = rowIndex;
-      let col = colIndex;
-
-      switch (event.key) {
-        case KEYS.RIGHT:
-          [row, col] = rtl ? getCellLeft() : getCellRight();
-          break;
-
-        case KEYS.LEFT:
-          [row, col] = rtl ? getCellRight() : getCellLeft();
-          break;
-
-        case KEYS.DOWN:
-          [row, col] = getCellDown();
-          break;
-
-        case KEYS.UP:
-          [row, col] = getCellUp();
-          break;
-
-        case KEYS.HOME:
-          row = event.ctrlKey ? 0 : rowIndex;
-          col = 0;
-          break;
-
-        case KEYS.END: {
-          const lastRowIndex = rowCount - 1;
-          const lastColIndex = matrix[lastRowIndex].length - 1;
-
-          row = event.ctrlKey ? lastRowIndex : rowIndex;
-          col = event.ctrlKey ? lastColIndex : matrix[rowIndex].length - 1;
-          break;
-        }
+      if (isRowIndexInvalid) {
+        _rowIndex = rowCount > 0 ? rowCount - 1 : 0;
       }
 
-      if (row !== rowIndex || col !== colIndex) {
-        const id = `${idPrefix}-${row}-${col}`;
-        const element = environment.getElementById(id);
-
-        element?.focus();
+      if (isColIndexInvalid) {
+        _colIndex = colCount > 0 ? colCount - 1 : 0;
       }
-    }
-  };
 
-  const getGridCellProps = ({
-    rowIdx,
-    colIdx,
-    onFocus,
-    onKeyDown,
-    ...other
-  }: IGetGridCellProps) => ({
-    tabIndex: rowIndex === rowIdx && colIndex === colIdx ? 0 : -1,
-    role: 'gridcell',
-    id: `${idPrefix}-${rowIdx}-${colIdx}`,
-    onFocus: composeEventHandlers(onFocus, () => {
       if (!isControlled) {
-        setUncontrolledRowIndex(rowIdx);
-        setUncontrolledColIndex(colIdx);
+        setUncontrolledRowIndex(_rowIndex);
+        setUncontrolledColIndex(_colIndex);
       }
 
-      onChange && onChange(rowIdx, colIdx);
-    }),
-    onKeyDown: composeEventHandlers(onKeyDown, handleKeyDown),
-    ...other
-  });
+      onChange(_rowIndex, _colIndex);
+    }
+  }, [matrix, rowIndex, colIndex, isControlled, setUncontrolledColIndex, onChange]);
 
-  return {
-    getGridCellProps
-  };
+  const getGridProps: IUseGridReturnValue['getGridProps'] = useCallback(
+    ({ role = 'grid', ...other }) => ({
+      'data-garden-container-id': 'containers.grid',
+      'data-garden-container-version': PACKAGE_VERSION,
+      role: role === null ? undefined : role,
+      ...other
+    }),
+    []
+  );
+
+  const getGridCellProps: IUseGridReturnValue['getGridCellProps'] = useCallback(
+    (
+      {
+        role = 'gridcell',
+        rowIndex: _rowIndex,
+        colIndex: _colIndex,
+        onFocus,
+        onKeyDown,
+        ...other
+      } = { rowIndex: 0, colIndex: 0 }
+    ) => {
+      const handleFocus = () => {
+        if (!isControlled) {
+          setUncontrolledRowIndex(_rowIndex);
+          setUncontrolledColIndex(_colIndex);
+        }
+
+        onChange(_rowIndex, _colIndex);
+      };
+
+      const handleKeyDown: KeyboardEventHandler = event => {
+        if (GRID_KEYS.includes(event.key)) {
+          event.preventDefault();
+
+          let row = rowIndex;
+          let col = colIndex;
+
+          switch (event.key) {
+            case KEYS.RIGHT:
+              [row, col] = rtl
+                ? getCellLeft(matrix, rowIndex, colIndex, wrap)
+                : getCellRight(matrix, rowIndex, colIndex, wrap);
+              break;
+
+            case KEYS.LEFT:
+              [row, col] = rtl
+                ? getCellRight(matrix, rowIndex, colIndex, wrap)
+                : getCellLeft(matrix, rowIndex, colIndex, wrap);
+              break;
+
+            case KEYS.DOWN:
+              [row, col] = getCellDown(matrix, rowIndex, colIndex, wrap);
+              break;
+
+            case KEYS.UP:
+              [row, col] = getCellUp(matrix, rowIndex, colIndex, wrap);
+              break;
+
+            case KEYS.HOME:
+              row = event.ctrlKey ? 0 : rowIndex;
+              col = 0;
+              break;
+
+            case KEYS.END: {
+              const rowCount = matrix.length;
+              const lastRowIndex = rowCount - 1;
+              const lastColIndex = matrix[lastRowIndex].length - 1;
+
+              row = event.ctrlKey ? lastRowIndex : rowIndex;
+              col = event.ctrlKey ? lastColIndex : matrix[rowIndex].length - 1;
+              break;
+            }
+          }
+
+          if (row !== rowIndex || col !== colIndex) {
+            const id = getId(prefix!, row, col);
+            const element = doc.getElementById(id);
+
+            element?.focus();
+          }
+        }
+      };
+
+      return {
+        'data-garden-container-id': 'containers.grid.cell',
+        'data-garden-container-version': PACKAGE_VERSION,
+        id: getId(prefix!, _rowIndex, _colIndex),
+        role: role === null ? undefined : role,
+        tabIndex: rowIndex === _rowIndex && colIndex === _colIndex ? 0 : -1,
+        onFocus: composeEventHandlers(onFocus, handleFocus),
+        onKeyDown: composeEventHandlers(onKeyDown, handleKeyDown),
+        ...other
+      };
+    },
+    [matrix, rowIndex, colIndex, doc, prefix, isControlled, onChange, rtl, wrap]
+  );
+
+  return useMemo<IUseGridReturnValue>(
+    () => ({
+      getGridProps,
+      getGridCellProps
+    }),
+    [getGridProps, getGridCellProps]
+  );
 }

@@ -7,20 +7,14 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useGrid, IUseGridProps, IUseGridReturnValue } from './useGrid';
+import { useGrid } from './useGrid';
+import { IGridContainerProps } from './types';
 
-export interface IGridContainerProps extends IUseGridProps {
-  /** A render prop function which receives grid a prop getter */
-  render?: (options: IUseGridReturnValue) => React.ReactNode;
-  /** A children render prop function which receives a grid prop getter */
-  children?: (options: IUseGridReturnValue) => React.ReactNode;
-}
-
-export const GridContainer: React.FC<IGridContainerProps> = props => {
-  const { children, render = children, ...options } = props;
-
-  return <>{render!(useGrid(options)) as React.ReactElement}</>;
-};
+export const GridContainer: React.FC<IGridContainerProps> = ({
+  children,
+  render = children,
+  ...options
+}) => <>{render!(useGrid(options))}</>;
 
 GridContainer.propTypes = {
   children: PropTypes.func,
