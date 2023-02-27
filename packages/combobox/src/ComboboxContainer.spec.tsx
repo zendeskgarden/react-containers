@@ -566,6 +566,10 @@ describe('ComboboxContainer', () => {
             'aria-activedescendant',
             listboxOptions[1].getAttribute('id')
           );
+
+          await user.click(listboxOptions[1]);
+
+          expect(input).toHaveAttribute('aria-expanded', 'true');
         });
 
         it('re-enables options as expected', () => {

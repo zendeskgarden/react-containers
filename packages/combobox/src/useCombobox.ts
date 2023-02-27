@@ -448,7 +448,7 @@ export const useCombobox = ({
   );
 
   const getOptionProps = useCallback<IUseComboboxReturnValue['getOptionProps']>(
-    ({ role = 'option', option, ...other } = {}) => {
+    ({ role = 'option', option, onMouseDown, ...other } = {}) => {
       const optionProps = {
         'data-garden-container-id': 'containers.combobox.option',
         'data-garden-container-version': PACKAGE_VERSION,
@@ -458,7 +458,13 @@ export const useCombobox = ({
       };
 
       if (option === undefined || option.disabled) {
-        return optionProps;
+        // Prevent downshift listbox mouse leave event.
+        const handleMouseDown = (event: MouseEvent) => event.preventDefault();
+
+        return {
+          onMouseDown: composeEventHandlers(onMouseDown, handleMouseDown),
+          ...optionProps
+        };
       }
 
       const ariaSelected = Array.isArray(_selectionValue)
