@@ -148,7 +148,7 @@ export const useCombobox = ({
 
         case useDownshift.stateChangeTypes.FunctionCloseMenu:
         case useDownshift.stateChangeTypes.InputBlur:
-          // Prevent selection on blur; retain expansion on multiselectable value focus.
+          // Prevent selection on blur; retain expansion on multiselectable tag focus.
           return {
             ...state,
             isOpen:
@@ -198,6 +198,8 @@ export const useCombobox = ({
           }
         } else if (changes.selectedItem) {
           changes.selectedItem = [changes.selectedItem];
+        } else {
+          changes.selectedItem = [];
         }
       }
 
@@ -221,7 +223,7 @@ export const useCombobox = ({
     getItemProps: getDownshiftOptionProps,
     closeMenu: closeListbox,
     setHighlightedIndex: setActiveIndex,
-    selectItem: toggleDownshiftSelection
+    selectItem: setDownshiftSelection
   } = useDownshift<OptionValue | OptionValue[]>({
     id: prefix,
     toggleButtonId: `${prefix}-trigger`,
@@ -399,8 +401,11 @@ export const useCombobox = ({
 
       const handleKeyDown = (event: KeyboardEvent) => {
         if (event.key === KEYS.BACKSPACE || event.key === KEYS.DELETE) {
-          toggleDownshiftSelection(option.value);
-        } else if (event.key === KEYS.DOWN || event.key === KEYS.UP || event.key === KEYS.ESCAPE) {
+          setDownshiftSelection(option.value);
+        } else if (
+          triggerContainsInput &&
+          (event.key === KEYS.DOWN || event.key === KEYS.UP || event.key === KEYS.ESCAPE)
+        ) {
           const inputProps = getDownshiftInputProps();
 
           inputRef.current?.focus();
@@ -419,7 +424,7 @@ export const useCombobox = ({
     },
     [
       triggerContainsInput,
-      toggleDownshiftSelection,
+      setDownshiftSelection,
       getDownshiftInputProps,
       _isExpanded,
       values,
@@ -476,16 +481,15 @@ export const useCombobox = ({
     value => {
       if (value === undefined) {
         // Clear selection
-        toggleDownshiftSelection(null);
+        setDownshiftSelection(null);
       } else {
         const removeValue = typeof value === 'object' ? value.value : value;
 
-        if (
-          (Array.isArray(_selectionValue) && _selectionValue.includes(removeValue)) ||
-          _selectionValue === removeValue
-        ) {
-          toggleDownshiftSelection(removeValue);
-        } else if (process.env.NODE_ENV === 'development') {
+        if (Array.isArray(_selectionValue) && _selectionValue.includes(removeValue)) {
+          setDownshiftSelection(removeValue);
+        } else if (_selectionValue === removeValue) {
+          setDownshiftSelection(null);
+        } else if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
           // eslint-disable-next-line no-console
           console.warn(
             `Warning: useCombobox \`selection\` does not contain '${removeValue}' for removal.`
@@ -493,24 +497,26 @@ export const useCombobox = ({
         }
       }
     },
-    [_selectionValue, toggleDownshiftSelection]
+    [_selectionValue, setDownshiftSelection]
   );
 
-  const selection = useMemo(
-    () =>
-      Array.isArray(_selectionValue)
-        ? _selectionValue.map(value => ({
-            value,
-            label: labels[value],
-            disabled: disabledValues.includes(value)
-          }))
-        : {
-            value: _selectionValue,
-            label: labels[_selectionValue],
-            disabled: disabledValues.includes(_selectionValue)
-          },
-    [_selectionValue, disabledValues, labels]
-  );
+  const selection = useMemo(() => {
+    if (Array.isArray(_selectionValue)) {
+      return _selectionValue.map(value => ({
+        value,
+        label: labels[value],
+        disabled: disabledValues.includes(value)
+      }));
+    } else if (_selectionValue) {
+      return {
+        value: _selectionValue,
+        label: labels[_selectionValue],
+        disabled: disabledValues.includes(_selectionValue)
+      };
+    }
+
+    return null;
+  }, [_selectionValue, disabledValues, labels]);
 
   return useMemo<IUseComboboxReturnValue>(
     () => ({

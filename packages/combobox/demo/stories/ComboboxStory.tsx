@@ -161,7 +161,7 @@ const Component = ({
             >
               {(Array.isArray(selection)
                 ? selection.find(value => value.value === option.value) !== undefined
-                : selection.value === option.value) && '✓ '}
+                : selection && selection.value === option.value) && '✓ '}
               {option.label || option.value}
             </li>
           ))

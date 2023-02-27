@@ -84,7 +84,8 @@ export interface IUseComboboxReturnValue {
   activeValue?: OptionValue;
   selection:
     | { value: OptionValue; label?: string; disabled?: boolean }
-    | { value: OptionValue; label?: string; disabled?: boolean }[];
+    | { value: OptionValue; label?: string; disabled?: boolean }[]
+    | null;
   inputValue?: string;
   getLabelProps: IUseFieldReturnValue['getLabelProps'];
   getHintProps: IUseFieldReturnValue['getHintProps'];

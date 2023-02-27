@@ -5,11 +5,11 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React, { createRef } from 'react';
+import React, { createRef, PropsWithChildren } from 'react';
 import { render, RenderResult } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { ComboboxContainer } from './';
-import { IUseComboboxProps } from './types';
+import { ComboboxContainer, useCombobox } from './';
+import { IUseComboboxProps, IUseComboboxReturnValue } from './types';
 
 interface ITestComboboxProps
   extends Omit<
@@ -19,6 +19,7 @@ interface ITestComboboxProps
   layout: 'Garden' | 'Downshift';
   labelTestId?: string;
   hintTestId?: string;
+  tagTestId?: string;
   inputTestId?: string;
   triggerTestId?: string;
   listboxTestId?: string;
@@ -35,6 +36,7 @@ describe('ComboboxContainer', () => {
     hasMessage = true,
     labelTestId = 'label',
     hintTestId = 'hint',
+    tagTestId = 'tag',
     inputTestId = 'input',
     triggerTestId = 'trigger',
     listboxTestId = 'listbox',
@@ -60,10 +62,12 @@ describe('ComboboxContainer', () => {
           getLabelProps,
           getHintProps,
           getTriggerProps,
+          getTagProps,
           getInputProps,
           getListboxProps,
           getOptionProps,
-          getMessageProps
+          getMessageProps,
+          selection
         }) => (
           <>
             <label data-test-id={labelTestId} {...getLabelProps()}>
@@ -76,10 +80,34 @@ describe('ComboboxContainer', () => {
             )}
             {layout === 'Garden' ? (
               <div data-test-id={triggerTestId} {...getTriggerProps()}>
+                {Array.isArray(selection) &&
+                  selection.map(option => (
+                    <button
+                      key={option.value}
+                      data-test-id={tagTestId}
+                      disabled={option.disabled}
+                      {...getTagProps({ 'aria-label': 'tag', option })}
+                      type="button"
+                    >
+                      {option.label || option.value}
+                    </button>
+                  ))}
                 <input data-test-id={inputTestId} {...getInputProps()} />
               </div>
             ) : (
               <>
+                {Array.isArray(selection) &&
+                  selection.map(option => (
+                    <button
+                      key={option.value}
+                      data-test-id={tagTestId}
+                      disabled={option.disabled}
+                      {...getTagProps({ 'aria-label': 'tag', option })}
+                      type="button"
+                    >
+                      {option.label || option.value}
+                    </button>
+                  ))}
                 <input data-test-id={inputTestId} {...getInputProps()} />
                 <button data-test-id={triggerTestId} {...getTriggerProps()} type="button" />
               </>
@@ -400,12 +428,13 @@ describe('ComboboxContainer', () => {
       });
 
       describe('on multiple selection', () => {
+        let tags: HTMLElement[];
         let input: HTMLElement;
         let listbox: HTMLElement;
         let listboxOptions: HTMLElement[];
 
         beforeEach(async () => {
-          const { getByTestId, getAllByRole } = render(
+          const { getByTestId, getAllByRole, getAllByTestId } = render(
             <TestCombobox
               isMultiselectable
               layout={layout}
@@ -422,6 +451,7 @@ describe('ComboboxContainer', () => {
           input = getByTestId('input');
           listbox = getByTestId('listbox');
           listboxOptions = getAllByRole('option');
+          tags = getAllByTestId('tag');
 
           await user.click(input);
           await user.keyboard('{ArrowDown}');
@@ -461,6 +491,14 @@ describe('ComboboxContainer', () => {
 
           expect(listboxOptions[1]).toHaveAttribute('aria-selected', 'false');
           expect(listboxOptions[3]).toHaveAttribute('aria-selected', 'true');
+
+          await user.click(tags[1]);
+
+          expect(tags[1]).toHaveFocus();
+
+          await user.keyboard('{Delete}');
+
+          expect(listboxOptions[3]).toHaveAttribute('aria-selected', 'false');
         });
       });
 
@@ -661,6 +699,117 @@ describe('ComboboxContainer', () => {
     }
   );
 
+  describe('`removeSelection`', () => {
+    let selection: IUseComboboxReturnValue['selection'];
+    let removeSelection: IUseComboboxReturnValue['removeSelection'];
+    const TestRemoveSelectionCombobox = ({
+      options,
+      children,
+      ...props
+    }: PropsWithChildren<Omit<ITestComboboxProps, 'layout'>>) => {
+      const triggerRef = createRef<HTMLDivElement>();
+      const inputRef = createRef<HTMLInputElement>();
+      const listboxRef = createRef<HTMLUListElement>();
+      const { selection: _selection, removeSelection: _removeSelection } = useCombobox({
+        triggerRef,
+        inputRef,
+        listboxRef,
+        options,
+        ...props
+      });
+
+      selection = _selection;
+      removeSelection = _removeSelection;
+
+      return <>{children}</>;
+    };
+
+    it('clears multiselectable values', async () => {
+      const options = [{ value: 'test-1', selected: true }];
+      const { getByTestId } = render(
+        <TestRemoveSelectionCombobox isMultiselectable options={options}>
+          <button data-test-id="button" onClick={() => removeSelection('test-1')} />
+        </TestRemoveSelectionCombobox>
+      );
+      const button = getByTestId('button');
+
+      expect(selection).toHaveLength(1);
+
+      await user.click(button);
+
+      expect(selection).toHaveLength(0);
+    });
+
+    it('clears multiselectable objects', async () => {
+      const options = [{ value: 'test-1', selected: true }];
+      const { getByTestId } = render(
+        <TestRemoveSelectionCombobox isMultiselectable options={options}>
+          <button data-test-id="button" onClick={() => removeSelection(options[0])} />
+        </TestRemoveSelectionCombobox>
+      );
+      const button = getByTestId('button');
+
+      expect(selection).toHaveLength(1);
+
+      await user.click(button);
+
+      expect(selection).toHaveLength(0);
+    });
+
+    it('clears all selections', async () => {
+      const options = [
+        { value: 'test-1', selected: true },
+        { value: 'test-2', selected: true }
+      ];
+      const { getByTestId } = render(
+        <TestRemoveSelectionCombobox isMultiselectable options={options}>
+          <button data-test-id="button" onClick={() => removeSelection()} />
+        </TestRemoveSelectionCombobox>
+      );
+      const button = getByTestId('button');
+
+      expect(selection).toHaveLength(2);
+
+      await user.click(button);
+
+      expect(selection).toHaveLength(0);
+    });
+
+    it('clears single selection values', async () => {
+      const { getByTestId } = render(
+        <TestRemoveSelectionCombobox options={[{ value: 'test-1', selected: true }]}>
+          <button data-test-id="button" onClick={() => removeSelection('test-1')} />
+        </TestRemoveSelectionCombobox>
+      );
+      const button = getByTestId('button');
+
+      expect(selection).not.toBeNull();
+
+      await user.click(button);
+
+      expect(selection).toBeNull();
+    });
+
+    it('warns if selection cannot be removed', async () => {
+      const consoleWarn = console.warn;
+
+      console.warn = jest.fn();
+
+      const { getByTestId } = render(
+        <TestRemoveSelectionCombobox options={[]}>
+          <button data-test-id="button" onClick={() => removeSelection('test-1')} />
+        </TestRemoveSelectionCombobox>
+      );
+      const button = getByTestId('button');
+
+      await user.click(button);
+
+      expect(console.warn).toHaveBeenCalled();
+
+      console.warn = consoleWarn;
+    });
+  });
+
   describe('only with Garden layout', () => {
     it('handles autocomplete trigger click', async () => {
       const { getByTestId } = render(<TestCombobox layout="Garden" options={[]} />);
@@ -722,6 +871,57 @@ describe('ComboboxContainer', () => {
 
       expect(input).toHaveFocus();
       expect(input).toHaveAttribute('aria-expanded', 'false');
+    });
+
+    it('retains multiselectable listbox expansion on tag focus', async () => {
+      const { getByTestId } = render(
+        <TestCombobox
+          layout="Garden"
+          isMultiselectable
+          options={[{ value: 'test', selected: true }]}
+        />
+      );
+      const trigger = getByTestId('trigger');
+      const tag = getByTestId('tag');
+
+      await user.click(trigger);
+
+      expect(trigger).toHaveAttribute('aria-expanded', 'true');
+
+      await user.keyboard('{Shift>}{Tab}{/Shift}');
+
+      expect(tag).toHaveFocus();
+      expect(trigger).toHaveAttribute('aria-expanded', 'true');
+    });
+
+    it('handles multiselectable value keystrokes', async () => {
+      const { getByTestId } = render(
+        <TestCombobox
+          layout="Garden"
+          isMultiselectable
+          options={[{ value: 'test-1' }, { value: 'test-2', selected: true }, { value: 'test-2' }]}
+        />
+      );
+      const tag = getByTestId('tag');
+      const input = getByTestId('input');
+
+      await user.click(tag);
+      await user.keyboard('{ArrowDown}');
+
+      expect(input).toHaveFocus();
+      expect(input).toHaveAttribute('aria-expanded', 'true');
+
+      await user.keyboard('{Shift>}{Tab}{/Shift}');
+      await user.keyboard('{Escape}');
+
+      expect(input).toHaveFocus();
+      expect(input).toHaveAttribute('aria-expanded', 'false');
+
+      await user.keyboard('{Shift>}{Tab}{/Shift}');
+      await user.keyboard('{ArrowUp}');
+
+      expect(input).toHaveFocus();
+      expect(input).toHaveAttribute('aria-expanded', 'true');
     });
   });
 });
