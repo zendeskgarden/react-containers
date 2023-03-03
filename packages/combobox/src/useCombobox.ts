@@ -447,6 +447,16 @@ export const useCombobox = ({
     [getDownshiftListboxProps, listboxRef, isMultiselectable]
   );
 
+  const getOptGroupProps = useCallback<IUseComboboxReturnValue['getOptGroupProps']>(
+    ({ role = 'group', ...other }) => ({
+      'data-garden-container-id': 'containers.combobox.optgroup',
+      'data-garden-container-version': PACKAGE_VERSION,
+      role: role === null ? undefined : role,
+      ...other
+    }),
+    []
+  );
+
   const getOptionProps = useCallback<IUseComboboxReturnValue['getOptionProps']>(
     ({ role = 'option', option, onMouseDown, ...other } = {}) => {
       const optionProps = {
@@ -533,6 +543,7 @@ export const useCombobox = ({
       getInputProps,
       getTagProps,
       getListboxProps,
+      getOptGroupProps,
       getOptionProps,
       getMessageProps,
       /* state */
@@ -555,6 +566,7 @@ export const useCombobox = ({
       getInputProps,
       getTagProps,
       getListboxProps,
+      getOptGroupProps,
       getOptionProps,
       getMessageProps,
       removeSelection

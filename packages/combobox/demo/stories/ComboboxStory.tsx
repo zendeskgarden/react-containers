@@ -153,8 +153,10 @@ const Component = ({
           options.map((option, index) => (
             <li
               key={index}
-              className={classNames('cursor-pointer', {
+              className={classNames({
                 'bg-blue-100': option.value === activeValue,
+                'cursor-default': option.disabled,
+                'cursor-pointer': !option.disabled,
                 'text-grey-400': option.disabled
               })}
               {...getOptionProps({ option })}

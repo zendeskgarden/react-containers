@@ -111,6 +111,12 @@ export interface IUseComboboxReturnValue {
       'aria-label': NonNullable<HTMLProps<T>['aria-label']>;
     }
   ) => HTMLProps<T>;
+  getOptGroupProps: <T extends Element>(
+    props: Omit<HTMLProps<T>, 'role' | 'aria-label'> & {
+      role?: 'group' | null;
+      'aria-label': NonNullable<HTMLProps<T>['aria-label']>;
+    }
+  ) => HTMLProps<T>;
   getOptionProps: <T extends Element>(
     props?: Omit<HTMLProps<T>, 'role'> & {
       role?: 'option' | null;
@@ -138,6 +144,7 @@ export interface IComboboxContainerProps<T = Element, L = Element> extends IUseC
    * @param {function} [options.getInputProps] Input props getter
    * @param {function} [options.getTagProps] Tag (multiselectable value) props getter
    * @param {function} [options.getListboxProps] Listbox props getter
+   * @param {function} [options.getOptGroupProps] Option group props getter
    * @param {function} [options.getOptionProps] Option props getter
    * @param {function} [options.getMessageProps] Message props getter
    * @param {boolean} options.isExpanded Current listbox expansion
@@ -154,6 +161,7 @@ export interface IComboboxContainerProps<T = Element, L = Element> extends IUseC
     getInputProps: IUseComboboxReturnValue['getInputProps'];
     getTagProps: IUseComboboxReturnValue['getTagProps'];
     getListboxProps: IUseComboboxReturnValue['getListboxProps'];
+    getOptGroupProps: IUseComboboxReturnValue['getOptGroupProps'];
     getOptionProps: IUseComboboxReturnValue['getOptionProps'];
     getMessageProps: IUseComboboxReturnValue['getMessageProps'];
     /* state */
