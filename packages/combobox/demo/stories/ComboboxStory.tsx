@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React, { createRef, useState } from 'react';
+import React, { createRef, LiHTMLAttributes, useState } from 'react';
 import { Story } from '@storybook/react';
 import classNames from 'classnames';
 import { composeEventHandlers } from '@zendeskgarden/container-utilities';
@@ -14,9 +14,38 @@ import {
   IUseComboboxProps,
   IUseComboboxReturnValue,
   ComboboxContainer,
-  useCombobox
+  useCombobox,
+  IOption
 } from '@zendeskgarden/container-combobox';
 import { useGrid } from '@zendeskgarden/container-grid';
+
+interface IOptionProps extends LiHTMLAttributes<HTMLLIElement> {
+  option: IOption;
+  isGrouped?: boolean;
+  activeValue: IUseComboboxReturnValue['activeValue'];
+  selection: IUseComboboxReturnValue['selection'];
+  getOptionProps: IUseComboboxReturnValue['getOptionProps'];
+}
+
+const Option = ({ option, isGrouped, activeValue, selection, getOptionProps }: IOptionProps) => (
+  <li
+    className={classNames({
+      'pl-2': isGrouped,
+      'bg-blue-100': option.value === activeValue,
+      'cursor-default': option.disabled,
+      'cursor-pointer': !option.disabled,
+      'text-grey-400': option.disabled
+    })}
+    {...getOptionProps({ option })}
+  >
+    {(Array.isArray(selection)
+      ? selection.find(value => value.value === option.value) !== undefined
+      : selection && selection.value === option.value) && '✓ '}
+    {option.label || option.value}
+  </li>
+);
+
+Option.displayName = 'Option';
 
 interface ITagsProps {
   getTagProps: IUseComboboxReturnValue['getTagProps'];
@@ -89,6 +118,7 @@ const Component = ({
   getInputProps,
   getTagProps,
   getListboxProps,
+  getOptGroupProps,
   getOptionProps,
   getMessageProps,
   options
@@ -150,23 +180,39 @@ const Component = ({
             No matches found
           </li>
         ) : (
-          options.map((option, index) => (
-            <li
-              key={index}
-              className={classNames({
-                'bg-blue-100': option.value === activeValue,
-                'cursor-default': option.disabled,
-                'cursor-pointer': !option.disabled,
-                'text-grey-400': option.disabled
-              })}
-              {...getOptionProps({ option })}
-            >
-              {(Array.isArray(selection)
-                ? selection.find(value => value.value === option.value) !== undefined
-                : selection && selection.value === option.value) && '✓ '}
-              {option.label || option.value}
-            </li>
-          ))
+          options.map((option, index) =>
+            'options' in option ? (
+              <li
+                key={index}
+                role="none"
+                className="cursor-default"
+                onMouseDown={event => event.preventDefault()}
+              >
+                {option.label && <b className="block mt-1">{option.label}</b>}
+                <hr aria-hidden="true" className="my-1 border-grey-200" />
+                <ul {...getOptGroupProps({ 'aria-label': option.label || 'group' })}>
+                  {option.options.map((groupOption, groupIndex) => (
+                    <Option
+                      key={`${index}.${groupIndex}`}
+                      option={groupOption}
+                      isGrouped
+                      activeValue={activeValue}
+                      selection={selection}
+                      getOptionProps={getOptionProps}
+                    />
+                  ))}
+                </ul>
+              </li>
+            ) : (
+              <Option
+                key={index}
+                option={option}
+                activeValue={activeValue}
+                selection={selection}
+                getOptionProps={getOptionProps}
+              />
+            )
+          )
         )}
       </ul>
     </div>
@@ -212,8 +258,18 @@ export const ComboboxStory: Story<IArgs> = ({ as, ...props }) => {
       if (value === '') {
         setOptions(props.options);
       } else {
+        const _options: IOption[] = [];
+
+        props.options.forEach(option => {
+          if ('options' in option) {
+            _options.push(...option.options);
+          } else {
+            _options.push(option);
+          }
+        });
+
         setOptions(
-          props.options.filter(option =>
+          _options.filter(option =>
             (option.label || option.value).match(new RegExp(value.replace(/\\/gu, '\\\\'), 'gui'))
           )
         );

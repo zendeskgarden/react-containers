@@ -18,7 +18,7 @@ import {
   UseComboboxState as IDownshiftState,
   UseComboboxStateChangeTypes as IDownshiftStateChangeType
 } from 'downshift';
-import { IUseComboboxProps, IUseComboboxReturnValue, OptionValue } from './types';
+import { IOption, IUseComboboxProps, IUseComboboxReturnValue, OptionValue } from './types';
 import { toType } from './utils';
 
 export const useCombobox = ({
@@ -62,8 +62,7 @@ export const useCombobox = ({
   const disabledValues: OptionValue[] = useMemo(() => [], []);
   const values = useMemo(() => {
     const retVal: OptionValue[] = [];
-
-    options.forEach(option => {
+    const callback = (option: IOption) => {
       if (option.disabled) {
         if (!disabledValues.includes(option.value)) {
           disabledValues.push(option.value);
@@ -83,6 +82,14 @@ export const useCombobox = ({
       }
 
       labels[option.value] = option.label || option.value;
+    };
+
+    options.forEach(option => {
+      if ('options' in option) {
+        option.options.forEach(callback);
+      } else {
+        callback(option);
+      }
     });
 
     return retVal;

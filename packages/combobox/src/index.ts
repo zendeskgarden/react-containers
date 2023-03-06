@@ -11,4 +11,9 @@ export { useCombobox } from './useCombobox';
 /* Render-props */
 export { ComboboxContainer } from './ComboboxContainer';
 
-export type { IComboboxContainerProps, IUseComboboxProps, IUseComboboxReturnValue } from './types';
+export type {
+  IOption,
+  IComboboxContainerProps,
+  IUseComboboxProps,
+  IUseComboboxReturnValue
+} from './types';

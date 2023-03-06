@@ -8,10 +8,24 @@
 import { IUseComboboxProps } from '@zendeskgarden/container-combobox';
 
 export const OPTIONS: IUseComboboxProps['options'] = [
-  { value: 'option-01', label: 'Apple' },
-  { value: 'option-02', label: 'Banana' },
-  { value: 'option-03', label: 'Carrot', disabled: true },
-  { value: 'option-04', label: 'Grape' },
-  { value: 'option-05', label: 'Kiwi' },
-  { value: 'option-06', label: 'Quince' }
+  {
+    label: 'Fruits',
+    options: [
+      { value: 'fruit-01', label: 'Apple' },
+      { value: 'fruit-02', label: 'Banana', disabled: true },
+      { value: 'fruit-03', label: 'Cherry' },
+      { value: 'fruit-04', label: 'Grape' },
+      { value: 'fruit-05', label: 'Kiwi' }
+    ]
+  },
+  {
+    label: 'Vegetables',
+    options: [
+      { value: 'vegetable-01', label: 'Asparagus' },
+      { value: 'vegetable-02', label: 'Broccoli', disabled: true },
+      { value: 'vegetable-03', label: 'Brussel sprouts' },
+      { value: 'vegetable-04', label: 'Cauliflower' },
+      { value: 'vegetable-07', label: 'Kale' }
+    ]
+  }
 ];

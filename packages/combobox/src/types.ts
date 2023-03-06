@@ -10,6 +10,16 @@ import { HTMLProps, ReactNode, RefObject } from 'react';
 
 export type OptionValue = any;
 
+interface ISelectedOption {
+  value: OptionValue;
+  label?: string;
+  disabled?: boolean;
+}
+
+export interface IOption extends ISelectedOption {
+  selected?: boolean;
+}
+
 export interface IUseComboboxProps<T = Element, L = Element> {
   /** Prefixes IDs for the combobox */
   idPrefix?: string;
@@ -30,19 +40,15 @@ export interface IUseComboboxProps<T = Element, L = Element> {
   /** Indicates the combobox has a message */
   hasMessage?: boolean;
   /**
-   * Provides an ordered list of options
+   * Provides an ordered list of option groups and options
    *
    * @param {OptionValue} option.value Unique option value
    * @param {string} option.label Optional human-readable text (defaults to `option.value`)
    * @param {boolean} option.selected Sets initial selection for the option
    * @param {boolean} option.disabled Indicates that the option is not interactive
+   * @param {IOption[]} option.options Groups a list of options
    */
-  options: {
-    value: OptionValue;
-    label?: string;
-    selected?: boolean;
-    disabled?: boolean;
-  }[];
+  options: (IOption | { options: IOption[]; label?: string })[];
   /** Sets the input value in a controlled combobox */
   inputValue?: string;
   /** Sets the selection value (or `isMultiselectable` values) in a controlled combobox */
@@ -82,10 +88,7 @@ export interface IUseComboboxProps<T = Element, L = Element> {
 export interface IUseComboboxReturnValue {
   isExpanded: boolean;
   activeValue?: OptionValue;
-  selection:
-    | { value: OptionValue; label?: string; disabled?: boolean }
-    | { value: OptionValue; label?: string; disabled?: boolean }[]
-    | null;
+  selection: ISelectedOption | ISelectedOption[] | null;
   inputValue?: string;
   getLabelProps: IUseFieldReturnValue['getLabelProps'];
   getHintProps: IUseFieldReturnValue['getHintProps'];
@@ -97,11 +100,7 @@ export interface IUseComboboxReturnValue {
   ) => HTMLProps<HTMLInputElement>;
   getTagProps: <T extends Element>(
     props: Omit<HTMLProps<T>, 'aria-label'> & {
-      option: {
-        value: OptionValue;
-        label?: string;
-        disabled?: boolean;
-      };
+      option: ISelectedOption;
       'aria-label': NonNullable<HTMLProps<T>['aria-label']>;
     }
   ) => HTMLProps<T>;
@@ -120,18 +119,11 @@ export interface IUseComboboxReturnValue {
   getOptionProps: <T extends Element>(
     props?: Omit<HTMLProps<T>, 'role'> & {
       role?: 'option' | null;
-      option?: {
-        value: OptionValue;
-        label?: string;
-        selected?: boolean;
-        disabled?: boolean;
-      };
+      option?: IOption;
     }
   ) => HTMLProps<T>;
   getMessageProps: IUseFieldReturnValue['getMessageProps'];
-  removeSelection: (
-    value?: { value: OptionValue; label?: string; disabled?: boolean } | OptionValue
-  ) => void;
+  removeSelection: (value?: ISelectedOption | OptionValue) => void;
 }
 
 export interface IComboboxContainerProps<T = Element, L = Element> extends IUseComboboxProps<T, L> {
