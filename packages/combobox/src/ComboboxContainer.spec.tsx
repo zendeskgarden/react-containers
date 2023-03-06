@@ -23,6 +23,7 @@ interface ITestComboboxProps
   inputTestId?: string;
   triggerTestId?: string;
   listboxTestId?: string;
+  optGroupTestIdPrefix?: string;
   optionTestIdPrefix?: string;
   messageTestId?: string;
 }
@@ -40,6 +41,7 @@ describe('ComboboxContainer', () => {
     inputTestId = 'input',
     triggerTestId = 'trigger',
     listboxTestId = 'listbox',
+    optGroupTestIdPrefix = 'optgroup',
     optionTestIdPrefix = 'option',
     messageTestId = 'message',
     ...props
@@ -65,6 +67,7 @@ describe('ComboboxContainer', () => {
           getTagProps,
           getInputProps,
           getListboxProps,
+          getOptGroupProps,
           getOptionProps,
           getMessageProps,
           selection
@@ -118,15 +121,34 @@ describe('ComboboxContainer', () => {
               </div>
             )}
             <ul data-test-id={listboxTestId} {...getListboxProps({ 'aria-label': 'Options' })}>
-              {options.map((option, index) => (
-                <li
-                  key={option.value || index}
-                  data-test-id={`${optionTestIdPrefix}-${index + 1}`}
-                  {...getOptionProps({ option })}
-                >
-                  {option.label || option.value}
-                </li>
-              ))}
+              {options.map((option, index) =>
+                'options' in option ? (
+                  <li key={option.label || index}>
+                    <ul
+                      {...getOptGroupProps({ 'aria-label': option.label || 'group' })}
+                      data-test-id={`${optGroupTestIdPrefix}-${index + 1}`}
+                    >
+                      {option.options.map((groupOption, groupIndex) => (
+                        <li
+                          key={groupOption.value || groupIndex}
+                          data-test-id={`${optionTestIdPrefix}-${index + 1}.${groupIndex + 1}`}
+                          {...getOptionProps({ option: groupOption })}
+                        >
+                          {groupOption.label || groupOption.value}
+                        </li>
+                      ))}
+                    </ul>
+                  </li>
+                ) : (
+                  <li
+                    key={option.value || index}
+                    data-test-id={`${optionTestIdPrefix}-${index + 1}`}
+                    {...getOptionProps({ option })}
+                  >
+                    {option.label || option.value}
+                  </li>
+                )
+              )}
             </ul>
           </>
         )}
@@ -140,7 +162,14 @@ describe('ComboboxContainer', () => {
       const options = [
         { value: 'test-1', label: 'Test one' },
         { value: 'test-2', label: 'Test two' },
-        { value: 'test-3', label: 'Test three' }
+        { value: 'test-3', label: 'Test three' },
+        {
+          options: [
+            { value: 'test-4', label: 'Test four' },
+            { value: 'test-5', label: 'Test five' }
+          ],
+          label: 'Group'
+        }
       ];
 
       it('applies correct accessibility attributes', () => {
@@ -153,6 +182,7 @@ describe('ComboboxContainer', () => {
         const listbox = getByTestId('listbox');
         const listboxId = listbox.getAttribute('id');
         const option = getByTestId('option-1');
+        const optGroup = getByTestId('optgroup-4');
 
         expect(label).toHaveAttribute('for', input.getAttribute('id'));
         expect(trigger).toHaveAttribute('aria-controls', listboxId);
@@ -172,6 +202,7 @@ describe('ComboboxContainer', () => {
         expect(listbox).toHaveAttribute('aria-label', 'Options');
         expect(option).toHaveAttribute('role', 'option');
         expect(option).toHaveAttribute('aria-selected', 'false');
+        expect(optGroup).toHaveAttribute('role', 'group');
       });
 
       it('is in the tab sequence', async () => {
