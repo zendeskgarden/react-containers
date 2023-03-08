@@ -283,13 +283,11 @@ export const ComboboxStory: Story<IArgs> = ({ as, ...props }) => {
       }
     }
   };
-  const defaultActiveIndex = props.isAutocomplete && props.isEditable ? 0 : undefined;
 
   switch (as) {
     case 'container':
       return (
         <Container
-          defaultActiveIndex={defaultActiveIndex}
           {...props}
           triggerRef={triggerRef}
           inputRef={inputRef}
@@ -303,7 +301,6 @@ export const ComboboxStory: Story<IArgs> = ({ as, ...props }) => {
     default:
       return (
         <Hook
-          defaultActiveIndex={defaultActiveIndex}
           {...props}
           triggerRef={triggerRef}
           inputRef={inputRef}

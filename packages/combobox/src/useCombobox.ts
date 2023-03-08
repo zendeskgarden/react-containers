@@ -97,6 +97,13 @@ export const useCombobox = ({
   }, [options, disabledValues, selectedValues, labels]);
   const initialSelectionValue = isMultiselectable ? selectedValues : selectedValues[0];
   const initialInputValue = isMultiselectable ? '' : labels[initialSelectionValue];
+  const _defaultActiveIndex = useMemo(() => {
+    if (defaultActiveIndex === undefined) {
+      return isAutocomplete && isEditable ? 0 : undefined;
+    }
+
+    return defaultActiveIndex;
+  }, [defaultActiveIndex, isAutocomplete, isEditable]);
 
   /*
    * Validation
@@ -172,17 +179,20 @@ export const useCombobox = ({
           return { ...state, isOpen: false };
 
         case useDownshift.stateChangeTypes.InputKeyDownArrowDown:
-          if (changes.highlightedIndex === -1) {
-            // Fix Downshift standard first option activation on multiselectable listbox expansion.
+          if (state.isOpen !== changes.isOpen) {
+            // Fix Downshift standard first option activation on listbox
+            // expansion. Addresses problems with initial multiselectable and
+            // overeager `defaultActiveIndex` comboboxes.
             changes.highlightedIndex = 0;
           }
 
           break;
 
         case useDownshift.stateChangeTypes.InputKeyDownArrowUp:
-          if (changes.highlightedIndex === -1 || state.isOpen !== changes.isOpen) {
-            // Fix Downshift standard last option activation and overeager
-            // `defaultActiveIndex` on listbox expansion.
+          if (state.isOpen !== changes.isOpen) {
+            // Fix Downshift standard last option activation on listbox
+            // expansion. Addresses problems with initial multiselectable and
+            // overeager `defaultActiveIndex` comboboxes.
             changes.highlightedIndex = values.length - 1;
           }
 
@@ -264,7 +274,7 @@ export const useCombobox = ({
     defaultIsOpen: defaultExpanded,
     initialIsOpen: initialExpanded,
     highlightedIndex: activeIndex,
-    defaultHighlightedIndex: defaultActiveIndex,
+    defaultHighlightedIndex: _defaultActiveIndex,
     initialHighlightedIndex: initialActiveIndex,
     onStateChange: handleDownshiftStateChange,
     stateReducer,
@@ -302,13 +312,6 @@ export const useCombobox = ({
     }
   });
 
-  useEffect(() => {
-    if (!isEditable && doc.activeElement === inputRef.current) {
-      // Prevent Downshift from grabbing non-editable combobox focus.
-      triggerRef.current?.focus();
-    }
-  }, [isEditable, doc.activeElement, inputRef, triggerRef]);
-
   useLayoutEffect(() => {
     // Trigger autocomplete selection override. Use layout effect to prevent
     // `defaultActiveIndex` flash.
@@ -322,8 +325,8 @@ export const useCombobox = ({
 
       if (index !== -1) {
         setActiveIndex(index);
-      } else if (defaultActiveIndex !== undefined) {
-        setActiveIndex(defaultActiveIndex);
+      } else if (_defaultActiveIndex !== undefined) {
+        setActiveIndex(_defaultActiveIndex);
       }
     }
   }, [
@@ -332,7 +335,7 @@ export const useCombobox = ({
     _selectionValue,
     _inputValue,
     values,
-    defaultActiveIndex,
+    _defaultActiveIndex,
     setActiveIndex
   ]);
 
@@ -432,13 +435,16 @@ export const useCombobox = ({
       role = isEditable ? 'combobox' : null,
       'aria-labelledby': ariaLabeledBy = null,
       onClick,
+      onFocus,
       ...other
     } = {}) => {
       const inputProps = {
         'data-garden-container-id': 'containers.combobox.input',
         'data-garden-container-version': PACKAGE_VERSION,
         ref: inputRef,
-        role: role === null ? undefined : role
+        role: role === null ? undefined : role,
+        onClick,
+        onFocus
       };
 
       if (isEditable) {
@@ -458,6 +464,7 @@ export const useCombobox = ({
           ...other
         } as IDownshiftInputProps);
       }
+
       const downshiftInputProps = getDownshiftInputProps({
         ...inputProps,
         disabled: true,
@@ -469,12 +476,20 @@ export const useCombobox = ({
         'aria-labelledby': undefined
       });
 
+      const handleFocus = () => {
+        if (!isEditable) {
+          // Prevent Downshift from grabbing non-editable combobox focus.
+          triggerRef.current?.focus();
+        }
+      };
+
+      // Select-only combobox input
       return {
         ...downshiftInputProps,
         disabled,
-        onClick,
         readOnly: true,
         tabIndex: -1,
+        onFocus: composeEventHandlers(onFocus, handleFocus),
         ...other
       };
     },
