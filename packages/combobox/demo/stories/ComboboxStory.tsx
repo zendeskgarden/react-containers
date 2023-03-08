@@ -96,6 +96,7 @@ interface IComponentProps extends IUseComboboxReturnValue {
   layout: IArgs['layout'];
   isAutocomplete?: IUseComboboxProps['isAutocomplete'];
   isMultiselectable?: IUseComboboxProps['isMultiselectable'];
+  isEditable?: IUseComboboxProps['isEditable'];
   disabled?: IUseComboboxProps['disabled'];
   hasHint?: IUseComboboxProps['hasHint'];
   hasMessage?: IUseComboboxProps['hasMessage'];
@@ -105,6 +106,7 @@ interface IComponentProps extends IUseComboboxReturnValue {
 const Component = ({
   layout,
   isAutocomplete,
+  isEditable,
   isMultiselectable,
   isExpanded,
   disabled,
@@ -132,16 +134,21 @@ const Component = ({
         <div
           className={classNames('border', 'border-solid', 'p-1', {
             'cursor-default': disabled,
-            'cursor-pointer': isAutocomplete && !disabled,
-            'cursor-text': !(isAutocomplete || disabled),
+            'cursor-pointer': !disabled && (isAutocomplete || !isEditable),
+            'cursor-text': !(disabled || isAutocomplete) && isEditable,
             'bg-grey-100': disabled,
             'border-grey-200': disabled
           })}
           {...getTriggerProps()}
         >
           {isMultiselectable && <Tags selection={selection} getTagProps={getTagProps} />}
-          <input className={classNames('border-none', 'bg-transparent')} {...getInputProps()} />
-          {isAutocomplete && (
+          <input
+            className={classNames('border-none', 'bg-transparent', {
+              'cursor-pointer': !(disabled || isEditable)
+            })}
+            {...getInputProps()}
+          />
+          {(isAutocomplete || !isEditable) && (
             <button
               className={classNames('ml-1', 'px-1', { 'cursor-default': disabled })}
               disabled={disabled}
@@ -157,7 +164,7 @@ const Component = ({
         <div>
           {isMultiselectable && <Tags selection={selection} getTagProps={getTagProps} />}
           <input {...getInputProps()} />
-          {isAutocomplete && (
+          {(isAutocomplete || !isEditable) && (
             <button
               className="ml-1 px-1"
               {...getTriggerProps({ 'aria-label': 'Options' })}
@@ -252,7 +259,7 @@ export const ComboboxStory: Story<IArgs> = ({ as, ...props }) => {
   const listboxRef = createRef<HTMLUListElement>();
   const [options, setOptions] = useState(props.options);
   const onChange: IUseComboboxProps['onChange'] = changes => {
-    if (props.isAutocomplete && changes.inputValue !== undefined) {
+    if (props.isAutocomplete && props.isEditable && changes.inputValue !== undefined) {
       const value = changes.inputValue;
 
       if (value === '') {
@@ -276,7 +283,7 @@ export const ComboboxStory: Story<IArgs> = ({ as, ...props }) => {
       }
     }
   };
-  const defaultActiveIndex = props.isAutocomplete ? 0 : undefined;
+  const defaultActiveIndex = props.isAutocomplete && props.isEditable ? 0 : undefined;
 
   switch (as) {
     case 'container':

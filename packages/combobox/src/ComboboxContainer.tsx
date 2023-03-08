@@ -32,6 +32,7 @@ ComboboxContainer.propTypes = {
   listboxRef: PropTypes.any.isRequired,
   isAutocomplete: PropTypes.bool,
   isMultiselectable: PropTypes.bool,
+  isEditable: PropTypes.bool,
   disabled: PropTypes.bool,
   hasHint: PropTypes.bool,
   hasMessage: PropTypes.bool,
@@ -57,5 +58,6 @@ ComboboxContainer.propTypes = {
 };
 
 ComboboxContainer.defaultProps = {
-  isAutocomplete: true
+  isAutocomplete: true,
+  isEditable: true
 };

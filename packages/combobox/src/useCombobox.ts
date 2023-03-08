@@ -26,8 +26,9 @@ export const useCombobox = ({
   triggerRef,
   inputRef,
   listboxRef,
-  isAutocomplete,
+  isAutocomplete = true,
   isMultiselectable,
+  isEditable = true,
   disabled,
   hasHint,
   hasMessage,
@@ -254,7 +255,7 @@ export const useCombobox = ({
   });
 
   const {
-    getLabelProps,
+    getLabelProps: getFieldLabelProps,
     getHintProps,
     getInputProps: getFieldInputProps,
     getMessageProps
@@ -275,10 +276,21 @@ export const useCombobox = ({
 
   useEffect(() => {
     if (previousStateRef.current?.type === useDownshift.stateChangeTypes.FunctionSelectItem) {
-      // Keep input focused on selection removal.
-      inputRef.current?.focus();
+      // Keep combobox focused on selection removal.
+      if (isEditable) {
+        inputRef.current?.focus();
+      } else {
+        triggerRef.current?.focus();
+      }
     }
   });
+
+  useEffect(() => {
+    if (!isEditable && doc.activeElement === inputRef.current) {
+      // Prevent Downshift from grabbing non-editable combobox focus.
+      triggerRef.current?.focus();
+    }
+  }, [isEditable, doc.activeElement, inputRef, triggerRef]);
 
   useLayoutEffect(() => {
     // Trigger autocomplete selection override. Use layout effect to prevent
@@ -312,22 +324,23 @@ export const useCombobox = ({
    */
 
   const getTriggerProps = useCallback<IUseComboboxReturnValue['getTriggerProps']>(
-    ({ onBlur, onClick, ...other } = {}) => {
+    ({ onBlur, onClick, onKeyDown, ...other } = {}) => {
+      const handleBlur = (event: React.FocusEvent) => {
+        if (event.relatedTarget === null || !event.currentTarget?.contains(event.relatedTarget)) {
+          closeListbox();
+        }
+      };
+
       const triggerProps = getDownshiftTriggerProps({
         'data-garden-container-id': 'containers.combobox',
         'data-garden-container-version': PACKAGE_VERSION,
+        onBlur: composeEventHandlers(onBlur, handleBlur),
         ref: triggerRef,
         disabled,
         ...other
       } as IDownshiftTriggerProps);
 
-      if (triggerContainsInput) {
-        const handleBlur = (event: React.FocusEvent) => {
-          if (event.relatedTarget === null || !event.currentTarget?.contains(event.relatedTarget)) {
-            closeListbox();
-          }
-        };
-
+      if (isEditable && triggerContainsInput) {
         const handleClick = (event: MouseEvent) => {
           if (disabled) {
             event.preventDefault();
@@ -340,8 +353,8 @@ export const useCombobox = ({
 
         return {
           ...triggerProps,
-          onBlur: composeEventHandlers(onBlur, handleBlur),
           onClick: composeEventHandlers(onClick, handleClick),
+          onKeyDown,
           /* Knock out ARIA for non-autocomplete Garden layout trigger */
           'aria-controls': isAutocomplete ? triggerProps['aria-controls'] : undefined,
           'aria-expanded': isAutocomplete ? triggerProps['aria-expanded'] : undefined,
@@ -349,56 +362,123 @@ export const useCombobox = ({
           'aria-disabled': disabled || undefined,
           disabled: undefined
         };
+      } else if (!isEditable) {
+        const { 'aria-activedescendant': ariaActiveDescendant, onKeyDown: handleKeyDown } =
+          getDownshiftInputProps({}, { suppressRefError: true });
+        const { 'aria-labelledby': ariaLabeledBy } = getFieldInputProps();
+
+        return {
+          ...triggerProps,
+          'aria-activedescendant': ariaActiveDescendant,
+          'aria-haspopup': 'listbox',
+          'aria-labelledby': ariaLabeledBy,
+          'aria-disabled': disabled || undefined,
+          disabled: undefined,
+          role: 'combobox',
+          onKeyDown: composeEventHandlers(onKeyDown, handleKeyDown),
+          tabIndex: disabled ? -1 : 0
+        };
       }
 
       return triggerProps;
     },
     [
       getDownshiftTriggerProps,
+      getDownshiftInputProps,
+      getFieldInputProps,
       triggerRef,
       disabled,
       closeListbox,
       triggerContainsInput,
       isAutocomplete,
+      isEditable,
       inputRef
     ]
   );
 
-  const getInputProps = useCallback<IUseComboboxReturnValue['getInputProps']>(
-    ({ role = 'combobox', 'aria-labelledby': ariaLabeledBy = null, onClick, ...other } = {}) => {
-      const handleClick = (event: MouseEvent) => triggerContainsInput && event.stopPropagation();
+  const getLabelProps = useCallback<IUseComboboxReturnValue['getLabelProps']>(
+    ({ onClick, ...other } = {}) => {
+      const { htmlFor, ...labelProps } = getFieldLabelProps(other);
+      const handleClick = () => !isEditable && triggerRef.current?.focus();
 
-      return getDownshiftInputProps({
+      return {
+        ...labelProps,
+        onClick: composeEventHandlers(onClick, handleClick),
+        htmlFor: isEditable ? htmlFor : undefined
+      };
+    },
+    [getFieldLabelProps, isEditable, triggerRef]
+  );
+
+  const getInputProps = useCallback<IUseComboboxReturnValue['getInputProps']>(
+    ({
+      role = isEditable ? 'combobox' : null,
+      'aria-labelledby': ariaLabeledBy = null,
+      onClick,
+      ...other
+    } = {}) => {
+      const inputProps = {
         'data-garden-container-id': 'containers.combobox.input',
         'data-garden-container-version': PACKAGE_VERSION,
         ref: inputRef,
+        role: role === null ? undefined : role
+      };
+
+      if (isEditable) {
+        const handleClick = (event: MouseEvent) =>
+          event.target instanceof Element &&
+          triggerRef.current?.contains(event.target) &&
+          event.stopPropagation();
+
+        return getDownshiftInputProps({
+          ...inputProps,
+          disabled,
+          role,
+          'aria-labelledby': ariaLabeledBy,
+          'aria-autocomplete': isAutocomplete ? 'list' : undefined,
+          onClick: composeEventHandlers(onClick, handleClick),
+          ...getFieldInputProps(),
+          ...other
+        } as IDownshiftInputProps);
+      }
+      const downshiftInputProps = getDownshiftInputProps({
+        ...inputProps,
+        disabled: true,
+        'aria-autocomplete': undefined,
+        'aria-activedescendant': undefined,
+        'aria-controls': undefined,
+        'aria-expanded': undefined,
+        'aria-hidden': true,
+        'aria-labelledby': undefined
+      });
+
+      return {
+        ...downshiftInputProps,
         disabled,
-        role,
-        'aria-labelledby': ariaLabeledBy,
-        'aria-autocomplete': isAutocomplete ? 'list' : undefined,
-        onClick: composeEventHandlers(onClick, handleClick),
-        ...getFieldInputProps(),
+        onClick,
+        readOnly: true,
+        tabIndex: -1,
         ...other
-      } as IDownshiftInputProps);
+      };
     },
     [
       getDownshiftInputProps,
       getFieldInputProps,
       inputRef,
-      triggerContainsInput,
+      triggerRef,
       disabled,
-      isAutocomplete
+      isAutocomplete,
+      isEditable
     ]
   );
 
   const getTagProps = useCallback<IUseComboboxReturnValue['getTagProps']>(
     ({ option, onClick, onFocus, onKeyDown, ...other }) => {
-      const handleClick = (event: MouseEvent) => {
-        if (triggerContainsInput) {
-          // Prevent tag click from affecting expansion.
-          event.stopPropagation();
-        }
-      };
+      // Prevent tag click from affecting expansion.
+      const handleClick = (event: MouseEvent) =>
+        event.target instanceof Element &&
+        triggerRef.current?.contains(event.target) &&
+        event.stopPropagation();
 
       const handleFocus = () => {
         if (_isExpanded) {
@@ -409,14 +489,26 @@ export const useCombobox = ({
       const handleKeyDown = (event: KeyboardEvent) => {
         if (event.key === KEYS.BACKSPACE || event.key === KEYS.DELETE) {
           setDownshiftSelection(option.value);
-        } else if (
-          triggerContainsInput &&
-          (event.key === KEYS.DOWN || event.key === KEYS.UP || event.key === KEYS.ESCAPE)
-        ) {
-          const inputProps = getDownshiftInputProps();
+        } else {
+          const triggerContainsTag =
+            event.target instanceof Element && triggerRef.current?.contains(event.target);
 
-          inputRef.current?.focus();
-          inputProps.onKeyDown(event);
+          if (
+            triggerContainsTag &&
+            (event.key === KEYS.DOWN || event.key === KEYS.UP || event.key === KEYS.ESCAPE)
+          ) {
+            const inputProps = getDownshiftInputProps();
+
+            if (isEditable) {
+              inputRef.current?.focus();
+            } else {
+              triggerRef.current?.focus();
+            }
+
+            inputProps.onKeyDown(event);
+          } else if (triggerContainsTag && !isEditable) {
+            event.stopPropagation();
+          }
         }
       };
 
@@ -430,9 +522,10 @@ export const useCombobox = ({
       };
     },
     [
-      triggerContainsInput,
+      triggerRef,
       setDownshiftSelection,
       getDownshiftInputProps,
+      isEditable,
       _isExpanded,
       values,
       setActiveIndex,

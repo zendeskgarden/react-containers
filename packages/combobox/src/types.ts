@@ -20,7 +20,7 @@ export interface IOption extends ISelectedOption {
   selected?: boolean;
 }
 
-export interface IUseComboboxProps<T = Element, L = Element> {
+export interface IUseComboboxProps<T = HTMLElement, L = HTMLElement> {
   /** Prefixes IDs for the combobox */
   idPrefix?: string;
   /** Provides ref access to the underlying trigger element */
@@ -33,6 +33,8 @@ export interface IUseComboboxProps<T = Element, L = Element> {
   isAutocomplete?: boolean;
   /** Determines whether multiple option values can be selected */
   isMultiselectable?: boolean;
+  /** Determines whether the combobox is editable or select-only */
+  isEditable?: boolean;
   /** Indicates that the element is not interactive */
   disabled?: boolean;
   /** Indicates the combobox has a hint */
@@ -126,7 +128,8 @@ export interface IUseComboboxReturnValue {
   removeSelection: (value?: ISelectedOption | OptionValue) => void;
 }
 
-export interface IComboboxContainerProps<T = Element, L = Element> extends IUseComboboxProps<T, L> {
+export interface IComboboxContainerProps<T = HTMLElement, L = HTMLElement>
+  extends IUseComboboxProps<T, L> {
   /**
    * Provides combobox render prop functions, state, and actions
    *
