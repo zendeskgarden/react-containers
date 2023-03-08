@@ -415,7 +415,7 @@ describe('ComboboxContainer', () => {
           rerender(
             /* simulate option filtering */
             <TestCombobox
-              defaultActiveIndex={0}
+              defaultActiveIndex={1}
               layout={layout}
               options={[{ value: 'test-1' }, { value: 'test-3' }]}
             />
@@ -425,7 +425,7 @@ describe('ComboboxContainer', () => {
 
           expect(input).toHaveAttribute(
             'aria-activedescendant',
-            listboxOptions[0].getAttribute('id')
+            listboxOptions[1].getAttribute('id')
           );
         });
 

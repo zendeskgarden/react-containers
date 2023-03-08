@@ -355,6 +355,8 @@ export const useCombobox = ({
         'data-garden-container-id': 'containers.combobox',
         'data-garden-container-version': PACKAGE_VERSION,
         onBlur: composeEventHandlers(onBlur, handleBlur),
+        onClick,
+        onKeyDown,
         ref: triggerRef,
         disabled,
         ...other
@@ -374,7 +376,6 @@ export const useCombobox = ({
         return {
           ...triggerProps,
           onClick: composeEventHandlers(onClick, handleClick),
-          onKeyDown,
           /* Knock out ARIA for non-autocomplete Garden layout trigger */
           'aria-controls': isAutocomplete ? triggerProps['aria-controls'] : undefined,
           'aria-expanded': isAutocomplete ? triggerProps['aria-expanded'] : undefined,
@@ -596,6 +597,7 @@ export const useCombobox = ({
         'data-garden-container-version': PACKAGE_VERSION,
         role,
         'aria-disabled': option?.disabled,
+        onMouseDown,
         ...other
       };
 
@@ -604,8 +606,8 @@ export const useCombobox = ({
         const handleMouseDown = (event: MouseEvent) => event.preventDefault();
 
         return {
-          onMouseDown: composeEventHandlers(onMouseDown, handleMouseDown),
-          ...optionProps
+          ...optionProps,
+          onMouseDown: composeEventHandlers(onMouseDown, handleMouseDown)
         };
       }
 
