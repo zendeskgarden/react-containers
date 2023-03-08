@@ -171,6 +171,23 @@ export const useCombobox = ({
           // Prevent expansion on focus.
           return { ...state, isOpen: false };
 
+        case useDownshift.stateChangeTypes.InputKeyDownArrowDown:
+          if (changes.highlightedIndex === -1) {
+            // Fix Downshift standard first option activation on multiselectable listbox expansion.
+            changes.highlightedIndex = 0;
+          }
+
+          break;
+
+        case useDownshift.stateChangeTypes.InputKeyDownArrowUp:
+          if (changes.highlightedIndex === -1 || state.isOpen !== changes.isOpen) {
+            // Fix Downshift standard last option activation and overeager
+            // `defaultActiveIndex` on listbox expansion.
+            changes.highlightedIndex = values.length - 1;
+          }
+
+          break;
+
         case useDownshift.stateChangeTypes.InputKeyDownEnter:
         case useDownshift.stateChangeTypes.FunctionSelectItem:
         case useDownshift.stateChangeTypes.ItemClick:
