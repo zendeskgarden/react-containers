@@ -57,6 +57,8 @@ export const useCombobox = ({
 
   const prefix = `${useId(idPrefix)}-`;
   const [triggerContainsInput, setTriggerContainsInput] = useState<boolean>();
+  const [matchValue, setMatchValue] = useState('');
+  const matchTimeoutRef = useRef<number>();
   const previousStateRef = useRef<IPreviousState>();
   const labels: Record<OptionValue, string> = useMemo(() => ({}), []);
   const selectedValues: OptionValue[] = useMemo(() => [], []);
@@ -179,7 +181,8 @@ export const useCombobox = ({
           return { ...state, isOpen: false };
 
         case useDownshift.stateChangeTypes.InputKeyDownArrowDown:
-          if (state.isOpen !== changes.isOpen) {
+        case useDownshift.stateChangeTypes.FunctionOpenMenu:
+          if (state.isOpen !== changes.isOpen && !altKey) {
             // Fix Downshift standard first option activation on listbox
             // expansion. Addresses problems with initial multiselectable and
             // overeager `defaultActiveIndex` comboboxes.
@@ -257,6 +260,7 @@ export const useCombobox = ({
     getMenuProps: getDownshiftListboxProps,
     getItemProps: getDownshiftOptionProps,
     closeMenu: closeListbox,
+    openMenu: openListbox,
     setHighlightedIndex: setActiveIndex,
     selectItem: setDownshiftSelection
   } = useDownshift<OptionValue | OptionValue[]>({
@@ -292,6 +296,37 @@ export const useCombobox = ({
    * Effects
    */
 
+  useLayoutEffect(
+    () => {
+      // Trigger autocomplete selection override. Use layout effect to prevent
+      // `defaultActiveIndex` flash.
+      if (isAutocomplete && _isExpanded && _selectionValue && !matchValue) {
+        const value = Array.isArray(_selectionValue)
+          ? _selectionValue[
+              _selectionValue.length - 1 // multiselectable most recent
+            ]
+          : _selectionValue;
+        const index = values.findIndex(current => current === value);
+
+        if (index !== -1) {
+          setActiveIndex(index);
+        } else if (_defaultActiveIndex !== undefined) {
+          setActiveIndex(_defaultActiveIndex);
+        }
+      }
+    },
+    /* eslint-disable-line react-hooks/exhaustive-deps */ [
+      /* matchValue, // prevent match active index reset */
+      isAutocomplete,
+      _isExpanded,
+      _selectionValue,
+      _inputValue,
+      values,
+      _defaultActiveIndex,
+      setActiveIndex
+    ]
+  );
+
   useEffect(
     // Downshift does not expect a dropdown like Garden's combobox where the
     // wrapping div functions like an open/close button. Finesse state so that
@@ -300,6 +335,15 @@ export const useCombobox = ({
     () => setTriggerContainsInput(triggerRef.current?.contains(inputRef.current)),
     [triggerRef, inputRef]
   );
+
+  useEffect(() => {
+    // Clear the select-only match value after the the user stops typing for
+    // half a second.
+    clearTimeout(matchTimeoutRef.current);
+    matchTimeoutRef.current = window.setTimeout(() => setMatchValue(''), 500);
+
+    return () => clearTimeout(matchTimeoutRef.current);
+  }, [matchValue]);
 
   useEffect(() => {
     if (previousStateRef.current?.type === useDownshift.stateChangeTypes.FunctionSelectItem) {
@@ -311,33 +355,6 @@ export const useCombobox = ({
       }
     }
   });
-
-  useLayoutEffect(() => {
-    // Trigger autocomplete selection override. Use layout effect to prevent
-    // `defaultActiveIndex` flash.
-    if (isAutocomplete && _isExpanded && _selectionValue) {
-      const value = Array.isArray(_selectionValue)
-        ? _selectionValue[
-            _selectionValue.length - 1 // multiselectable most recent
-          ]
-        : _selectionValue;
-      const index = values.findIndex(current => current === value);
-
-      if (index !== -1) {
-        setActiveIndex(index);
-      } else if (_defaultActiveIndex !== undefined) {
-        setActiveIndex(_defaultActiveIndex);
-      }
-    }
-  }, [
-    isAutocomplete,
-    _isExpanded,
-    _selectionValue,
-    _inputValue,
-    values,
-    _defaultActiveIndex,
-    setActiveIndex
-  ]);
 
   /*
    * Prop getters
@@ -384,9 +401,53 @@ export const useCombobox = ({
           disabled: undefined
         };
       } else if (!isEditable) {
-        const { 'aria-activedescendant': ariaActiveDescendant, onKeyDown: handleKeyDown } =
+        const { 'aria-activedescendant': ariaActiveDescendant, onKeyDown: onDownshiftKeyDown } =
           getDownshiftInputProps({}, { suppressRefError: true });
         const { 'aria-labelledby': ariaLabeledBy } = getFieldInputProps();
+
+        const handleKeyDown = (event: KeyboardEvent) => {
+          event.stopPropagation();
+
+          if (!_isExpanded && (event.key === KEYS.SPACE || event.key === KEYS.ENTER)) {
+            openListbox();
+          } else if (/^(?:\S| ){1}$/u.test(event.key)) {
+            // Handle option matching described under
+            // https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-select-only/#kbd_label
+            const _matchValue = `${matchValue}${event.key}`;
+
+            setMatchValue(_matchValue);
+
+            let offset = 0;
+
+            if (_isExpanded) {
+              if (_activeIndex !== -1) {
+                offset = _matchValue.length === 1 ? _activeIndex + 1 : _activeIndex;
+              }
+            } else {
+              openListbox();
+
+              const offsetValue = Array.isArray(_selectionValue)
+                ? _selectionValue[
+                    _selectionValue.length - 1 // multiselectable most recent
+                  ]
+                : _selectionValue;
+
+              if (offsetValue !== null) {
+                offset = values.findIndex(current => current === offsetValue);
+              }
+            }
+
+            for (let index = 0; index < values.length; index++) {
+              const valueIndex = (index + offset) % values.length;
+              const value = values[valueIndex];
+
+              if (labels[value].toLowerCase().startsWith(_matchValue.toLowerCase())) {
+                setActiveIndex(valueIndex);
+                break;
+              }
+            }
+          }
+        };
 
         return {
           ...triggerProps,
@@ -396,7 +457,7 @@ export const useCombobox = ({
           'aria-disabled': disabled || undefined,
           disabled: undefined,
           role: 'combobox',
-          onKeyDown: composeEventHandlers(onKeyDown, handleKeyDown),
+          onKeyDown: composeEventHandlers(onKeyDown, onDownshiftKeyDown, handleKeyDown),
           tabIndex: disabled ? -1 : 0
         };
       }
@@ -409,7 +470,15 @@ export const useCombobox = ({
       getFieldInputProps,
       triggerRef,
       disabled,
+      _selectionValue,
+      _isExpanded,
+      _activeIndex,
       closeListbox,
+      openListbox,
+      setActiveIndex,
+      matchValue,
+      values,
+      labels,
       triggerContainsInput,
       isAutocomplete,
       isEditable,
@@ -597,7 +666,6 @@ export const useCombobox = ({
         'data-garden-container-version': PACKAGE_VERSION,
         role,
         'aria-disabled': option?.disabled,
-        onMouseDown,
         ...other
       };
 

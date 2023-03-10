@@ -275,11 +275,9 @@ export const ComboboxStory: Story<IArgs> = ({ as, ...props }) => {
           }
         });
 
-        setOptions(
-          _options.filter(option =>
-            (option.label || option.value).match(new RegExp(value.replace(/\\/gu, '\\\\'), 'gui'))
-          )
-        );
+        const regex = new RegExp(value.replace(/\\/gu, '\\\\'), 'gui');
+
+        setOptions(_options.filter(option => (option.label || option.value).match(regex)));
       }
     }
   };
