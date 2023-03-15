@@ -33,6 +33,7 @@ describe('ComboboxContainer', () => {
   const TestCombobox = ({
     layout,
     options,
+    isEditable = true,
     hasHint = true,
     hasMessage = true,
     labelTestId = 'label',
@@ -58,6 +59,7 @@ describe('ComboboxContainer', () => {
         options={options}
         hasHint={hasHint}
         hasMessage={hasMessage}
+        isEditable={isEditable}
         {...props}
       >
         {({
@@ -98,7 +100,10 @@ describe('ComboboxContainer', () => {
                 <input data-test-id={inputTestId} {...getInputProps()} />
               </div>
             ) : (
-              <>
+              <div
+                data-test-id={!isEditable && triggerTestId}
+                {...(!isEditable && getTriggerProps())}
+              >
                 {Array.isArray(selection) &&
                   selection.map(option => (
                     <button
@@ -112,8 +117,10 @@ describe('ComboboxContainer', () => {
                     </button>
                   ))}
                 <input data-test-id={inputTestId} {...getInputProps()} />
-                <button data-test-id={triggerTestId} {...getTriggerProps()} type="button" />
-              </>
+                {isEditable && (
+                  <button data-test-id={triggerTestId} {...getTriggerProps()} type="button" />
+                )}
+              </div>
             )}
             {hasMessage && (
               <div data-test-id={messageTestId} {...getMessageProps()}>
@@ -203,6 +210,23 @@ describe('ComboboxContainer', () => {
         expect(option).toHaveAttribute('role', 'option');
         expect(option).toHaveAttribute('aria-selected', 'false');
         expect(optGroup).toHaveAttribute('role', 'group');
+      });
+
+      it('applies correct non-editable accessibility attributes', () => {
+        const { getByTestId } = render(
+          <TestCombobox layout={layout} options={options} isEditable={false} />
+        );
+        const label = getByTestId('label');
+        const trigger = getByTestId('trigger');
+        const input = getByTestId('input');
+
+        expect(label).not.toHaveAttribute('for');
+        expect(trigger).toHaveAttribute('aria-haspopup', 'listbox');
+        expect(trigger).toHaveAttribute('tabIndex', '0');
+        expect(input).not.toHaveAttribute('role');
+        expect(input).toHaveAttribute('readOnly');
+        expect(input).toHaveAttribute('aria-hidden', 'true');
+        expect(input).toHaveAttribute('tabIndex', '-1');
       });
 
       it('is in the tab sequence', async () => {
@@ -530,6 +554,95 @@ describe('ComboboxContainer', () => {
           await user.keyboard('{Delete}');
 
           expect(listboxOptions[3]).toHaveAttribute('aria-selected', 'false');
+        });
+      });
+
+      describe('non-editable', () => {
+        let label: HTMLElement;
+        let trigger: HTMLElement;
+        let input: HTMLElement;
+        let listboxOptions: HTMLElement[];
+
+        beforeEach(() => {
+          const { getByTestId, getAllByRole } = render(
+            <TestCombobox
+              isEditable={false}
+              layout={layout}
+              options={[
+                { value: 'test-1', label: 'Apple' },
+                { value: 'test-2', label: 'Banana' },
+                { value: 'test-3', label: 'Cherry', selected: true },
+                { value: 'test-4', label: 'Brussel sprouts' }
+              ]}
+            />
+          );
+
+          label = getByTestId('label');
+          trigger = getByTestId('trigger');
+          input = getByTestId('input');
+          listboxOptions = getAllByRole('option');
+        });
+
+        it('handles label click', async () => {
+          await user.click(label);
+
+          expect(trigger).toHaveFocus();
+        });
+
+        it('handles expansion keys', async () => {
+          trigger.focus();
+
+          expect(trigger).toHaveAttribute('aria-expanded', 'false');
+
+          await user.keyboard('{Enter}');
+
+          expect(trigger).toHaveAttribute('aria-expanded', 'true');
+
+          await user.keyboard('{Escape}');
+
+          expect(trigger).toHaveAttribute('aria-expanded', 'false');
+        });
+
+        it('handles option matching', async () => {
+          trigger.focus();
+
+          await user.keyboard('a');
+
+          expect(trigger).toHaveAttribute('aria-expanded', 'true');
+          expect(trigger).toHaveAttribute('aria-activedescendant', listboxOptions[0].id);
+
+          await user.keyboard('PPLE');
+
+          expect(trigger).toHaveAttribute('aria-activedescendant', listboxOptions[0].id);
+        });
+
+        it('starts matching at selection', async () => {
+          trigger.focus();
+
+          await user.keyboard('b');
+
+          expect(trigger).toHaveAttribute('aria-activedescendant', listboxOptions[3].id);
+        });
+
+        it('prevents programmatic input focus', () => {
+          input.focus();
+
+          expect(trigger).toHaveFocus();
+        });
+
+        it('disables as expected', () => {
+          const { getByTestId } = render(
+            <TestCombobox
+              disabled
+              isEditable={false}
+              layout={layout}
+              options={options}
+              triggerTestId="no-edit-trigger"
+            />
+          );
+          const testTrigger = getByTestId('no-edit-trigger');
+
+          expect(testTrigger).toHaveAttribute('tabIndex', '-1');
         });
       });
 
@@ -929,6 +1042,28 @@ describe('ComboboxContainer', () => {
       expect(trigger).toHaveAttribute('aria-expanded', 'true');
     });
 
+    it('prevents tag propagation to trigger', async () => {
+      const { getByTestId } = render(
+        <TestCombobox
+          layout="Garden"
+          isEditable={false}
+          isMultiselectable
+          options={[{ value: 'test', selected: true }]}
+        />
+      );
+      const trigger = getByTestId('trigger');
+      const tag = getByTestId('tag');
+
+      await user.click(trigger);
+
+      expect(trigger).toHaveAttribute('aria-expanded', 'true');
+
+      await user.click(tag);
+      await user.keyboard('{Enter}');
+
+      expect(trigger).toHaveAttribute('aria-expanded', 'true');
+    });
+
     it('handles multiselectable value keystrokes', async () => {
       const { getByTestId } = render(
         <TestCombobox
@@ -957,6 +1092,24 @@ describe('ComboboxContainer', () => {
 
       expect(input).toHaveFocus();
       expect(input).toHaveAttribute('aria-expanded', 'true');
+    });
+
+    it('handles non-editable multiselectable value keystrokes', async () => {
+      const { getByTestId } = render(
+        <TestCombobox
+          layout="Garden"
+          isEditable={false}
+          isMultiselectable
+          options={[{ value: 'test-1' }, { value: 'test-2', selected: true }, { value: 'test-2' }]}
+        />
+      );
+      const tag = getByTestId('tag');
+      const trigger = getByTestId('trigger');
+
+      await user.click(tag);
+      await user.keyboard('{ArrowDown}');
+
+      expect(trigger).toHaveFocus();
     });
   });
 });

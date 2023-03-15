@@ -161,10 +161,15 @@ const Component = ({
         </div>
       )}
       {layout === 'Downshift' && (
-        <div>
+        <div {...(!isEditable && getTriggerProps())}>
           {isMultiselectable && <Tags selection={selection} getTagProps={getTagProps} />}
-          <input {...getInputProps()} />
-          {(isAutocomplete || !isEditable) && (
+          <input
+            className={classNames({
+              'cursor-pointer': !(disabled || isEditable)
+            })}
+            {...getInputProps()}
+          />
+          {isAutocomplete && isEditable && (
             <button
               className="ml-1 px-1"
               {...getTriggerProps({ 'aria-label': 'Options' })}
