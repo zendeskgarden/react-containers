@@ -124,112 +124,110 @@ const Component = ({
   getOptionProps,
   getMessageProps,
   options
-}: IComponentProps) => {
-  return (
-    /* eslint-disable jsx-a11y/label-has-associated-control */
-    <div className="relative">
-      <label {...getLabelProps()}>Label</label>
-      {hasHint && <div {...getHintProps()}>Hint</div>}
-      {layout === 'Garden' && (
-        <div
-          className={classNames('border', 'border-solid', 'p-1', {
-            'cursor-default': disabled,
-            'cursor-pointer': !disabled && (isAutocomplete || !isEditable),
-            'cursor-text': !(disabled || isAutocomplete) && isEditable,
-            'bg-grey-100': disabled,
-            'border-grey-200': disabled
-          })}
-          {...getTriggerProps()}
-        >
-          {isMultiselectable && <Tags selection={selection} getTagProps={getTagProps} />}
-          <input
-            className={classNames('border-none', 'bg-transparent', {
-              'cursor-pointer': !(disabled || isEditable)
-            })}
-            {...getInputProps()}
-          />
-          {(isAutocomplete || !isEditable) && (
-            <button
-              className={classNames('ml-1', 'px-1', { 'cursor-default': disabled })}
-              disabled={disabled}
-              tabIndex={-1}
-              type="button"
-            >
-              &#9660;
-            </button>
-          )}
-        </div>
-      )}
-      {layout === 'Downshift' && (
-        <div {...(!isEditable && getTriggerProps())}>
-          {isMultiselectable && <Tags selection={selection} getTagProps={getTagProps} />}
-          <input
-            className={classNames({
-              'cursor-pointer': !(disabled || isEditable)
-            })}
-            {...getInputProps()}
-          />
-          {isAutocomplete && isEditable && (
-            <button
-              className="ml-1 px-1"
-              {...getTriggerProps({ 'aria-label': 'Options' })}
-              type="button"
-            >
-              &#9660;
-            </button>
-          )}
-        </div>
-      )}
-      {hasMessage && <div {...getMessageProps()}>Message</div>}
-      <ul
-        className={classNames('mt-1', 'border', 'border-solid', 'absolute', 'w-full', {
-          invisible: !isExpanded
+}: IComponentProps) => (
+  /* eslint-disable jsx-a11y/label-has-associated-control */
+  <div className="relative">
+    <label {...getLabelProps()}>Label</label>
+    {hasHint && <div {...getHintProps()}>Hint</div>}
+    {layout === 'Garden' && (
+      <div
+        className={classNames('border', 'border-solid', 'p-1', {
+          'cursor-default': disabled,
+          'cursor-pointer': !disabled && (isAutocomplete || !isEditable),
+          'cursor-text': !(disabled || isAutocomplete) && isEditable,
+          'bg-grey-100': disabled,
+          'border-grey-200': disabled
         })}
-        {...getListboxProps({ 'aria-label': 'Options' })}
+        {...getTriggerProps()}
       >
-        {options.length === 0 ? (
-          <li className="text-grey-400" {...getOptionProps({ 'aria-disabled': true })}>
-            No matches found
-          </li>
-        ) : (
-          options.map((option, index) =>
-            'options' in option ? (
-              <li
-                key={index}
-                role="none"
-                className="cursor-default"
-                onMouseDown={event => event.preventDefault()}
-              >
-                {option.label && <b className="block mt-1">{option.label}</b>}
-                <hr aria-hidden="true" className="my-1 border-grey-200" />
-                <ul {...getOptGroupProps({ 'aria-label': option.label || 'group' })}>
-                  {option.options.map((groupOption, groupIndex) => (
-                    <Option
-                      key={`${index}.${groupIndex}`}
-                      option={groupOption}
-                      isGrouped
-                      activeValue={activeValue}
-                      selection={selection}
-                      getOptionProps={getOptionProps}
-                    />
-                  ))}
-                </ul>
-              </li>
-            ) : (
-              <Option
-                key={index}
-                option={option}
-                activeValue={activeValue}
-                selection={selection}
-                getOptionProps={getOptionProps}
-              />
-            )
-          )
+        {isMultiselectable && <Tags selection={selection} getTagProps={getTagProps} />}
+        <input
+          className={classNames('border-none', 'bg-transparent', {
+            'cursor-pointer': !(disabled || isEditable)
+          })}
+          {...getInputProps()}
+        />
+        {(isAutocomplete || !isEditable) && (
+          <button
+            className={classNames('ml-1', 'px-1', { 'cursor-default': disabled })}
+            disabled={disabled}
+            tabIndex={-1}
+            type="button"
+          >
+            &#9660;
+          </button>
         )}
-      </ul>
-    </div>
-  );
-};
+      </div>
+    )}
+    {layout === 'Downshift' && (
+      <div {...(!isEditable && getTriggerProps())}>
+        {isMultiselectable && <Tags selection={selection} getTagProps={getTagProps} />}
+        <input
+          className={classNames({
+            'cursor-pointer': !(disabled || isEditable)
+          })}
+          {...getInputProps()}
+        />
+        {isAutocomplete && isEditable && (
+          <button
+            className="ml-1 px-1"
+            {...getTriggerProps({ 'aria-label': 'Options' })}
+            type="button"
+          >
+            &#9660;
+          </button>
+        )}
+      </div>
+    )}
+    {hasMessage && <div {...getMessageProps()}>Message</div>}
+    <ul
+      className={classNames('mt-1', 'border', 'border-solid', 'absolute', 'w-full', {
+        invisible: !isExpanded
+      })}
+      {...getListboxProps({ 'aria-label': 'Options' })}
+    >
+      {options.length === 0 ? (
+        <li className="text-grey-400" {...getOptionProps({ 'aria-disabled': true })}>
+          No matches found
+        </li>
+      ) : (
+        options.map((option, index) =>
+          'options' in option ? (
+            <li
+              key={index}
+              role="none"
+              className="cursor-default"
+              onMouseDown={event => event.preventDefault()}
+            >
+              {option.label && <b className="block mt-1">{option.label}</b>}
+              <hr aria-hidden="true" className="my-1 border-grey-200" />
+              <ul {...getOptGroupProps({ 'aria-label': option.label || 'group' })}>
+                {option.options.map((groupOption, groupIndex) => (
+                  <Option
+                    key={`${index}.${groupIndex}`}
+                    option={groupOption}
+                    isGrouped
+                    activeValue={activeValue}
+                    selection={selection}
+                    getOptionProps={getOptionProps}
+                  />
+                ))}
+              </ul>
+            </li>
+          ) : (
+            <Option
+              key={index}
+              option={option}
+              activeValue={activeValue}
+              selection={selection}
+              getOptionProps={getOptionProps}
+            />
+          )
+        )
+      )}
+    </ul>
+  </div>
+);
 
 Component.displayName = 'Component';
 
