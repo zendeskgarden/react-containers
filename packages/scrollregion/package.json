@@ -1,6 +1,6 @@
 {
   "name": "@zendeskgarden/container-scrollregion",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Containers relating to scroll region in the Garden Design System",
   "license": "Apache-2.0",
   "author": "Zendesk Garden <garden@zendesk.com>",
