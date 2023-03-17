@@ -8,6 +8,32 @@
 import { KEYS } from '@zendeskgarden/container-utilities';
 import { useCombobox as useDownshift } from 'downshift';
 
+/** Map Downshift to Garden state change types */
+const typeMap: Record<string, string> = {
+  [useDownshift.stateChangeTypes.FunctionCloseMenu]: 'fn:setExpansion',
+  [useDownshift.stateChangeTypes.FunctionOpenMenu]: 'fn:setExpansion',
+  [useDownshift.stateChangeTypes.FunctionToggleMenu]: 'fn:setExpansion',
+  [useDownshift.stateChangeTypes.FunctionReset]: 'fn:reset',
+  [useDownshift.stateChangeTypes.FunctionSelectItem]: 'fn:setSelectionValue',
+  [useDownshift.stateChangeTypes.FunctionSetHighlightedIndex]: 'fn:setActiveIndex',
+  [useDownshift.stateChangeTypes.FunctionSetInputValue]: 'fn:setInputValue',
+  [useDownshift.stateChangeTypes.InputBlur]: 'input:blur',
+  [useDownshift.stateChangeTypes.InputChange]: 'input:change',
+  [useDownshift.stateChangeTypes.InputFocus]: 'input:focus',
+  [useDownshift.stateChangeTypes.InputKeyDownArrowDown]: `input:keyDown:${KEYS.DOWN}`,
+  [useDownshift.stateChangeTypes.InputKeyDownArrowUp]: `input:keyDown:${KEYS.UP}`,
+  [useDownshift.stateChangeTypes.InputKeyDownEnd]: `input:keyDown:${KEYS.END}`,
+  [useDownshift.stateChangeTypes.InputKeyDownEnter]: `input:keyDown:${KEYS.ENTER}`,
+  [useDownshift.stateChangeTypes.InputKeyDownEscape]: `input:keyDown:${KEYS.ESCAPE}`,
+  [useDownshift.stateChangeTypes.InputKeyDownHome]: `input:keyDown:${KEYS.HOME}`,
+  [useDownshift.stateChangeTypes.InputKeyDownPageDown]: `input:keyDown:${KEYS.PAGE_DOWN}`,
+  [useDownshift.stateChangeTypes.InputKeyDownPageUp]: `input:keyDown:${KEYS.PAGE_UP}`,
+  [useDownshift.stateChangeTypes.ItemClick]: 'option:click',
+  [useDownshift.stateChangeTypes.ItemMouseMove]: 'option:mouseMove',
+  [useDownshift.stateChangeTypes.MenuMouseLeave]: 'listbox:mouseLeave',
+  [useDownshift.stateChangeTypes.ToggleButtonClick]: 'toggle:click'
+};
+
 /**
  * Convert Downshift types to Garden.
  *
@@ -16,71 +42,5 @@ import { useCombobox as useDownshift } from 'downshift';
  * @returns A preferred Garden type.
  */
 export const toType = (downshiftType: string) => {
-  /* istanbul ignore next */
-  switch (downshiftType) {
-    case useDownshift.stateChangeTypes.FunctionCloseMenu:
-    case useDownshift.stateChangeTypes.FunctionOpenMenu:
-    case useDownshift.stateChangeTypes.FunctionToggleMenu:
-      return 'fn:setExpansion';
-
-    case useDownshift.stateChangeTypes.FunctionReset:
-      return 'fn:reset';
-
-    case useDownshift.stateChangeTypes.FunctionSelectItem:
-      return 'fn:setSelectionValue';
-
-    case useDownshift.stateChangeTypes.FunctionSetHighlightedIndex:
-      return 'fn:setActiveIndex';
-
-    case useDownshift.stateChangeTypes.FunctionSetInputValue:
-      return 'fn:setInputValue';
-
-    case useDownshift.stateChangeTypes.InputBlur:
-      return 'input:blur';
-
-    case useDownshift.stateChangeTypes.InputChange:
-      return 'input:change';
-
-    case useDownshift.stateChangeTypes.InputFocus:
-      return 'input:focus';
-
-    case useDownshift.stateChangeTypes.InputKeyDownArrowDown:
-      return `input:keyDown:${KEYS.DOWN}`;
-
-    case useDownshift.stateChangeTypes.InputKeyDownArrowUp:
-      return `input:keyDown:${KEYS.UP}`;
-
-    case useDownshift.stateChangeTypes.InputKeyDownEnd:
-      return `input:keyDown:${KEYS.END}`;
-
-    case useDownshift.stateChangeTypes.InputKeyDownEnter:
-      return `input:keyDown:${KEYS.ENTER}`;
-
-    case useDownshift.stateChangeTypes.InputKeyDownEscape:
-      return `input:keyDown:${KEYS.ESCAPE}`;
-
-    case useDownshift.stateChangeTypes.InputKeyDownHome:
-      return `input:keyDown:${KEYS.HOME}`;
-
-    case useDownshift.stateChangeTypes.InputKeyDownPageDown:
-      return `input:keyDown:${KEYS.PAGE_DOWN}`;
-
-    case useDownshift.stateChangeTypes.InputKeyDownPageUp:
-      return `input:keyDown:${KEYS.PAGE_UP}`;
-
-    case useDownshift.stateChangeTypes.ItemClick:
-      return 'option:click';
-
-    case useDownshift.stateChangeTypes.ItemMouseMove:
-      return 'option:mouseMove';
-
-    case useDownshift.stateChangeTypes.MenuMouseLeave:
-      return 'listbox:mouseLeave';
-
-    case useDownshift.stateChangeTypes.ToggleButtonClick:
-      return 'toggle:click';
-
-    default:
-      return downshiftType;
-  }
+  return typeMap[downshiftType] || downshiftType;
 };

@@ -65,7 +65,7 @@ export const useCombobox = ({
   const disabledValues: OptionValue[] = useMemo(() => [], []);
   const values = useMemo(() => {
     const retVal: OptionValue[] = [];
-    const callback = (option: IOption) => {
+    const setValues = (option: IOption) => {
       if (option.disabled) {
         if (!disabledValues.includes(option.value)) {
           disabledValues.push(option.value);
@@ -89,9 +89,9 @@ export const useCombobox = ({
 
     options.forEach(option => {
       if ('options' in option) {
-        option.options.forEach(callback);
+        option.options.forEach(setValues);
       } else {
-        callback(option);
+        setValues(option);
       }
     });
 
@@ -226,7 +226,12 @@ export const useCombobox = ({
 
       // Handle multiselectable state changes
       if (isMultiselectable && state.selectedItem !== changes.selectedItem) {
-        if (state.selectedItem && changes.selectedItem) {
+        if (
+          state.selectedItem !== undefined &&
+          state.selectedItem !== null &&
+          changes.selectedItem !== undefined &&
+          changes.selectedItem !== null
+        ) {
           if (state.selectedItem.includes(changes.selectedItem)) {
             changes.selectedItem = (state.selectedItem as OptionValue[]).filter(
               value => value !== changes.selectedItem
@@ -234,7 +239,7 @@ export const useCombobox = ({
           } else {
             changes.selectedItem = [...state.selectedItem, changes.selectedItem];
           }
-        } else if (changes.selectedItem) {
+        } else if (changes.selectedItem !== undefined && changes.selectedItem !== null) {
           changes.selectedItem = [changes.selectedItem];
         } else {
           changes.selectedItem = [];
