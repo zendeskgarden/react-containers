@@ -16,13 +16,6 @@ export const ComboboxContainer: React.FC<IComboboxContainerProps> = props => {
   return <>{render!(useCombobox(options))}</>;
 };
 
-const OptionType = PropTypes.shape({
-  value: PropTypes.any.isRequired,
-  label: PropTypes.string,
-  selected: PropTypes.bool,
-  disabled: PropTypes.bool
-});
-
 ComboboxContainer.propTypes = {
   children: PropTypes.func,
   render: PropTypes.func,
@@ -36,15 +29,7 @@ ComboboxContainer.propTypes = {
   disabled: PropTypes.bool,
   hasHint: PropTypes.bool,
   hasMessage: PropTypes.bool,
-  options: PropTypes.arrayOf(
-    PropTypes.oneOfType([
-      OptionType,
-      PropTypes.shape({
-        options: PropTypes.arrayOf(OptionType).isRequired,
-        label: PropTypes.string
-      })
-    ])
-  ).isRequired,
+  options: PropTypes.arrayOf(PropTypes.any).isRequired,
   inputValue: PropTypes.string,
   selectionValue: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
   isExpanded: PropTypes.bool,
