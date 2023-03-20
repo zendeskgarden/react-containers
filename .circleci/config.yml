@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  node: circleci/node@5.0.3
+  node: circleci/node@5.1.0
 
 references:
   executor: &executor
@@ -27,6 +27,7 @@ jobs:
       - node/install-packages:
           pkg-manager: yarn
           override-ci-command: yarn --frozen-lockfile --ignore-scripts
+          cache-version: '{{ .Environment.CACHE_VERSION }}'
       - run: yarn lerna bootstrap
       - run: yarn lerna run build --concurrency=2 # prevent out-of-memory
       - *persist_to_workspace
