@@ -24,6 +24,7 @@ to install.
 | [`@zendeskgarden/container-accordion`](packages/accordion)         | [![npm version][accordion npm version]][accordion npm link]         | [![npm version][accordion size bundle]][accordion size link]         | [![Dependency Status][accordion dependency status]][accordion dependency link]         |
 | [`@zendeskgarden/container-breadcrumb`](packages/breadcrumb)       | [![npm version][breadcrumb npm version]][breadcrumb npm link]       | [![npm version][breadcrumb size bundle]][breadcrumb size link]       | [![Dependency Status][breadcrumb dependency status]][breadcrumb dependency link]       |
 | [`@zendeskgarden/container-buttongroup`](packages/buttongroup)     | [![npm version][buttongroup npm version]][buttongroup npm link]     | [![npm version][buttongroup size bundle]][buttongroup size link]     | [![Dependency Status][buttongroup dependency status]][buttongroup dependency link]     |
+| [`@zendeskgarden/container-combobox`](packages/combobox)           | [![npm version][combobox npm version]][combobox npm link]           | [![npm version][combobox size bundle]][combobox size link]           | [![Dependency Status][combobox dependency status]][combobox dependency link]           |
 | [`@zendeskgarden/container-field`](packages/field)                 | [![npm version][field npm version]][field npm link]                 | [![npm version][field size bundle]][field size link]                 | [![Dependency Status][field dependency status]][field dependency link]                 |
 | [`@zendeskgarden/container-focusjail`](packages/focusjail)         | [![npm version][focusjail npm version]][focusjail npm link]         | [![npm version][focusjail size bundle]][focusjail size link]         | [![Dependency Status][focusjail dependency status]][focusjail dependency link]         |
 | [`@zendeskgarden/container-focusvisible`](packages/focusvisible)   | [![npm version][focusvisible npm version]][focusvisible npm link]   | [![npm version][focusvisible size bundle]][focusvisible size link]   | [![Dependency Status][focusvisible dependency status]][focusvisible dependency link]   |
@@ -59,6 +60,12 @@ to install.
 [buttongroup size link]: https://bundlephobia.com/result?p=@zendeskgarden/container-buttongroup
 [buttongroup dependency status]: https://flat.badgen.net/david/dep/zendeskgarden/react-containers/packages/buttongroup
 [buttongroup dependency link]: https://david-dm.org/zendeskgarden/react-containers?path=packages/buttongroup
+[combobox npm version]: https://flat.badgen.net/npm/v/@zendeskgarden/container-combobox
+[combobox npm link]: https://www.npmjs.com/package/@zendeskgarden/container-combobox
+[combobox size bundle]: https://flat.badgen.net/bundlephobia/minzip/@zendeskgarden/container-combobox
+[combobox size link]: https://bundlephobia.com/result?p=@zendeskgarden/container-combobox
+[combobox dependency status]: https://flat.badgen.net/david/dep/zendeskgarden/react-containers/packages/combobox
+[combobox dependency link]: https://david-dm.org/zendeskgarden/react-containers?path=packages/combobox
 [field npm version]: https://flat.badgen.net/npm/v/@zendeskgarden/container-field
 [field npm link]: https://www.npmjs.com/package/@zendeskgarden/container-field
 [field size bundle]: https://flat.badgen.net/bundlephobia/minzip/@zendeskgarden/container-field
