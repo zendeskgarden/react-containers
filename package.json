@@ -62,7 +62,7 @@
     "@types/webpack-env": "1.18.0",
     "@typescript-eslint/eslint-plugin": "5.56.0",
     "@typescript-eslint/parser": "5.56.0",
-    "@zendeskgarden/eslint-config": "29.0.0",
+    "@zendeskgarden/eslint-config": "32.0.0",
     "@zendeskgarden/react-theming": "8.63.2",
     "@zendeskgarden/scripts": "1.4.1",
     "@zendeskgarden/tailwindcss": "3.0.1",

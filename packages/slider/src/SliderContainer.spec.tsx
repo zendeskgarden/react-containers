@@ -11,18 +11,22 @@ import { render, fireEvent, createEvent } from '@testing-library/react';
 import { IUseSliderProps, IUseSliderReturnValue } from './types';
 import { SliderContainer } from './SliderContainer';
 
-jest.mock('lodash.debounce', () => {
-  const wrapWithCancel = (fn: any) => {
-    fn.cancel = jest.fn();
+jest.mock<typeof import('lodash.debounce')>(
+  'lodash.debounce',
+  // @ts-expect-error: due to typing mismatch, the expected export types do not match
+  () => {
+    const wrapWithCancel = (fn: any) => {
+      fn.cancel = jest.fn();
 
-    return fn;
-  };
+      return fn;
+    };
 
-  return {
-    default: (fn: any) => wrapWithCancel(fn),
-    __esModule: true
-  };
-});
+    return {
+      default: (fn: any) => wrapWithCancel(fn),
+      __esModule: true
+    };
+  }
+);
 
 describe('SliderContainer', () => {
   const user = userEvent.setup();
