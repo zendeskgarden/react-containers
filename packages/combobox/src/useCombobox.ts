@@ -367,16 +367,10 @@ export const useCombobox = ({
 
   const getTriggerProps = useCallback<IUseComboboxReturnValue['getTriggerProps']>(
     ({ onBlur, onClick, onKeyDown, ...other } = {}) => {
-      const handleBlur = (event: React.FocusEvent) => {
-        if (event.relatedTarget === null || !event.currentTarget?.contains(event.relatedTarget)) {
-          closeListbox();
-        }
-      };
-
       const triggerProps = getDownshiftTriggerProps({
         'data-garden-container-id': 'containers.combobox',
         'data-garden-container-version': PACKAGE_VERSION,
-        onBlur: composeEventHandlers(onBlur, handleBlur),
+        onBlur,
         onClick,
         onKeyDown,
         ref: triggerRef,
@@ -385,6 +379,12 @@ export const useCombobox = ({
       } as IDownshiftTriggerProps);
 
       if (isEditable && triggerContainsInput) {
+        const handleBlur = (event: React.FocusEvent) => {
+          if (event.relatedTarget === null || !event.currentTarget?.contains(event.relatedTarget)) {
+            closeListbox();
+          }
+        };
+
         const handleClick = (event: MouseEvent) => {
           if (disabled) {
             event.preventDefault();
@@ -397,6 +397,7 @@ export const useCombobox = ({
 
         return {
           ...triggerProps,
+          onBlur: composeEventHandlers(onBlur, handleBlur),
           onClick: composeEventHandlers(onClick, handleClick),
           /* Knock out ARIA for non-autocomplete Garden layout trigger */
           'aria-controls': isAutocomplete ? triggerProps['aria-controls'] : undefined,
@@ -671,6 +672,7 @@ export const useCombobox = ({
         'data-garden-container-version': PACKAGE_VERSION,
         role,
         'aria-disabled': option?.disabled,
+        onMouseDown,
         ...other
       };
 
