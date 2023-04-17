@@ -193,7 +193,6 @@ describe('ComboboxContainer', () => {
 
         expect(label).toHaveAttribute('for', input.getAttribute('id'));
         expect(trigger).toHaveAttribute('aria-controls', listboxId);
-        expect(trigger).toHaveAttribute('aria-expanded', 'false');
         expect(input).toHaveAttribute('role', 'combobox');
         expect(input).toHaveAttribute('aria-activedescendant');
         expect(input).toHaveAttribute('aria-autocomplete', 'list');
@@ -967,12 +966,12 @@ describe('ComboboxContainer', () => {
       await user.click(trigger);
 
       expect(input).toHaveFocus();
-      expect(trigger).toHaveAttribute('aria-expanded', 'true');
+      expect(input).toHaveAttribute('aria-expanded', 'true');
 
       await user.click(trigger);
 
       expect(input).not.toHaveFocus();
-      expect(trigger).toHaveAttribute('aria-expanded', 'false');
+      expect(input).toHaveAttribute('aria-expanded', 'false');
     });
 
     it('handles listbox collapse on input blur', async () => {
@@ -984,17 +983,18 @@ describe('ComboboxContainer', () => {
       await user.keyboard('{Tab}');
 
       expect(input).not.toHaveFocus();
-      expect(trigger).toHaveAttribute('aria-expanded', 'false');
+      expect(input).toHaveAttribute('aria-expanded', 'false');
     });
 
     it('handles listbox collapse on unrelated focus', async () => {
       const { getByTestId } = render(<TestCombobox layout="Garden" options={[]} />);
+      const input = getByTestId('input');
       const trigger = getByTestId('trigger');
 
       await user.click(trigger);
       await user.click(document.body);
 
-      expect(trigger).toHaveAttribute('aria-expanded', 'false');
+      expect(input).toHaveAttribute('aria-expanded', 'false');
     });
 
     it('handles disabled trigger click', async () => {
@@ -1005,7 +1005,7 @@ describe('ComboboxContainer', () => {
       await user.click(trigger);
 
       expect(input).not.toHaveFocus();
-      expect(trigger).toHaveAttribute('aria-expanded', 'false');
+      expect(input).toHaveAttribute('aria-expanded', 'false');
     });
 
     it('handles trigger click without autocomplete', async () => {
@@ -1029,17 +1029,18 @@ describe('ComboboxContainer', () => {
           options={[{ value: 'test', selected: true }]}
         />
       );
+      const input = getByTestId('input');
       const trigger = getByTestId('trigger');
       const tag = getByTestId('tag');
 
       await user.click(trigger);
 
-      expect(trigger).toHaveAttribute('aria-expanded', 'true');
+      expect(input).toHaveAttribute('aria-expanded', 'true');
 
       await user.keyboard('{Shift>}{Tab}{/Shift}');
 
       expect(tag).toHaveFocus();
-      expect(trigger).toHaveAttribute('aria-expanded', 'true');
+      expect(input).toHaveAttribute('aria-expanded', 'true');
     });
 
     it('prevents tag propagation to trigger', async () => {

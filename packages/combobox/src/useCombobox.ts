@@ -401,7 +401,8 @@ export const useCombobox = ({
           onClick: composeEventHandlers(onClick, handleClick),
           /* Knock out ARIA for non-autocomplete Garden layout trigger */
           'aria-controls': isAutocomplete ? triggerProps['aria-controls'] : undefined,
-          'aria-expanded': isAutocomplete ? triggerProps['aria-expanded'] : undefined,
+          /* Knock out ARIA for Garden layout trigger */
+          'aria-expanded': undefined,
           /* Handle disabled for Garden layout */
           'aria-disabled': disabled || undefined,
           disabled: undefined
