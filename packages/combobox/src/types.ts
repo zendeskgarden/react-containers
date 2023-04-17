@@ -84,7 +84,7 @@ export interface IUseComboboxProps<T = HTMLElement, L = HTMLElement> {
     activeIndex?: number;
   }) => void;
   /** Sets the environment where the combobox is rendered */
-  environment?: Document;
+  environment?: Window;
 }
 
 export interface IUseComboboxReturnValue {

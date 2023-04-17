@@ -44,7 +44,7 @@ export const useCombobox = ({
   onChange = () => undefined,
   environment
 }: IUseComboboxProps): IUseComboboxReturnValue => {
-  const doc = environment || document;
+  const win = environment || window;
 
   /*
    * State
@@ -287,7 +287,7 @@ export const useCombobox = ({
     initialHighlightedIndex: initialActiveIndex,
     onStateChange: handleDownshiftStateChange,
     stateReducer,
-    environment: doc.defaultView || window
+    environment: win
   });
 
   const {
