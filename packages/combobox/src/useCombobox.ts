@@ -680,19 +680,20 @@ export const useCombobox = <
         ...other
       };
 
+      const ariaSelected = Array.isArray(_selectionValue)
+        ? _selectionValue?.includes(option?.value)
+        : _selectionValue === option?.value;
+
       if (option === undefined || option.disabled) {
         // Prevent downshift listbox mouse leave event.
         const handleMouseDown = (event: MouseEvent) => event.preventDefault();
 
         return {
+          'aria-selected': ariaSelected,
           ...optionProps,
           onMouseDown: composeEventHandlers(onMouseDown, handleMouseDown)
         };
       }
-
-      const ariaSelected = Array.isArray(_selectionValue)
-        ? _selectionValue?.includes(option.value)
-        : _selectionValue === option.value;
 
       return getDownshiftOptionProps({
         item: option.value,
