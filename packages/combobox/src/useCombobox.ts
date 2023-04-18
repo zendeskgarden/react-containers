@@ -21,7 +21,10 @@ import {
 import { IOption, IUseComboboxProps, IUseComboboxReturnValue, OptionValue } from './types';
 import { toType } from './utils';
 
-export const useCombobox = ({
+export const useCombobox = <
+  T extends HTMLElement = HTMLElement,
+  L extends HTMLElement = HTMLElement
+>({
   idPrefix,
   triggerRef,
   inputRef,
@@ -43,7 +46,7 @@ export const useCombobox = ({
   initialActiveIndex,
   onChange = () => undefined,
   environment
-}: IUseComboboxProps): IUseComboboxReturnValue => {
+}: IUseComboboxProps<T, L>): IUseComboboxReturnValue => {
   const win = environment || window;
 
   /*
