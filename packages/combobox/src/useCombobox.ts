@@ -21,7 +21,10 @@ import {
 import { IOption, IUseComboboxProps, IUseComboboxReturnValue, OptionValue } from './types';
 import { toType } from './utils';
 
-export const useCombobox = ({
+export const useCombobox = <
+  T extends HTMLElement = HTMLElement,
+  L extends HTMLElement = HTMLElement
+>({
   idPrefix,
   triggerRef,
   inputRef,
@@ -43,8 +46,8 @@ export const useCombobox = ({
   initialActiveIndex,
   onChange = () => undefined,
   environment
-}: IUseComboboxProps): IUseComboboxReturnValue => {
-  const doc = environment || document;
+}: IUseComboboxProps<T, L>): IUseComboboxReturnValue => {
+  const win = environment || window;
 
   /*
    * State
@@ -287,7 +290,7 @@ export const useCombobox = ({
     initialHighlightedIndex: initialActiveIndex,
     onStateChange: handleDownshiftStateChange,
     stateReducer,
-    environment: doc.defaultView || window
+    environment: win
   });
 
   const {
@@ -367,16 +370,10 @@ export const useCombobox = ({
 
   const getTriggerProps = useCallback<IUseComboboxReturnValue['getTriggerProps']>(
     ({ onBlur, onClick, onKeyDown, ...other } = {}) => {
-      const handleBlur = (event: React.FocusEvent) => {
-        if (event.relatedTarget === null || !event.currentTarget?.contains(event.relatedTarget)) {
-          closeListbox();
-        }
-      };
-
       const triggerProps = getDownshiftTriggerProps({
         'data-garden-container-id': 'containers.combobox',
         'data-garden-container-version': PACKAGE_VERSION,
-        onBlur: composeEventHandlers(onBlur, handleBlur),
+        onBlur,
         onClick,
         onKeyDown,
         ref: triggerRef,
@@ -385,6 +382,12 @@ export const useCombobox = ({
       } as IDownshiftTriggerProps);
 
       if (isEditable && triggerContainsInput) {
+        const handleBlur = (event: React.FocusEvent) => {
+          if (event.relatedTarget === null || !event.currentTarget?.contains(event.relatedTarget)) {
+            closeListbox();
+          }
+        };
+
         const handleClick = (event: MouseEvent) => {
           if (disabled) {
             event.preventDefault();
@@ -397,10 +400,12 @@ export const useCombobox = ({
 
         return {
           ...triggerProps,
+          onBlur: composeEventHandlers(onBlur, handleBlur),
           onClick: composeEventHandlers(onClick, handleClick),
           /* Knock out ARIA for non-autocomplete Garden layout trigger */
           'aria-controls': isAutocomplete ? triggerProps['aria-controls'] : undefined,
-          'aria-expanded': isAutocomplete ? triggerProps['aria-expanded'] : undefined,
+          /* Knock out ARIA for Garden layout trigger */
+          'aria-expanded': undefined,
           /* Handle disabled for Garden layout */
           'aria-disabled': disabled || undefined,
           disabled: undefined
@@ -671,22 +676,24 @@ export const useCombobox = ({
         'data-garden-container-version': PACKAGE_VERSION,
         role,
         'aria-disabled': option?.disabled,
+        onMouseDown,
         ...other
       };
+
+      const ariaSelected = Array.isArray(_selectionValue)
+        ? _selectionValue?.includes(option?.value)
+        : _selectionValue === option?.value;
 
       if (option === undefined || option.disabled) {
         // Prevent downshift listbox mouse leave event.
         const handleMouseDown = (event: MouseEvent) => event.preventDefault();
 
         return {
+          'aria-selected': ariaSelected,
           ...optionProps,
           onMouseDown: composeEventHandlers(onMouseDown, handleMouseDown)
         };
       }
-
-      const ariaSelected = Array.isArray(_selectionValue)
-        ? _selectionValue?.includes(option.value)
-        : _selectionValue === option.value;
 
       return getDownshiftOptionProps({
         item: option.value,
