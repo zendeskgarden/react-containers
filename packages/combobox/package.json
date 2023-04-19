@@ -1,6 +1,6 @@
 {
   "name": "@zendeskgarden/container-combobox",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Containers relating to Combobox in the Garden Design System",
   "license": "Apache-2.0",
   "author": "Zendesk Garden <garden@zendesk.com>",
