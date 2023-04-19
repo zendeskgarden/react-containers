@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.5](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-buttongroup@1.0.4...@zendeskgarden/container-buttongroup@1.0.5) (2023-04-19)
+
+### Bug Fixes
+
+- **deps:** update non-major package dependencies ([#528](https://github.com/zendeskgarden/react-containers/issues/528)) ([5df36aa](https://github.com/zendeskgarden/react-containers/commit/5df36aa7c5e78dc0da79a95416e915cc8e1348da))
+
 ## [1.0.4](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-buttongroup@1.0.3...@zendeskgarden/container-buttongroup@1.0.4) (2023-03-17)
 
 ### Bug Fixes

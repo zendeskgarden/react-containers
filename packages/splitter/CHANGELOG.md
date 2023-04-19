@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.7](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-splitter@2.0.6...@zendeskgarden/container-splitter@2.0.7) (2023-04-19)
+
+### Bug Fixes
+
+- **deps:** update non-major package dependencies ([#528](https://github.com/zendeskgarden/react-containers/issues/528)) ([5df36aa](https://github.com/zendeskgarden/react-containers/commit/5df36aa7c5e78dc0da79a95416e915cc8e1348da))
+
 ## [2.0.6](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-splitter@2.0.5...@zendeskgarden/container-splitter@2.0.6) (2023-03-17)
 
 ### Bug Fixes
