@@ -819,7 +819,7 @@ describe('ComboboxContainer', () => {
                 selectionValue={['test-1', 'test-2']}
               />
             );
-          }).toThrow('to be a string');
+          }).toThrow('not to be an array');
 
           console.error = consoleError;
         });
