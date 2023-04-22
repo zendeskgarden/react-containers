@@ -677,7 +677,6 @@ export const useCombobox = <
         'data-garden-container-id': 'containers.combobox.option',
         'data-garden-container-version': PACKAGE_VERSION,
         role,
-        'aria-disabled': option?.disabled,
         onMouseDown,
         ...other
       };
@@ -695,6 +694,7 @@ export const useCombobox = <
         const handleMouseDown = (event: MouseEvent) => event.preventDefault();
 
         return {
+          'aria-disabled': true,
           'aria-selected': ariaSelected,
           ...optionProps,
           onMouseDown: composeEventHandlers(onMouseDown, handleMouseDown)
