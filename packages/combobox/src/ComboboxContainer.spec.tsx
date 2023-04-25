@@ -88,7 +88,7 @@ describe('ComboboxContainer', () => {
                 {Array.isArray(selection) &&
                   selection.map(option => (
                     <button
-                      key={option.value}
+                      key={option.value as string}
                       data-test-id={tagTestId}
                       disabled={option.disabled}
                       {...getTagProps({ 'aria-label': 'tag', option })}
@@ -107,7 +107,7 @@ describe('ComboboxContainer', () => {
                 {Array.isArray(selection) &&
                   selection.map(option => (
                     <button
-                      key={option.value}
+                      key={option.value as string}
                       data-test-id={tagTestId}
                       disabled={option.disabled}
                       {...getTagProps({ 'aria-label': 'tag', option })}
@@ -137,7 +137,7 @@ describe('ComboboxContainer', () => {
                     >
                       {option.options.map((groupOption, groupIndex) => (
                         <li
-                          key={groupOption.value || groupIndex}
+                          key={(groupOption.value as string) || groupIndex}
                           data-test-id={`${optionTestIdPrefix}-${index + 1}.${groupIndex + 1}`}
                           {...getOptionProps({ option: groupOption })}
                         >
@@ -148,7 +148,7 @@ describe('ComboboxContainer', () => {
                   </li>
                 ) : (
                   <li
-                    key={option.value || index}
+                    key={(option.value as string) || index}
                     data-test-id={`${optionTestIdPrefix}-${index + 1}`}
                     {...getOptionProps({ option })}
                   >
@@ -819,7 +819,7 @@ describe('ComboboxContainer', () => {
                 selectionValue={['test-1', 'test-2']}
               />
             );
-          }).toThrow('to be a string');
+          }).toThrow('not to be an array');
 
           console.error = consoleError;
         });

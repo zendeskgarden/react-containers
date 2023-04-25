@@ -8,7 +8,7 @@
 import { IUseFieldReturnValue } from '@zendeskgarden/container-field';
 import { HTMLProps, ReactNode, RefObject } from 'react';
 
-export type OptionValue = any;
+export type OptionValue = string | object;
 
 interface ISelectedOption {
   value: OptionValue;

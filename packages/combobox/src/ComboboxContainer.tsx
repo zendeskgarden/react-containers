@@ -43,6 +43,5 @@ ComboboxContainer.propTypes = {
 };
 
 ComboboxContainer.defaultProps = {
-  isAutocomplete: true,
   isEditable: true
 };

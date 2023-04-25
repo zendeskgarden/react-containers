@@ -19,7 +19,7 @@ import {
   UseComboboxStateChangeTypes as IDownshiftStateChangeType
 } from 'downshift';
 import { IOption, IUseComboboxProps, IUseComboboxReturnValue, OptionValue } from './types';
-import { toType } from './utils';
+import { toLabel, toType } from './utils';
 
 export const useCombobox = <
   T extends HTMLElement = HTMLElement,
@@ -63,7 +63,7 @@ export const useCombobox = <
   const [matchValue, setMatchValue] = useState('');
   const matchTimeoutRef = useRef<number>();
   const previousStateRef = useRef<IPreviousState>();
-  const labels: Record<OptionValue, string> = useMemo(() => ({}), []);
+  const labels: Record<string, string> = useMemo(() => ({}), []);
   const selectedValues: OptionValue[] = useMemo(() => [], []);
   const disabledValues: OptionValue[] = useMemo(() => [], []);
   const values = useMemo(() => {
@@ -87,7 +87,9 @@ export const useCombobox = <
         selectedValues.push(option.value);
       }
 
-      labels[option.value] = option.label || option.value;
+      const key = typeof option.value === 'string' ? option.value : JSON.stringify(option.value);
+
+      labels[key] = option.label || key;
     };
 
     options.forEach(option => {
@@ -101,7 +103,7 @@ export const useCombobox = <
     return retVal;
   }, [options, disabledValues, selectedValues, labels]);
   const initialSelectionValue = isMultiselectable ? selectedValues : selectedValues[0];
-  const initialInputValue = isMultiselectable ? '' : labels[initialSelectionValue];
+  const initialInputValue = isMultiselectable ? '' : toLabel(labels, initialSelectionValue);
   const _defaultActiveIndex = useMemo(() => {
     if (defaultActiveIndex === undefined) {
       return isAutocomplete && isEditable ? 0 : undefined;
@@ -126,7 +128,7 @@ export const useCombobox = <
         'Error: expected multiselectable useCombobox `selectionValue` to be an array.'
       );
     } else if (!isMultiselectable && Array.isArray(selectionValue)) {
-      throw new Error('Error: expected useCombobox `selectionValue` to be a string.');
+      throw new Error('Error: expected useCombobox `selectionValue` not to be an array.');
     }
   }
 
@@ -254,7 +256,7 @@ export const useCombobox = <
       return changes;
     };
 
-  const transformValue = (value: OptionValue | null) => (value ? labels[value] : '');
+  const transformValue = (value: OptionValue | null) => (value ? toLabel(labels, value) : '');
 
   /** Hooks */
 
@@ -451,7 +453,7 @@ export const useCombobox = <
               const valueIndex = (index + offset) % values.length;
               const value = values[valueIndex];
 
-              if (labels[value].toLowerCase().startsWith(_matchValue.toLowerCase())) {
+              if (toLabel(labels, value).toLowerCase().startsWith(_matchValue.toLowerCase())) {
                 setActiveIndex(valueIndex);
                 break;
               }
@@ -675,20 +677,24 @@ export const useCombobox = <
         'data-garden-container-id': 'containers.combobox.option',
         'data-garden-container-version': PACKAGE_VERSION,
         role,
-        'aria-disabled': option?.disabled,
         onMouseDown,
         ...other
       };
 
-      const ariaSelected = Array.isArray(_selectionValue)
-        ? _selectionValue?.includes(option?.value)
-        : _selectionValue === option?.value;
+      let ariaSelected = false;
+
+      if (option?.value !== undefined) {
+        ariaSelected = Array.isArray(_selectionValue)
+          ? _selectionValue?.includes(option?.value)
+          : _selectionValue === option?.value;
+      }
 
       if (option === undefined || option.disabled) {
         // Prevent downshift listbox mouse leave event.
         const handleMouseDown = (event: MouseEvent) => event.preventDefault();
 
         return {
+          'aria-disabled': true,
           'aria-selected': ariaSelected,
           ...optionProps,
           onMouseDown: composeEventHandlers(onMouseDown, handleMouseDown)
@@ -713,7 +719,7 @@ export const useCombobox = <
         // Clear selection
         setDownshiftSelection(null);
       } else {
-        const removeValue = typeof value === 'object' ? value.value : value;
+        const removeValue = typeof value === 'object' && 'value' in value ? value.value : value;
 
         if (Array.isArray(_selectionValue) && _selectionValue.includes(removeValue)) {
           setDownshiftSelection(removeValue);
@@ -740,7 +746,7 @@ export const useCombobox = <
     } else if (_selectionValue) {
       return {
         value: _selectionValue,
-        label: labels[_selectionValue],
+        label: toLabel(labels, _selectionValue),
         disabled: disabledValues.includes(_selectionValue)
       };
     }

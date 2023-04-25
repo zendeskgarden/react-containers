@@ -7,6 +7,7 @@
 
 import { KEYS } from '@zendeskgarden/container-utilities';
 import { useCombobox as useDownshift } from 'downshift';
+import { OptionValue } from './types';
 
 /** Map Downshift to Garden state change types */
 const typeMap: Record<string, string> = {
@@ -43,4 +44,22 @@ const typeMap: Record<string, string> = {
  */
 export const toType = (downshiftType: string) => {
   return typeMap[downshiftType] || downshiftType;
+};
+
+/**
+ * Convert the given option value to a label.
+ *
+ * @param labels A stored record of label key value pairs.
+ * @param value The value to convert to a valid key.
+ *
+ * @returns A label from the `labels` record based on the given value.
+ */
+export const toLabel = (labels: Record<string, string>, value: OptionValue) => {
+  if (value === undefined) {
+    return '';
+  }
+
+  const key = typeof value === 'string' ? value : JSON.stringify(value);
+
+  return labels[key];
 };
