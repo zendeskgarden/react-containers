@@ -986,6 +986,21 @@ describe('ComboboxContainer', () => {
       expect(input).toHaveAttribute('aria-expanded', 'false');
     });
 
+    it('handles listbox collapse on non-editable multiselectable blur', async () => {
+      const { getByTestId } = render(
+        <TestCombobox layout="Garden" options={[]} isEditable={false} isMultiselectable />
+      );
+      const trigger = getByTestId('trigger');
+
+      await user.click(trigger);
+
+      expect(trigger).toHaveAttribute('aria-expanded', 'true');
+
+      await user.keyboard('{Tab}');
+
+      expect(trigger).toHaveAttribute('aria-expanded', 'false');
+    });
+
     it('handles listbox collapse on unrelated focus', async () => {
       const { getByTestId } = render(<TestCombobox layout="Garden" options={[]} />);
       const input = getByTestId('input');
