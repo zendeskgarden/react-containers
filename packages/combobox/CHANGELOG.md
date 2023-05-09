@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.1](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-combobox@0.3.0...@zendeskgarden/container-combobox@0.3.1) (2023-05-09)
+
+### Bug Fixes
+
+- **combobox:** ensure listbox collapse on non-editable combobox blur ([#539](https://github.com/zendeskgarden/react-containers/issues/539)) ([1884fd0](https://github.com/zendeskgarden/react-containers/commit/1884fd0588b58cebb13ef1cd1c877b1a6cc3b5d6))
+
 # [0.3.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-combobox@0.2.0...@zendeskgarden/container-combobox@0.3.0) (2023-04-25)
 
 **Note:** Version bump only for package @zendeskgarden/container-combobox
