@@ -383,13 +383,13 @@ export const useCombobox = <
         ...other
       } as IDownshiftTriggerProps);
 
-      if (isEditable && triggerContainsInput) {
-        const handleBlur = (event: React.FocusEvent) => {
-          if (event.relatedTarget === null || !event.currentTarget?.contains(event.relatedTarget)) {
-            closeListbox();
-          }
-        };
+      const handleBlur = (event: React.FocusEvent) => {
+        if (event.relatedTarget === null || !event.currentTarget?.contains(event.relatedTarget)) {
+          closeListbox();
+        }
+      };
 
+      if (isEditable && triggerContainsInput) {
         const handleClick = (event: MouseEvent) => {
           if (disabled) {
             event.preventDefault();
@@ -469,6 +469,7 @@ export const useCombobox = <
           'aria-disabled': disabled || undefined,
           disabled: undefined,
           role: 'combobox',
+          onBlur: composeEventHandlers(onBlur, handleBlur),
           onKeyDown: composeEventHandlers(onKeyDown, onDownshiftKeyDown, handleKeyDown),
           tabIndex: disabled ? -1 : 0
         };
