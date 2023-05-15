@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.2](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-combobox@0.3.1...@zendeskgarden/container-combobox@0.3.2) (2023-05-15)
+
+### Bug Fixes
+
+- **combobox:** prevent Downshift from overriding controlled `activeIndex` ([#540](https://github.com/zendeskgarden/react-containers/issues/540)) ([8894421](https://github.com/zendeskgarden/react-containers/commit/8894421a62f9a2b7d1b26b75c7ddafd3553b0ab2))
+
 ## [0.3.1](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-combobox@0.3.0...@zendeskgarden/container-combobox@0.3.1) (2023-05-09)
 
 ### Bug Fixes
