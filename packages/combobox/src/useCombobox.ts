@@ -164,6 +164,9 @@ export const useCombobox = <
           if (previousStateRef.current?.altKey) {
             // Prevent option activation for autocomplete selection override.
             changes.highlightedIndex = -1;
+          } else if (previousStateRef.current?.isOpen) {
+            // Prevent Downshift from overriding controlled `highlightedIndex`.
+            return state;
           }
 
           break;
