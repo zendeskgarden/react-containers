@@ -209,10 +209,12 @@ export const useCombobox = <
         case useDownshift.stateChangeTypes.InputKeyDownEnter:
         case useDownshift.stateChangeTypes.FunctionSelectItem:
         case useDownshift.stateChangeTypes.ItemClick:
+          // Prevent selection from altering active index.
+          changes.highlightedIndex = state.highlightedIndex;
+
           if (isMultiselectable) {
             // A multiselectable combobox remains expanded on selection.
             changes.isOpen = state.isOpen;
-            changes.highlightedIndex = state.highlightedIndex;
             changes.inputValue = '';
           }
 
