@@ -164,9 +164,6 @@ export const useCombobox = <
           if (previousStateRef.current?.altKey) {
             // Prevent option activation for autocomplete selection override.
             changes.highlightedIndex = -1;
-          } else if (previousStateRef.current?.isOpen) {
-            // Prevent Downshift from overriding controlled `highlightedIndex`.
-            return state;
           }
 
           break;
@@ -212,12 +209,10 @@ export const useCombobox = <
         case useDownshift.stateChangeTypes.InputKeyDownEnter:
         case useDownshift.stateChangeTypes.FunctionSelectItem:
         case useDownshift.stateChangeTypes.ItemClick:
-          // Prevent selection from altering active index.
-          changes.highlightedIndex = state.highlightedIndex;
-
           if (isMultiselectable) {
             // A multiselectable combobox remains expanded on selection.
             changes.isOpen = state.isOpen;
+            changes.highlightedIndex = state.highlightedIndex;
             changes.inputValue = '';
           }
 
@@ -274,10 +269,10 @@ export const useCombobox = <
     getInputProps: getDownshiftInputProps,
     getMenuProps: getDownshiftListboxProps,
     getItemProps: getDownshiftOptionProps,
-    closeMenu: closeListbox,
-    openMenu: openListbox,
-    setHighlightedIndex: setActiveIndex,
-    selectItem: setDownshiftSelection
+    closeMenu,
+    openMenu,
+    setHighlightedIndex,
+    selectItem
   } = useDownshift<OptionValue | OptionValue[]>({
     id: prefix,
     toggleButtonId: `${prefix}-trigger`,
@@ -300,6 +295,38 @@ export const useCombobox = <
     environment: win
   });
 
+  const closeListbox = useCallback(() => {
+    closeMenu();
+    onChange({ type: toType(useDownshift.stateChangeTypes.FunctionCloseMenu), isExpanded: false });
+  }, [closeMenu, onChange]);
+
+  const openListbox = useCallback(() => {
+    openMenu();
+    onChange({ type: toType(useDownshift.stateChangeTypes.FunctionOpenMenu), isExpanded: true });
+  }, [openMenu, onChange]);
+
+  const setActiveIndex = useCallback(
+    index => {
+      setHighlightedIndex(index);
+      onChange({
+        type: toType(useDownshift.stateChangeTypes.FunctionSetHighlightedIndex),
+        activeIndex: index
+      });
+    },
+    [onChange, setHighlightedIndex]
+  );
+
+  const setDownshiftSelection = useCallback(
+    (value: OptionValue | OptionValue[] | null) => {
+      selectItem(value);
+      onChange({
+        type: toType(useDownshift.stateChangeTypes.FunctionSelectItem),
+        selectionValue: value
+      });
+    },
+    [onChange, selectItem]
+  );
+
   const {
     getLabelProps: getFieldLabelProps,
     getHintProps,
@@ -315,7 +342,13 @@ export const useCombobox = <
     () => {
       // Trigger autocomplete selection override. Use layout effect to prevent
       // `defaultActiveIndex` flash.
-      if (isAutocomplete && _isExpanded && _selectionValue && !matchValue) {
+      if (
+        isAutocomplete &&
+        _isExpanded &&
+        !previousStateRef.current?.isOpen &&
+        _selectionValue &&
+        !matchValue
+      ) {
         const value = Array.isArray(_selectionValue)
           ? _selectionValue[
               _selectionValue.length - 1 // multiselectable most recent
@@ -370,6 +403,13 @@ export const useCombobox = <
       }
     }
   });
+
+  useEffect(() => {
+    if (isEditable && inputRef.current === win.document.activeElement) {
+      // Scroll input into view on focus.
+      inputRef.current?.scrollIntoView && inputRef.current?.scrollIntoView();
+    }
+  }, [inputRef, isEditable, win.document.activeElement]);
 
   /*
    * Prop getters
