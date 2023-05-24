@@ -61,16 +61,14 @@ export const useCombobox = <
   const prefix = `${useId(idPrefix)}-`;
   const [triggerContainsInput, setTriggerContainsInput] = useState<boolean>();
   const [matchValue, setMatchValue] = useState('');
-  const listboxOwnsRef = useRef(new Set<string>());
   const matchTimeoutRef = useRef<number>();
   const previousStateRef = useRef<IPreviousState>();
   const labels: Record<string, string> = useMemo(() => ({}), []);
   const selectedValues: OptionValue[] = useMemo(() => [], []);
   const disabledValues: OptionValue[] = useMemo(() => [], []);
-  const groupedValues: OptionValue[] = useMemo(() => [], []);
   const values = useMemo(() => {
     const retVal: OptionValue[] = [];
-    const setValues = (option: IOption, grouped = -1) => {
+    const setValues = (option: IOption) => {
       if (option.disabled) {
         if (!disabledValues.includes(option.value)) {
           disabledValues.push(option.value);
@@ -89,10 +87,6 @@ export const useCombobox = <
         selectedValues.push(option.value);
       }
 
-      if (grouped !== -1) {
-        groupedValues.push(option.value);
-      }
-
       const key = typeof option.value === 'string' ? option.value : JSON.stringify(option.value);
 
       labels[key] = option.label || key;
@@ -107,7 +101,7 @@ export const useCombobox = <
     });
 
     return retVal;
-  }, [options, disabledValues, groupedValues, selectedValues, labels]);
+  }, [options, disabledValues, selectedValues, labels]);
   const initialSelectionValue = isMultiselectable ? selectedValues : selectedValues[0];
   const initialInputValue = isMultiselectable ? '' : toLabel(labels, initialSelectionValue);
   const _defaultActiveIndex = useMemo(() => {
@@ -716,13 +710,9 @@ export const useCombobox = <
         role,
         'aria-labelledby': ariaLabeledBy,
         'aria-multiselectable': isMultiselectable ? true : undefined,
-        'aria-owns':
-          listboxOwnsRef.current.size > 0
-            ? Array.from(listboxOwnsRef.current).join(' ')
-            : undefined,
         ...other
       } as IDownshiftListboxProps),
-    [getDownshiftListboxProps, listboxOwnsRef, listboxRef, isMultiselectable]
+    [getDownshiftListboxProps, listboxRef, isMultiselectable]
   );
 
   const getOptGroupProps = useCallback<IUseComboboxReturnValue['getOptGroupProps']>(
@@ -756,39 +746,26 @@ export const useCombobox = <
       if (option === undefined || option.disabled) {
         // Prevent downshift listbox mouse leave event.
         const handleMouseDown = (event: MouseEvent) => event.preventDefault();
-        let id: string | undefined;
-
-        if (option) {
-          id = getOptionId(disabledValues.indexOf(option.value), option.disabled);
-
-          if (groupedValues.includes(option.value)) {
-            listboxOwnsRef.current.add(id);
-          }
-        }
 
         return {
           'aria-disabled': true,
           'aria-selected': ariaSelected,
-          id,
+          id: option
+            ? getOptionId(disabledValues.indexOf(option.value), option.disabled)
+            : undefined,
           ...optionProps,
           onMouseDown: composeEventHandlers(onMouseDown, handleMouseDown)
         };
       }
 
-      const downshiftOptionProps = getDownshiftOptionProps({
+      return getDownshiftOptionProps({
         item: option.value,
         index: values.indexOf(option.value),
         'aria-selected': ariaSelected,
         ...optionProps
       } as IDownshiftOptionProps<OptionValue>);
-
-      if (groupedValues.includes(option.value)) {
-        listboxOwnsRef.current.add(downshiftOptionProps.id);
-      }
-
-      return downshiftOptionProps;
     },
-    [getDownshiftOptionProps, disabledValues, groupedValues, values, _selectionValue, getOptionId]
+    [getDownshiftOptionProps, disabledValues, values, _selectionValue, getOptionId]
   );
 
   /** Actions */
