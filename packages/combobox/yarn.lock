@@ -9,12 +9,40 @@
   dependencies:
     regenerator-runtime "^0.13.11"
 
+"@reach/auto-id@^0.18.0":
+  version "0.18.0"
+  resolved "https://registry.yarnpkg.com/@reach/auto-id/-/auto-id-0.18.0.tgz#4b97085cd1cf1360a9bedc6e9c78e97824014f0d"
+  integrity sha512-XwY1IwhM7mkHZFghhjiqjQ6dstbOdpbFLdggeke75u8/8icT8uEHLbovFUgzKjy9qPvYwZIB87rLiR8WdtOXCg==
+  dependencies:
+    "@reach/utils" "0.18.0"
+
+"@reach/utils@0.18.0":
+  version "0.18.0"
+  resolved "https://registry.yarnpkg.com/@reach/utils/-/utils-0.18.0.tgz#4f3cebe093dd436eeaff633809bf0f68f4f9d2ee"
+  integrity sha512-KdVMdpTgDyK8FzdKO9SCpiibuy/kbv3pwgfXshTI6tEcQT1OOwj7BAksnzGC0rPz0UholwC+AgkqEl3EJX3M1A==
+
+"@zendeskgarden/container-field@^3.0.4":
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/@zendeskgarden/container-field/-/container-field-3.0.4.tgz#620f7e04bad4dd0b97c62a9fc08111cb82cf41d0"
+  integrity sha512-mits6DF6Ndh0qp9EX9d1hZdl+DEqx2332V9WVAc3V247UfTrNAmnjv7bE1Z8PWJkzsHti9XKxt4+mfX0IdtkWA==
+  dependencies:
+    "@babel/runtime" "^7.8.4"
+    "@zendeskgarden/container-utilities" "^1.0.5"
+
+"@zendeskgarden/container-utilities@^1.0.5":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@zendeskgarden/container-utilities/-/container-utilities-1.0.5.tgz#f787e2d75471bbf684d5b1b0c0daabe6e23a0b18"
+  integrity sha512-9BEpLnAwSsDq4QgnGWhK/O/Fj+Q9daNGaSNNxqSfhkWj8h7HQDM4vU4gtu/mDEgDO8ubDE9Qeu+zytN/pdWqpQ==
+  dependencies:
+    "@babel/runtime" "^7.8.4"
+    "@reach/auto-id" "^0.18.0"
+
 compute-scroll-into-view@^2.0.4:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/compute-scroll-into-view/-/compute-scroll-into-view-2.0.4.tgz#2b444b2b9e4724819d2531efacb7ac094155fdf6"
   integrity sha512-y/ZA3BGnxoM/QHHQ2Uy49CLtnWPbt4tTPpEEZiEmmiWBFKjej7nEyH8Ryz54jH0MLXflUYA3Er2zUxPSJu5R+g==
 
-downshift@^7.2.0:
+downshift@^7.6.0:
   version "7.6.0"
   resolved "https://registry.yarnpkg.com/downshift/-/downshift-7.6.0.tgz#de04fb2962bd6c4ea94589c797c91f34aa9816f3"
   integrity sha512-VSoTVynTAsabou/hbZ6HJHUVhtBiVOjQoBsCPcQq5eAROIGP+9XKMp9asAKQ3cEcUP4oe0fFdD2pziUjhFY33Q==
