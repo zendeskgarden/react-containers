@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.3](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-combobox@0.3.2...@zendeskgarden/container-combobox@0.3.3) (2023-05-30)
+
+### Bug Fixes
+
+- **combobox:** handle controlled actions ([#541](https://github.com/zendeskgarden/react-containers/issues/541)) ([f9aad41](https://github.com/zendeskgarden/react-containers/commit/f9aad41b685da55529d92fb295b231d4eb516d1b))
+
 ## [0.3.2](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-combobox@0.3.1...@zendeskgarden/container-combobox@0.3.2) (2023-05-15)
 
 ### Bug Fixes
