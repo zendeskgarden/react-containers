@@ -18,7 +18,6 @@ const PACKAGE_NAMES = readdirSync(path.resolve(__dirname, '../packages')).filter
 
 const options = {
   backgrounds: false,
-  docs: true,
   measure: false,
   outline: false,
   viewport: false
