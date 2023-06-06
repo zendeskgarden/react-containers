@@ -1,6 +1,7 @@
-import { Meta, ArgsTable, Canvas, Story } from '@storybook/addon-docs';
+import { Meta, ArgsTable, Canvas, Story, Markdown } from '@storybook/addon-docs';
 import { KeyboardFocusContainer } from '@zendeskgarden/container-keyboardfocus';
 import { KeyboardFocusStory } from './stories/KeyboardFocusStory';
+import README from '../README.md';
 
 <Meta title="Packages/KeyboardFocus" component={KeyboardFocusContainer} />
 
@@ -21,3 +22,5 @@ import { KeyboardFocusStory } from './stories/KeyboardFocusStory';
     {args => <KeyboardFocusStory {...args} />}
   </Story>
 </Canvas>
+
+<Markdown>{README}</Markdown>

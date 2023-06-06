@@ -1,8 +1,9 @@
-import { Meta, ArgsTable, Canvas, Story } from '@storybook/addon-docs';
+import { Meta, ArgsTable, Canvas, Story, Markdown } from '@storybook/addon-docs';
 import { useArgs } from '@storybook/client-api';
 import { TreeviewContainer } from '@zendeskgarden/container-treeview';
 import { TreeviewStory } from './stories/TreeviewStory';
 import { TREE } from './stories/data';
+import README from '../README.md';
 
 <Meta
   title="Packages/Treeview"
@@ -51,3 +52,5 @@ import { TREE } from './stories/data';
     }}
   </Story>
 </Canvas>
+
+<Markdown>{README}</Markdown>

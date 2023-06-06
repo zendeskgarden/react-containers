@@ -1,8 +1,9 @@
 import { useRef } from 'react';
-import { Meta, ArgsTable, Canvas, Story } from '@storybook/addon-docs';
+import { Meta, ArgsTable, Canvas, Story, Markdown } from '@storybook/addon-docs';
 import { useArgs } from '@storybook/client-api';
 import { ModalContainer } from '@zendeskgarden/container-modal';
 import { ModalStory } from './stories/ModalStory';
+import README from '../README.md';
 
 <Meta title="Packages/Modal" component={ModalContainer} />
 
@@ -31,3 +32,5 @@ import { ModalStory } from './stories/ModalStory';
     }}
   </Story>
 </Canvas>
+
+<Markdown>{README}</Markdown>

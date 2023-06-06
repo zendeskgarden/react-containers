@@ -41,10 +41,6 @@ module.exports = {
     },
     '@storybook/addon-a11y'
   ],
-  docs: {
-    autodocs: true,
-    defaultName: 'API'
-  },
   framework: {
     name: '@storybook/react-webpack5',
     options: {}

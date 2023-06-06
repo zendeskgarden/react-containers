@@ -1,6 +1,7 @@
-import { Meta, ArgsTable, Canvas, Story } from '@storybook/addon-docs';
+import { Meta, ArgsTable, Canvas, Story, Markdown } from '@storybook/addon-docs';
 import { FieldContainer } from '@zendeskgarden/container-field';
 import { FieldStory } from './stories/FieldStory';
+import README from '../README.md';
 
 <Meta title="Packages/Field" component={FieldContainer} />
 
@@ -21,3 +22,5 @@ import { FieldStory } from './stories/FieldStory';
     {args => <FieldStory {...args} />}
   </Story>
 </Canvas>
+
+<Markdown>{README}</Markdown>
