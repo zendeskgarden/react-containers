@@ -1,7 +1,8 @@
 import { useRef } from 'react';
-import { Meta, ArgsTable, Canvas, Story } from '@storybook/addon-docs';
+import { Meta, ArgsTable, Canvas, Story, Markdown } from '@storybook/addon-docs';
 import { FocusVisibleContainer } from '@zendeskgarden/container-focusvisible';
 import { FocusVisibleStory } from './stories/FocusVisibleStory';
+import README from '../README.md';
 
 <Meta title="Packages/FocusVisible" component={FocusVisibleContainer} />
 
@@ -27,3 +28,5 @@ import { FocusVisibleStory } from './stories/FocusVisibleStory';
     }}
   </Story>
 </Canvas>
+
+<Markdown>{README}</Markdown>

@@ -1,8 +1,9 @@
-import { Meta, ArgsTable, Canvas, Story } from '@storybook/addon-docs';
+import { Meta, ArgsTable, Canvas, Story, Markdown } from '@storybook/addon-docs';
 import { useArgs } from '@storybook/client-api';
 import { ComboboxContainer } from '@zendeskgarden/container-combobox';
 import { ComboboxStory } from './stories/ComboboxStory';
 import { OPTIONS } from './stories/data';
+import README from '../README.md';
 
 <Meta
   title="Packages/Combobox"
@@ -62,3 +63,5 @@ import { OPTIONS } from './stories/data';
     }}
   </Story>
 </Canvas>
+
+<Markdown>{README}</Markdown>

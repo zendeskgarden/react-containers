@@ -1,6 +1,7 @@
-import { Meta, ArgsTable, Canvas, Story } from '@storybook/addon-docs';
+import { Meta, ArgsTable, Canvas, Story, Markdown } from '@storybook/addon-docs';
 import { ScheduleContainer } from '@zendeskgarden/container-schedule';
 import { ScheduleStory } from './stories/ScheduleStory';
+import README from '../README.md';
 
 <Meta title="Packages/Schedule" component={ScheduleContainer} />
 
@@ -21,3 +22,5 @@ import { ScheduleStory } from './stories/ScheduleStory';
     {args => <ScheduleStory {...args} />}
   </Story>
 </Canvas>
+
+<Markdown>{README}</Markdown>

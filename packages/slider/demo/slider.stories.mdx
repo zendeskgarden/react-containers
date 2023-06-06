@@ -1,7 +1,8 @@
-import { Meta, ArgsTable, Canvas, Story } from '@storybook/addon-docs';
+import { Meta, ArgsTable, Canvas, Story, Markdown } from '@storybook/addon-docs';
 import { useArgs } from '@storybook/client-api';
 import { SliderContainer } from '@zendeskgarden/container-slider';
 import { SliderStory } from './stories/SliderStory';
+import README from '../README.md';
 
 <Meta
   title="Packages/Slider"
@@ -47,3 +48,5 @@ import { SliderStory } from './stories/SliderStory';
     }}
   </Story>
 </Canvas>
+
+<Markdown>{README}</Markdown>

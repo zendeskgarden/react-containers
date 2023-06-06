@@ -1,6 +1,7 @@
-import { Meta, ArgsTable, Canvas, Story } from '@storybook/addon-docs';
+import { Meta, ArgsTable, Canvas, Story, Markdown } from '@storybook/addon-docs';
 import { {{capitalize component}}Container } from '@zendeskgarden/container-{{lowercase component}}';
 import { {{capitalize component}}Story } from './stories/{{capitalize component}}Story';
+import README from '../README.md';
 
 <Meta title="Packages/{{capitalize component}}" component={ {{capitalize component}}Container } />
 
@@ -22,3 +23,5 @@ export const argTypes = {
     {args => <{{capitalize component}}Story {...args} />}
   </Story>
 </Canvas>
+
+<Markdown>{README}</Markdown>

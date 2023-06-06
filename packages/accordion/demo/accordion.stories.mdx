@@ -1,7 +1,8 @@
-import { Meta, ArgsTable, Canvas, Story } from '@storybook/addon-docs';
+import { Meta, ArgsTable, Canvas, Story, Markdown } from '@storybook/addon-docs';
 import { useArgs } from '@storybook/client-api';
 import { AccordionContainer } from '@zendeskgarden/container-accordion';
 import { AccordionStory } from './stories/AccordionStory';
+import README from '../README.md';
 
 <Meta
   title="Packages/Accordion"
@@ -57,3 +58,5 @@ import { AccordionStory } from './stories/AccordionStory';
     }}
   </Story>
 </Canvas>
+
+<Markdown>{README}</Markdown>

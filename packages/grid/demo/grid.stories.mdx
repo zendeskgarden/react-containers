@@ -1,8 +1,9 @@
-import { Meta, ArgsTable, Canvas, Story } from '@storybook/addon-docs';
+import { Meta, ArgsTable, Canvas, Story, Markdown } from '@storybook/addon-docs';
 import { useArgs } from '@storybook/client-api';
 import { GridContainer } from '@zendeskgarden/container-grid';
 import { GridStory } from './stories/GridStory';
 import { MATRIX } from './stories/data';
+import README from '../README.md';
 
 <Meta
   title="Packages/Grid"
@@ -51,3 +52,5 @@ import { MATRIX } from './stories/data';
     }}
   </Story>
 </Canvas>
+
+<Markdown>{README}</Markdown>
