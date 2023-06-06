@@ -19,22 +19,12 @@ module.exports = {
     ['@babel/preset-typescript', { onlyRemoveTypeImports: true }]
   ],
   plugins: [
-    [
-      '@babel/plugin-transform-runtime',
-      {
-        useESModules: true
-      }
-    ],
+    ['@babel/plugin-transform-runtime', { useESModules: true }],
     '@babel/plugin-transform-object-assign',
-    [
-      '@babel/plugin-proposal-class-properties',
-      {
-        loose: true
-      }
-    ],
+    ['@babel/plugin-transform-class-properties', { loose: true }],
     'babel-plugin-styled-components',
-    ['@babel/plugin-proposal-private-property-in-object', { loose: true }],
-    ['@babel/plugin-proposal-private-methods', { loose: true }]
+    ['@babel/plugin-transform-private-property-in-object', { loose: true }],
+    ['@babel/plugin-transform-private-methods', { loose: true }]
   ],
   sourceType: 'unambiguous'
 };
