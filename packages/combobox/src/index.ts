@@ -13,7 +13,6 @@ export { ComboboxContainer } from './ComboboxContainer';
 
 export type {
   IOption,
-  ISelectedOption,
   IComboboxContainerProps,
   IUseComboboxProps,
   IUseComboboxReturnValue
