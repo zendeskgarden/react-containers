@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.4](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-combobox@0.3.3...@zendeskgarden/container-combobox@0.3.4) (2023-06-12)
+
+### Bug Fixes
+
+- **combobox:** update yarn lock file ([#546](https://github.com/zendeskgarden/react-containers/issues/546)) ([4c58d20](https://github.com/zendeskgarden/react-containers/commit/4c58d20e92e261c3fc7b91e0f2e238c5d4841f11))
+- **deps:** update non-major package dependencies ([#543](https://github.com/zendeskgarden/react-containers/issues/543)) ([08856fc](https://github.com/zendeskgarden/react-containers/commit/08856fca9b08f7434b91bf1b95b4d2fff497d75f))
+
 ## [0.3.3](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-combobox@0.3.2...@zendeskgarden/container-combobox@0.3.3) (2023-05-30)
 
 ### Bug Fixes

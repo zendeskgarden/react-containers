@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.6](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-pagination@1.0.5...@zendeskgarden/container-pagination@1.0.6) (2023-06-12)
+
+### Bug Fixes
+
+- **deps:** update non-major package dependencies ([#543](https://github.com/zendeskgarden/react-containers/issues/543)) ([08856fc](https://github.com/zendeskgarden/react-containers/commit/08856fca9b08f7434b91bf1b95b4d2fff497d75f))
+
 ## [1.0.5](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-pagination@1.0.4...@zendeskgarden/container-pagination@1.0.5) (2023-04-19)
 
 ### Bug Fixes

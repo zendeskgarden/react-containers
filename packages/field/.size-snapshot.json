@@ -2,7 +2,7 @@
   "index.cjs.js": {
     "bundled": 2943,
     "minified": 1647,
-    "gzipped": 633
+    "gzipped": 634
   },
   "index.esm.js": {
     "bundled": 2854,
