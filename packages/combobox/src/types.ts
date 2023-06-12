@@ -10,7 +10,7 @@ import { HTMLProps, ReactNode, RefObject } from 'react';
 
 export type OptionValue = string | object;
 
-interface ISelectedOption {
+export interface ISelectedOption {
   value: OptionValue;
   label?: string;
   disabled?: boolean;
