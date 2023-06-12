@@ -29,7 +29,7 @@ export const useCombobox = <
   triggerRef,
   inputRef,
   listboxRef,
-  isAutocomplete = true,
+  isAutocomplete,
   isMultiselectable,
   isEditable = true,
   disabled,

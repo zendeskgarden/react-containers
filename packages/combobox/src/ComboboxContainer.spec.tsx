@@ -33,6 +33,7 @@ describe('ComboboxContainer', () => {
   const TestCombobox = ({
     layout,
     options,
+    isAutocomplete = true,
     isEditable = true,
     hasHint = true,
     hasMessage = true,
@@ -59,6 +60,7 @@ describe('ComboboxContainer', () => {
         options={options}
         hasHint={hasHint}
         hasMessage={hasMessage}
+        isAutocomplete={isAutocomplete}
         isEditable={isEditable}
         {...props}
       >
