@@ -5,15 +5,17 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import { HTMLProps, ReactNode, RefObject } from 'react';
+import { HTMLProps, ReactNode, MutableRefObject } from 'react';
 
 export interface IUseSelectionProps<Item> {
+  /** The array of IDs used for managing selection */
+  items: Item[];
   /** Determines the orientation of the selection */
   direction?: 'horizontal' | 'vertical' | 'both';
   /** Sets the initial focused item */
-  defaultFocusedIndex?: number;
+  defaultFocusedItem?: Item;
   /** Sets the initial selected item */
-  defaultSelectedIndex?: number;
+  defaultSelectedItem?: Item;
   /** Determines right-to-left layout */
   rtl?: boolean;
   /** Sets controlled item selection */
@@ -45,7 +47,7 @@ export interface IUseSelectionReturnValue<Item> {
   getItemProps: <T extends Element>(
     props: Omit<HTMLProps<T>, 'role'> & {
       item: Item;
-      focusRef: RefObject<T>;
+      focusRef?: MutableRefObject<T>;
       refKey?: string;
       role?: 'option' | null;
       selectedAriaKey?: any;

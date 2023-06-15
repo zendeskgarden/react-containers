@@ -2,6 +2,7 @@ import { Meta, ArgsTable, Canvas, Story, Markdown } from '@storybook/addon-docs'
 import { useArgs } from '@storybook/client-api';
 import { SelectionContainer } from '@zendeskgarden/container-selection';
 import { SelectionStory } from './stories/SelectionStory';
+import { ITEMS } from './stories/data';
 import README from '../README.md';
 
 <Meta
@@ -9,12 +10,12 @@ import README from '../README.md';
   component={SelectionContainer}
   args={{
     as: 'hook',
-    items: 3,
+    items: ITEMS,
     direction: 'horizontal'
   }}
   argTypes={{
     as: { options: ['container', 'hook'], control: 'radio', table: { category: 'Story' } },
-    items: { control: { type: 'range', min: 1, max: 5 }, table: { category: 'Story' } }
+    items: { table: { category: 'Story' } }
   }}
 />
 
@@ -30,9 +31,14 @@ import README from '../README.md';
   <Story
     name="Uncontrolled"
     args={{
-      defaultFocusedIndex: 0
+      defaultFocusedItem: 'item-1'
     }}
-    argTypes={{ selectedItem: { control: false }, focusedItem: { control: false } }}
+    argTypes={{
+      selectedItem: { control: false },
+      focusedItem: { control: false },
+      defaultFocusedItem: { control: { type: 'text' } },
+      defaultSelectedItem: { control: { type: 'text' } }
+    }}
   >
     {args => <SelectionStory {...args} />}
   </Story>
@@ -44,9 +50,14 @@ import README from '../README.md';
   <Story
     name="Controlled"
     args={{
-      selectedItem: '0'
+      selectedItem: 'item-3'
     }}
-    argTypes={{ defaultFocusedIndex: { control: false }, defaultSelectedIndex: { control: false } }}
+    argTypes={{
+      selectedItem: { control: { type: 'text' } },
+      focusedItem: { control: { type: 'text' } },
+      defaultFocusedItem: { control: false },
+      defaultSelectedItem: { control: false }
+    }}
   >
     {args => {
       const updateArgs = useArgs()[1];

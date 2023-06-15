@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React, { createRef, RefObject } from 'react';
+import React from 'react';
 import { Story } from '@storybook/react';
 import classNames from 'classnames';
 import {
@@ -19,7 +19,7 @@ import {
 interface IComponentProps extends IUseSelectionReturnValue<string> {
   direction: IUseSelectionProps<any>['direction'];
   rtl: IUseSelectionProps<any>['rtl'];
-  items: RefObject<HTMLLIElement>[];
+  items: string[];
 }
 
 const Component = ({
@@ -40,7 +40,7 @@ const Component = ({
   >
     {items.map((item, index) => (
       <li
-        key={index}
+        key={item}
         className={classNames(
           'flex',
           'justify-center',
@@ -56,46 +56,51 @@ const Component = ({
             [`mt-${index * 4}`]: direction === 'both'
           }
         )}
-        {...getItemProps({ item: index.toString(), focusRef: item })}
+        {...getItemProps({ item })}
       >
-        {index.toString() === selectedItem && <span className="text-lg">✓</span>}
+        {item === selectedItem && <span className="text-lg">✓</span>}
       </li>
     ))}
   </ul>
 );
 
 interface IProps extends IUseSelectionProps<string> {
-  itemRefs: RefObject<HTMLLIElement>[];
+  items: string[];
 }
 
-const Container = ({ itemRefs, ...props }: IProps) => (
+const Container = ({ ...props }: IProps) => (
   <SelectionContainer {...props}>
     {containerProps => (
-      <Component items={itemRefs} direction={props.direction} rtl={props.rtl} {...containerProps} />
+      <Component
+        items={props.items}
+        direction={props.direction}
+        rtl={props.rtl}
+        {...containerProps}
+      />
     )}
   </SelectionContainer>
 );
 
-const Hook = ({ itemRefs, ...props }: IProps) => {
-  const hookProps = useSelection(props);
+const Hook = ({ ...props }: IProps) => {
+  const hookProps = useSelection({ ...props });
 
-  return <Component items={itemRefs} direction={props.direction} rtl={props.rtl} {...hookProps} />;
+  return (
+    <Component items={props.items} direction={props.direction} rtl={props.rtl} {...hookProps} />
+  );
 };
 
-interface IArgs extends ISelectionContainerProps<any> {
+interface IArgs extends ISelectionContainerProps<string> {
   as: 'hook' | 'container';
-  items: number;
+  items: string[];
 }
 
-export const SelectionStory: Story<IArgs> = ({ as, items, ...props }: IArgs) => {
-  const itemRefs = Array.from({ length: items }, () => createRef<HTMLLIElement>());
-
+export const SelectionStory: Story<IArgs> = ({ as, ...props }: IArgs) => {
   switch (as) {
     case 'container':
-      return <Container itemRefs={itemRefs} {...props} />;
+      return <Container {...props} />;
 
     case 'hook':
     default:
-      return <Hook itemRefs={itemRefs} {...props} />;
+      return <Hook {...props} />;
   }
 };
