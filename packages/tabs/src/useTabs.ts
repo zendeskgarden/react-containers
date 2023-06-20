@@ -10,16 +10,18 @@ import { useSelection } from '@zendeskgarden/container-selection';
 import { IUseTabsProps, IUseTabsReturnValue } from './types';
 
 export const useTabs = <Item>({
+  items,
   orientation = 'horizontal',
   idPrefix,
   ...options
-}: IUseTabsProps<Item> = {}): IUseTabsReturnValue<Item> => {
+}: IUseTabsProps<Item>): IUseTabsReturnValue<Item> => {
   const prefix = useId(idPrefix);
   const PANEL_ID = `${prefix}__panel`;
   const TAB_ID = `${prefix}__tab`;
   const { selectedItem, focusedItem, getContainerProps, getItemProps } = useSelection<Item>({
+    items,
     direction: orientation,
-    defaultSelectedIndex: 0,
+    defaultSelectedItem: items[0],
     ...options
   });
 
@@ -36,25 +38,24 @@ export const useTabs = <Item>({
 
   const getTabProps: IUseTabsReturnValue<Item>['getTabProps'] = ({
     role = 'tab',
-    index,
+    item,
     ...other
   }) => ({
-    ...getItemProps(other),
+    ...getItemProps({ item, ...other }),
     role: role === null ? undefined : role,
-    id: `${TAB_ID}:${index}`,
-    'aria-controls': `${PANEL_ID}:${index}`
+    id: `${TAB_ID}:${item}`,
+    'aria-controls': `${PANEL_ID}:${item}`
   });
 
   const getTabPanelProps: IUseTabsReturnValue<Item>['getTabPanelProps'] = ({
     role = 'tabpanel',
-    index,
     item,
     ...other
   }) => ({
     role: role === null ? undefined : role,
-    id: `${PANEL_ID}:${index}`,
+    id: `${PANEL_ID}:${item}`,
     hidden: item !== selectedItem,
-    'aria-labelledby': `${TAB_ID}:${index}`,
+    'aria-labelledby': `${TAB_ID}:${item}`,
     ...other
   });
 

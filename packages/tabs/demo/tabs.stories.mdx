@@ -2,6 +2,7 @@ import { Meta, ArgsTable, Canvas, Story, Markdown } from '@storybook/addon-docs'
 import { useArgs } from '@storybook/client-api';
 import { TabsContainer } from '@zendeskgarden/container-tabs';
 import { TabsStory } from './stories/TabsStory';
+import { ITEMS } from './stories/data';
 import README from '../README.md';
 
 <Meta
@@ -9,11 +10,12 @@ import README from '../README.md';
   component={TabsContainer}
   args={{
     as: 'hook',
-    tabs: 3
+    tabs: 3,
+    items: ITEMS
   }}
   argTypes={{
     as: { options: ['container', 'hook'], control: 'radio', table: { category: 'Story' } },
-    tabs: { control: { type: 'range', min: 1, max: 5 }, table: { category: 'Story' } }
+    tabs: { table: { category: 'Story' } }
   }}
 />
 
@@ -28,9 +30,7 @@ import README from '../README.md';
 <Canvas>
   <Story
     name="Uncontrolled"
-    args={{
-      defaultSelectedIndex: 0
-    }}
+    args={{ defaultSelectedItem: ITEMS[0] }}
     argTypes={{ selectedItem: { control: false } }}
   >
     {args => <TabsStory {...args} />}
@@ -42,10 +42,8 @@ import README from '../README.md';
 <Canvas>
   <Story
     name="Controlled"
-    args={{
-      selectedItem: '0'
-    }}
-    argTypes={{ defaultSelectedIndex: { control: false } }}
+    args={{ selectedItem: ITEMS[0] }}
+    argTypes={{ defaultSelectedItem: { control: false } }}
   >
     {args => {
       const updateArgs = useArgs()[1];

@@ -9,6 +9,8 @@ import { IUseSelectionProps, IUseSelectionReturnValue } from '@zendeskgarden/con
 import { HTMLProps, ReactNode, RefObject } from 'react';
 
 export interface IUseTabsProps<Item> extends Omit<IUseSelectionProps<Item>, 'direction'> {
+  /** The array of IDs used for managing selection */
+  items: Item[];
   /** Determines the orientation of the tabs */
   orientation?: 'horizontal' | 'vertical';
   /** Prefixes IDs for tab elements */
@@ -24,16 +26,14 @@ export interface IUseTabsReturnValue<Item>
   ) => HTMLProps<T>;
   getTabProps: <T extends Element>(
     props: Omit<HTMLProps<T>, 'role'> & {
-      index: number;
       item: Item;
-      focusRef: RefObject<T>;
+      focusRef?: RefObject<T>;
       refKey?: string;
       role?: 'tab' | null;
     }
   ) => HTMLProps<T>;
   getTabPanelProps: <T extends Element>(
     props: Omit<HTMLProps<T>, 'role'> & {
-      index: number;
       item: Item;
       role?: 'tabpanel' | null;
     }
