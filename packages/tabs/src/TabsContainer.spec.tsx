@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React, { createRef } from 'react';
+import React from 'react';
 import userEvent from '@testing-library/user-event';
 import { render } from '@testing-library/react';
 import { TabsContainer, ITabsContainerProps } from './';
@@ -15,42 +15,44 @@ describe('TabsContainer', () => {
 
   const idPrefix = 'test_id';
   const tabs = ['tab-1', 'tab-2', 'tab-3'];
-  const tabRefs = tabs.map(() => createRef<HTMLDivElement>());
-  const getPanelId = (index: number) => `${idPrefix}__panel:${index}`;
-  const getTabId = (index: number) => `${idPrefix}__tab:${index}`;
+  const getPanelId = (tab: string) => `${idPrefix}__panel:${tab}`;
+  const getTabId = (tab: string) => `${idPrefix}__tab:${tab}`;
 
-  const BasicExample: React.FunctionComponent<ITabsContainerProps<string>> = ({
+  const BasicExample: React.FunctionComponent<Omit<ITabsContainerProps<string>, 'items'>> = ({
     orientation,
     onSelect,
-    defaultSelectedIndex = 0
+    defaultSelectedItem = tabs[0]
   } = {}) => (
     <TabsContainer
+      items={tabs}
       orientation={orientation}
       onSelect={onSelect}
       idPrefix={idPrefix}
-      defaultSelectedIndex={defaultSelectedIndex}
+      defaultSelectedItem={defaultSelectedItem}
     >
       {({ getTabListProps, getTabProps, getTabPanelProps, selectedItem, focusedItem }) => (
         <div>
           <div data-test-id="tab-list" {...getTabListProps()}>
-            {tabs.map((tab, index) => (
+            {tabs.map(tab => (
               <div
+                key={tab}
+                data-test-value={tab}
                 data-test-id="tab"
                 data-selected={tab === selectedItem}
                 data-focused={tab === focusedItem}
-                {...getTabProps({
-                  index,
-                  key: tab,
-                  item: tab,
-                  focusRef: tabRefs[index]
-                })}
+                {...getTabProps({ item: tab })}
               >
                 {tab}
               </div>
             ))}
           </div>
-          {tabs.map((tab, index) => (
-            <div data-test-id="tab-panel" {...getTabPanelProps({ index, item: tab, key: tab })}>
+          {tabs.map(tab => (
+            <div
+              key={tab}
+              data-test-value={tab}
+              data-test-id="tab-panel"
+              {...getTabPanelProps({ item: tab })}
+            >
               {tab} content
             </div>
           ))}
@@ -84,14 +86,14 @@ describe('TabsContainer', () => {
 
         tabItems.forEach((tab, index) => {
           expect(tab).toHaveAttribute('role', 'tab');
-          expect(tab).toHaveAttribute('id', getTabId(index));
-          expect(tab).toHaveAttribute('aria-controls', getPanelId(index));
+          expect(tab).toHaveAttribute('id', getTabId(tab.dataset.testValue!));
+          expect(tab).toHaveAttribute('aria-controls', getPanelId(tab.dataset.testValue!));
           expect(tab).toHaveAttribute('aria-selected', index === 0 ? 'true' : 'false');
         });
       });
 
-      it('defaultSelectedIndex applies correct accessibility attributes', () => {
-        const { getAllByTestId } = render(<BasicExample defaultSelectedIndex={1} />);
+      it('defaultSelectedItem applies correct accessibility attributes', () => {
+        const { getAllByTestId } = render(<BasicExample defaultSelectedItem={tabs[1]} />);
         const [, tab] = getAllByTestId('tab');
 
         expect(tab).toHaveAttribute('aria-selected', 'true');
@@ -104,15 +106,15 @@ describe('TabsContainer', () => {
       const { getAllByTestId } = render(<BasicExample />);
       const tabPanels = getAllByTestId('tab-panel');
 
-      tabPanels.forEach((tabPanel, index) => {
+      tabPanels.forEach(tabPanel => {
         expect(tabPanel).toHaveAttribute('role', 'tabpanel');
-        expect(tabPanel).toHaveAttribute('id', getPanelId(index));
-        expect(tabPanel).toHaveAttribute('aria-labelledby', getTabId(index));
+        expect(tabPanel).toHaveAttribute('id', getPanelId(tabPanel.dataset.testValue!));
+        expect(tabPanel).toHaveAttribute('aria-labelledby', getTabId(tabPanel.dataset.testValue!));
       });
     });
 
-    it('defaultSelectedIndex applies correct accessibility attributes', () => {
-      const { getAllByTestId } = render(<BasicExample defaultSelectedIndex={1} />);
+    it('defaultSelectedItem applies correct accessibility attributes', () => {
+      const { getAllByTestId } = render(<BasicExample defaultSelectedItem={tabs[1]} />);
       const [, tabPanel] = getAllByTestId('tab-panel');
 
       expect(tabPanel).not.toHaveAttribute('hidden');
