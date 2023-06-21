@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React, { createRef, useRef } from 'react';
+import React, { useRef } from 'react';
 import { Story } from '@storybook/react';
 import classNames from 'classnames';
 import { useFocusVisible } from '@zendeskgarden/container-focusvisible';
@@ -15,7 +15,8 @@ export const SelectionStory: Story = () => {
   const items = ['Item 1', 'Item 2', 'Item 3'];
   const scope = useRef(null);
   const { getContainerProps, getItemProps, selectedItem } = useSelection({
-    defaultSelectedIndex: 0
+    items,
+    defaultSelectedItem: items[0]
   });
 
   useFocusVisible({ scope });
@@ -23,8 +24,6 @@ export const SelectionStory: Story = () => {
   return (
     <ul className="flex" {...getContainerProps()} ref={scope}>
       {items.map(item => {
-        const focusRef = createRef<HTMLLIElement>();
-
         return (
           <li
             key={item}
@@ -37,7 +36,7 @@ export const SelectionStory: Story = () => {
               'pt-1',
               { 'border-b-3': item === selectedItem }
             )}
-            {...getItemProps({ item, focusRef })}
+            {...getItemProps({ item })}
           >
             {item}
           </li>
