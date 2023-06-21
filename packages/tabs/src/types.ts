@@ -6,7 +6,7 @@
  */
 
 import { IUseSelectionProps, IUseSelectionReturnValue } from '@zendeskgarden/container-selection';
-import { HTMLProps, ReactNode, RefObject } from 'react';
+import { HTMLProps, MutableRefObject, ReactNode } from 'react';
 
 export interface IUseTabsProps<Item> extends Omit<IUseSelectionProps<Item>, 'direction'> {
   /** The array of IDs used for managing selection */
@@ -27,7 +27,7 @@ export interface IUseTabsReturnValue<Item>
   getTabProps: <T extends Element>(
     props: Omit<HTMLProps<T>, 'role'> & {
       item: Item;
-      focusRef?: RefObject<T>;
+      focusRef?: MutableRefObject<T>;
       refKey?: string;
       role?: 'tab' | null;
     }

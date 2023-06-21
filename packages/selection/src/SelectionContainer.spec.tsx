@@ -17,22 +17,23 @@ describe('SelectionContainer', () => {
   const itemValues = ['Item-1', 'Item-2', 'Item-3'];
 
   const BasicExample: React.FunctionComponent<
-    Omit<ISelectionContainerProps<string>, 'children'> & {
+    Omit<ISelectionContainerProps<string>, 'children' | 'items'> & {
       selectedAriaKey?: string;
     }
   > = ({
     direction,
-    defaultFocusedIndex,
-    defaultSelectedIndex,
+    defaultFocusedItem,
+    defaultSelectedItem,
     selectedAriaKey,
     rtl,
     onFocus,
     onSelect
   }) => (
     <SelectionContainer
+      items={itemValues}
       direction={direction}
-      defaultFocusedIndex={defaultFocusedIndex}
-      defaultSelectedIndex={defaultSelectedIndex}
+      defaultFocusedItem={defaultFocusedItem}
+      defaultSelectedItem={defaultSelectedItem}
       rtl={rtl}
       onFocus={onFocus ? onFocus : undefined}
       onSelect={onSelect ? onSelect : undefined}
@@ -40,7 +41,6 @@ describe('SelectionContainer', () => {
       {({ getContainerProps, getItemProps, selectedItem }) => (
         <div data-test-id="container" {...getContainerProps()}>
           {itemValues.map(item => {
-            const ref = React.createRef();
             const isSelected = item === selectedItem;
 
             return (
@@ -49,7 +49,6 @@ describe('SelectionContainer', () => {
                   selectedAriaKey,
                   key: item,
                   item,
-                  focusRef: ref,
                   'data-test-id': 'item',
                   'aria-selected': isSelected
                 } as any)}
@@ -97,7 +96,7 @@ describe('SelectionContainer', () => {
       expect(container).toHaveAttribute('role', 'listbox');
     });
 
-    it('first item in container defaults as the only initial focusable item', async () => {
+    it('first item in container defaults as the initial focusable item', async () => {
       const { getByText } = render(<BasicExample />);
       const item = getByText('Item-1');
 
@@ -119,8 +118,10 @@ describe('SelectionContainer', () => {
         expect(document.activeElement).toBe(item);
       });
 
-      it('focuses last item if no item is currently selected and defaultFocusedIndex is provided', () => {
-        const { getByText } = render(<BasicExample defaultFocusedIndex={itemValues.length - 1} />);
+      it('focuses last item if no item is currently selected and defaultFocusedItem is provided', () => {
+        const { getByText } = render(
+          <BasicExample defaultFocusedItem={itemValues[itemValues.length - 1]} />
+        );
         const lastItem = getByText('Item-3');
 
         expect(lastItem).toHaveAttribute('tabIndex', '0');
@@ -209,6 +210,7 @@ describe('SelectionContainer', () => {
               const secondItem = getByText('Item-2');
 
               await user.click(secondItem);
+              fireEvent.focus(secondItem);
               fireEvent.keyDown(secondItem, { key: KEYS.LEFT });
 
               expect(document.activeElement).toBe(item);
@@ -235,6 +237,7 @@ describe('SelectionContainer', () => {
               const secondItem = getByText('Item-2');
 
               await user.tab();
+              fireEvent.focus(item);
               fireEvent.keyDown(item, { key: KEYS.LEFT });
 
               expect(document.activeElement).toBe(secondItem);
@@ -263,6 +266,7 @@ describe('SelectionContainer', () => {
               const secondItem = getByText('Item-2');
 
               await user.click(item);
+              fireEvent.focus(item);
               fireEvent.keyDown(item, { key: KEYS.RIGHT });
               expect(secondItem).toBe(document.activeElement);
             });
@@ -285,6 +289,7 @@ describe('SelectionContainer', () => {
               const secondItem = getByText('Item-2');
 
               await user.click(secondItem);
+              fireEvent.focus(secondItem);
               fireEvent.keyDown(secondItem, { key: KEYS.RIGHT });
 
               expect(item).toBe(document.activeElement);
@@ -338,6 +343,7 @@ describe('SelectionContainer', () => {
             const secondItem = getByText('Item-2');
 
             await user.click(secondItem);
+            fireEvent.focus(secondItem);
             fireEvent.keyDown(secondItem, { key: KEYS.UP });
 
             expect(item).toBe(document.activeElement);
@@ -349,6 +355,7 @@ describe('SelectionContainer', () => {
             const secondItem = getByText('Item-2');
 
             await user.click(secondItem);
+            fireEvent.focus(secondItem);
             fireEvent.keyDown(secondItem, { key: KEYS.UP });
 
             expect(item).toBe(document.activeElement);
@@ -360,6 +367,7 @@ describe('SelectionContainer', () => {
             const lastItem = getByText('Item-3');
 
             await user.click(item);
+            fireEvent.focus(item);
             fireEvent.keyDown(item, { key: KEYS.UP });
 
             expect(lastItem).toBe(document.activeElement);
@@ -373,6 +381,7 @@ describe('SelectionContainer', () => {
             const secondItem = getByText('Item-2');
 
             await user.click(item);
+            fireEvent.focus(item);
             fireEvent.keyDown(item, { key: KEYS.DOWN });
 
             expect(secondItem).toBe(document.activeElement);
@@ -384,6 +393,7 @@ describe('SelectionContainer', () => {
             const secondItem = getByText('Item-2');
 
             await user.click(item);
+            fireEvent.focus(item);
             fireEvent.keyDown(item, { key: KEYS.DOWN });
 
             expect(secondItem).toBe(document.activeElement);
@@ -395,6 +405,7 @@ describe('SelectionContainer', () => {
             const lastItem = getByText('Item-3');
 
             await user.click(lastItem);
+            fireEvent.focus(lastItem);
             fireEvent.keyDown(lastItem, { key: KEYS.DOWN });
 
             expect(item).toBe(document.activeElement);
@@ -437,6 +448,7 @@ describe('SelectionContainer', () => {
               const secondItem = getByText('Item-2');
 
               await user.click(secondItem);
+              fireEvent.focus(secondItem);
               fireEvent.keyDown(secondItem, { key: KEYS.LEFT });
 
               expect(document.activeElement).toBe(item);
@@ -491,6 +503,7 @@ describe('SelectionContainer', () => {
               const secondItem = getByText('Item-2');
 
               await user.click(item);
+              fireEvent.focus(item);
               fireEvent.keyDown(item, { key: KEYS.RIGHT });
               expect(secondItem).toBe(document.activeElement);
             });
@@ -501,6 +514,7 @@ describe('SelectionContainer', () => {
               const lastItem = getByText('Item-3');
 
               await user.click(lastItem);
+              fireEvent.focus(lastItem);
               fireEvent.keyDown(lastItem, { key: KEYS.RIGHT });
               expect(item).toBe(document.activeElement);
             });
@@ -513,6 +527,7 @@ describe('SelectionContainer', () => {
               const secondItem = getByText('Item-2');
 
               await user.click(secondItem);
+              fireEvent.focus(secondItem);
               fireEvent.keyDown(secondItem, { key: KEYS.RIGHT });
 
               expect(item).toBe(document.activeElement);
@@ -538,6 +553,7 @@ describe('SelectionContainer', () => {
             const secondItem = getByText('Item-2');
 
             await user.click(secondItem);
+            fireEvent.focus(secondItem);
             fireEvent.keyDown(secondItem, { key: KEYS.UP });
 
             expect(item).toBe(document.activeElement);
@@ -549,6 +565,7 @@ describe('SelectionContainer', () => {
             const secondItem = getByText('Item-2');
 
             await user.click(secondItem);
+            fireEvent.focus(secondItem);
             fireEvent.keyDown(secondItem, { key: KEYS.UP });
 
             expect(item).toBe(document.activeElement);
@@ -573,6 +590,7 @@ describe('SelectionContainer', () => {
             const secondItem = getByText('Item-2');
 
             await user.click(item);
+            fireEvent.focus(item);
             fireEvent.keyDown(item, { key: KEYS.DOWN });
 
             expect(secondItem).toBe(document.activeElement);
@@ -584,6 +602,7 @@ describe('SelectionContainer', () => {
             const secondItem = getByText('Item-2');
 
             await user.click(item);
+            fireEvent.focus(item);
             fireEvent.keyDown(item, { key: KEYS.DOWN });
 
             expect(secondItem).toBe(document.activeElement);
@@ -595,6 +614,7 @@ describe('SelectionContainer', () => {
             const lastItem = getByText('Item-3');
 
             await user.click(lastItem);
+            fireEvent.focus(lastItem);
             fireEvent.keyDown(lastItem, { key: KEYS.DOWN });
 
             expect(item).toBe(document.activeElement);
@@ -619,8 +639,8 @@ describe('SelectionContainer', () => {
       expect(item).toHaveAttribute('aria-selected', 'false');
     });
 
-    it('applies selected aria value if defaultSelectedIndex is passed', () => {
-      const { getByText } = render(<BasicExample defaultSelectedIndex={1} />);
+    it('applies selected aria value if defaultSelectedItem is passed', () => {
+      const { getByText } = render(<BasicExample defaultSelectedItem={itemValues[1]} />);
       const secondItem = getByText('Item-2');
 
       expect(secondItem).toHaveAttribute('aria-selected', 'true');

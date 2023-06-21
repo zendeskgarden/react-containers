@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import { HTMLProps, ReactNode, RefObject } from 'react';
+import { HTMLProps, MutableRefObject, ReactNode } from 'react';
 
 export interface IUseSelectionProps<Item> {
   /** The array of IDs used for managing selection */
@@ -47,7 +47,7 @@ export interface IUseSelectionReturnValue<Item> {
   getItemProps: <T extends Element>(
     props: Omit<HTMLProps<T>, 'role'> & {
       item: Item;
-      focusRef?: RefObject<T>;
+      focusRef?: MutableRefObject<T>;
       refKey?: string;
       role?: 'option' | null;
       selectedAriaKey?: any;

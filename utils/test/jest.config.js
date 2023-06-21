@@ -26,7 +26,7 @@ module.exports = {
   testEnvironment: 'jest-environment-jsdom',
   setupFilesAfterEnv: ['<rootDir>/utils/test/jest.setup.js'],
   modulePathIgnorePatterns: ['./node_modules'],
-  transformIgnorePatterns: ['\\/node_modules\\/(?!@zendeskgarden|@babel)'],
+  transformIgnorePatterns: ['/node_modules/(?!(@zendeskgarden|@babel|react-merge-refs))'],
   transform: {
     '^.+\\.(t|j)sx?$': [
       '@swc/jest',
@@ -39,7 +39,8 @@ module.exports = {
           }
         }
       }
-    ]
+    ],
+    '^.+\\.mjs?$': 'babel-jest'
   },
   moduleNameMapper: {
     'garden-test-utils': '<rootDir>/utils/test/utilities.ts'
