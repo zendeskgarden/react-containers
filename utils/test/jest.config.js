@@ -28,7 +28,7 @@ module.exports = {
   modulePathIgnorePatterns: ['./node_modules'],
   transformIgnorePatterns: ['/node_modules/(?!(@zendeskgarden|@babel|react-merge-refs))'],
   transform: {
-    '^.+\\.(t|j)sx?$': [
+    '^.+\\.(t|j|mj)sx?$': [
       '@swc/jest',
       {
         jsc: {
@@ -39,8 +39,7 @@ module.exports = {
           }
         }
       }
-    ],
-    '^.+\\.mjs?$': 'babel-jest'
+    ]
   },
   moduleNameMapper: {
     'garden-test-utils': '<rootDir>/utils/test/utilities.ts'
