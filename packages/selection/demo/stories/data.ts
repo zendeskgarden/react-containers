@@ -5,4 +5,4 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-export const ITEMS: string[] = ['item-1', 'item-2', 'item-3', 'item-4', 'item-5'];
+export const VALUES: string[] = ['item-1', 'item-2', 'item-3', 'item-4', 'item-5'];

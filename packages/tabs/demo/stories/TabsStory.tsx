@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { Story } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import {
   ITabsContainerProps,
   IUseTabsProps,
@@ -17,17 +17,17 @@ import {
 import classNames from 'classnames';
 
 interface TabItemProps {
-  item: string;
+  value: string;
   getTabProps: IUseTabsReturnValue<string>['getTabProps'];
   selectedItem: IUseTabsReturnValue<string>['selectedItem'];
   orientation: IUseTabsProps<string>['orientation'];
   rtl?: IUseTabsProps<string>['rtl'];
 }
 
-const TabItem = ({ item, getTabProps, selectedItem, orientation, rtl }: TabItemProps) => (
+const TabItem = ({ value, getTabProps, selectedItem, orientation, rtl }: TabItemProps) => (
   <li
-    key={item}
-    {...getTabProps({ item })}
+    key={value}
+    {...getTabProps({ value })}
     className={classNames(
       'border-3',
       'border-solid',
@@ -36,24 +36,24 @@ const TabItem = ({ item, getTabProps, selectedItem, orientation, rtl }: TabItemP
       'px-2',
       'py-1',
       {
-        'border-b-blue-600': selectedItem === item && orientation !== 'vertical',
-        'border-r-blue-600': selectedItem === item && orientation === 'vertical' && !rtl,
-        'border-l-blue-600': selectedItem === item && orientation === 'vertical' && rtl
+        'border-b-blue-600': selectedItem === value && orientation !== 'vertical',
+        'border-r-blue-600': selectedItem === value && orientation === 'vertical' && !rtl,
+        'border-l-blue-600': selectedItem === value && orientation === 'vertical' && rtl
       }
     )}
   >
-    {item}
+    {value}
   </li>
 );
 
 interface IComponentProps extends IUseTabsReturnValue<string> {
-  items: IUseTabsProps<string>['items'];
+  values: IUseTabsProps<string>['values'];
   orientation: IUseTabsProps<any>['orientation'];
   rtl: IUseTabsProps<any>['rtl'];
 }
 
 const Component = ({
-  items,
+  values,
   getTabListProps,
   getTabPanelProps,
   getTabProps,
@@ -78,10 +78,10 @@ const Component = ({
           'border-l-grey-600': orientation === 'vertical' && rtl
         })}
       >
-        {items.map(item => (
+        {values.map(value => (
           <TabItem
-            key={item}
-            item={item}
+            key={value}
+            value={value}
             getTabProps={getTabProps}
             selectedItem={selectedItem}
             orientation={orientation}
@@ -89,44 +89,39 @@ const Component = ({
           />
         ))}
       </ul>
-      {items.map(item => (
-        <div key={item} {...getTabPanelProps({ item })} className="p-2">
-          {item}
+      {values.map(value => (
+        <div key={value} {...getTabPanelProps({ value })} className="p-2">
+          {value}
         </div>
       ))}
     </div>
   );
 };
 
-interface IProps extends IUseTabsProps<string> {
-  items: IUseTabsProps<string>['items'];
-}
-
-const Container = (props: IProps) => {
-  const { rtl, orientation, items } = props;
+const Container = (props: IUseTabsProps<string>) => {
+  const { rtl, orientation, values } = props;
 
   return (
     <TabsContainer {...props}>
       {containerProps => (
-        <Component items={items} orientation={orientation} rtl={rtl} {...containerProps} />
+        <Component values={values} orientation={orientation} rtl={rtl} {...containerProps} />
       )}
     </TabsContainer>
   );
 };
 
-const Hook = (props: IProps) => {
-  const { items, orientation, rtl } = props;
+const Hook = (props: IUseTabsProps<string>) => {
+  const { values, orientation, rtl } = props;
   const hookProps = useTabs(props);
 
-  return <Component items={items} orientation={orientation} rtl={rtl} {...hookProps} />;
+  return <Component values={values} orientation={orientation} rtl={rtl} {...hookProps} />;
 };
 
 interface IArgs extends ITabsContainerProps<string> {
   as: 'hook' | 'container';
-  items: IUseTabsProps<string>['items'];
 }
 
-export const TabsStory: Story<IArgs> = ({ as, ...props }: IArgs) => {
+export const TabsStory: StoryFn<IArgs> = ({ as, ...props }: IArgs) => {
   switch (as) {
     case 'container':
       return <Container {...props} />;

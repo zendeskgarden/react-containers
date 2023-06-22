@@ -14,10 +14,10 @@ import { SelectionContainer, ISelectionContainerProps } from './';
 describe('SelectionContainer', () => {
   const user = userEvent.setup();
 
-  const itemValues = ['Item-1', 'Item-2', 'Item-3'];
+  const values = ['Item-1', 'Item-2', 'Item-3'];
 
   const BasicExample: React.FunctionComponent<
-    Omit<ISelectionContainerProps<string>, 'children' | 'items'> & {
+    Omit<ISelectionContainerProps<string>, 'children' | 'values'> & {
       selectedAriaKey?: string;
     }
   > = ({
@@ -30,7 +30,7 @@ describe('SelectionContainer', () => {
     onSelect
   }) => (
     <SelectionContainer
-      items={itemValues}
+      values={values}
       direction={direction}
       defaultFocusedItem={defaultFocusedItem}
       defaultSelectedItem={defaultSelectedItem}
@@ -40,20 +40,20 @@ describe('SelectionContainer', () => {
     >
       {({ getContainerProps, getItemProps, selectedItem }) => (
         <div data-test-id="container" {...getContainerProps()}>
-          {itemValues.map(item => {
-            const isSelected = item === selectedItem;
+          {values.map(value => {
+            const isSelected = value === selectedItem;
 
             return (
               <div
                 {...getItemProps({
                   selectedAriaKey,
-                  key: item,
-                  item,
-                  'data-test-id': 'item',
+                  key: value,
+                  value,
+                  'data-test-id': 'value',
                   'aria-selected': isSelected
                 } as any)}
               >
-                {item}
+                {value}
               </div>
             );
           })}
@@ -71,7 +71,7 @@ describe('SelectionContainer', () => {
 
         await user.tab();
 
-        expect(onFocusSpy).toHaveBeenCalledWith(itemValues[0]);
+        expect(onFocusSpy).toHaveBeenCalledWith(values[0]);
       });
     });
 
@@ -83,7 +83,7 @@ describe('SelectionContainer', () => {
 
         await user.click(item);
 
-        expect(onSelectSpy).toHaveBeenCalledWith(itemValues[0]);
+        expect(onSelectSpy).toHaveBeenCalledWith(values[0]);
       });
     });
   });
@@ -120,7 +120,7 @@ describe('SelectionContainer', () => {
 
       it('focuses last item if no item is currently selected and defaultFocusedItem is provided', () => {
         const { getByText } = render(
-          <BasicExample defaultFocusedItem={itemValues[itemValues.length - 1]} />
+          <BasicExample defaultFocusedItem={values[values.length - 1]} />
         );
         const lastItem = getByText('Item-3');
 
@@ -640,7 +640,7 @@ describe('SelectionContainer', () => {
     });
 
     it('applies selected aria value if defaultSelectedItem is passed', () => {
-      const { getByText } = render(<BasicExample defaultSelectedItem={itemValues[1]} />);
+      const { getByText } = render(<BasicExample defaultSelectedItem={values[1]} />);
       const secondItem = getByText('Item-2');
 
       expect(secondItem).toHaveAttribute('aria-selected', 'true');

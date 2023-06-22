@@ -2,7 +2,7 @@ import { Meta, ArgsTable, Canvas, Story, Markdown } from '@storybook/addon-docs'
 import { useArgs } from '@storybook/client-api';
 import { TabsContainer } from '@zendeskgarden/container-tabs';
 import { TabsStory } from './stories/TabsStory';
-import { ITEMS } from './stories/data';
+import { VALUES } from './stories/data';
 import README from '../README.md';
 
 <Meta
@@ -10,12 +10,13 @@ import README from '../README.md';
   component={TabsContainer}
   args={{
     as: 'hook',
-    tabs: 3,
-    items: ITEMS
+    orientation: 'horizontal',
+    values: VALUES,
+    defaultSelectedItem: VALUES[0]
   }}
   argTypes={{
     as: { options: ['container', 'hook'], control: 'radio', table: { category: 'Story' } },
-    tabs: { table: { category: 'Story' } }
+    values: { table: { category: 'Story' } }
   }}
 />
 
@@ -28,11 +29,7 @@ import README from '../README.md';
 ## Uncontrolled
 
 <Canvas>
-  <Story
-    name="Uncontrolled"
-    args={{ defaultSelectedItem: ITEMS[0] }}
-    argTypes={{ selectedItem: { control: false } }}
-  >
+  <Story name="Uncontrolled" argTypes={{ selectedItem: { control: false } }}>
     {args => <TabsStory {...args} />}
   </Story>
 </Canvas>
@@ -40,11 +37,7 @@ import README from '../README.md';
 ## Controlled
 
 <Canvas>
-  <Story
-    name="Controlled"
-    args={{ selectedItem: ITEMS[0] }}
-    argTypes={{ defaultSelectedItem: { control: false } }}
-  >
+  <Story name="Controlled" argTypes={{ defaultSelectedItem: { control: false } }}>
     {args => {
       const updateArgs = useArgs()[1];
       const handleSelect = selectedItem => updateArgs({ selectedItem });

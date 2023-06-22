@@ -8,8 +8,8 @@
 import { HTMLProps, MutableRefObject, ReactNode } from 'react';
 
 export interface IUseSelectionProps<Item> {
-  /** The array of IDs used for managing selection */
-  items: Item[];
+  /** Provides an ordered list of unique selection values */
+  values: Item[];
   /** Determines the orientation of the selection */
   direction?: 'horizontal' | 'vertical' | 'both';
   /** Sets the initial focused item */
@@ -46,7 +46,7 @@ export interface IUseSelectionReturnValue<Item> {
   ) => HTMLProps<T>;
   getItemProps: <T extends Element>(
     props: Omit<HTMLProps<T>, 'role'> & {
-      item: Item;
+      value: Item;
       focusRef?: MutableRefObject<T>;
       refKey?: string;
       role?: 'option' | null;

@@ -14,17 +14,17 @@ describe('TabsContainer', () => {
   const user = userEvent.setup();
 
   const idPrefix = 'test_id';
-  const tabs = ['tab-1', 'tab-2', 'tab-3'];
+  const values = ['tab-1', 'tab-2', 'tab-3'];
   const getPanelId = (tab: string) => `${idPrefix}__panel:${tab}`;
   const getTabId = (tab: string) => `${idPrefix}__tab:${tab}`;
 
-  const BasicExample: React.FunctionComponent<Omit<ITabsContainerProps<string>, 'items'>> = ({
+  const BasicExample: React.FunctionComponent<Omit<ITabsContainerProps<string>, 'values'>> = ({
     orientation,
     onSelect,
-    defaultSelectedItem = tabs[0]
+    defaultSelectedItem = values[0]
   } = {}) => (
     <TabsContainer
-      items={tabs}
+      values={values}
       orientation={orientation}
       onSelect={onSelect}
       idPrefix={idPrefix}
@@ -33,27 +33,27 @@ describe('TabsContainer', () => {
       {({ getTabListProps, getTabProps, getTabPanelProps, selectedItem, focusedItem }) => (
         <div>
           <div data-test-id="tab-list" {...getTabListProps()}>
-            {tabs.map(tab => (
+            {values.map(value => (
               <div
-                key={tab}
-                data-test-value={tab}
+                key={value}
+                data-test-value={value}
                 data-test-id="tab"
-                data-selected={tab === selectedItem}
-                data-focused={tab === focusedItem}
-                {...getTabProps({ item: tab })}
+                data-selected={value === selectedItem}
+                data-focused={value === focusedItem}
+                {...getTabProps({ value })}
               >
-                {tab}
+                {value}
               </div>
             ))}
           </div>
-          {tabs.map(tab => (
+          {values.map(value => (
             <div
-              key={tab}
-              data-test-value={tab}
+              key={value}
+              data-test-value={value}
               data-test-id="tab-panel"
-              {...getTabPanelProps({ item: tab })}
+              {...getTabPanelProps({ value })}
             >
-              {tab} content
+              {value} content
             </div>
           ))}
         </div>
@@ -93,7 +93,7 @@ describe('TabsContainer', () => {
       });
 
       it('defaultSelectedItem applies correct accessibility attributes', () => {
-        const { getAllByTestId } = render(<BasicExample defaultSelectedItem={tabs[1]} />);
+        const { getAllByTestId } = render(<BasicExample defaultSelectedItem={values[1]} />);
         const [, tab] = getAllByTestId('tab');
 
         expect(tab).toHaveAttribute('aria-selected', 'true');
@@ -114,7 +114,7 @@ describe('TabsContainer', () => {
     });
 
     it('defaultSelectedItem applies correct accessibility attributes', () => {
-      const { getAllByTestId } = render(<BasicExample defaultSelectedItem={tabs[1]} />);
+      const { getAllByTestId } = render(<BasicExample defaultSelectedItem={values[1]} />);
       const [, tabPanel] = getAllByTestId('tab-panel');
 
       expect(tabPanel).not.toHaveAttribute('hidden');

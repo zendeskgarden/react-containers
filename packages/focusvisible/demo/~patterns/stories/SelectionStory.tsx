@@ -12,18 +12,15 @@ import { useFocusVisible } from '@zendeskgarden/container-focusvisible';
 import { useSelection } from '@zendeskgarden/container-selection';
 
 export const SelectionStory: Story = () => {
-  const items = ['Item 1', 'Item 2', 'Item 3'];
+  const values = ['Item 1', 'Item 2', 'Item 3'];
   const scope = useRef(null);
-  const { getContainerProps, getItemProps, selectedItem } = useSelection({
-    items,
-    defaultSelectedItem: items[0]
-  });
+  const { getContainerProps, getItemProps, selectedItem } = useSelection({ values });
 
   useFocusVisible({ scope });
 
   return (
     <ul className="flex" {...getContainerProps()} ref={scope}>
-      {items.map(item => {
+      {values.map(item => {
         return (
           <li
             key={item}

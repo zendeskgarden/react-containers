@@ -23,7 +23,7 @@ SelectionContainer.defaultProps = {
 SelectionContainer.propTypes = {
   children: PropTypes.func,
   render: PropTypes.func,
-  items: PropTypes.arrayOf(PropTypes.string).isRequired,
+  values: PropTypes.arrayOf(PropTypes.any).isRequired,
   rtl: PropTypes.bool,
   direction: PropTypes.oneOf(['horizontal', 'vertical', 'both']),
   defaultFocusedItem: PropTypes.string,

@@ -19,16 +19,10 @@ import { composeEventHandlers, getControlledValue, KEYS } from '@zendeskgarden/c
 import { IUseSelectionProps, IUseSelectionReturnValue } from './types';
 import { stateReducer } from './utils';
 
-/**
- * Require items up front?
- * 1. Order is guaranteed
- * 2. Can be optimized between renders
- * 3. items/ref dictionary can never be duplicated
- */
 export const useSelection = <Item>({
-  items,
+  values,
   direction = 'horizontal',
-  defaultFocusedItem = items[0],
+  defaultFocusedItem = values[0],
   defaultSelectedItem,
   rtl,
   selectedItem,
@@ -39,16 +33,16 @@ export const useSelection = <Item>({
   const isSelectedItemControlled = selectedItem !== undefined;
   const isFocusedItemControlled = focusedItem !== undefined;
 
-  // Create a ref dictionary from `items`.
+  // Create a ref dictionary from `values`.
   // Refs are created/assigned as part of `getItemProps`.
   const refs: Record<string, any> = useMemo(
     () =>
-      items.reduce((all: Record<string, MutableRefObject<any>>, item) => {
-        all[String(item)] = { current: null };
+      values.reduce((all: Record<string, MutableRefObject<any>>, value) => {
+        all[String(value)] = { current: null };
 
         return all;
       }, {}),
-    [items]
+    [values]
   );
 
   const [state, dispatch] = useReducer(stateReducer, {
@@ -63,13 +57,13 @@ export const useSelection = <Item>({
     if (controlledFocusedItem !== undefined) {
       const focusItemTarget = refs[controlledFocusedItem];
 
-      if (focusItemTarget?.current) focusItemTarget.current.focus();
+      focusItemTarget?.current && focusItemTarget.current.focus();
     }
   }, [controlledFocusedItem]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (selectedItem === undefined && defaultSelectedItem !== undefined) {
-      if (onSelect) onSelect(defaultSelectedItem);
+      onSelect && onSelect(defaultSelectedItem);
 
       if (!isSelectedItemControlled) {
         dispatch({
@@ -96,36 +90,34 @@ export const useSelection = <Item>({
     onFocus: onFocusCallback,
     onKeyDown,
     onClick,
-    item,
+    value,
     focusRef,
     refKey = 'ref',
     ...other
   }) => {
-    const isSelected = controlledSelectedItem === item;
+    const isSelected = controlledSelectedItem === value;
     const isFocused =
-      controlledFocusedItem === undefined ? isSelected : controlledFocusedItem === item;
+      controlledFocusedItem === undefined ? isSelected : controlledFocusedItem === value;
     const tabIndex =
       isFocused ||
       (controlledSelectedItem === undefined &&
         controlledFocusedItem === undefined &&
-        item === defaultFocusedItem)
+        value === defaultFocusedItem)
         ? 0
         : -1;
     const verticalDirection = direction === 'vertical' || direction === 'both';
     const horizontalDirection = direction === 'horizontal' || direction === 'both';
 
     const handleFocus = () => {
-      if (onFocus) onFocus(item);
+      onFocus && onFocus(value);
 
-      if (!isFocusedItemControlled) {
-        dispatch({ type: 'FOCUS', payload: item });
-      }
+      !isFocusedItemControlled && dispatch({ type: 'FOCUS', payload: value });
     };
 
     const handleClick = () => {
-      if (onSelect) onSelect(item);
-      if (onFocus) onFocus(item);
-      if (!isSelectedItemControlled) dispatch({ type: 'MOUSE_SELECT', payload: item });
+      onSelect && onSelect(value);
+      onFocus && onFocus(value);
+      !isSelectedItemControlled && dispatch({ type: 'MOUSE_SELECT', payload: value });
     };
 
     const handleKeyDown: KeyboardEventHandler = event => {
@@ -133,45 +125,37 @@ export const useSelection = <Item>({
       let currentItem: Item;
 
       if (isFocusedItemControlled) {
-        currentItem = items.find(id => focusedItem === id)!;
+        currentItem = values.find(id => focusedItem === id)!;
       } else {
-        currentItem = items.find(id => state.focusedItem === id)!;
+        currentItem = values.find(id => state.focusedItem === id)!;
       }
 
       const onIncrement = () => {
-        const nextItemIndex = items.findIndex(id => id === currentItem) + 1;
+        const nextItemIndex = values.indexOf(currentItem) + 1;
 
-        nextItem = items[nextItemIndex];
+        nextItem = values[nextItemIndex];
 
         if (!nextItem) {
-          nextItem = items[0];
+          nextItem = values[0];
         }
 
-        if (!isFocusedItemControlled) {
-          dispatch({ type: 'INCREMENT', payload: nextItem });
-        }
+        !isFocusedItemControlled && dispatch({ type: 'INCREMENT', payload: nextItem });
 
-        if (onFocus) {
-          onFocus(nextItem);
-        }
+        onFocus && onFocus(nextItem);
       };
 
       const onDecrement = () => {
-        const nextItemIndex = items.findIndex(id => id === currentItem) - 1;
+        const nextItemIndex = values.indexOf(currentItem) - 1;
 
-        nextItem = items[nextItemIndex];
+        nextItem = values[nextItemIndex];
 
         if (!nextItem) {
-          nextItem = items[items.length - 1];
+          nextItem = values[values.length - 1];
         }
 
-        if (!isFocusedItemControlled) {
-          dispatch({ type: 'DECREMENT', payload: nextItem });
-        }
+        !isFocusedItemControlled && dispatch({ type: 'DECREMENT', payload: nextItem });
 
-        if (onFocus) {
-          onFocus(nextItem);
-        }
+        onFocus && onFocus(nextItem);
       };
 
       const hasModifierKeyPressed =
@@ -201,32 +185,22 @@ export const useSelection = <Item>({
 
           event.preventDefault();
         } else if (event.key === KEYS.HOME) {
-          const firstItem = items[0];
+          const firstItem = values[0];
 
-          if (!isFocusedItemControlled) {
-            dispatch({ type: 'HOME', payload: firstItem });
-          }
+          !isFocusedItemControlled && dispatch({ type: 'HOME', payload: firstItem });
 
-          if (onFocus) onFocus(firstItem);
+          onFocus && onFocus(firstItem);
           event.preventDefault();
         } else if (event.key === KEYS.END) {
-          const lastItem = items[items.length - 1];
+          const lastItem = values[values.length - 1];
 
-          if (!isFocusedItemControlled) {
-            dispatch({ type: 'END', payload: lastItem });
-          }
+          !isFocusedItemControlled && dispatch({ type: 'END', payload: lastItem });
 
-          if (onFocus) onFocus(lastItem);
+          onFocus && onFocus(lastItem);
           event.preventDefault();
         } else if (event.key === KEYS.SPACE || event.key === KEYS.ENTER) {
-          if (onSelect) onSelect(item);
-
-          if (!isSelectedItemControlled) {
-            dispatch({
-              type: 'KEYBOARD_SELECT',
-              payload: item
-            });
-          }
+          onSelect && onSelect(value);
+          !isSelectedItemControlled && dispatch({ type: 'KEYBOARD_SELECT', payload: value });
 
           event.preventDefault();
         }
@@ -245,7 +219,7 @@ export const useSelection = <Item>({
       role: role === null ? undefined : role,
       tabIndex,
       [selectedAriaKey]: selectedAriaKey ? isSelected : undefined,
-      [refKey]: mergeRefs([focusRef, refs[String(item)]]),
+      [refKey]: mergeRefs([focusRef, refs[String(value)]]),
       onFocus: composeEventHandlers(onFocusCallback, handleFocus),
       onClick: composeEventHandlers(onClick, handleClick),
       onKeyDown: composeEventHandlers(onKeyDown, handleKeyDown),

@@ -23,6 +23,7 @@ TabsContainer.defaultProps = {
 TabsContainer.propTypes = {
   children: PropTypes.func,
   render: PropTypes.func,
+  values: PropTypes.arrayOf(PropTypes.any).isRequired,
   rtl: PropTypes.bool,
   orientation: PropTypes.oneOf(['horizontal', 'vertical']),
   idPrefix: PropTypes.string,

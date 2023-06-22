@@ -2,7 +2,7 @@ import { Meta, ArgsTable, Canvas, Story, Markdown } from '@storybook/addon-docs'
 import { useArgs } from '@storybook/client-api';
 import { SelectionContainer } from '@zendeskgarden/container-selection';
 import { SelectionStory } from './stories/SelectionStory';
-import { ITEMS } from './stories/data';
+import { VALUES } from './stories/data';
 import README from '../README.md';
 
 <Meta
@@ -10,12 +10,12 @@ import README from '../README.md';
   component={SelectionContainer}
   args={{
     as: 'hook',
-    items: ITEMS,
+    values: VALUES,
     direction: 'horizontal'
   }}
   argTypes={{
     as: { options: ['container', 'hook'], control: 'radio', table: { category: 'Story' } },
-    items: { table: { category: 'Story' } }
+    values: { table: { category: 'Story' } }
   }}
 />
 
