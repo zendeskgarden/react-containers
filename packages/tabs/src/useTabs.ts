@@ -9,23 +9,23 @@ import { useId } from '@zendeskgarden/container-utilities';
 import { useSelection } from '@zendeskgarden/container-selection';
 import { IUseTabsProps, IUseTabsReturnValue } from './types';
 
-export const useTabs = <Item>({
+export const useTabs = <Value>({
   values,
   orientation = 'horizontal',
   idPrefix,
   ...options
-}: IUseTabsProps<Item>): IUseTabsReturnValue<Item> => {
+}: IUseTabsProps<Value>): IUseTabsReturnValue<Value> => {
   const prefix = useId(idPrefix);
   const PANEL_ID = `${prefix}__panel`;
   const TAB_ID = `${prefix}__tab`;
-  const { selectedItem, focusedItem, getContainerProps, getItemProps } = useSelection<Item>({
+  const { selectedItem, focusedItem, getContainerProps, getItemProps } = useSelection<Value>({
     values,
     direction: orientation,
     defaultSelectedItem: values[0],
     ...options
   });
 
-  const getTabListProps: IUseTabsReturnValue<Item>['getTabListProps'] = ({
+  const getTabListProps: IUseTabsReturnValue<Value>['getTabListProps'] = ({
     role = 'tablist',
     ...other
   } = {}) => ({
@@ -36,7 +36,7 @@ export const useTabs = <Item>({
     'data-garden-container-version': PACKAGE_VERSION
   });
 
-  const getTabProps: IUseTabsReturnValue<Item>['getTabProps'] = ({
+  const getTabProps: IUseTabsReturnValue<Value>['getTabProps'] = ({
     role = 'tab',
     value,
     ...other
@@ -47,7 +47,7 @@ export const useTabs = <Item>({
     'aria-controls': `${PANEL_ID}:${value}`
   });
 
-  const getTabPanelProps: IUseTabsReturnValue<Item>['getTabPanelProps'] = ({
+  const getTabPanelProps: IUseTabsReturnValue<Value>['getTabPanelProps'] = ({
     role = 'tabpanel',
     value,
     ...other

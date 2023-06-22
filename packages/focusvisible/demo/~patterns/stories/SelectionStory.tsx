@@ -20,10 +20,10 @@ export const SelectionStory: Story = () => {
 
   return (
     <ul className="flex" {...getContainerProps()} ref={scope}>
-      {values.map(item => {
+      {values.map(value => {
         return (
           <li
-            key={item}
+            key={value}
             className={classNames(
               'border-0',
               'border-blue-600',
@@ -31,11 +31,11 @@ export const SelectionStory: Story = () => {
               'mx-3',
               'px-2',
               'pt-1',
-              { 'border-b-3': item === selectedItem }
+              { 'border-b-3': value === selectedItem }
             )}
-            {...getItemProps({ item })}
+            {...getItemProps({ value })}
           >
-            {item}
+            {value}
           </li>
         );
       })}

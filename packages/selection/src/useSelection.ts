@@ -19,7 +19,7 @@ import { composeEventHandlers, getControlledValue, KEYS } from '@zendeskgarden/c
 import { IUseSelectionProps, IUseSelectionReturnValue } from './types';
 import { stateReducer } from './utils';
 
-export const useSelection = <Item>({
+export const useSelection = <Value>({
   values,
   direction = 'horizontal',
   defaultFocusedItem = values[0],
@@ -29,7 +29,7 @@ export const useSelection = <Item>({
   focusedItem,
   onSelect,
   onFocus
-}: IUseSelectionProps<Item>): IUseSelectionReturnValue<Item> => {
+}: IUseSelectionProps<Value>): IUseSelectionReturnValue<Value> => {
   const isSelectedItemControlled = selectedItem !== undefined;
   const isFocusedItemControlled = focusedItem !== undefined;
 
@@ -74,7 +74,7 @@ export const useSelection = <Item>({
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const getContainerProps: IUseSelectionReturnValue<Item>['getContainerProps'] = useCallback(
+  const getContainerProps: IUseSelectionReturnValue<Value>['getContainerProps'] = useCallback(
     ({ role = 'listbox', ...other } = {}) => ({
       role: role === null ? undefined : role,
       'data-garden-container-id': 'containers.selection',
@@ -84,7 +84,7 @@ export const useSelection = <Item>({
     []
   );
 
-  const getItemProps: IUseSelectionReturnValue<Item>['getItemProps'] = ({
+  const getItemProps: IUseSelectionReturnValue<Value>['getItemProps'] = ({
     selectedAriaKey = 'aria-selected',
     role = 'option',
     onFocus: onFocusCallback,
@@ -121,8 +121,8 @@ export const useSelection = <Item>({
     };
 
     const handleKeyDown: KeyboardEventHandler = event => {
-      let nextItem: Item;
-      let currentItem: Item;
+      let nextItem: Value;
+      let currentItem: Value;
 
       if (isFocusedItemControlled) {
         currentItem = values.find(id => focusedItem === id)!;

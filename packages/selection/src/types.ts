@@ -7,38 +7,38 @@
 
 import { HTMLProps, MutableRefObject, ReactNode } from 'react';
 
-export interface IUseSelectionProps<Item> {
+export interface IUseSelectionProps<Value> {
   /** Provides an ordered list of unique selection values */
-  values: Item[];
+  values: Value[];
   /** Determines the orientation of the selection */
   direction?: 'horizontal' | 'vertical' | 'both';
   /** Sets the initial focused item */
-  defaultFocusedItem?: Item;
+  defaultFocusedItem?: Value;
   /** Sets the initial selected item */
-  defaultSelectedItem?: Item;
+  defaultSelectedItem?: Value;
   /** Determines right-to-left layout */
   rtl?: boolean;
   /** Sets controlled item selection */
-  selectedItem?: Item;
+  selectedItem?: Value;
   /** Sets controlled item focus */
-  focusedItem?: Item;
+  focusedItem?: Value;
   /**
    * Handles controlled item selection
    *
    * @param selectedItem The selected item
    */
-  onSelect?: (selectedItem: Item) => void;
+  onSelect?: (selectedItem: Value) => void;
   /**
    * Handles controlled item focus
    *
    * @param focusedItem The focused item
    */
-  onFocus?: (focusedItem?: Item) => void;
+  onFocus?: (focusedItem?: Value) => void;
 }
 
-export interface IUseSelectionReturnValue<Item> {
-  focusedItem?: IUseSelectionProps<Item>['focusedItem'];
-  selectedItem?: IUseSelectionProps<Item>['selectedItem'];
+export interface IUseSelectionReturnValue<Value> {
+  focusedItem?: IUseSelectionProps<Value>['focusedItem'];
+  selectedItem?: IUseSelectionProps<Value>['selectedItem'];
   getContainerProps: <T extends Element>(
     props?: Omit<HTMLProps<T>, 'role'> & {
       role?: 'listbox' | null;
@@ -46,7 +46,7 @@ export interface IUseSelectionReturnValue<Item> {
   ) => HTMLProps<T>;
   getItemProps: <T extends Element>(
     props: Omit<HTMLProps<T>, 'role'> & {
-      value: Item;
+      value: Value;
       focusRef?: MutableRefObject<T>;
       refKey?: string;
       role?: 'option' | null;
@@ -55,21 +55,21 @@ export interface IUseSelectionReturnValue<Item> {
   ) => HTMLProps<T>;
 }
 
-export interface ISelectionContainerProps<Item> extends IUseSelectionProps<Item> {
+export interface ISelectionContainerProps<Value> extends IUseSelectionProps<Value> {
   /**
    * Provides selection render prop state and functions
    *
    * @param {*} [options.focusedItem] Controlled focused item
    * @param {*} [options.selectedItem] Controlled selected item
    * @param {function} [options.getContainerProps] Container props getter
-   * @param {function} [options.getItemProps] Item props getter
+   * @param {function} [options.getItemProps] Value props getter
    */
   render?: (options: {
-    focusedItem?: IUseSelectionReturnValue<Item>['focusedItem'];
-    selectedItem?: IUseSelectionReturnValue<Item>['selectedItem'];
-    getContainerProps: IUseSelectionReturnValue<Item>['getContainerProps'];
-    getItemProps: IUseSelectionReturnValue<Item>['getItemProps'];
+    focusedItem?: IUseSelectionReturnValue<Value>['focusedItem'];
+    selectedItem?: IUseSelectionReturnValue<Value>['selectedItem'];
+    getContainerProps: IUseSelectionReturnValue<Value>['getContainerProps'];
+    getItemProps: IUseSelectionReturnValue<Value>['getItemProps'];
   }) => ReactNode;
   /** @ignore */
-  children?: (options: IUseSelectionReturnValue<Item>) => ReactNode;
+  children?: (options: IUseSelectionReturnValue<Value>) => ReactNode;
 }
