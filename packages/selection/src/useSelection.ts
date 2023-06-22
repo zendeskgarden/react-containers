@@ -35,9 +35,9 @@ export const useSelection = <Value>({
 
   // Create a ref dictionary from `values`.
   // Refs are created/assigned as part of `getItemProps`.
-  const refs: Record<string, any> = useMemo(
+  const refs = useMemo(
     () =>
-      values.reduce((all: Record<string, MutableRefObject<any>>, value) => {
+      values.reduce((all: Record<string, MutableRefObject<any | null>>, value) => {
         all[String(value)] = { current: null };
 
         return all;
@@ -219,7 +219,7 @@ export const useSelection = <Value>({
       role: role === null ? undefined : role,
       tabIndex,
       [selectedAriaKey]: selectedAriaKey ? isSelected : undefined,
-      [refKey]: mergeRefs([focusRef, refs[String(value)]]),
+      [refKey]: mergeRefs([focusRef as MutableRefObject<any>, refs[String(value)]]),
       onFocus: composeEventHandlers(onFocusCallback, handleFocus),
       onClick: composeEventHandlers(onClick, handleClick),
       onKeyDown: composeEventHandlers(onKeyDown, handleKeyDown),
