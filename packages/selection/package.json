@@ -28,9 +28,6 @@
     "react": ">=16.8.0",
     "react-dom": ">=16.8.0"
   },
-  "devDependencies": {
-    "react-merge-refs": "^2.0.2"
-  },
   "keywords": [
     "a11y",
     "accessible",

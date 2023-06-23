@@ -26,9 +26,9 @@ module.exports = {
   testEnvironment: 'jest-environment-jsdom',
   setupFilesAfterEnv: ['<rootDir>/utils/test/jest.setup.js'],
   modulePathIgnorePatterns: ['./node_modules'],
-  transformIgnorePatterns: ['/node_modules/(?!(@zendeskgarden|@babel|react-merge-refs))'],
+  transformIgnorePatterns: ['\\/node_modules\\/(?!@zendeskgarden|@babel)'],
   transform: {
-    '^.+\\.(t|j|mj)sx?$': [
+    '^.+\\.(t|j)sx?$': [
       '@swc/jest',
       {
         jsc: {

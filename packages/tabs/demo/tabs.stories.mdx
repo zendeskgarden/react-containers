@@ -2,7 +2,7 @@ import { Meta, ArgsTable, Canvas, Story, Markdown } from '@storybook/addon-docs'
 import { useArgs } from '@storybook/client-api';
 import { TabsContainer } from '@zendeskgarden/container-tabs';
 import { TabsStory } from './stories/TabsStory';
-import { VALUES } from './stories/data';
+import { TABS } from './stories/data';
 import README from '../README.md';
 
 <Meta
@@ -11,12 +11,11 @@ import README from '../README.md';
   args={{
     as: 'hook',
     orientation: 'horizontal',
-    values: VALUES,
-    defaultSelectedValue: VALUES[0]
+    tabs: TABS,
+    defaultSelectedValue: TABS[0].value
   }}
   argTypes={{
-    as: { options: ['container', 'hook'], control: 'radio', table: { category: 'Story' } },
-    values: { table: { category: 'Story' } }
+    as: { options: ['container', 'hook'], control: 'radio', table: { category: 'Story' } }
   }}
 />
 

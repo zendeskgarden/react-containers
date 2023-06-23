@@ -14,17 +14,22 @@ describe('TabsContainer', () => {
   const user = userEvent.setup();
 
   const idPrefix = 'test_id';
-  const values = ['tab-1', 'tab-2', 'tab-3'];
+  const tabs = [
+    { value: 'tab-1' },
+    { value: 'tab-2' },
+    { value: 'tab-3' },
+    { value: 'tab-4', disabled: true }
+  ];
   const getPanelId = (tab: string) => `${idPrefix}__panel:${tab}`;
   const getTabId = (tab: string) => `${idPrefix}__tab:${tab}`;
 
-  const BasicExample: React.FunctionComponent<Omit<ITabsContainerProps<string>, 'values'>> = ({
+  const BasicExample: React.FunctionComponent<Omit<ITabsContainerProps<string>, 'tabs'>> = ({
     orientation,
     onSelect,
-    defaultSelectedValue = values[0]
+    defaultSelectedValue = tabs[0].value
   } = {}) => (
     <TabsContainer
-      values={values}
+      tabs={tabs}
       orientation={orientation}
       onSelect={onSelect}
       idPrefix={idPrefix}
@@ -33,27 +38,27 @@ describe('TabsContainer', () => {
       {({ getTabListProps, getTabProps, getTabPanelProps, selectedValue, focusedValue }) => (
         <div>
           <div data-test-id="tab-list" {...getTabListProps()}>
-            {values.map(value => (
+            {tabs.map(tab => (
               <div
-                key={value}
-                data-test-value={value}
+                key={tab.value}
+                data-test-value={tab.value}
                 data-test-id="tab"
-                data-selected={value === selectedValue}
-                data-focused={value === focusedValue}
-                {...getTabProps({ value })}
+                data-selected={tab.value === selectedValue}
+                data-focused={tab.value === focusedValue}
+                {...getTabProps({ value: tab.value })}
               >
-                {value}
+                {tab.value}
               </div>
             ))}
           </div>
-          {values.map(value => (
+          {tabs.map(tab => (
             <div
-              key={value}
-              data-test-value={value}
+              key={tab.value}
+              data-test-value={tab.value}
               data-test-id="tab-panel"
-              {...getTabPanelProps({ value })}
+              {...getTabPanelProps({ value: tab.value })}
             >
-              {value} content
+              {tab.value} content
             </div>
           ))}
         </div>
@@ -89,11 +94,17 @@ describe('TabsContainer', () => {
           expect(tab).toHaveAttribute('id', getTabId(tab.dataset.testValue!));
           expect(tab).toHaveAttribute('aria-controls', getPanelId(tab.dataset.testValue!));
           expect(tab).toHaveAttribute('aria-selected', index === 0 ? 'true' : 'false');
+
+          if (index === 3) {
+            expect(tab).toHaveAttribute('aria-disabled', 'true');
+          } else {
+            expect(tab).not.toHaveAttribute('aria-disabled');
+          }
         });
       });
 
       it('defaultSelectedValue applies correct accessibility attributes', () => {
-        const { getAllByTestId } = render(<BasicExample defaultSelectedValue={values[1]} />);
+        const { getAllByTestId } = render(<BasicExample defaultSelectedValue={tabs[1].value} />);
         const [, tab] = getAllByTestId('tab');
 
         expect(tab).toHaveAttribute('aria-selected', 'true');
@@ -114,7 +125,7 @@ describe('TabsContainer', () => {
     });
 
     it('defaultSelectedValue applies correct accessibility attributes', () => {
-      const { getAllByTestId } = render(<BasicExample defaultSelectedValue={values[1]} />);
+      const { getAllByTestId } = render(<BasicExample defaultSelectedValue={tabs[1].value} />);
       const [, tabPanel] = getAllByTestId('tab-panel');
 
       expect(tabPanel).not.toHaveAttribute('hidden');

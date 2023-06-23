@@ -15,45 +15,46 @@ import {
   useTabs
 } from '@zendeskgarden/container-tabs';
 import classNames from 'classnames';
+import { ITab } from '../../src/types';
 
 interface TabItemProps {
-  value: string;
-  getTabProps: IUseTabsReturnValue<string>['getTabProps'];
+  tab: ITab<string>;
   selectedValue: IUseTabsReturnValue<string>['selectedValue'];
   orientation: IUseTabsProps<string>['orientation'];
   rtl?: IUseTabsProps<string>['rtl'];
+  getTabProps: IUseTabsReturnValue<string>['getTabProps'];
 }
 
-const TabItem = ({ value, getTabProps, selectedValue, orientation, rtl }: TabItemProps) => (
+const TabItem = ({
+  tab: { value, disabled },
+  getTabProps,
+  selectedValue,
+  orientation,
+  rtl
+}: TabItemProps) => (
   <li
     key={value}
+    className={classNames('border-3 border-solid border-transparent px-2 py-1', {
+      'border-b-blue-600': selectedValue === value && orientation !== 'vertical',
+      'border-r-blue-600': selectedValue === value && orientation === 'vertical' && !rtl,
+      'border-l-blue-600': selectedValue === value && orientation === 'vertical' && rtl,
+      'cursor-pointer': !disabled,
+      'opacity-50 cursor-default': disabled
+    })}
     {...getTabProps({ value })}
-    className={classNames(
-      'border-3',
-      'border-solid',
-      'border-transparent',
-      'cursor-pointer',
-      'px-2',
-      'py-1',
-      {
-        'border-b-blue-600': selectedValue === value && orientation !== 'vertical',
-        'border-r-blue-600': selectedValue === value && orientation === 'vertical' && !rtl,
-        'border-l-blue-600': selectedValue === value && orientation === 'vertical' && rtl
-      }
-    )}
   >
     {value}
   </li>
 );
 
 interface IComponentProps extends IUseTabsReturnValue<string> {
-  values: IUseTabsProps<string>['values'];
+  tabs: IUseTabsProps<string>['tabs'];
   orientation: IUseTabsProps<any>['orientation'];
   rtl: IUseTabsProps<any>['rtl'];
 }
 
 const Component = ({
-  values,
+  tabs,
   getTabListProps,
   getTabPanelProps,
   getTabProps,
@@ -78,10 +79,10 @@ const Component = ({
           'border-l-grey-600': orientation === 'vertical' && rtl
         })}
       >
-        {values.map(value => (
+        {tabs.map(tab => (
           <TabItem
-            key={value}
-            value={value}
+            key={tab.value}
+            tab={tab}
             getTabProps={getTabProps}
             selectedValue={selectedValue}
             orientation={orientation}
@@ -89,9 +90,9 @@ const Component = ({
           />
         ))}
       </ul>
-      {values.map(value => (
-        <div key={value} {...getTabPanelProps({ value })} className="p-2">
-          {value}
+      {tabs.map(tab => (
+        <div key={tab.value} {...getTabPanelProps({ value: tab.value })} className="p-2">
+          {tab.value}
         </div>
       ))}
     </div>
@@ -99,22 +100,22 @@ const Component = ({
 };
 
 const Container = (props: IUseTabsProps<string>) => {
-  const { rtl, orientation, values } = props;
+  const { rtl, orientation, tabs } = props;
 
   return (
     <TabsContainer {...props}>
       {containerProps => (
-        <Component values={values} orientation={orientation} rtl={rtl} {...containerProps} />
+        <Component tabs={tabs} orientation={orientation} rtl={rtl} {...containerProps} />
       )}
     </TabsContainer>
   );
 };
 
 const Hook = (props: IUseTabsProps<string>) => {
-  const { values, orientation, rtl } = props;
+  const { tabs, orientation, rtl } = props;
   const hookProps = useTabs(props);
 
-  return <Component values={values} orientation={orientation} rtl={rtl} {...hookProps} />;
+  return <Component tabs={tabs} orientation={orientation} rtl={rtl} {...hookProps} />;
 };
 
 interface IArgs extends ITabsContainerProps<string> {

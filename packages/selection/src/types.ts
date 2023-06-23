@@ -41,13 +41,12 @@ export interface IUseSelectionReturnValue<Value> {
   selectedValue?: IUseSelectionProps<Value>['selectedValue'];
   getGroupProps: <T extends Element>(
     props?: Omit<HTMLProps<T>, 'role'> & {
-      role?: string | null;
+      role?: 'group' | null;
     }
   ) => HTMLProps<T>;
   getElementProps: <T extends Element>(
-    props: Omit<HTMLProps<T>, 'role'> & {
+    props: HTMLProps<T> & {
       value: Value;
-      role?: string | null;
       selectedAriaKey?: any;
     }
   ) => HTMLProps<T>;

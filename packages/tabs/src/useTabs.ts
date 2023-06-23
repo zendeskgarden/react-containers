@@ -7,10 +7,11 @@
 
 import { useId } from '@zendeskgarden/container-utilities';
 import { useSelection } from '@zendeskgarden/container-selection';
-import { IUseTabsProps, IUseTabsReturnValue } from './types';
+import { ITab, IUseTabsProps, IUseTabsReturnValue } from './types';
+import { useMemo } from 'react';
 
 export const useTabs = <Value>({
-  values,
+  tabs,
   orientation = 'horizontal',
   idPrefix,
   ...options
@@ -18,6 +19,17 @@ export const useTabs = <Value>({
   const prefix = useId(idPrefix);
   const PANEL_ID = `${prefix}__panel`;
   const TAB_ID = `${prefix}__tab`;
+
+  const values = useMemo(
+    () =>
+      tabs.reduce((all: any[], tab: ITab<Value>) => {
+        !tab.disabled && all.push(tab.value);
+
+        return all;
+      }, []),
+    [tabs]
+  );
+
   const { selectedValue, focusedValue, getGroupProps, getElementProps } = useSelection<Value>({
     values,
     direction: orientation,
@@ -40,12 +52,25 @@ export const useTabs = <Value>({
     role = 'tab',
     value,
     ...other
-  }) => ({
-    ...getElementProps({ value, ...other }),
-    role: role === null ? undefined : role,
-    id: `${TAB_ID}:${value}`,
-    'aria-controls': `${PANEL_ID}:${value}`
-  });
+  }) => {
+    const isDisabled = tabs.find(tab => tab.value === value)?.disabled;
+    const { onClick, onKeyDown, onFocus, onBlur, ...elementProps } = getElementProps({
+      value,
+      role: role === null ? undefined : role,
+      ...other
+    });
+
+    return {
+      ...elementProps,
+      onClick: isDisabled ? undefined : onClick,
+      onFocus: isDisabled ? undefined : onFocus,
+      onKeyDown: isDisabled ? undefined : onKeyDown,
+      onBlur: isDisabled ? undefined : onBlur,
+      id: `${TAB_ID}:${value}`,
+      'aria-disabled': isDisabled || undefined,
+      'aria-controls': `${PANEL_ID}:${value}`
+    };
+  };
 
   const getTabPanelProps: IUseTabsReturnValue<Value>['getTabPanelProps'] = ({
     role = 'tabpanel',

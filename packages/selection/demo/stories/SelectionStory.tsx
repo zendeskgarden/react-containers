@@ -5,8 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React, { useRef } from 'react';
-import { mergeRefs } from 'react-merge-refs';
+import React from 'react';
 import { StoryFn } from '@storybook/react';
 import classNames from 'classnames';
 import {
@@ -32,9 +31,6 @@ const SelectionElement = ({
   direction,
   selectedValue
 }: ISelectionElementProps) => {
-  const { ref: selectionRef, ...elementProps } = getElementProps({ value });
-  const focusRef = useRef(null);
-
   return (
     <li
       key={value}
@@ -53,8 +49,7 @@ const SelectionElement = ({
           [`mt-${index * 4}`]: direction === 'both'
         }
       )}
-      ref={mergeRefs([focusRef, selectionRef!])}
-      {...elementProps}
+      {...getElementProps({ value })}
     >
       {value === selectedValue && <span className="text-lg">✓</span>}
     </li>

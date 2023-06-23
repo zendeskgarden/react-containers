@@ -93,7 +93,7 @@ describe('SelectionContainer', () => {
       const { getByTestId } = render(<BasicExample />);
       const container = getByTestId('container');
 
-      expect(container).not.toHaveAttribute('role');
+      expect(container).toHaveAttribute('role', 'group');
     });
 
     it('first item in container defaults as the initial focusable item', async () => {

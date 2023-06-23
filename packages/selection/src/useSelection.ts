@@ -36,8 +36,8 @@ export const useSelection = <Value>({
   // Refs are created/assigned as part of `getElementProps`.
   const refs = useMemo(
     () =>
-      values.reduce((all: Record<string, MutableRefObject<any | null>>, value) => {
-        all[String(value)] = { current: null };
+      values.reduce((all: Record<any, MutableRefObject<any | null>>, value: any) => {
+        all[value] = { current: null };
 
         return all;
       }, {}),
@@ -74,7 +74,7 @@ export const useSelection = <Value>({
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const getGroupProps: IUseSelectionReturnValue<Value>['getGroupProps'] = useCallback(
-    ({ role, ...other } = {}) => ({
+    ({ role = 'group', ...other } = {}) => ({
       role: role === null ? undefined : role,
       'data-garden-container-id': 'containers.selection',
       'data-garden-container-version': PACKAGE_VERSION,
@@ -85,7 +85,6 @@ export const useSelection = <Value>({
 
   const getElementProps: IUseSelectionReturnValue<Value>['getElementProps'] = ({
     selectedAriaKey = 'aria-selected',
-    role,
     onFocus: onFocusCallback,
     onKeyDown,
     onClick,
@@ -213,10 +212,9 @@ export const useSelection = <Value>({
     };
 
     return {
-      role: role === null ? undefined : role,
       tabIndex,
       [selectedAriaKey]: selectedAriaKey ? isSelected : undefined,
-      ref: refs[String(value)],
+      ref: refs[value as any],
       onFocus: composeEventHandlers(onFocusCallback, handleFocus),
       onClick: composeEventHandlers(onClick, handleClick),
       onKeyDown: composeEventHandlers(onKeyDown, handleKeyDown),

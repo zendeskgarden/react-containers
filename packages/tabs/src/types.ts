@@ -6,11 +6,17 @@
  */
 
 import { IUseSelectionProps, IUseSelectionReturnValue } from '@zendeskgarden/container-selection';
-import { HTMLProps, MutableRefObject, ReactNode } from 'react';
+import { HTMLProps, ReactNode } from 'react';
 
-export interface IUseTabsProps<Value> extends Omit<IUseSelectionProps<Value>, 'direction'> {
+export interface ITab<Value> {
+  value: Value;
+  disabled?: boolean;
+}
+
+export interface IUseTabsProps<Value>
+  extends Omit<IUseSelectionProps<Value>, 'direction' | 'values'> {
   /** Provides an ordered list of unique selection values */
-  values: Value[];
+  tabs: ITab<Value>[];
   /** Determines the orientation of the tabs */
   orientation?: 'horizontal' | 'vertical';
   /** Prefixes IDs for tab elements */
@@ -27,8 +33,6 @@ export interface IUseTabsReturnValue<Value>
   getTabProps: <T extends Element>(
     props: Omit<HTMLProps<T>, 'role'> & {
       value: Value;
-      focusRef?: MutableRefObject<T>;
-      refKey?: string;
       role?: 'tab' | null;
     }
   ) => HTMLProps<T>;

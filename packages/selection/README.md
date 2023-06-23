@@ -26,30 +26,23 @@ aria attributes and RTL support. It uses the
 ```jsx
 import { useSelection } from '@zendeskgarden/container-selection';
 
-const items = ['Item 1', 'Item 2', 'Item 3'];
+const values = ['Value 1', 'Value 2', 'Value 3'];
 
 const Selection = ({ direction }) => {
   const { focusedValue, selectedValue, getGroupProps, getElementProps } = useSelection({
+    values,
     direction
   });
 
   return (
     <ul {...getGroupProps()}>
-      {items.map(item => {
-        const ref = React.createRef();
-        const isSelected = selectedValue === item;
-        const isFocused = focusedValue === item;
+      {values.map(value => {
+        const isSelected = selectedValue === value;
+        const isFocused = focusedValue === value;
 
         return (
-          <li
-            {...getElementProps({
-              key: item,
-              item,
-              ref,
-              focusRef: ref
-            })}
-          >
-            {item}
+          <li {...getElementProps({ key: value, value })}>
+            {value}
             {isSelected && <div>[Selected]</div>}
             {isFocused && <div>(Focused)</div>}
           </li>
@@ -65,25 +58,17 @@ const Selection = ({ direction }) => {
 ```jsx
 import { SelectionContainer } from '@zendeskgarden/container-selection';
 
-const items = ['Item 1', 'Item 2', 'Item 3'];
+const values = ['Value 1', 'Value 2', 'Value 3'];
 
-<SelectionContainer direction="vertical">
+<SelectionContainer direction="vertical" values={values}>
   {({ selectedValue, focusedValue, getGroupProps, getElementProps }) => (
     <ul {...getGroupProps()}>
-      {items.map(item => {
-        const ref = React.createRef();
-        const isSelected = item === selectedValue;
-        const isFocused = item === focusedValue;
+      {values.map(value => {
+        const isSelected = value === selectedValue;
+        const isFocused = value === focusedValue;
 
         return (
-          <li
-            {...getElementProps({
-              key: item,
-              item,
-              ref,
-              focusRef: ref
-            })}
-          >
+          <li {...getElementProps({ key: value, value })}>
             {item}
             {isSelected && <span> - Selected</span>}
             {isFocused && <span> - Focused</span>}

@@ -45,7 +45,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### BREAKING CHANGES
 
-- - breadcrumb – `[options.getGroupProps]` requires `aria-label`
+- - breadcrumb – `[options.getContainerProps]` requires `aria-label`
 
 * modal – `[options.getCloseProps]` requires `aria-label`
 * modal – rename `id` prop to `idPrefix` for consistency

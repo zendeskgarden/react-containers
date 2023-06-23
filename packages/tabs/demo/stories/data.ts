@@ -5,4 +5,12 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-export const VALUES: string[] = ['tab-1', 'tab-2', 'tab-3', 'tab-4', 'tab-5'];
+import { ITab } from '../../src/types';
+
+export const TABS: ITab<string>[] = [
+  { value: 'tab-1' },
+  { value: 'tab-2' },
+  { value: 'tab-3' },
+  { value: 'tab-4' },
+  { value: 'tab-5' }
+];
