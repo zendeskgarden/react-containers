@@ -29,20 +29,20 @@ import { useSelection } from '@zendeskgarden/container-selection';
 const items = ['Item 1', 'Item 2', 'Item 3'];
 
 const Selection = ({ direction }) => {
-  const { focusedItem, selectedItem, getContainerProps, getItemProps } = useSelection({
+  const { focusedValue, selectedValue, getGroupProps, getElementProps } = useSelection({
     direction
   });
 
   return (
-    <ul {...getContainerProps()}>
+    <ul {...getGroupProps()}>
       {items.map(item => {
         const ref = React.createRef();
-        const isSelected = selectedItem === item;
-        const isFocused = focusedItem === item;
+        const isSelected = selectedValue === item;
+        const isFocused = focusedValue === item;
 
         return (
           <li
-            {...getItemProps({
+            {...getElementProps({
               key: item,
               item,
               ref,
@@ -68,16 +68,16 @@ import { SelectionContainer } from '@zendeskgarden/container-selection';
 const items = ['Item 1', 'Item 2', 'Item 3'];
 
 <SelectionContainer direction="vertical">
-  {({ selectedItem, focusedItem, getContainerProps, getItemProps }) => (
-    <ul {...getContainerProps()}>
+  {({ selectedValue, focusedValue, getGroupProps, getElementProps }) => (
+    <ul {...getGroupProps()}>
       {items.map(item => {
         const ref = React.createRef();
-        const isSelected = item === selectedItem;
-        const isFocused = item === focusedItem;
+        const isSelected = item === selectedValue;
+        const isFocused = item === focusedValue;
 
         return (
           <li
-            {...getItemProps({
+            {...getElementProps({
               key: item,
               item,
               ref,

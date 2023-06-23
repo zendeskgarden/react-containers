@@ -27,7 +27,7 @@ TabsContainer.propTypes = {
   rtl: PropTypes.bool,
   orientation: PropTypes.oneOf(['horizontal', 'vertical']),
   idPrefix: PropTypes.string,
-  defaultSelectedItem: PropTypes.any,
-  selectedItem: PropTypes.any,
+  defaultSelectedValue: PropTypes.any,
+  selectedValue: PropTypes.any,
   onSelect: PropTypes.func
 };

@@ -5,51 +5,49 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import { HTMLProps, MutableRefObject, ReactNode } from 'react';
+import { HTMLProps, ReactNode } from 'react';
 
 export interface IUseSelectionProps<Value> {
   /** Provides an ordered list of unique selection values */
   values: Value[];
   /** Determines the orientation of the selection */
   direction?: 'horizontal' | 'vertical' | 'both';
-  /** Sets the initial focused item */
-  defaultFocusedItem?: Value;
-  /** Sets the initial selected item */
-  defaultSelectedItem?: Value;
+  /** Sets the initial focused value */
+  defaultFocusedValue?: Value;
+  /** Sets the initial selected value */
+  defaultSelectedValue?: Value;
   /** Determines right-to-left layout */
   rtl?: boolean;
-  /** Sets controlled item selection */
-  selectedItem?: Value;
-  /** Sets controlled item focus */
-  focusedItem?: Value;
+  /** Sets controlled value selection */
+  selectedValue?: Value;
+  /** Sets controlled value focus */
+  focusedValue?: Value;
   /**
-   * Handles controlled item selection
+   * Handles controlled value selection
    *
-   * @param selectedItem The selected item
+   * @param selectedValue The selected value
    */
-  onSelect?: (selectedItem: Value) => void;
+  onSelect?: (selectedValue: Value) => void;
   /**
-   * Handles controlled item focus
+   * Handles controlled value focus
    *
-   * @param focusedItem The focused item
+   * @param focusedValue The focused value
    */
-  onFocus?: (focusedItem?: Value) => void;
+  onFocus?: (focusedValue?: Value) => void;
 }
 
 export interface IUseSelectionReturnValue<Value> {
-  focusedItem?: IUseSelectionProps<Value>['focusedItem'];
-  selectedItem?: IUseSelectionProps<Value>['selectedItem'];
-  getContainerProps: <T extends Element>(
+  focusedValue?: IUseSelectionProps<Value>['focusedValue'];
+  selectedValue?: IUseSelectionProps<Value>['selectedValue'];
+  getGroupProps: <T extends Element>(
     props?: Omit<HTMLProps<T>, 'role'> & {
-      role?: 'listbox' | null;
+      role?: string | null;
     }
   ) => HTMLProps<T>;
-  getItemProps: <T extends Element>(
+  getElementProps: <T extends Element>(
     props: Omit<HTMLProps<T>, 'role'> & {
       value: Value;
-      focusRef?: MutableRefObject<T>;
-      refKey?: string;
-      role?: 'option' | null;
+      role?: string | null;
       selectedAriaKey?: any;
     }
   ) => HTMLProps<T>;
@@ -59,16 +57,16 @@ export interface ISelectionContainerProps<Value> extends IUseSelectionProps<Valu
   /**
    * Provides selection render prop state and functions
    *
-   * @param {*} [options.focusedItem] Controlled focused item
-   * @param {*} [options.selectedItem] Controlled selected item
-   * @param {function} [options.getContainerProps] Container props getter
-   * @param {function} [options.getItemProps] Value props getter
+   * @param {*} [options.focusedValue] Controlled focused value
+   * @param {*} [options.selectedValue] Controlled selected value
+   * @param {function} [options.getGroupProps] Container props getter
+   * @param {function} [options.getElementProps] Value props getter
    */
   render?: (options: {
-    focusedItem?: IUseSelectionReturnValue<Value>['focusedItem'];
-    selectedItem?: IUseSelectionReturnValue<Value>['selectedItem'];
-    getContainerProps: IUseSelectionReturnValue<Value>['getContainerProps'];
-    getItemProps: IUseSelectionReturnValue<Value>['getItemProps'];
+    focusedValue?: IUseSelectionReturnValue<Value>['focusedValue'];
+    selectedValue?: IUseSelectionReturnValue<Value>['selectedValue'];
+    getGroupProps: IUseSelectionReturnValue<Value>['getGroupProps'];
+    getElementProps: IUseSelectionReturnValue<Value>['getElementProps'];
   }) => ReactNode;
   /** @ignore */
   children?: (options: IUseSelectionReturnValue<Value>) => ReactNode;

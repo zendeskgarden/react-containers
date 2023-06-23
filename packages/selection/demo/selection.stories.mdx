@@ -31,13 +31,13 @@ import README from '../README.md';
   <Story
     name="Uncontrolled"
     args={{
-      defaultFocusedItem: 'item-1'
+      defaultFocusedValue: 'item-1'
     }}
     argTypes={{
-      selectedItem: { control: false },
-      focusedItem: { control: false },
-      defaultFocusedItem: { control: { type: 'text' } },
-      defaultSelectedItem: { control: { type: 'text' } }
+      selectedValue: { control: false },
+      focusedValue: { control: false },
+      defaultFocusedValue: { control: { type: 'text' } },
+      defaultSelectedValue: { control: { type: 'text' } }
     }}
   >
     {args => <SelectionStory {...args} />}
@@ -50,19 +50,19 @@ import README from '../README.md';
   <Story
     name="Controlled"
     args={{
-      selectedItem: 'item-3'
+      selectedValue: 'item-3'
     }}
     argTypes={{
-      selectedItem: { control: { type: 'text' } },
-      focusedItem: { control: { type: 'text' } },
-      defaultFocusedItem: { control: false },
-      defaultSelectedItem: { control: false }
+      selectedValue: { control: { type: 'text' } },
+      focusedValue: { control: { type: 'text' } },
+      defaultFocusedValue: { control: false },
+      defaultSelectedValue: { control: false }
     }}
   >
     {args => {
       const updateArgs = useArgs()[1];
-      const handleSelect = selectedItem => updateArgs({ selectedItem });
-      const handleFocus = focusedItem => updateArgs({ focusedItem });
+      const handleSelect = selectedValue => updateArgs({ selectedValue });
+      const handleFocus = focusedValue => updateArgs({ focusedValue });
       return <SelectionStory {...args} onSelect={handleSelect} onFocus={handleFocus} />;
     }}
   </Story>

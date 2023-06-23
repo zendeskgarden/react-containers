@@ -28,7 +28,7 @@ const tabs = ['Tab 1', 'Tab 2', 'Tab 3'];
 const tabRefs = tabs.map(() => createRef(null));
 
 const Tabs = () => {
-  const { selectedItem, getTabProps, getTabListProps, getTabPanelProps } = useTabs();
+  const { selectedValue, getTabProps, getTabListProps, getTabPanelProps } = useTabs();
   const tabComponents = [];
   const tabPanels = [];
 
@@ -41,7 +41,7 @@ const Tabs = () => {
           ref: tabRefs[index],
           key: tab,
           style: {
-            borderBottom: `3px solid ${tab === selectedItem ? '#1f73b7' : 'transparent'}`
+            borderBottom: `3px solid ${tab === selectedValue ? '#1f73b7' : 'transparent'}`
           }
         })}
       >
@@ -94,7 +94,7 @@ const Tabs = () => {
 
   return (
     <TabsContainer>
-      {({ selectedItem, getTabProps, getTabListProps, getTabPanelProps }) => {
+      {({ selectedValue, getTabProps, getTabListProps, getTabPanelProps }) => {
         tabs.forEach((tab, index) => {
           tabComponents.push(
             <li
@@ -104,7 +104,7 @@ const Tabs = () => {
                 ref: tabRefs[index],
                 key: tab,
                 style: {
-                  borderBottom: `3px solid ${tab === selectedItem ? '#1f73b7' : 'transparent'}`
+                  borderBottom: `3px solid ${tab === selectedValue ? '#1f73b7' : 'transparent'}`
                 }
               })}
             >

@@ -21,16 +21,16 @@ describe('TabsContainer', () => {
   const BasicExample: React.FunctionComponent<Omit<ITabsContainerProps<string>, 'values'>> = ({
     orientation,
     onSelect,
-    defaultSelectedItem = values[0]
+    defaultSelectedValue = values[0]
   } = {}) => (
     <TabsContainer
       values={values}
       orientation={orientation}
       onSelect={onSelect}
       idPrefix={idPrefix}
-      defaultSelectedItem={defaultSelectedItem}
+      defaultSelectedValue={defaultSelectedValue}
     >
-      {({ getTabListProps, getTabProps, getTabPanelProps, selectedItem, focusedItem }) => (
+      {({ getTabListProps, getTabProps, getTabPanelProps, selectedValue, focusedValue }) => (
         <div>
           <div data-test-id="tab-list" {...getTabListProps()}>
             {values.map(value => (
@@ -38,8 +38,8 @@ describe('TabsContainer', () => {
                 key={value}
                 data-test-value={value}
                 data-test-id="tab"
-                data-selected={value === selectedItem}
-                data-focused={value === focusedItem}
+                data-selected={value === selectedValue}
+                data-focused={value === focusedValue}
                 {...getTabProps({ value })}
               >
                 {value}
@@ -61,7 +61,7 @@ describe('TabsContainer', () => {
     </TabsContainer>
   );
 
-  it('calls onSelect with selectedItem when Tab is selected', async () => {
+  it('calls onSelect with selectedValue when Tab is selected', async () => {
     const onSelectSpy = jest.fn();
     const { getAllByTestId } = render(<BasicExample onSelect={onSelectSpy} />);
     const [tab] = getAllByTestId('tab');
@@ -92,8 +92,8 @@ describe('TabsContainer', () => {
         });
       });
 
-      it('defaultSelectedItem applies correct accessibility attributes', () => {
-        const { getAllByTestId } = render(<BasicExample defaultSelectedItem={values[1]} />);
+      it('defaultSelectedValue applies correct accessibility attributes', () => {
+        const { getAllByTestId } = render(<BasicExample defaultSelectedValue={values[1]} />);
         const [, tab] = getAllByTestId('tab');
 
         expect(tab).toHaveAttribute('aria-selected', 'true');
@@ -113,8 +113,8 @@ describe('TabsContainer', () => {
       });
     });
 
-    it('defaultSelectedItem applies correct accessibility attributes', () => {
-      const { getAllByTestId } = render(<BasicExample defaultSelectedItem={values[1]} />);
+    it('defaultSelectedValue applies correct accessibility attributes', () => {
+      const { getAllByTestId } = render(<BasicExample defaultSelectedValue={values[1]} />);
       const [, tabPanel] = getAllByTestId('tab-panel');
 
       expect(tabPanel).not.toHaveAttribute('hidden');

@@ -6,8 +6,8 @@
  */
 
 type SelectionState<T> = {
-  focusedItem?: T;
-  selectedItem?: T;
+  focusedValue?: T;
+  selectedValue?: T;
 };
 
 type SelectionAction =
@@ -27,23 +27,23 @@ export const stateReducer = <T>(state: SelectionState<T>, action: SelectionActio
     case 'FOCUS':
     case 'INCREMENT':
     case 'DECREMENT': {
-      return { ...state, focusedItem: action.payload };
+      return { ...state, focusedValue: action.payload };
     }
 
     case 'MOUSE_SELECT': {
       return {
         ...state,
-        selectedItem: action.payload,
-        focusedItem: undefined
+        selectedValue: action.payload,
+        focusedValue: undefined
       };
     }
 
     case 'KEYBOARD_SELECT': {
-      return { ...state, selectedItem: action.payload };
+      return { ...state, selectedValue: action.payload };
     }
 
     case 'EXIT_WIDGET': {
-      return { ...state, focusedItem: undefined };
+      return { ...state, focusedValue: undefined };
     }
 
     default:

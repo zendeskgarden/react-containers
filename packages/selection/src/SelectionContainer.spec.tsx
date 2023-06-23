@@ -22,8 +22,8 @@ describe('SelectionContainer', () => {
     }
   > = ({
     direction,
-    defaultFocusedItem,
-    defaultSelectedItem,
+    defaultFocusedValue,
+    defaultSelectedValue,
     selectedAriaKey,
     rtl,
     onFocus,
@@ -32,20 +32,20 @@ describe('SelectionContainer', () => {
     <SelectionContainer
       values={values}
       direction={direction}
-      defaultFocusedItem={defaultFocusedItem}
-      defaultSelectedItem={defaultSelectedItem}
+      defaultFocusedValue={defaultFocusedValue}
+      defaultSelectedValue={defaultSelectedValue}
       rtl={rtl}
       onFocus={onFocus ? onFocus : undefined}
       onSelect={onSelect ? onSelect : undefined}
     >
-      {({ getContainerProps, getItemProps, selectedItem }) => (
-        <div data-test-id="container" {...getContainerProps()}>
+      {({ getGroupProps, getElementProps, selectedValue }) => (
+        <div data-test-id="container" {...getGroupProps()}>
           {values.map(value => {
-            const isSelected = value === selectedItem;
+            const isSelected = value === selectedValue;
 
             return (
               <div
-                {...getItemProps({
+                {...getElementProps({
                   selectedAriaKey,
                   key: value,
                   value,
@@ -88,12 +88,12 @@ describe('SelectionContainer', () => {
     });
   });
 
-  describe('getContainerProps', () => {
+  describe('getGroupProps', () => {
     it('applies accessibility role', () => {
       const { getByTestId } = render(<BasicExample />);
       const container = getByTestId('container');
 
-      expect(container).toHaveAttribute('role', 'listbox');
+      expect(container).not.toHaveAttribute('role');
     });
 
     it('first item in container defaults as the initial focusable item', async () => {
@@ -118,9 +118,9 @@ describe('SelectionContainer', () => {
         expect(document.activeElement).toBe(item);
       });
 
-      it('focuses last item if no item is currently selected and defaultFocusedItem is provided', () => {
+      it('focuses last item if no item is currently selected and defaultFocusedValue is provided', () => {
         const { getByText } = render(
-          <BasicExample defaultFocusedItem={values[values.length - 1]} />
+          <BasicExample defaultFocusedValue={values[values.length - 1]} />
         );
         const lastItem = getByText('Item-3');
 
@@ -624,12 +624,12 @@ describe('SelectionContainer', () => {
     });
   });
 
-  describe('getItemProps', () => {
-    it('applies accessibility role attribute', () => {
+  describe('getElementProps', () => {
+    it("doesn't apply accessibility role attribute", () => {
       const { getByText } = render(<BasicExample />);
       const item = getByText('Item-1');
 
-      expect(item).toHaveAttribute('role', 'option');
+      expect(item).not.toHaveAttribute('role');
     });
 
     it('applies default selected aria value if none provided', () => {
@@ -639,8 +639,8 @@ describe('SelectionContainer', () => {
       expect(item).toHaveAttribute('aria-selected', 'false');
     });
 
-    it('applies selected aria value if defaultSelectedItem is passed', () => {
-      const { getByText } = render(<BasicExample defaultSelectedItem={values[1]} />);
+    it('applies selected aria value if defaultSelectedValue is passed', () => {
+      const { getByText } = render(<BasicExample defaultSelectedValue={values[1]} />);
       const secondItem = getByText('Item-2');
 
       expect(secondItem).toHaveAttribute('aria-selected', 'true');

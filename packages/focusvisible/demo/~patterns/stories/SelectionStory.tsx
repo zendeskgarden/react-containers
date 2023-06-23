@@ -14,12 +14,12 @@ import { useSelection } from '@zendeskgarden/container-selection';
 export const SelectionStory: Story = () => {
   const values = ['Item 1', 'Item 2', 'Item 3'];
   const scope = useRef(null);
-  const { getContainerProps, getItemProps, selectedItem } = useSelection({ values });
+  const { getGroupProps, getElementProps, selectedValue } = useSelection({ values });
 
   useFocusVisible({ scope });
 
   return (
-    <ul className="flex" {...getContainerProps()} ref={scope}>
+    <ul className="flex" {...getGroupProps()} ref={scope}>
       {values.map(value => {
         return (
           <li
@@ -31,9 +31,9 @@ export const SelectionStory: Story = () => {
               'mx-3',
               'px-2',
               'pt-1',
-              { 'border-b-3': value === selectedItem }
+              { 'border-b-3': value === selectedValue }
             )}
-            {...getItemProps({ value })}
+            {...getElementProps({ value })}
           >
             {value}
           </li>

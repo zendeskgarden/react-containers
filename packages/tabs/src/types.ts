@@ -18,7 +18,7 @@ export interface IUseTabsProps<Value> extends Omit<IUseSelectionProps<Value>, 'd
 }
 
 export interface IUseTabsReturnValue<Value>
-  extends Pick<IUseSelectionReturnValue<Value>, 'focusedItem' | 'selectedItem'> {
+  extends Pick<IUseSelectionReturnValue<Value>, 'focusedValue' | 'selectedValue'> {
   getTabListProps: <T extends Element>(
     props?: Omit<HTMLProps<T>, 'role'> & {
       role?: 'tablist' | null;
@@ -44,15 +44,15 @@ export interface ITabsContainerProps<Value> extends IUseTabsProps<Value> {
   /**
    * Provides tabs render prop state and functions
    *
-   * @param {*} [options.focusedItem] Controlled focused tab
-   * @param {*} [options.selectedItem] Controlled selected tab
+   * @param {*} [options.focusedValue] Controlled focused tab
+   * @param {*} [options.selectedValue] Controlled selected tab
    * @param {function} [options.getTabListProps] Tab list props getter
    * @param {function} [options.getTabProps] Tab props getter
    * @param {function} [options.getTabPanelProps] Tab panel props getter
    */
   render?: (options: {
-    focusedItem?: IUseTabsReturnValue<Value>['focusedItem'];
-    selectedItem?: IUseTabsReturnValue<Value>['selectedItem'];
+    focusedValue?: IUseTabsReturnValue<Value>['focusedValue'];
+    selectedValue?: IUseTabsReturnValue<Value>['selectedValue'];
     getTabListProps: IUseTabsReturnValue<Value>['getTabListProps'];
     getTabProps: IUseTabsReturnValue<Value>['getTabProps'];
     getTabPanelProps: IUseTabsReturnValue<Value>['getTabPanelProps'];

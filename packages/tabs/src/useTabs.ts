@@ -18,10 +18,10 @@ export const useTabs = <Value>({
   const prefix = useId(idPrefix);
   const PANEL_ID = `${prefix}__panel`;
   const TAB_ID = `${prefix}__tab`;
-  const { selectedItem, focusedItem, getContainerProps, getItemProps } = useSelection<Value>({
+  const { selectedValue, focusedValue, getGroupProps, getElementProps } = useSelection<Value>({
     values,
     direction: orientation,
-    defaultSelectedItem: values[0],
+    defaultSelectedValue: values[0],
     ...options
   });
 
@@ -29,7 +29,7 @@ export const useTabs = <Value>({
     role = 'tablist',
     ...other
   } = {}) => ({
-    ...getContainerProps(other),
+    ...getGroupProps(other),
     role: role === null ? undefined : role,
     'aria-orientation': orientation,
     'data-garden-container-id': 'containers.tabs',
@@ -41,7 +41,7 @@ export const useTabs = <Value>({
     value,
     ...other
   }) => ({
-    ...getItemProps({ value, ...other }),
+    ...getElementProps({ value, ...other }),
     role: role === null ? undefined : role,
     id: `${TAB_ID}:${value}`,
     'aria-controls': `${PANEL_ID}:${value}`
@@ -54,14 +54,14 @@ export const useTabs = <Value>({
   }) => ({
     role: role === null ? undefined : role,
     id: `${PANEL_ID}:${value}`,
-    hidden: value !== selectedItem,
+    hidden: value !== selectedValue,
     'aria-labelledby': `${TAB_ID}:${value}`,
     ...other
   });
 
   return {
-    selectedItem,
-    focusedItem,
+    selectedValue,
+    focusedValue,
     getTabListProps,
     getTabProps,
     getTabPanelProps

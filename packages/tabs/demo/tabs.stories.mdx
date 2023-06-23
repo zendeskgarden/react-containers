@@ -12,7 +12,7 @@ import README from '../README.md';
     as: 'hook',
     orientation: 'horizontal',
     values: VALUES,
-    defaultSelectedItem: VALUES[0]
+    defaultSelectedValue: VALUES[0]
   }}
   argTypes={{
     as: { options: ['container', 'hook'], control: 'radio', table: { category: 'Story' } },
@@ -29,7 +29,7 @@ import README from '../README.md';
 ## Uncontrolled
 
 <Canvas>
-  <Story name="Uncontrolled" argTypes={{ selectedItem: { control: false } }}>
+  <Story name="Uncontrolled" argTypes={{ selectedValue: { control: false } }}>
     {args => <TabsStory {...args} />}
   </Story>
 </Canvas>
@@ -37,10 +37,10 @@ import README from '../README.md';
 ## Controlled
 
 <Canvas>
-  <Story name="Controlled" argTypes={{ defaultSelectedItem: { control: false } }}>
+  <Story name="Controlled" argTypes={{ defaultSelectedValue: { control: false } }}>
     {args => {
       const updateArgs = useArgs()[1];
-      const handleSelect = selectedItem => updateArgs({ selectedItem });
+      const handleSelect = selectedValue => updateArgs({ selectedValue });
       return <TabsStory {...args} onSelect={handleSelect} />;
     }}
   </Story>

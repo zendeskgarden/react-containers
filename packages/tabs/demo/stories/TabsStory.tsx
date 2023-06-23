@@ -19,12 +19,12 @@ import classNames from 'classnames';
 interface TabItemProps {
   value: string;
   getTabProps: IUseTabsReturnValue<string>['getTabProps'];
-  selectedItem: IUseTabsReturnValue<string>['selectedItem'];
+  selectedValue: IUseTabsReturnValue<string>['selectedValue'];
   orientation: IUseTabsProps<string>['orientation'];
   rtl?: IUseTabsProps<string>['rtl'];
 }
 
-const TabItem = ({ value, getTabProps, selectedItem, orientation, rtl }: TabItemProps) => (
+const TabItem = ({ value, getTabProps, selectedValue, orientation, rtl }: TabItemProps) => (
   <li
     key={value}
     {...getTabProps({ value })}
@@ -36,9 +36,9 @@ const TabItem = ({ value, getTabProps, selectedItem, orientation, rtl }: TabItem
       'px-2',
       'py-1',
       {
-        'border-b-blue-600': selectedItem === value && orientation !== 'vertical',
-        'border-r-blue-600': selectedItem === value && orientation === 'vertical' && !rtl,
-        'border-l-blue-600': selectedItem === value && orientation === 'vertical' && rtl
+        'border-b-blue-600': selectedValue === value && orientation !== 'vertical',
+        'border-r-blue-600': selectedValue === value && orientation === 'vertical' && !rtl,
+        'border-l-blue-600': selectedValue === value && orientation === 'vertical' && rtl
       }
     )}
   >
@@ -57,7 +57,7 @@ const Component = ({
   getTabListProps,
   getTabPanelProps,
   getTabProps,
-  selectedItem,
+  selectedValue,
   orientation,
   rtl
 }: IComponentProps) => {
@@ -83,7 +83,7 @@ const Component = ({
             key={value}
             value={value}
             getTabProps={getTabProps}
-            selectedItem={selectedItem}
+            selectedValue={selectedValue}
             orientation={orientation}
             rtl={rtl}
           />

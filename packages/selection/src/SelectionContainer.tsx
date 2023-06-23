@@ -26,10 +26,10 @@ SelectionContainer.propTypes = {
   values: PropTypes.arrayOf(PropTypes.any).isRequired,
   rtl: PropTypes.bool,
   direction: PropTypes.oneOf(['horizontal', 'vertical', 'both']),
-  defaultFocusedItem: PropTypes.string,
-  defaultSelectedItem: PropTypes.string,
-  focusedItem: PropTypes.any,
-  selectedItem: PropTypes.any,
+  defaultFocusedValue: PropTypes.string,
+  defaultSelectedValue: PropTypes.string,
+  focusedValue: PropTypes.any,
+  selectedValue: PropTypes.any,
   onSelect: PropTypes.func,
   onFocus: PropTypes.func
 };

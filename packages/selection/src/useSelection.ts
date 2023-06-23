@@ -14,7 +14,6 @@ import {
   useMemo,
   useReducer
 } from 'react';
-import { mergeRefs } from 'react-merge-refs';
 import { composeEventHandlers, getControlledValue, KEYS } from '@zendeskgarden/container-utilities';
 import { IUseSelectionProps, IUseSelectionReturnValue } from './types';
 import { stateReducer } from './utils';
@@ -22,19 +21,19 @@ import { stateReducer } from './utils';
 export const useSelection = <Value>({
   values,
   direction = 'horizontal',
-  defaultFocusedItem = values[0],
-  defaultSelectedItem,
+  defaultFocusedValue = values[0],
+  defaultSelectedValue,
   rtl,
-  selectedItem,
-  focusedItem,
+  selectedValue,
+  focusedValue,
   onSelect,
   onFocus
 }: IUseSelectionProps<Value>): IUseSelectionReturnValue<Value> => {
-  const isSelectedItemControlled = selectedItem !== undefined;
-  const isFocusedItemControlled = focusedItem !== undefined;
+  const isSelectedValueControlled = selectedValue !== undefined;
+  const isFocusedValueControlled = focusedValue !== undefined;
 
   // Create a ref dictionary from `values`.
-  // Refs are created/assigned as part of `getItemProps`.
+  // Refs are created/assigned as part of `getElementProps`.
   const refs = useMemo(
     () =>
       values.reduce((all: Record<string, MutableRefObject<any | null>>, value) => {
@@ -46,36 +45,36 @@ export const useSelection = <Value>({
   );
 
   const [state, dispatch] = useReducer(stateReducer, {
-    selectedItem,
-    focusedItem
+    selectedValue,
+    focusedValue
   });
 
-  const controlledFocusedItem = getControlledValue(focusedItem, state.focusedItem);
-  const controlledSelectedItem = getControlledValue(selectedItem, state.selectedItem);
+  const controlledFocusedValue = getControlledValue(focusedValue, state.focusedValue);
+  const controlledSelectedValue = getControlledValue(selectedValue, state.selectedValue);
 
   useEffect(() => {
-    if (controlledFocusedItem !== undefined) {
-      const focusItemTarget = refs[controlledFocusedItem];
+    if (controlledFocusedValue !== undefined) {
+      const targetRef = refs[controlledFocusedValue];
 
-      focusItemTarget?.current && focusItemTarget.current.focus();
+      targetRef?.current && targetRef.current.focus();
     }
-  }, [controlledFocusedItem]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [controlledFocusedValue]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    if (selectedItem === undefined && defaultSelectedItem !== undefined) {
-      onSelect && onSelect(defaultSelectedItem);
+    if (selectedValue === undefined && defaultSelectedValue !== undefined) {
+      onSelect && onSelect(defaultSelectedValue);
 
-      if (!isSelectedItemControlled) {
+      if (!isSelectedValueControlled) {
         dispatch({
           type: 'KEYBOARD_SELECT',
-          payload: defaultSelectedItem
+          payload: defaultSelectedValue
         });
       }
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const getContainerProps: IUseSelectionReturnValue<Value>['getContainerProps'] = useCallback(
-    ({ role = 'listbox', ...other } = {}) => ({
+  const getGroupProps: IUseSelectionReturnValue<Value>['getGroupProps'] = useCallback(
+    ({ role, ...other } = {}) => ({
       role: role === null ? undefined : role,
       'data-garden-container-id': 'containers.selection',
       'data-garden-container-version': PACKAGE_VERSION,
@@ -84,25 +83,23 @@ export const useSelection = <Value>({
     []
   );
 
-  const getItemProps: IUseSelectionReturnValue<Value>['getItemProps'] = ({
+  const getElementProps: IUseSelectionReturnValue<Value>['getElementProps'] = ({
     selectedAriaKey = 'aria-selected',
-    role = 'option',
+    role,
     onFocus: onFocusCallback,
     onKeyDown,
     onClick,
     value,
-    focusRef,
-    refKey = 'ref',
     ...other
   }) => {
-    const isSelected = controlledSelectedItem === value;
+    const isSelected = controlledSelectedValue === value;
     const isFocused =
-      controlledFocusedItem === undefined ? isSelected : controlledFocusedItem === value;
+      controlledFocusedValue === undefined ? isSelected : controlledFocusedValue === value;
     const tabIndex =
       isFocused ||
-      (controlledSelectedItem === undefined &&
-        controlledFocusedItem === undefined &&
-        value === defaultFocusedItem)
+      (controlledSelectedValue === undefined &&
+        controlledFocusedValue === undefined &&
+        value === defaultFocusedValue)
         ? 0
         : -1;
     const verticalDirection = direction === 'vertical' || direction === 'both';
@@ -111,23 +108,23 @@ export const useSelection = <Value>({
     const handleFocus = () => {
       onFocus && onFocus(value);
 
-      !isFocusedItemControlled && dispatch({ type: 'FOCUS', payload: value });
+      !isFocusedValueControlled && dispatch({ type: 'FOCUS', payload: value });
     };
 
     const handleClick = () => {
       onSelect && onSelect(value);
       onFocus && onFocus(value);
-      !isSelectedItemControlled && dispatch({ type: 'MOUSE_SELECT', payload: value });
+      !isSelectedValueControlled && dispatch({ type: 'MOUSE_SELECT', payload: value });
     };
 
     const handleKeyDown: KeyboardEventHandler = event => {
       let nextItem: Value;
       let currentItem: Value;
 
-      if (isFocusedItemControlled) {
-        currentItem = values.find(id => focusedItem === id)!;
+      if (isFocusedValueControlled) {
+        currentItem = values.find(id => focusedValue === id)!;
       } else {
-        currentItem = values.find(id => state.focusedItem === id)!;
+        currentItem = values.find(id => state.focusedValue === id)!;
       }
 
       const onIncrement = () => {
@@ -139,7 +136,7 @@ export const useSelection = <Value>({
           nextItem = values[0];
         }
 
-        !isFocusedItemControlled && dispatch({ type: 'INCREMENT', payload: nextItem });
+        !isFocusedValueControlled && dispatch({ type: 'INCREMENT', payload: nextItem });
 
         onFocus && onFocus(nextItem);
       };
@@ -153,7 +150,7 @@ export const useSelection = <Value>({
           nextItem = values[values.length - 1];
         }
 
-        !isFocusedItemControlled && dispatch({ type: 'DECREMENT', payload: nextItem });
+        !isFocusedValueControlled && dispatch({ type: 'DECREMENT', payload: nextItem });
 
         onFocus && onFocus(nextItem);
       };
@@ -187,20 +184,20 @@ export const useSelection = <Value>({
         } else if (event.key === KEYS.HOME) {
           const firstItem = values[0];
 
-          !isFocusedItemControlled && dispatch({ type: 'HOME', payload: firstItem });
+          !isFocusedValueControlled && dispatch({ type: 'HOME', payload: firstItem });
 
           onFocus && onFocus(firstItem);
           event.preventDefault();
         } else if (event.key === KEYS.END) {
           const lastItem = values[values.length - 1];
 
-          !isFocusedItemControlled && dispatch({ type: 'END', payload: lastItem });
+          !isFocusedValueControlled && dispatch({ type: 'END', payload: lastItem });
 
           onFocus && onFocus(lastItem);
           event.preventDefault();
         } else if (event.key === KEYS.SPACE || event.key === KEYS.ENTER) {
           onSelect && onSelect(value);
-          !isSelectedItemControlled && dispatch({ type: 'KEYBOARD_SELECT', payload: value });
+          !isSelectedValueControlled && dispatch({ type: 'KEYBOARD_SELECT', payload: value });
 
           event.preventDefault();
         }
@@ -219,7 +216,7 @@ export const useSelection = <Value>({
       role: role === null ? undefined : role,
       tabIndex,
       [selectedAriaKey]: selectedAriaKey ? isSelected : undefined,
-      [refKey]: mergeRefs([focusRef as MutableRefObject<any>, refs[String(value)]]),
+      ref: refs[String(value)],
       onFocus: composeEventHandlers(onFocusCallback, handleFocus),
       onClick: composeEventHandlers(onClick, handleClick),
       onKeyDown: composeEventHandlers(onKeyDown, handleKeyDown),
@@ -229,9 +226,9 @@ export const useSelection = <Value>({
   };
 
   return {
-    focusedItem: controlledFocusedItem,
-    selectedItem: controlledSelectedItem,
-    getItemProps,
-    getContainerProps
+    focusedValue: controlledFocusedValue,
+    selectedValue: controlledSelectedValue,
+    getElementProps,
+    getGroupProps
   };
 };
