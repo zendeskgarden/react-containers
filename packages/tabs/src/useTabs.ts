@@ -53,7 +53,7 @@ export const useTabs = <Value>({
     value,
     ...other
   }) => {
-    const isDisabled = tabs.find(tab => tab.value === value)?.disabled;
+    const isDisabled = values.indexOf(value) === -1;
     const { onClick, onKeyDown, onFocus, onBlur, ...elementProps } = getElementProps({
       value,
       role: role === null ? undefined : role,
