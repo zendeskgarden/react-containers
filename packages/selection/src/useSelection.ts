@@ -9,6 +9,7 @@ import {
   FocusEventHandler,
   KeyboardEventHandler,
   MutableRefObject,
+  createRef,
   useCallback,
   useEffect,
   useMemo,
@@ -37,7 +38,7 @@ export const useSelection = <Value>({
   const refs = useMemo(
     () =>
       values.reduce((all: Record<any, MutableRefObject<any | null>>, value: any) => {
-        all[value] = { current: null };
+        all[value] = createRef();
 
         return all;
       }, {}),
