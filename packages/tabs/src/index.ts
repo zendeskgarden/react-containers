@@ -11,4 +11,4 @@ export { useTabs } from './useTabs';
 /* Render-props */
 export { TabsContainer } from './TabsContainer';
 
-export type { ITabsContainerProps, IUseTabsProps, IUseTabsReturnValue } from './types';
+export type { ITab, ITabsContainerProps, IUseTabsProps, IUseTabsReturnValue } from './types';

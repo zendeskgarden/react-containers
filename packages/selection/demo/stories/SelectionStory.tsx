@@ -17,11 +17,11 @@ import {
 } from '@zendeskgarden/container-selection';
 
 interface ISelectionElementProps {
-  getElementProps: IUseSelectionReturnValue<any>['getElementProps'];
+  getElementProps: IUseSelectionReturnValue<string>['getElementProps'];
   value: string;
   index: number;
-  direction: IUseSelectionProps<any>['direction'];
-  selectedValue: IUseSelectionProps<any>['selectedValue'];
+  direction: IUseSelectionProps<string>['direction'];
+  selectedValue: IUseSelectionProps<string>['selectedValue'];
 }
 
 const SelectionElement = ({
@@ -57,9 +57,9 @@ const SelectionElement = ({
 };
 
 interface IComponentProps extends IUseSelectionReturnValue<string> {
-  direction: IUseSelectionProps<any>['direction'];
-  rtl: IUseSelectionProps<any>['rtl'];
-  values: IUseSelectionProps<any>['values'];
+  direction: IUseSelectionProps<string>['direction'];
+  rtl: IUseSelectionProps<string>['rtl'];
+  values: IUseSelectionProps<string>['values'];
 }
 
 const SelectionGroup = ({

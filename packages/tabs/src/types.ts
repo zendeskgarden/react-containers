@@ -15,7 +15,12 @@ export interface ITab<Value> {
 
 export interface IUseTabsProps<Value>
   extends Omit<IUseSelectionProps<Value>, 'direction' | 'values'> {
-  /** Provides an ordered list of unique selection values */
+  /**
+   * Provides an ordered list of unique tab values
+   *
+   * @param {Value} tab.value Unique tab value
+   * @param {boolean} tab.disabled Indicates that the tab is not interactive
+   */
   tabs: ITab<Value>[];
   /** Determines the orientation of the tabs */
   orientation?: 'horizontal' | 'vertical';
