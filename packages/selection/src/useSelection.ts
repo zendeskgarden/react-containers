@@ -5,141 +5,154 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import { FocusEventHandler, KeyboardEventHandler, useEffect, useReducer } from 'react';
+import {
+  FocusEventHandler,
+  KeyboardEventHandler,
+  MutableRefObject,
+  createRef,
+  useCallback,
+  useEffect,
+  useMemo,
+  useReducer
+} from 'react';
 import { composeEventHandlers, getControlledValue, KEYS } from '@zendeskgarden/container-utilities';
 import { IUseSelectionProps, IUseSelectionReturnValue } from './types';
 import { stateReducer } from './utils';
 
-export const useSelection = <Item>({
+export const useSelection = <Value>({
+  values,
   direction = 'horizontal',
-  defaultFocusedIndex = 0,
-  defaultSelectedIndex,
+  defaultFocusedValue = values[0],
+  defaultSelectedValue,
   rtl,
-  selectedItem,
-  focusedItem,
+  selectedValue,
+  focusedValue,
   onSelect,
   onFocus
-}: IUseSelectionProps<Item> = {}): IUseSelectionReturnValue<Item> => {
-  const isSelectedItemControlled = selectedItem !== undefined;
-  const isFocusedItemControlled = focusedItem !== undefined;
-  const refs: React.MutableRefObject<any | null>[] = [];
-  const items: Item[] = [];
+}: IUseSelectionProps<Value>): IUseSelectionReturnValue<Value> => {
+  const isSelectedValueControlled = selectedValue !== undefined;
+  const isFocusedValueControlled = focusedValue !== undefined;
+
+  // Create a ref dictionary from `values`.
+  // Refs are created/assigned as part of `getElementProps`.
+  const refs = useMemo(
+    () =>
+      values.reduce((all: Record<any, MutableRefObject<any | null>>, value: any) => {
+        all[value] = createRef();
+
+        return all;
+      }, {}),
+    [values]
+  );
 
   const [state, dispatch] = useReducer(stateReducer, {
-    selectedItem,
-    focusedItem
+    selectedValue,
+    focusedValue
   });
 
-  const controlledFocusedItem = getControlledValue(focusedItem, state.focusedItem);
-  const controlledSelectedItem = getControlledValue(selectedItem, state.selectedItem);
+  const controlledFocusedValue = getControlledValue(focusedValue, state.focusedValue);
+  const controlledSelectedValue = getControlledValue(selectedValue, state.selectedValue);
 
   useEffect(() => {
-    if (controlledFocusedItem !== undefined) {
-      const focusedIndex = items.indexOf(controlledFocusedItem);
+    if (controlledFocusedValue !== undefined) {
+      const targetRef = refs[controlledFocusedValue];
 
-      refs[focusedIndex] && refs[focusedIndex].current!.focus();
+      targetRef?.current && targetRef.current.focus();
     }
-  }, [controlledFocusedItem]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [controlledFocusedValue]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    if (selectedItem === undefined && defaultSelectedIndex !== undefined) {
-      onSelect && onSelect(items[defaultSelectedIndex]);
+    if (selectedValue === undefined && defaultSelectedValue !== undefined) {
+      onSelect && onSelect(defaultSelectedValue);
 
-      if (!isSelectedItemControlled) {
+      if (!isSelectedValueControlled) {
         dispatch({
           type: 'KEYBOARD_SELECT',
-          payload: items[defaultSelectedIndex]
+          payload: defaultSelectedValue
         });
       }
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const getContainerProps: IUseSelectionReturnValue<Item>['getContainerProps'] = ({
-    role = 'listbox',
-    ...other
-  } = {}) => ({
-    role: role === null ? undefined : role,
-    'data-garden-container-id': 'containers.selection',
-    'data-garden-container-version': PACKAGE_VERSION,
-    ...other
-  });
+  const getGroupProps: IUseSelectionReturnValue<Value>['getGroupProps'] = useCallback(
+    ({ role = 'group', ...other } = {}) => ({
+      role: role === null ? undefined : role,
+      'data-garden-container-id': 'containers.selection',
+      'data-garden-container-version': PACKAGE_VERSION,
+      ...other
+    }),
+    []
+  );
 
-  const getItemProps: IUseSelectionReturnValue<Item>['getItemProps'] = ({
+  const getElementProps: IUseSelectionReturnValue<Value>['getElementProps'] = ({
     selectedAriaKey = 'aria-selected',
-    role = 'option',
     onFocus: onFocusCallback,
     onKeyDown,
     onClick,
-    item,
-    focusRef,
-    refKey = 'ref',
+    value,
     ...other
   }) => {
-    refs.push(focusRef);
-    items.push(item);
-
-    const isSelected = controlledSelectedItem === item;
+    const isSelected = controlledSelectedValue === value;
     const isFocused =
-      controlledFocusedItem === undefined ? isSelected : controlledFocusedItem === item;
+      controlledFocusedValue === undefined ? isSelected : controlledFocusedValue === value;
     const tabIndex =
       isFocused ||
-      (controlledSelectedItem === undefined &&
-        controlledFocusedItem === undefined &&
-        items.indexOf(item) === defaultFocusedIndex)
+      (controlledSelectedValue === undefined &&
+        controlledFocusedValue === undefined &&
+        value === defaultFocusedValue)
         ? 0
         : -1;
     const verticalDirection = direction === 'vertical' || direction === 'both';
     const horizontalDirection = direction === 'horizontal' || direction === 'both';
 
     const handleFocus = () => {
-      onFocus && onFocus(item);
+      onFocus && onFocus(value);
 
-      if (!isFocusedItemControlled) {
-        dispatch({ type: 'FOCUS', payload: item });
-      }
+      !isFocusedValueControlled && dispatch({ type: 'FOCUS', payload: value });
     };
 
     const handleClick = () => {
-      onSelect && onSelect(item);
-      onFocus && onFocus();
-
-      if (!isSelectedItemControlled) {
-        dispatch({ type: 'MOUSE_SELECT', payload: item });
-      }
+      onSelect && onSelect(value);
+      onFocus && onFocus(value);
+      !isSelectedValueControlled && dispatch({ type: 'MOUSE_SELECT', payload: value });
     };
 
     const handleKeyDown: KeyboardEventHandler = event => {
-      let nextIndex: number;
-      let currentIndex: number;
+      let nextItem: Value;
+      let currentItem: Value;
 
-      if (isFocusedItemControlled) {
-        currentIndex = items.indexOf(focusedItem as any);
+      if (isFocusedValueControlled) {
+        currentItem = values.find(id => focusedValue === id)!;
       } else {
-        currentIndex = items.indexOf(state.focusedItem || state.selectedItem);
+        currentItem = values.find(id => state.focusedValue === id)!;
       }
 
       const onIncrement = () => {
-        nextIndex = currentIndex + 1;
+        const nextItemIndex = values.indexOf(currentItem) + 1;
 
-        if (currentIndex === items.length - 1) {
-          nextIndex = 0;
+        nextItem = values[nextItemIndex];
+
+        if (!nextItem) {
+          nextItem = values[0];
         }
 
-        !isFocusedItemControlled && dispatch({ type: 'INCREMENT', payload: items[nextIndex] });
+        !isFocusedValueControlled && dispatch({ type: 'INCREMENT', payload: nextItem });
 
-        onFocus && onFocus(items[nextIndex]);
+        onFocus && onFocus(nextItem);
       };
 
       const onDecrement = () => {
-        nextIndex = currentIndex - 1;
+        const nextItemIndex = values.indexOf(currentItem) - 1;
 
-        if (currentIndex === 0) {
-          nextIndex = items.length - 1;
+        nextItem = values[nextItemIndex];
+
+        if (!nextItem) {
+          nextItem = values[values.length - 1];
         }
 
-        !isFocusedItemControlled && dispatch({ type: 'DECREMENT', payload: items[nextIndex] });
+        !isFocusedValueControlled && dispatch({ type: 'DECREMENT', payload: nextItem });
 
-        onFocus && onFocus(items[nextIndex]);
+        onFocus && onFocus(nextItem);
       };
 
       const hasModifierKeyPressed =
@@ -169,28 +182,22 @@ export const useSelection = <Item>({
 
           event.preventDefault();
         } else if (event.key === KEYS.HOME) {
-          if (!isFocusedItemControlled) {
-            dispatch({ type: 'HOME', payload: items[0] });
-          }
+          const firstItem = values[0];
 
-          onFocus && onFocus(items[0]);
+          !isFocusedValueControlled && dispatch({ type: 'HOME', payload: firstItem });
+
+          onFocus && onFocus(firstItem);
           event.preventDefault();
         } else if (event.key === KEYS.END) {
-          if (!isFocusedItemControlled) {
-            dispatch({ type: 'END', payload: items[items.length - 1] });
-          }
+          const lastItem = values[values.length - 1];
 
-          onFocus && onFocus(items[items.length - 1]);
+          !isFocusedValueControlled && dispatch({ type: 'END', payload: lastItem });
+
+          onFocus && onFocus(lastItem);
           event.preventDefault();
         } else if (event.key === KEYS.SPACE || event.key === KEYS.ENTER) {
-          onSelect && onSelect(item);
-
-          if (!isSelectedItemControlled) {
-            dispatch({
-              type: 'KEYBOARD_SELECT',
-              payload: item
-            });
-          }
+          onSelect && onSelect(value);
+          !isSelectedValueControlled && dispatch({ type: 'KEYBOARD_SELECT', payload: value });
 
           event.preventDefault();
         }
@@ -199,19 +206,16 @@ export const useSelection = <Item>({
 
     const onBlur: FocusEventHandler = event => {
       if ((event.target as HTMLElement).tabIndex === 0) {
-        if (!isFocusedItemControlled) {
-          dispatch({ type: 'EXIT_WIDGET' });
-        }
+        dispatch({ type: 'EXIT_WIDGET' });
 
         onFocus && onFocus();
       }
     };
 
     return {
-      role: role === null ? undefined : role,
       tabIndex,
       [selectedAriaKey]: selectedAriaKey ? isSelected : undefined,
-      [refKey]: focusRef,
+      ref: refs[value as any],
       onFocus: composeEventHandlers(onFocusCallback, handleFocus),
       onClick: composeEventHandlers(onClick, handleClick),
       onKeyDown: composeEventHandlers(onKeyDown, handleKeyDown),
@@ -221,9 +225,9 @@ export const useSelection = <Item>({
   };
 
   return {
-    focusedItem: controlledFocusedItem,
-    selectedItem: controlledSelectedItem,
-    getItemProps,
-    getContainerProps
+    focusedValue: controlledFocusedValue,
+    selectedValue: controlledSelectedValue,
+    getElementProps,
+    getGroupProps
   };
 };

@@ -5,7 +5,4 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-export interface ITreeNode {
-  name: string;
-  children?: ITreeNode[];
-}
+export const VALUES: string[] = ['item-1', 'item-2', 'item-3', 'item-4', 'item-5'];

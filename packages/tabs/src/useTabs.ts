@@ -7,60 +7,86 @@
 
 import { useId } from '@zendeskgarden/container-utilities';
 import { useSelection } from '@zendeskgarden/container-selection';
-import { IUseTabsProps, IUseTabsReturnValue } from './types';
+import { ITab, IUseTabsProps, IUseTabsReturnValue } from './types';
+import { useMemo } from 'react';
 
-export const useTabs = <Item>({
+export const useTabs = <Value>({
+  tabs,
   orientation = 'horizontal',
   idPrefix,
   ...options
-}: IUseTabsProps<Item> = {}): IUseTabsReturnValue<Item> => {
+}: IUseTabsProps<Value>): IUseTabsReturnValue<Value> => {
   const prefix = useId(idPrefix);
   const PANEL_ID = `${prefix}__panel`;
   const TAB_ID = `${prefix}__tab`;
-  const { selectedItem, focusedItem, getContainerProps, getItemProps } = useSelection<Item>({
+
+  const values = useMemo(
+    () =>
+      tabs.reduce((all: any[], tab: ITab<Value>) => {
+        !tab.disabled && all.push(tab.value);
+
+        return all;
+      }, []),
+    [tabs]
+  );
+
+  const { selectedValue, focusedValue, getGroupProps, getElementProps } = useSelection<Value>({
+    values,
     direction: orientation,
-    defaultSelectedIndex: 0,
+    defaultSelectedValue: values[0],
     ...options
   });
 
-  const getTabListProps: IUseTabsReturnValue<Item>['getTabListProps'] = ({
+  const getTabListProps: IUseTabsReturnValue<Value>['getTabListProps'] = ({
     role = 'tablist',
     ...other
   } = {}) => ({
-    ...getContainerProps(other),
+    ...getGroupProps(other),
     role: role === null ? undefined : role,
     'aria-orientation': orientation,
     'data-garden-container-id': 'containers.tabs',
     'data-garden-container-version': PACKAGE_VERSION
   });
 
-  const getTabProps: IUseTabsReturnValue<Item>['getTabProps'] = ({
+  const getTabProps: IUseTabsReturnValue<Value>['getTabProps'] = ({
     role = 'tab',
-    index,
+    value,
     ...other
-  }) => ({
-    ...getItemProps(other),
-    role: role === null ? undefined : role,
-    id: `${TAB_ID}:${index}`,
-    'aria-controls': `${PANEL_ID}:${index}`
-  });
+  }) => {
+    const isDisabled = values.indexOf(value) === -1;
+    const { onClick, onKeyDown, onFocus, onBlur, ...elementProps } = getElementProps({
+      value,
+      role: role === null ? undefined : role,
+      ...other
+    });
 
-  const getTabPanelProps: IUseTabsReturnValue<Item>['getTabPanelProps'] = ({
+    return {
+      ...elementProps,
+      onClick: isDisabled ? undefined : onClick,
+      onFocus: isDisabled ? undefined : onFocus,
+      onKeyDown: isDisabled ? undefined : onKeyDown,
+      onBlur: isDisabled ? undefined : onBlur,
+      id: `${TAB_ID}:${value}`,
+      'aria-disabled': isDisabled || undefined,
+      'aria-controls': `${PANEL_ID}:${value}`
+    };
+  };
+
+  const getTabPanelProps: IUseTabsReturnValue<Value>['getTabPanelProps'] = ({
     role = 'tabpanel',
-    index,
-    item,
+    value,
     ...other
   }) => ({
     role: role === null ? undefined : role,
-    id: `${PANEL_ID}:${index}`,
-    hidden: item !== selectedItem,
-    'aria-labelledby': `${TAB_ID}:${index}`,
+    id: `${PANEL_ID}:${value}`,
+    hidden: value !== selectedValue,
+    'aria-labelledby': `${TAB_ID}:${value}`,
     ...other
   });
 
   return {
-    selectedItem,
-    focusedItem,
+    selectedValue,
+    focusedValue,
     getTabListProps,
     getTabProps,
     getTabPanelProps

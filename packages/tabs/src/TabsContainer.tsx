@@ -23,10 +23,11 @@ TabsContainer.defaultProps = {
 TabsContainer.propTypes = {
   children: PropTypes.func,
   render: PropTypes.func,
+  tabs: PropTypes.arrayOf(PropTypes.any).isRequired,
   rtl: PropTypes.bool,
   orientation: PropTypes.oneOf(['horizontal', 'vertical']),
   idPrefix: PropTypes.string,
-  defaultSelectedIndex: PropTypes.number,
-  selectedItem: PropTypes.any,
+  defaultSelectedValue: PropTypes.any,
+  selectedValue: PropTypes.any,
   onSelect: PropTypes.func
 };

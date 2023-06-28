@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React, { createRef } from 'react';
+import React from 'react';
 import userEvent from '@testing-library/user-event';
 import { render } from '@testing-library/react';
 import { TabsContainer, ITabsContainerProps } from './';
@@ -14,44 +14,51 @@ describe('TabsContainer', () => {
   const user = userEvent.setup();
 
   const idPrefix = 'test_id';
-  const tabs = ['tab-1', 'tab-2', 'tab-3'];
-  const tabRefs = tabs.map(() => createRef<HTMLDivElement>());
-  const getPanelId = (index: number) => `${idPrefix}__panel:${index}`;
-  const getTabId = (index: number) => `${idPrefix}__tab:${index}`;
+  const tabs = [
+    { value: 'tab-1' },
+    { value: 'tab-2' },
+    { value: 'tab-3' },
+    { value: 'tab-4', disabled: true }
+  ];
+  const getPanelId = (tab: string) => `${idPrefix}__panel:${tab}`;
+  const getTabId = (tab: string) => `${idPrefix}__tab:${tab}`;
 
-  const BasicExample: React.FunctionComponent<ITabsContainerProps<string>> = ({
+  const BasicExample: React.FunctionComponent<Omit<ITabsContainerProps<string>, 'tabs'>> = ({
     orientation,
     onSelect,
-    defaultSelectedIndex = 0
+    defaultSelectedValue = tabs[0].value
   } = {}) => (
     <TabsContainer
+      tabs={tabs}
       orientation={orientation}
       onSelect={onSelect}
       idPrefix={idPrefix}
-      defaultSelectedIndex={defaultSelectedIndex}
+      defaultSelectedValue={defaultSelectedValue}
     >
-      {({ getTabListProps, getTabProps, getTabPanelProps, selectedItem, focusedItem }) => (
+      {({ getTabListProps, getTabProps, getTabPanelProps, selectedValue, focusedValue }) => (
         <div>
           <div data-test-id="tab-list" {...getTabListProps()}>
-            {tabs.map((tab, index) => (
+            {tabs.map(tab => (
               <div
+                key={tab.value}
+                data-test-value={tab.value}
                 data-test-id="tab"
-                data-selected={tab === selectedItem}
-                data-focused={tab === focusedItem}
-                {...getTabProps({
-                  index,
-                  key: tab,
-                  item: tab,
-                  focusRef: tabRefs[index]
-                })}
+                data-selected={tab.value === selectedValue}
+                data-focused={tab.value === focusedValue}
+                {...getTabProps({ value: tab.value })}
               >
-                {tab}
+                {tab.value}
               </div>
             ))}
           </div>
-          {tabs.map((tab, index) => (
-            <div data-test-id="tab-panel" {...getTabPanelProps({ index, item: tab, key: tab })}>
-              {tab} content
+          {tabs.map(tab => (
+            <div
+              key={tab.value}
+              data-test-value={tab.value}
+              data-test-id="tab-panel"
+              {...getTabPanelProps({ value: tab.value })}
+            >
+              {tab.value} content
             </div>
           ))}
         </div>
@@ -59,7 +66,7 @@ describe('TabsContainer', () => {
     </TabsContainer>
   );
 
-  it('calls onSelect with selectedItem when Tab is selected', async () => {
+  it('calls onSelect with selectedValue when Tab is selected', async () => {
     const onSelectSpy = jest.fn();
     const { getAllByTestId } = render(<BasicExample onSelect={onSelectSpy} />);
     const [tab] = getAllByTestId('tab');
@@ -84,14 +91,20 @@ describe('TabsContainer', () => {
 
         tabItems.forEach((tab, index) => {
           expect(tab).toHaveAttribute('role', 'tab');
-          expect(tab).toHaveAttribute('id', getTabId(index));
-          expect(tab).toHaveAttribute('aria-controls', getPanelId(index));
+          expect(tab).toHaveAttribute('id', getTabId(tab.dataset.testValue!));
+          expect(tab).toHaveAttribute('aria-controls', getPanelId(tab.dataset.testValue!));
           expect(tab).toHaveAttribute('aria-selected', index === 0 ? 'true' : 'false');
+
+          if (index === 3) {
+            expect(tab).toHaveAttribute('aria-disabled', 'true');
+          } else {
+            expect(tab).not.toHaveAttribute('aria-disabled');
+          }
         });
       });
 
-      it('defaultSelectedIndex applies correct accessibility attributes', () => {
-        const { getAllByTestId } = render(<BasicExample defaultSelectedIndex={1} />);
+      it('defaultSelectedValue applies correct accessibility attributes', () => {
+        const { getAllByTestId } = render(<BasicExample defaultSelectedValue={tabs[1].value} />);
         const [, tab] = getAllByTestId('tab');
 
         expect(tab).toHaveAttribute('aria-selected', 'true');
@@ -104,15 +117,15 @@ describe('TabsContainer', () => {
       const { getAllByTestId } = render(<BasicExample />);
       const tabPanels = getAllByTestId('tab-panel');
 
-      tabPanels.forEach((tabPanel, index) => {
+      tabPanels.forEach(tabPanel => {
         expect(tabPanel).toHaveAttribute('role', 'tabpanel');
-        expect(tabPanel).toHaveAttribute('id', getPanelId(index));
-        expect(tabPanel).toHaveAttribute('aria-labelledby', getTabId(index));
+        expect(tabPanel).toHaveAttribute('id', getPanelId(tabPanel.dataset.testValue!));
+        expect(tabPanel).toHaveAttribute('aria-labelledby', getTabId(tabPanel.dataset.testValue!));
       });
     });
 
-    it('defaultSelectedIndex applies correct accessibility attributes', () => {
-      const { getAllByTestId } = render(<BasicExample defaultSelectedIndex={1} />);
+    it('defaultSelectedValue applies correct accessibility attributes', () => {
+      const { getAllByTestId } = render(<BasicExample defaultSelectedValue={tabs[1].value} />);
       const [, tabPanel] = getAllByTestId('tab-panel');
 
       expect(tabPanel).not.toHaveAttribute('hidden');

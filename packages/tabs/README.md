@@ -24,44 +24,42 @@ can be used to build a tabbed interface. Check out
 ```jsx
 import { useTabs } from '@zendeskgarden/container-tabs';
 
-const tabs = ['Tab 1', 'Tab 2', 'Tab 3'];
-const tabRefs = tabs.map(() => createRef(null));
+const tabs = [{ value: 'Tab 1' }, { value: 'Tab 2' }, { value: 'Tab 3' }];
 
 const Tabs = () => {
-  const { selectedItem, getTabProps, getTabListProps, getTabPanelProps } = useTabs();
+  const { selectedValue, getTabProps, getTabListProps, getTabPanelProps } = useTabs({
+    tabs
+  });
   const tabComponents = [];
   const tabPanels = [];
 
-  tabs.forEach((tab, index) => {
+  tabs.forEach(({ value }, index) => {
     tabComponents.push(
       <li
         {...getTabProps({
-          item: tab,
-          index,
-          ref: tabRefs[index],
-          key: tab,
+          value,
+          key: value,
           style: {
-            borderBottom: `3px solid ${tab === selectedItem ? '#1f73b7' : 'transparent'}`
+            borderBottom: `3px solid ${value === selectedValue ? '#1f73b7' : 'transparent'}`
           }
         })}
       >
-        {tab}
+        {value}
       </li>
     );
 
     tabPanels.push(
       <div
         {...getTabPanelProps({
-          index,
-          item: tab,
-          key: tab,
+          value,
+          key: value,
           style: {
             padding: '10px 0',
             borderTop: '1px solid'
           }
         })}
       >
-        {tab} Content
+        {value} Content
       </div>
     );
   });
@@ -70,9 +68,7 @@ const Tabs = () => {
     <>
       <ul
         {...getTabListProps({
-          style: {
-            display: 'flex'
-          }
+          style: { display: 'flex' }
         })}
       >
         {tabComponents}
@@ -88,43 +84,42 @@ const Tabs = () => {
 ```jsx
 import { TabsContainer } from '@zendeskgarden/container-tabs';
 
+const tabs = [{ value: 'Tab 1' }, { value: 'Tab 2' }, { value: 'Tab 3' }];
+
 const Tabs = () => {
   const tabComponents = [];
   const tabPanels = [];
 
   return (
-    <TabsContainer>
-      {({ selectedItem, getTabProps, getTabListProps, getTabPanelProps }) => {
-        tabs.forEach((tab, index) => {
+    <TabsContainer tabs={tabs}>
+      {({ selectedValue, getTabProps, getTabListProps, getTabPanelProps }) => {
+        tabs.forEach(({ value }, index) => {
           tabComponents.push(
             <li
               {...getTabProps({
-                item: tab,
-                index,
-                ref: tabRefs[index],
-                key: tab,
+                value,
+                key: value,
                 style: {
-                  borderBottom: `3px solid ${tab === selectedItem ? '#1f73b7' : 'transparent'}`
+                  borderBottom: `3px solid ${value === selectedValue ? '#1f73b7' : 'transparent'}`
                 }
               })}
             >
-              {tab}
+              {value}
             </li>
           );
 
           tabPanels.push(
             <div
               {...getTabPanelProps({
-                index,
-                item: tab,
-                key: tab,
+                value,
+                key: value,
                 style: {
                   padding: '10px 0',
                   borderTop: '1px solid'
                 }
               })}
             >
-              {tab} Content
+              {value} Content
             </div>
           );
         });
@@ -133,9 +128,7 @@ const Tabs = () => {
           <>
             <ul
               {...getTabListProps({
-                style: {
-                  display: 'flex'
-                }
+                style: { display: 'flex' }
               })}
             >
               {tabComponents}

@@ -5,29 +5,25 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React, { createRef, useRef } from 'react';
+import React, { useRef } from 'react';
 import { Story } from '@storybook/react';
 import classNames from 'classnames';
 import { useFocusVisible } from '@zendeskgarden/container-focusvisible';
 import { useSelection } from '@zendeskgarden/container-selection';
 
 export const SelectionStory: Story = () => {
-  const items = ['Item 1', 'Item 2', 'Item 3'];
+  const values = ['Item 1', 'Item 2', 'Item 3'];
   const scope = useRef(null);
-  const { getContainerProps, getItemProps, selectedItem } = useSelection({
-    defaultSelectedIndex: 0
-  });
+  const { getGroupProps, getElementProps, selectedValue } = useSelection({ values });
 
   useFocusVisible({ scope });
 
   return (
-    <ul className="flex" {...getContainerProps()} ref={scope}>
-      {items.map(item => {
-        const focusRef = createRef<HTMLLIElement>();
-
+    <ul className="flex" {...getGroupProps()} ref={scope}>
+      {values.map(value => {
         return (
           <li
-            key={item}
+            key={value}
             className={classNames(
               'border-0',
               'border-blue-600',
@@ -35,11 +31,11 @@ export const SelectionStory: Story = () => {
               'mx-3',
               'px-2',
               'pt-1',
-              { 'border-b-3': item === selectedItem }
+              { 'border-b-3': value === selectedValue }
             )}
-            {...getItemProps({ item, focusRef })}
+            {...getElementProps({ value })}
           >
-            {item}
+            {value}
           </li>
         );
       })}

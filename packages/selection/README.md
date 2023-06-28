@@ -26,30 +26,23 @@ aria attributes and RTL support. It uses the
 ```jsx
 import { useSelection } from '@zendeskgarden/container-selection';
 
-const items = ['Item 1', 'Item 2', 'Item 3'];
+const values = ['Value 1', 'Value 2', 'Value 3'];
 
 const Selection = ({ direction }) => {
-  const { focusedItem, selectedItem, getContainerProps, getItemProps } = useSelection({
+  const { focusedValue, selectedValue, getGroupProps, getElementProps } = useSelection({
+    values,
     direction
   });
 
   return (
-    <ul {...getContainerProps()}>
-      {items.map(item => {
-        const ref = React.createRef();
-        const isSelected = selectedItem === item;
-        const isFocused = focusedItem === item;
+    <ul {...getGroupProps()}>
+      {values.map(value => {
+        const isSelected = selectedValue === value;
+        const isFocused = focusedValue === value;
 
         return (
-          <li
-            {...getItemProps({
-              key: item,
-              item,
-              ref,
-              focusRef: ref
-            })}
-          >
-            {item}
+          <li {...getElementProps({ key: value, value })}>
+            {value}
             {isSelected && <div>[Selected]</div>}
             {isFocused && <div>(Focused)</div>}
           </li>
@@ -65,25 +58,17 @@ const Selection = ({ direction }) => {
 ```jsx
 import { SelectionContainer } from '@zendeskgarden/container-selection';
 
-const items = ['Item 1', 'Item 2', 'Item 3'];
+const values = ['Value 1', 'Value 2', 'Value 3'];
 
-<SelectionContainer direction="vertical">
-  {({ selectedItem, focusedItem, getContainerProps, getItemProps }) => (
-    <ul {...getContainerProps()}>
-      {items.map(item => {
-        const ref = React.createRef();
-        const isSelected = item === selectedItem;
-        const isFocused = item === focusedItem;
+<SelectionContainer direction="vertical" values={values}>
+  {({ selectedValue, focusedValue, getGroupProps, getElementProps }) => (
+    <ul {...getGroupProps()}>
+      {values.map(value => {
+        const isSelected = value === selectedValue;
+        const isFocused = value === focusedValue;
 
         return (
-          <li
-            {...getItemProps({
-              key: item,
-              item,
-              ref,
-              focusRef: ref
-            })}
-          >
+          <li {...getElementProps({ key: value, value })}>
             {item}
             {isSelected && <span> - Selected</span>}
             {isFocused && <span> - Focused</span>}

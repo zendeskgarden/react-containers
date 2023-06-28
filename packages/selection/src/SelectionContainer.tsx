@@ -17,19 +17,19 @@ export const SelectionContainer: React.FC<ISelectionContainerProps<any>> = ({
 }) => <>{render!(useSelection(options))}</>;
 
 SelectionContainer.defaultProps = {
-  direction: 'horizontal',
-  defaultFocusedIndex: 0
+  direction: 'horizontal'
 };
 
 SelectionContainer.propTypes = {
   children: PropTypes.func,
   render: PropTypes.func,
+  values: PropTypes.arrayOf(PropTypes.any).isRequired,
   rtl: PropTypes.bool,
   direction: PropTypes.oneOf(['horizontal', 'vertical', 'both']),
-  defaultFocusedIndex: PropTypes.number,
-  defaultSelectedIndex: PropTypes.number,
-  focusedItem: PropTypes.any,
-  selectedItem: PropTypes.any,
+  defaultFocusedValue: PropTypes.string,
+  defaultSelectedValue: PropTypes.string,
+  focusedValue: PropTypes.any,
+  selectedValue: PropTypes.any,
   onSelect: PropTypes.func,
   onFocus: PropTypes.func
 };

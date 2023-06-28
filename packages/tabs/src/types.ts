@@ -6,17 +6,30 @@
  */
 
 import { IUseSelectionProps, IUseSelectionReturnValue } from '@zendeskgarden/container-selection';
-import { HTMLProps, ReactNode, RefObject } from 'react';
+import { HTMLProps, ReactNode } from 'react';
 
-export interface IUseTabsProps<Item> extends Omit<IUseSelectionProps<Item>, 'direction'> {
+export interface ITab<Value> {
+  value: Value;
+  disabled?: boolean;
+}
+
+export interface IUseTabsProps<Value>
+  extends Omit<IUseSelectionProps<Value>, 'direction' | 'values'> {
+  /**
+   * Provides an ordered list of unique tab values
+   *
+   * @param {Value} tab.value Unique tab value
+   * @param {boolean} tab.disabled Indicates that the tab is not interactive
+   */
+  tabs: ITab<Value>[];
   /** Determines the orientation of the tabs */
   orientation?: 'horizontal' | 'vertical';
   /** Prefixes IDs for tab elements */
   idPrefix?: string;
 }
 
-export interface IUseTabsReturnValue<Item>
-  extends Pick<IUseSelectionReturnValue<Item>, 'focusedItem' | 'selectedItem'> {
+export interface IUseTabsReturnValue<Value>
+  extends Pick<IUseSelectionReturnValue<Value>, 'focusedValue' | 'selectedValue'> {
   getTabListProps: <T extends Element>(
     props?: Omit<HTMLProps<T>, 'role'> & {
       role?: 'tablist' | null;
@@ -24,39 +37,35 @@ export interface IUseTabsReturnValue<Item>
   ) => HTMLProps<T>;
   getTabProps: <T extends Element>(
     props: Omit<HTMLProps<T>, 'role'> & {
-      index: number;
-      item: Item;
-      focusRef: RefObject<T>;
-      refKey?: string;
+      value: Value;
       role?: 'tab' | null;
     }
   ) => HTMLProps<T>;
   getTabPanelProps: <T extends Element>(
     props: Omit<HTMLProps<T>, 'role'> & {
-      index: number;
-      item: Item;
+      value: Value;
       role?: 'tabpanel' | null;
     }
   ) => HTMLProps<T>;
 }
 
-export interface ITabsContainerProps<Item> extends IUseTabsProps<Item> {
+export interface ITabsContainerProps<Value> extends IUseTabsProps<Value> {
   /**
    * Provides tabs render prop state and functions
    *
-   * @param {*} [options.focusedItem] Controlled focused tab
-   * @param {*} [options.selectedItem] Controlled selected tab
+   * @param {*} [options.focusedValue] Controlled focused tab
+   * @param {*} [options.selectedValue] Controlled selected tab
    * @param {function} [options.getTabListProps] Tab list props getter
    * @param {function} [options.getTabProps] Tab props getter
    * @param {function} [options.getTabPanelProps] Tab panel props getter
    */
   render?: (options: {
-    focusedItem?: IUseTabsReturnValue<Item>['focusedItem'];
-    selectedItem?: IUseTabsReturnValue<Item>['selectedItem'];
-    getTabListProps: IUseTabsReturnValue<Item>['getTabListProps'];
-    getTabProps: IUseTabsReturnValue<Item>['getTabProps'];
-    getTabPanelProps: IUseTabsReturnValue<Item>['getTabPanelProps'];
+    focusedValue?: IUseTabsReturnValue<Value>['focusedValue'];
+    selectedValue?: IUseTabsReturnValue<Value>['selectedValue'];
+    getTabListProps: IUseTabsReturnValue<Value>['getTabListProps'];
+    getTabProps: IUseTabsReturnValue<Value>['getTabProps'];
+    getTabPanelProps: IUseTabsReturnValue<Value>['getTabPanelProps'];
   }) => ReactNode;
   /** @ignore */
-  children?: (options: IUseTabsReturnValue<Item>) => ReactNode;
+  children?: (options: IUseTabsReturnValue<Value>) => ReactNode;
 }

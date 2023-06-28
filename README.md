@@ -23,7 +23,6 @@ to install.
 | ------------------------------------------------------------------ | ------------------------------------------------------------------- | -------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
 | [`@zendeskgarden/container-accordion`](packages/accordion)         | [![npm version][accordion npm version]][accordion npm link]         | [![npm version][accordion size bundle]][accordion size link]         | [![Dependency Status][accordion dependency status]][accordion dependency link]         |
 | [`@zendeskgarden/container-breadcrumb`](packages/breadcrumb)       | [![npm version][breadcrumb npm version]][breadcrumb npm link]       | [![npm version][breadcrumb size bundle]][breadcrumb size link]       | [![Dependency Status][breadcrumb dependency status]][breadcrumb dependency link]       |
-| [`@zendeskgarden/container-buttongroup`](packages/buttongroup)     | [![npm version][buttongroup npm version]][buttongroup npm link]     | [![npm version][buttongroup size bundle]][buttongroup size link]     | [![Dependency Status][buttongroup dependency status]][buttongroup dependency link]     |
 | [`@zendeskgarden/container-combobox`](packages/combobox)           | [![npm version][combobox npm version]][combobox npm link]           | [![npm version][combobox size bundle]][combobox size link]           | [![Dependency Status][combobox dependency status]][combobox dependency link]           |
 | [`@zendeskgarden/container-field`](packages/field)                 | [![npm version][field npm version]][field npm link]                 | [![npm version][field size bundle]][field size link]                 | [![Dependency Status][field dependency status]][field dependency link]                 |
 | [`@zendeskgarden/container-focusjail`](packages/focusjail)         | [![npm version][focusjail npm version]][focusjail npm link]         | [![npm version][focusjail size bundle]][focusjail size link]         | [![Dependency Status][focusjail dependency status]][focusjail dependency link]         |
@@ -31,7 +30,6 @@ to install.
 | [`@zendeskgarden/container-grid`](packages/grid)                   | [![npm version][grid npm version]][grid npm link]                   | [![npm version][grid size bundle]][grid size link]                   | [![Dependency Status][grid dependency status]][grid dependency link]                   |
 | [`@zendeskgarden/container-keyboardfocus`](packages/keyboardfocus) | [![npm version][keyboardfocus npm version]][keyboardfocus npm link] | [![npm version][keyboardfocus size bundle]][keyboardfocus size link] | [![Dependency Status][keyboardfocus dependency status]][keyboardfocus dependency link] |
 | [`@zendeskgarden/container-modal`](packages/modal)                 | [![npm version][modal npm version]][modal npm link]                 | [![npm version][modal size bundle]][modal size link]                 | [![Dependency Status][modal dependency status]][modal dependency link]                 |
-| [`@zendeskgarden/container-pagination`](packages/pagination)       | [![npm version][pagination npm version]][pagination npm link]       | [![npm version][pagination size bundle]][pagination size link]       | [![Dependency Status][pagination dependency status]][pagination dependency link]       |
 | [`@zendeskgarden/container-schedule`](packages/schedule)           | [![npm version][schedule npm version]][schedule npm link]           | [![npm version][schedule size bundle]][schedule size link]           | [![Dependency Status][schedule dependency status]][schedule dependency link]           |
 | [`@zendeskgarden/container-scrollregion`](packages/scrollregion)   | [![npm version][scrollregion npm version]][scrollregion npm link]   | [![npm version][scrollregion size bundle]][scrollregion size link]   | [![Dependency Status][scrollregion dependency status]][scrollregion dependency link]   |
 | [`@zendeskgarden/container-selection`](packages/selection)         | [![npm version][selection npm version]][selection npm link]         | [![npm version][selection size bundle]][selection size link]         | [![Dependency Status][selection dependency status]][selection dependency link]         |
@@ -39,7 +37,6 @@ to install.
 | [`@zendeskgarden/container-splitter`](packages/splitter)           | [![npm version][splitter npm version]][splitter npm link]           | [![npm version][splitter size bundle]][splitter size link]           | [![Dependency Status][splitter dependency status]][splitter dependency link]           |
 | [`@zendeskgarden/container-tabs`](packages/tabs)                   | [![npm version][tabs npm version]][tabs npm link]                   | [![npm version][tabs size bundle]][tabs size link]                   | [![Dependency Status][tabs dependency status]][tabs dependency link]                   |
 | [`@zendeskgarden/container-tooltip`](packages/tooltip)             | [![npm version][tooltip npm version]][tooltip npm link]             | [![npm version][tooltip size bundle]][tooltip size link]             | [![Dependency Status][tooltip dependency status]][tooltip dependency link]             |
-| [`@zendeskgarden/container-treeview`](packages/treeview)           | [![npm version][treeview npm version]][treeview npm link]           | [![npm version][treeview size bundle]][treeview size link]           | [![Dependency Status][treeview dependency status]][treeview dependency link]           |
 | [`@zendeskgarden/container-utilities`](packages/utilities)         | [![npm version][utilities npm version]][utilities npm link]         | [![npm version][utilities size bundle]][utilities size link]         | [![Dependency Status][utilities dependency status]][utilities dependency link]         |
 
 [accordion npm version]: https://flat.badgen.net/npm/v/@zendeskgarden/container-accordion
@@ -54,12 +51,6 @@ to install.
 [breadcrumb size link]: https://bundlephobia.com/result?p=@zendeskgarden/container-breadcrumb
 [breadcrumb dependency status]: https://flat.badgen.net/david/dep/zendeskgarden/react-containers/packages/breadcrumb
 [breadcrumb dependency link]: https://david-dm.org/zendeskgarden/react-containers?path=packages/breadcrumb
-[buttongroup npm version]: https://flat.badgen.net/npm/v/@zendeskgarden/container-buttongroup
-[buttongroup npm link]: https://www.npmjs.com/package/@zendeskgarden/container-buttongroup
-[buttongroup size bundle]: https://flat.badgen.net/bundlephobia/minzip/@zendeskgarden/container-buttongroup
-[buttongroup size link]: https://bundlephobia.com/result?p=@zendeskgarden/container-buttongroup
-[buttongroup dependency status]: https://flat.badgen.net/david/dep/zendeskgarden/react-containers/packages/buttongroup
-[buttongroup dependency link]: https://david-dm.org/zendeskgarden/react-containers?path=packages/buttongroup
 [combobox npm version]: https://flat.badgen.net/npm/v/@zendeskgarden/container-combobox
 [combobox npm link]: https://www.npmjs.com/package/@zendeskgarden/container-combobox
 [combobox size bundle]: https://flat.badgen.net/bundlephobia/minzip/@zendeskgarden/container-combobox
@@ -102,12 +93,6 @@ to install.
 [modal size link]: https://bundlephobia.com/result?p=@zendeskgarden/container-modal
 [modal dependency status]: https://flat.badgen.net/david/dep/zendeskgarden/react-containers/packages/modal
 [modal dependency link]: https://david-dm.org/zendeskgarden/react-containers?path=packages/modal
-[pagination npm version]: https://flat.badgen.net/npm/v/@zendeskgarden/container-pagination
-[pagination npm link]: https://www.npmjs.com/package/@zendeskgarden/container-pagination
-[pagination size bundle]: https://flat.badgen.net/bundlephobia/minzip/@zendeskgarden/container-pagination
-[pagination size link]: https://bundlephobia.com/result?p=@zendeskgarden/container-pagination
-[pagination dependency status]: https://flat.badgen.net/david/dep/zendeskgarden/react-containers/packages/pagination
-[pagination dependency link]: https://david-dm.org/zendeskgarden/react-containers?path=packages/pagination
 [schedule npm version]: https://flat.badgen.net/npm/v/@zendeskgarden/container-schedule
 [schedule npm link]: https://www.npmjs.com/package/@zendeskgarden/container-schedule
 [schedule size bundle]: https://flat.badgen.net/bundlephobia/minzip/@zendeskgarden/container-schedule
@@ -150,12 +135,6 @@ to install.
 [tooltip size link]: https://bundlephobia.com/result?p=@zendeskgarden/container-tooltip
 [tooltip dependency status]: https://flat.badgen.net/david/dep/zendeskgarden/react-containers/packages/tooltip
 [tooltip dependency link]: https://david-dm.org/zendeskgarden/react-containers?path=packages/tooltip
-[treeview npm version]: https://flat.badgen.net/npm/v/@zendeskgarden/container-treeview
-[treeview npm link]: https://www.npmjs.com/package/@zendeskgarden/container-treeview
-[treeview size bundle]: https://flat.badgen.net/bundlephobia/minzip/@zendeskgarden/container-treeview
-[treeview size link]: https://bundlephobia.com/result?p=@zendeskgarden/container-treeview
-[treeview dependency status]: https://flat.badgen.net/david/dep/zendeskgarden/react-containers/packages/treeview
-[treeview dependency link]: https://david-dm.org/zendeskgarden/react-containers?path=packages/treeview
 [utilities npm version]: https://flat.badgen.net/npm/v/@zendeskgarden/container-utilities
 [utilities npm link]: https://www.npmjs.com/package/@zendeskgarden/container-utilities
 [utilities size bundle]: https://flat.badgen.net/bundlephobia/minzip/@zendeskgarden/container-utilities

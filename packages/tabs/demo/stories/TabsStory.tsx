@@ -5,8 +5,8 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React, { createRef, RefObject } from 'react';
-import { Story } from '@storybook/react';
+import React from 'react';
+import { StoryFn } from '@storybook/react';
 import {
   ITabsContainerProps,
   IUseTabsProps,
@@ -15,9 +15,40 @@ import {
   useTabs
 } from '@zendeskgarden/container-tabs';
 import classNames from 'classnames';
+import { ITab } from '../../src/types';
+
+interface TabItemProps {
+  tab: ITab<string>;
+  selectedValue: IUseTabsReturnValue<string>['selectedValue'];
+  orientation: IUseTabsProps<string>['orientation'];
+  rtl?: IUseTabsProps<string>['rtl'];
+  getTabProps: IUseTabsReturnValue<string>['getTabProps'];
+}
+
+const TabItem = ({
+  tab: { value, disabled },
+  getTabProps,
+  selectedValue,
+  orientation,
+  rtl
+}: TabItemProps) => (
+  <li
+    key={value}
+    className={classNames('border-3 border-solid border-transparent px-2 py-1', {
+      'border-b-blue-600': selectedValue === value && orientation !== 'vertical',
+      'border-r-blue-600': selectedValue === value && orientation === 'vertical' && !rtl,
+      'border-l-blue-600': selectedValue === value && orientation === 'vertical' && rtl,
+      'cursor-pointer': !disabled,
+      'opacity-50 cursor-default': disabled
+    })}
+    {...getTabProps({ value })}
+  >
+    {value}
+  </li>
+);
 
 interface IComponentProps extends IUseTabsReturnValue<string> {
-  tabs: RefObject<HTMLLIElement>[];
+  tabs: IUseTabsProps<string>['tabs'];
   orientation: IUseTabsProps<any>['orientation'];
   rtl: IUseTabsProps<any>['rtl'];
 }
@@ -27,97 +58,77 @@ const Component = ({
   getTabListProps,
   getTabPanelProps,
   getTabProps,
-  selectedItem,
+  selectedValue,
   orientation,
   rtl
-}: IComponentProps) => (
-  <div
-    className={classNames({
-      flex: orientation === 'vertical',
-      'flex-row-reverse': orientation === 'vertical' && rtl
-    })}
-  >
-    <ul
-      {...getTabListProps()}
-      className={classNames('border-solid', 'border-transparent', 'flex', {
-        'flex-col': orientation === 'vertical',
-        'border-b-grey-600': orientation !== 'vertical',
-        'flex-row-reverse': orientation !== 'vertical' && rtl,
-        'border-r-grey-600': orientation === 'vertical' && !rtl,
-        'border-l-grey-600': orientation === 'vertical' && rtl
+}: IComponentProps) => {
+  return (
+    <div
+      className={classNames({
+        flex: orientation === 'vertical',
+        'flex-row-reverse': orientation === 'vertical' && rtl
       })}
     >
-      {tabs.map((tab, index) => (
-        <li
-          key={index}
-          {...getTabProps({ index, item: index.toString(), focusRef: tab })}
-          className={classNames(
-            'border-3',
-            'border-solid',
-            'border-transparent',
-            'cursor-pointer',
-            'px-2',
-            'py-1',
-            {
-              'border-b-blue-600': selectedItem === index.toString() && orientation !== 'vertical',
-              'border-r-blue-600':
-                selectedItem === index.toString() && orientation === 'vertical' && !rtl,
-              'border-l-blue-600':
-                selectedItem === index.toString() && orientation === 'vertical' && rtl
-            }
-          )}
-        >{`Tab ${index + 1}`}</li>
+      <ul
+        {...getTabListProps()}
+        className={classNames('border-solid', 'border-transparent', 'flex', {
+          'flex-col': orientation === 'vertical',
+          'border-b-grey-600': orientation !== 'vertical',
+          'flex-row-reverse': orientation !== 'vertical' && rtl,
+          'border-r-grey-600': orientation === 'vertical' && !rtl,
+          'border-l-grey-600': orientation === 'vertical' && rtl
+        })}
+      >
+        {tabs.map(tab => (
+          <TabItem
+            key={tab.value}
+            tab={tab}
+            getTabProps={getTabProps}
+            selectedValue={selectedValue}
+            orientation={orientation}
+            rtl={rtl}
+          />
+        ))}
+      </ul>
+      {tabs.map(tab => (
+        <div key={tab.value} {...getTabPanelProps({ value: tab.value })} className="p-2">
+          {tab.value}
+        </div>
       ))}
-    </ul>
-    {tabs.map((_, index) => (
-      <div
-        key={index}
-        {...getTabPanelProps({ index, item: index.toString() })}
-        className="p-2"
-      >{`Panel ${index + 1}`}</div>
-    ))}
-  </div>
-);
+    </div>
+  );
+};
 
-interface IProps extends IUseTabsProps<string> {
-  tabRefs: RefObject<HTMLLIElement>[];
-}
-
-const Container = ({ tabRefs, ...props }: IProps) => (
-  <TabsContainer {...props}>
-    {containerProps => (
-      <Component
-        tabs={tabRefs}
-        orientation={props.orientation}
-        rtl={props.rtl}
-        {...containerProps}
-      />
-    )}
-  </TabsContainer>
-);
-
-const Hook = ({ tabRefs, ...props }: IProps) => {
-  const hookProps = useTabs(props);
+const Container = (props: IUseTabsProps<string>) => {
+  const { rtl, orientation, tabs } = props;
 
   return (
-    <Component tabs={tabRefs} orientation={props.orientation} rtl={props.rtl} {...hookProps} />
+    <TabsContainer {...props}>
+      {containerProps => (
+        <Component tabs={tabs} orientation={orientation} rtl={rtl} {...containerProps} />
+      )}
+    </TabsContainer>
   );
+};
+
+const Hook = (props: IUseTabsProps<string>) => {
+  const { tabs, orientation, rtl } = props;
+  const hookProps = useTabs(props);
+
+  return <Component tabs={tabs} orientation={orientation} rtl={rtl} {...hookProps} />;
 };
 
 interface IArgs extends ITabsContainerProps<string> {
   as: 'hook' | 'container';
-  tabs: number;
 }
 
-export const TabsStory: Story<IArgs> = ({ as, tabs, ...props }: IArgs) => {
-  const tabRefs = Array.from({ length: tabs }, () => createRef<HTMLLIElement>());
-
+export const TabsStory: StoryFn<IArgs> = ({ as, ...props }: IArgs) => {
   switch (as) {
     case 'container':
-      return <Container tabRefs={tabRefs} {...props} />;
+      return <Container {...props} />;
 
     case 'hook':
     default:
-      return <Hook tabRefs={tabRefs} {...props} />;
+      return <Hook {...props} />;
   }
 };

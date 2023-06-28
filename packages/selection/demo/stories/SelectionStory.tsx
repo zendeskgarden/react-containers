@@ -5,8 +5,8 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React, { createRef, RefObject } from 'react';
-import { Story } from '@storybook/react';
+import React from 'react';
+import { StoryFn } from '@storybook/react';
 import classNames from 'classnames';
 import {
   ISelectionContainerProps,
@@ -16,19 +16,59 @@ import {
   useSelection
 } from '@zendeskgarden/container-selection';
 
-interface IComponentProps extends IUseSelectionReturnValue<string> {
-  direction: IUseSelectionProps<any>['direction'];
-  rtl: IUseSelectionProps<any>['rtl'];
-  items: RefObject<HTMLLIElement>[];
+interface ISelectionElementProps {
+  getElementProps: IUseSelectionReturnValue<string>['getElementProps'];
+  value: string;
+  index: number;
+  direction: IUseSelectionProps<string>['direction'];
+  selectedValue: IUseSelectionProps<string>['selectedValue'];
 }
 
-const Component = ({
+const SelectionElement = ({
+  getElementProps,
+  value,
+  index,
+  direction,
+  selectedValue
+}: ISelectionElementProps) => {
+  return (
+    <li
+      key={value}
+      className={classNames(
+        'flex',
+        'justify-center',
+        'items-center',
+        'border',
+        'border-solid',
+        'cursor-pointer',
+        'rounded',
+        'h-8',
+        'w-8',
+        'm-2',
+        {
+          [`mt-${index * 4}`]: direction === 'both'
+        }
+      )}
+      {...getElementProps({ value })}
+    >
+      {value === selectedValue && <span className="text-lg">✓</span>}
+    </li>
+  );
+};
+
+interface IComponentProps extends IUseSelectionReturnValue<string> {
+  direction: IUseSelectionProps<string>['direction'];
+  rtl: IUseSelectionProps<string>['rtl'];
+  values: IUseSelectionProps<string>['values'];
+}
+
+const SelectionGroup = ({
   direction,
   rtl,
-  items,
-  getContainerProps,
-  getItemProps,
-  selectedItem
+  values,
+  getGroupProps,
+  getElementProps,
+  selectedValue
 }: IComponentProps) => (
   <ul
     aria-label="selection"
@@ -36,66 +76,58 @@ const Component = ({
       'flex-col': direction === 'vertical',
       'flex-row-reverse': direction !== 'vertical' && rtl
     })}
-    {...getContainerProps()}
+    {...getGroupProps()}
   >
-    {items.map((item, index) => (
-      <li
-        key={index}
-        className={classNames(
-          'flex',
-          'justify-center',
-          'items-center',
-          'border',
-          'border-solid',
-          'cursor-pointer',
-          'rounded',
-          'h-8',
-          'w-8',
-          'm-2',
-          {
-            [`mt-${index * 4}`]: direction === 'both'
-          }
-        )}
-        {...getItemProps({ item: index.toString(), focusRef: item })}
-      >
-        {index.toString() === selectedItem && <span className="text-lg">✓</span>}
-      </li>
+    {values.map((value, index) => (
+      <SelectionElement
+        key={value}
+        value={value}
+        index={index}
+        direction={direction}
+        selectedValue={selectedValue}
+        getElementProps={getElementProps}
+      />
     ))}
   </ul>
 );
 
-interface IProps extends IUseSelectionProps<string> {
-  itemRefs: RefObject<HTMLLIElement>[];
-}
-
-const Container = ({ itemRefs, ...props }: IProps) => (
+const Container = ({ ...props }: IUseSelectionProps<string>) => (
   <SelectionContainer {...props}>
     {containerProps => (
-      <Component items={itemRefs} direction={props.direction} rtl={props.rtl} {...containerProps} />
+      <SelectionGroup
+        values={props.values}
+        direction={props.direction}
+        rtl={props.rtl}
+        {...containerProps}
+      />
     )}
   </SelectionContainer>
 );
 
-const Hook = ({ itemRefs, ...props }: IProps) => {
-  const hookProps = useSelection(props);
+const Hook = ({ ...props }: IUseSelectionProps<string>) => {
+  const hookProps = useSelection({ ...props });
 
-  return <Component items={itemRefs} direction={props.direction} rtl={props.rtl} {...hookProps} />;
+  return (
+    <SelectionGroup
+      values={props.values}
+      direction={props.direction}
+      rtl={props.rtl}
+      {...hookProps}
+    />
+  );
 };
 
-interface IArgs extends ISelectionContainerProps<any> {
+interface IArgs extends ISelectionContainerProps<string> {
   as: 'hook' | 'container';
-  items: number;
 }
 
-export const SelectionStory: Story<IArgs> = ({ as, items, ...props }: IArgs) => {
-  const itemRefs = Array.from({ length: items }, () => createRef<HTMLLIElement>());
-
+export const SelectionStory: StoryFn<IArgs> = ({ as, ...props }: IArgs) => {
   switch (as) {
     case 'container':
-      return <Container itemRefs={itemRefs} {...props} />;
+      return <Container {...props} />;
 
     case 'hook':
     default:
-      return <Hook itemRefs={itemRefs} {...props} />;
+      return <Hook {...props} />;
   }
 };
