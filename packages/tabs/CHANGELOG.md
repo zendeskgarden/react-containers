@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-tabs@1.0.6...@zendeskgarden/container-tabs@2.0.0) (2023-06-29)
+
+- feat(selection)!: updates container-selection to support react strict mode (#548) ([60dff5a](https://github.com/zendeskgarden/react-containers/commit/60dff5a282ad1c9c519e18641401985210b57edb)), closes [#548](https://github.com/zendeskgarden/react-containers/issues/548)
+
+### BREAKING CHANGES
+
+- Updated container-selection API
+- Updated container-tabs API (uptakes container-selection changes)
+
+Additional changes:
+
+- Removes container-treeview package
+- Removes container-buttongroup
+- Removes container-pagination
+
 ## [1.0.6](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-tabs@1.0.5...@zendeskgarden/container-tabs@1.0.6) (2023-06-12)
 
 ### Bug Fixes
