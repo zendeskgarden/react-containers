@@ -415,7 +415,7 @@ export const useCombobox = <
   useEffect(() => {
     if (isEditable && inputRef.current === win.document.activeElement) {
       // Scroll input into view on focus.
-      inputRef.current?.scrollIntoView && inputRef.current?.scrollIntoView();
+      inputRef.current?.scrollIntoView && inputRef.current?.scrollIntoView({ block: 'nearest' });
     }
   }, [inputRef, isEditable, win.document.activeElement]);
 
