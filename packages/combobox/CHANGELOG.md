@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.1](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-combobox@1.0.0...@zendeskgarden/container-combobox@1.0.1) (2023-07-12)
+
+### Bug Fixes
+
+- **combobox:** prevent page scroll on input focus ([#550](https://github.com/zendeskgarden/react-containers/issues/550)) ([156052e](https://github.com/zendeskgarden/react-containers/commit/156052e5aa5518a9fd038fbda6cd0b2b9e2d0af0))
+
 # [1.0.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-combobox@0.3.4...@zendeskgarden/container-combobox@1.0.0) (2023-06-12)
 
 **Note:** Version bump only for package @zendeskgarden/container-combobox
