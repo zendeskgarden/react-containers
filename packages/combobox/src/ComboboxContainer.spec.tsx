@@ -555,6 +555,11 @@ describe('ComboboxContainer', () => {
           await user.keyboard('{Delete}');
 
           expect(listboxOptions[3]).toHaveAttribute('aria-selected', 'false');
+          expect(input).toHaveFocus();
+
+          await user.keyboard('{Tab}');
+
+          expect(input).not.toHaveFocus();
         });
       });
 
