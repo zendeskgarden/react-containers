@@ -409,6 +409,11 @@ export const useCombobox = <
       } else {
         triggerRef.current?.focus();
       }
+
+      previousStateRef.current = {
+        ...previousStateRef.current,
+        type: useDownshift.stateChangeTypes.InputFocus
+      };
     }
   });
 
