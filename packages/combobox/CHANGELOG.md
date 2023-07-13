@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.2](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-combobox@1.0.1...@zendeskgarden/container-combobox@1.0.2) (2023-07-13)
+
+### Bug Fixes
+
+- **combobox:** prevent multiselectable from retaining focus on tag removal ([#551](https://github.com/zendeskgarden/react-containers/issues/551)) ([c6709d0](https://github.com/zendeskgarden/react-containers/commit/c6709d0c185865bea38470a78e893c71bec356c4))
+
 ## [1.0.1](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-combobox@1.0.0...@zendeskgarden/container-combobox@1.0.1) (2023-07-12)
 
 ### Bug Fixes
