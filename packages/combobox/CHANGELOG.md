@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.3](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-combobox@1.0.2...@zendeskgarden/container-combobox@1.0.3) (2023-07-18)
+
+### Bug Fixes
+
+- **combobox:** handle select-only collapse listbox on space/enter ([#552](https://github.com/zendeskgarden/react-containers/issues/552)) ([4ff0afc](https://github.com/zendeskgarden/react-containers/commit/4ff0afc75792985a34e0e5934e82f85a5592ddb1))
+
 ## [1.0.2](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-combobox@1.0.1...@zendeskgarden/container-combobox@1.0.2) (2023-07-13)
 
 ### Bug Fixes
