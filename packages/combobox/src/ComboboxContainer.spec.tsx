@@ -604,7 +604,7 @@ describe('ComboboxContainer', () => {
 
           expect(trigger).toHaveAttribute('aria-expanded', 'true');
 
-          await user.keyboard('{Escape}');
+          await user.keyboard('{Enter}');
 
           expect(trigger).toHaveAttribute('aria-expanded', 'false');
         });
