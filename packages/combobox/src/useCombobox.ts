@@ -348,10 +348,10 @@ export const useCombobox = <
 
   useLayoutEffect(
     () => {
-      // Trigger autocomplete selection override. Use layout effect to prevent
-      // `defaultActiveIndex` flash.
+      // Trigger autocomplete/select-only selection override. Use layout effect
+      // to prevent `defaultActiveIndex` flash.
       if (
-        isAutocomplete &&
+        (isAutocomplete || !isEditable) &&
         _isExpanded &&
         !previousStateRef.current?.isOpen &&
         _selectionValue &&
@@ -374,6 +374,7 @@ export const useCombobox = <
     /* eslint-disable-line react-hooks/exhaustive-deps */ [
       /* matchValue, // prevent match active index reset */
       isAutocomplete,
+      isEditable,
       _isExpanded,
       _selectionValue,
       _inputValue,
@@ -478,8 +479,24 @@ export const useCombobox = <
         const handleKeyDown = (event: KeyboardEvent) => {
           event.stopPropagation();
 
+          /* istanbul ignore else */
           if (!_isExpanded && (event.key === KEYS.SPACE || event.key === KEYS.ENTER)) {
+            event.preventDefault();
             openListbox();
+          } else if (
+            _isExpanded &&
+            !matchValue &&
+            (event.key === KEYS.SPACE || event.key === KEYS.ENTER)
+          ) {
+            event.preventDefault();
+
+            if (_activeIndex !== -1) {
+              setDownshiftSelection(values[_activeIndex]);
+            }
+
+            if (!isMultiselectable) {
+              closeListbox();
+            }
           } else if (/^(?:\S| ){1}$/u.test(event.key)) {
             // Handle option matching described under
             // https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-select-only/#kbd_label
@@ -547,12 +564,14 @@ export const useCombobox = <
       closeListbox,
       openListbox,
       setActiveIndex,
+      setDownshiftSelection,
       matchValue,
       values,
       labels,
       triggerContainsInput,
       isAutocomplete,
       isEditable,
+      isMultiselectable,
       inputRef
     ]
   );
@@ -666,21 +685,27 @@ export const useCombobox = <
           const triggerContainsTag =
             event.target instanceof Element && triggerRef.current?.contains(event.target);
 
+          if (triggerContainsTag && !isEditable) {
+            event.stopPropagation();
+          }
+
           if (
             triggerContainsTag &&
-            (event.key === KEYS.DOWN || event.key === KEYS.UP || event.key === KEYS.ESCAPE)
+            (event.key === KEYS.DOWN ||
+              event.key === KEYS.UP ||
+              event.key === KEYS.ESCAPE ||
+              (!isEditable && (event.key === KEYS.ENTER || event.key === KEYS.SPACE)))
           ) {
             const inputProps = getDownshiftInputProps();
 
             if (isEditable) {
               inputRef.current?.focus();
             } else {
+              event.preventDefault();
               triggerRef.current?.focus();
             }
 
             inputProps.onKeyDown(event);
-          } else if (triggerContainsTag && !isEditable) {
-            event.stopPropagation();
           }
         }
       };
