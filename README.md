@@ -29,7 +29,8 @@ to install.
 | [`@zendeskgarden/container-focusvisible`](packages/focusvisible)   | [![npm version][focusvisible npm version]][focusvisible npm link]   | [![npm version][focusvisible size bundle]][focusvisible size link]   | [![Dependency Status][focusvisible dependency status]][focusvisible dependency link]   |
 | [`@zendeskgarden/container-grid`](packages/grid)                   | [![npm version][grid npm version]][grid npm link]                   | [![npm version][grid size bundle]][grid size link]                   | [![Dependency Status][grid dependency status]][grid dependency link]                   |
 | [`@zendeskgarden/container-keyboardfocus`](packages/keyboardfocus) | [![npm version][keyboardfocus npm version]][keyboardfocus npm link] | [![npm version][keyboardfocus size bundle]][keyboardfocus size link] | [![Dependency Status][keyboardfocus dependency status]][keyboardfocus dependency link] |
-| [`@zendeskgarden/container-modal`](packages/modal)                 | [![npm version][modal npm version]][modal npm link]                 | [![npm version][modal size bundle]][modal size link]                 | [![Dependency Status][modal dependency status]][modal dependency link]                 |
+| [`@zendeskgarden/container-menu`](packages/menu)                   | [![npm version][menu npm version]][menu npm link]                   | [![npm version][menu size bundle]][menu size link]                   | [![Dependency Status][menu dependency status]][menu dependency link]                   |
+| [`@zendeskgarden/container-menu`](packages/menu)                   | [![npm version][modal npm version]][modal npm link]                 | [![npm version][modal size bundle]][modal size link]                 | [![Dependency Status][modal dependency status]][modal dependency link]                 |
 | [`@zendeskgarden/container-schedule`](packages/schedule)           | [![npm version][schedule npm version]][schedule npm link]           | [![npm version][schedule size bundle]][schedule size link]           | [![Dependency Status][schedule dependency status]][schedule dependency link]           |
 | [`@zendeskgarden/container-scrollregion`](packages/scrollregion)   | [![npm version][scrollregion npm version]][scrollregion npm link]   | [![npm version][scrollregion size bundle]][scrollregion size link]   | [![Dependency Status][scrollregion dependency status]][scrollregion dependency link]   |
 | [`@zendeskgarden/container-selection`](packages/selection)         | [![npm version][selection npm version]][selection npm link]         | [![npm version][selection size bundle]][selection size link]         | [![Dependency Status][selection dependency status]][selection dependency link]         |
@@ -87,6 +88,12 @@ to install.
 [keyboardfocus size link]: https://bundlephobia.com/result?p=@zendeskgarden/container-keyboardfocus
 [keyboardfocus dependency status]: https://flat.badgen.net/david/dep/zendeskgarden/react-containers/packages/keyboardfocus
 [keyboardfocus dependency link]: https://david-dm.org/zendeskgarden/react-containers?path=packages/keyboardfocus
+[menu npm version]: https://flat.badgen.net/npm/v/@zendeskgarden/container-menu
+[menu npm link]: https://www.npmjs.com/package/@zendeskgarden/container-menu
+[menu size bundle]: https://flat.badgen.net/bundlephobia/minzip/@zendeskgarden/container-menu
+[menu size link]: https://bundlephobia.com/result?p=@zendeskgarden/container-menu
+[menu dependency status]: https://flat.badgen.net/david/dep/zendeskgarden/react-containers/packages/menu
+[menu dependency link]: https://david-dm.org/zendeskgarden/react-containers?path=packages/menu
 [modal npm version]: https://flat.badgen.net/npm/v/@zendeskgarden/container-modal
 [modal npm link]: https://www.npmjs.com/package/@zendeskgarden/container-modal
 [modal size bundle]: https://flat.badgen.net/bundlephobia/minzip/@zendeskgarden/container-modal
