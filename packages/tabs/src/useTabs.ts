@@ -5,10 +5,10 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
+import { useCallback, useMemo } from 'react';
 import { useId } from '@zendeskgarden/container-utilities';
 import { useSelection } from '@zendeskgarden/container-selection';
 import { ITab, IUseTabsProps, IUseTabsReturnValue } from './types';
-import { useMemo } from 'react';
 
 export const useTabs = <Value>({
   tabs,
@@ -37,58 +37,59 @@ export const useTabs = <Value>({
     ...options
   });
 
-  const getTabListProps: IUseTabsReturnValue<Value>['getTabListProps'] = ({
-    role = 'tablist',
-    ...other
-  } = {}) => ({
-    ...getGroupProps(other),
-    role: role === null ? undefined : role,
-    'aria-orientation': orientation,
-    'data-garden-container-id': 'containers.tabs',
-    'data-garden-container-version': PACKAGE_VERSION
-  });
-
-  const getTabProps: IUseTabsReturnValue<Value>['getTabProps'] = ({
-    role = 'tab',
-    value,
-    ...other
-  }) => {
-    const isDisabled = values.indexOf(value) === -1;
-    const { onClick, onKeyDown, onFocus, onBlur, ...elementProps } = getElementProps({
-      value,
+  const getTabListProps: IUseTabsReturnValue<Value>['getTabListProps'] = useCallback(
+    ({ role = 'tablist', ...other } = {}) => ({
+      ...getGroupProps(other),
       role: role === null ? undefined : role,
+      'aria-orientation': orientation,
+      'data-garden-container-id': 'containers.tabs',
+      'data-garden-container-version': PACKAGE_VERSION
+    }),
+    [getGroupProps, orientation]
+  );
+
+  const getTabProps: IUseTabsReturnValue<Value>['getTabProps'] = useCallback(
+    ({ role = 'tab', value, ...other }) => {
+      const isDisabled = values.indexOf(value) === -1;
+      const { onClick, onKeyDown, onFocus, onBlur, ...elementProps } = getElementProps({
+        value,
+        role: role === null ? undefined : role,
+        ...other
+      });
+
+      return {
+        ...elementProps,
+        onClick: isDisabled ? undefined : onClick,
+        onFocus: isDisabled ? undefined : onFocus,
+        onKeyDown: isDisabled ? undefined : onKeyDown,
+        onBlur: isDisabled ? undefined : onBlur,
+        id: `${TAB_ID}:${value}`,
+        'aria-disabled': isDisabled || undefined,
+        'aria-controls': `${PANEL_ID}:${value}`
+      };
+    },
+    [getElementProps, values, PANEL_ID, TAB_ID]
+  );
+
+  const getTabPanelProps: IUseTabsReturnValue<Value>['getTabPanelProps'] = useCallback(
+    ({ role = 'tabpanel', value, ...other }) => ({
+      role: role === null ? undefined : role,
+      id: `${PANEL_ID}:${value}`,
+      hidden: value !== selectedValue,
+      'aria-labelledby': `${TAB_ID}:${value}`,
       ...other
-    });
+    }),
+    [selectedValue, PANEL_ID, TAB_ID]
+  );
 
-    return {
-      ...elementProps,
-      onClick: isDisabled ? undefined : onClick,
-      onFocus: isDisabled ? undefined : onFocus,
-      onKeyDown: isDisabled ? undefined : onKeyDown,
-      onBlur: isDisabled ? undefined : onBlur,
-      id: `${TAB_ID}:${value}`,
-      'aria-disabled': isDisabled || undefined,
-      'aria-controls': `${PANEL_ID}:${value}`
-    };
-  };
-
-  const getTabPanelProps: IUseTabsReturnValue<Value>['getTabPanelProps'] = ({
-    role = 'tabpanel',
-    value,
-    ...other
-  }) => ({
-    role: role === null ? undefined : role,
-    id: `${PANEL_ID}:${value}`,
-    hidden: value !== selectedValue,
-    'aria-labelledby': `${TAB_ID}:${value}`,
-    ...other
-  });
-
-  return {
-    selectedValue,
-    focusedValue,
-    getTabListProps,
-    getTabProps,
-    getTabPanelProps
-  };
+  return useMemo(
+    () => ({
+      selectedValue,
+      focusedValue,
+      getTabListProps,
+      getTabProps,
+      getTabPanelProps
+    }),
+    [selectedValue, focusedValue, getTabListProps, getTabProps, getTabPanelProps]
+  );
 };
