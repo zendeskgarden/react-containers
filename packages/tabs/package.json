@@ -1,6 +1,6 @@
 {
   "name": "@zendeskgarden/container-tabs",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Containers relating to tabs in the Garden Design System",
   "license": "Apache-2.0",
   "author": "Zendesk Garden <garden@zendesk.com>",

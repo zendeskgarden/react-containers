@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.1](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-tabs@2.0.0...@zendeskgarden/container-tabs@2.0.1) (2023-07-21)
+
+### Bug Fixes
+
+- **tabs:** minimize re-rendering of container by memoization ([#554](https://github.com/zendeskgarden/react-containers/issues/554)) ([2532797](https://github.com/zendeskgarden/react-containers/commit/2532797b34a4941ff9d2ea77cad7476addd12769))
+
 # [2.0.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-tabs@1.0.6...@zendeskgarden/container-tabs@2.0.0) (2023-06-29)
 
 - feat(selection)!: updates container-selection to support react strict mode (#548) ([60dff5a](https://github.com/zendeskgarden/react-containers/commit/60dff5a282ad1c9c519e18641401985210b57edb)), closes [#548](https://github.com/zendeskgarden/react-containers/issues/548)
