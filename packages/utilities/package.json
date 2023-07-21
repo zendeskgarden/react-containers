@@ -24,7 +24,6 @@
     "@reach/auto-id": "^0.18.0"
   },
   "peerDependencies": {
-    "prop-types": "^15.6.1",
     "react": ">=16.8.0",
     "react-dom": ">=16.8.0"
   },
