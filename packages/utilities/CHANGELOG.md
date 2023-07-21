@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.7](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-utilities@1.0.6...@zendeskgarden/container-utilities@1.0.7) (2023-07-21)
+
+### Bug Fixes
+
+- remove unused prop-type peerDep from container-utilities ([#555](https://github.com/zendeskgarden/react-containers/issues/555)) ([be2f04a](https://github.com/zendeskgarden/react-containers/commit/be2f04a2949df2f97027b88db45214cc6584b8fc))
+
 ## [1.0.6](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-utilities@1.0.5...@zendeskgarden/container-utilities@1.0.6) (2023-06-12)
 
 ### Bug Fixes

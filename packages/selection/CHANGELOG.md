@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.0.1](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-selection@3.0.0...@zendeskgarden/container-selection@3.0.1) (2023-07-21)
+
+**Note:** Version bump only for package @zendeskgarden/container-selection
+
 # [3.0.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-selection@2.0.6...@zendeskgarden/container-selection@3.0.0) (2023-06-29)
 
 - feat(selection)!: updates container-selection to support react strict mode (#548) ([60dff5a](https://github.com/zendeskgarden/react-containers/commit/60dff5a282ad1c9c519e18641401985210b57edb)), closes [#548](https://github.com/zendeskgarden/react-containers/issues/548)
