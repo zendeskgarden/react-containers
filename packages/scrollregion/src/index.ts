@@ -5,8 +5,6 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-export { useScrollRegion } from './useScrollRegion';
-export type { IUseScrollRegionProps } from './useScrollRegion';
+export { useScrollRegion, type IUseScrollRegionProps } from './useScrollRegion';
 
-export { ScrollRegionContainer } from './ScrollRegionContainer';
-export type { IScrollRegionContainerProps } from './ScrollRegionContainer';
+export { ScrollRegionContainer, type IScrollRegionContainerProps } from './ScrollRegionContainer';
