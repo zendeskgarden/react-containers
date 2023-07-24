@@ -58,7 +58,6 @@
     "@types/react": "17.0.62",
     "@types/react-color": "3.0.6",
     "@types/react-dom": "17.0.20",
-    "@types/styled-components": "5.1.26",
     "@types/webpack": "5.28.1",
     "@types/webpack-env": "1.18.1",
     "@typescript-eslint/eslint-plugin": "6.2.0",
