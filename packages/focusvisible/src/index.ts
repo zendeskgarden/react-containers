@@ -6,9 +6,7 @@
  */
 
 /* Hooks */
-export { useFocusVisible } from './useFocusVisible';
-export type { IUseFocusVisibleProps } from './useFocusVisible';
+export { useFocusVisible, type IUseFocusVisibleProps } from './useFocusVisible';
 
 /* Render-props */
-export { FocusVisibleContainer } from './FocusVisibleContainer';
-export type { IFocusVisibleContainerProps } from './FocusVisibleContainer';
+export { FocusVisibleContainer, type IFocusVisibleContainerProps } from './FocusVisibleContainer';

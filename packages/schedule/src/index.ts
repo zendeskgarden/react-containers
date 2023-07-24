@@ -6,9 +6,7 @@
  */
 
 /* Hooks */
-export { useSchedule } from './useSchedule';
-export type { IUseScheduleProps, IUseScheduleReturnValue } from './useSchedule';
+export { useSchedule, type IUseScheduleProps, type IUseScheduleReturnValue } from './useSchedule';
 
 /* Render-props */
-export { ScheduleContainer } from './ScheduleContainer';
-export type { IScheduleContainerProps } from './ScheduleContainer';
+export { ScheduleContainer, type IScheduleContainerProps } from './ScheduleContainer';
