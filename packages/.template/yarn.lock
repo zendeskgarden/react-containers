@@ -3,7 +3,7 @@
 
 
 "@babel/runtime@^7.8.4":
-  version "7.22.3"
+  version "7.22.6"
   dependencies:
     regenerator-runtime "^0.13.11"
 
