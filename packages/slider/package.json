@@ -20,7 +20,6 @@
   "sideEffects": false,
   "types": "dist/typings/index.d.ts",
   "dependencies": {
-    "@babel/runtime": "^7.8.4",
     "lodash.debounce": "^4.0.8"
   },
   "peerDependencies": {

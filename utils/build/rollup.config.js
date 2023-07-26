@@ -27,22 +27,17 @@ const externalPackages = [
   'react',
   'react-dom',
   'prop-types',
-  'react-uid',
   ...Object.keys(pkg.dependencies || {})
-];
-
-if (!externalPackages.includes('@babel/runtime')) {
-  throw new Error(`Package "${pkg.name}" must include the "@babel/runtime" dependency.`);
-}
+].map(external => new RegExp(`^${external}/?.*`, 'u'));
 
 export default [
   {
     input: pkg['zendeskgarden:src'],
     /**
-     * Only mark common dependencies as externals.
-     * These are not included in the bundlesize.
+     * Filter out dependencies that consumers
+     * will bundle during build time
      */
-    external: id => externalPackages.includes(id),
+    external: id => externalPackages.filter(regexp => regexp.test(id)).length > 0,
     acornInjectPlugins: [jsx()],
     plugins: [
       /**
