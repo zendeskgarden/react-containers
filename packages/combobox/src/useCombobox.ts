@@ -665,18 +665,12 @@ export const useCombobox = <
   );
 
   const getTagProps = useCallback<IUseComboboxReturnValue['getTagProps']>(
-    ({ option, onClick, onFocus, onKeyDown, ...other }) => {
+    ({ option, onClick, onKeyDown, ...other }) => {
       // Prevent tag click from affecting expansion.
       const handleClick = (event: MouseEvent) =>
         event.target instanceof Element &&
         triggerRef.current?.contains(event.target) &&
         event.stopPropagation();
-
-      const handleFocus = () => {
-        if (_isExpanded) {
-          setActiveIndex(values.findIndex(value => value === option.value));
-        }
-      };
 
       const handleKeyDown = (event: KeyboardEvent) => {
         if (event.key === KEYS.BACKSPACE || event.key === KEYS.DELETE) {
@@ -714,21 +708,11 @@ export const useCombobox = <
         'data-garden-container-id': 'containers.combobox.tag',
         'data-garden-container-version': PACKAGE_VERSION,
         onClick: composeEventHandlers(onClick, handleClick),
-        onFocus: composeEventHandlers(onFocus, handleFocus),
         onKeyDown: composeEventHandlers(onKeyDown, handleKeyDown),
         ...other
       };
     },
-    [
-      triggerRef,
-      setDownshiftSelection,
-      getDownshiftInputProps,
-      isEditable,
-      _isExpanded,
-      values,
-      setActiveIndex,
-      inputRef
-    ]
+    [triggerRef, setDownshiftSelection, getDownshiftInputProps, isEditable, inputRef]
   );
 
   const getListboxProps = useCallback<IUseComboboxReturnValue['getListboxProps']>(
