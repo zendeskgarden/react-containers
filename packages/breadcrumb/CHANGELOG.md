@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.5](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-breadcrumb@1.0.4...@zendeskgarden/container-breadcrumb@1.0.5) (2023-07-28)
+
+### Bug Fixes
+
+- **deps:** update non-major package dependencies ([#556](https://github.com/zendeskgarden/react-containers/issues/556)) ([6831969](https://github.com/zendeskgarden/react-containers/commit/6831969ebb4390546f0159c5803121d711ef91bd))
+
 ## [1.0.4](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-breadcrumb@1.0.3...@zendeskgarden/container-breadcrumb@1.0.4) (2023-06-12)
 
 ### Bug Fixes

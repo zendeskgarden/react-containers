@@ -1,6 +1,6 @@
 {
   "name": "@zendeskgarden/container-breadcrumb",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Containers relating to breadcrumb in the Garden Design System",
   "license": "Apache-2.0",
   "author": "Zendesk Garden <garden@zendesk.com>",

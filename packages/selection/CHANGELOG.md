@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.0.2](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-selection@3.0.1...@zendeskgarden/container-selection@3.0.2) (2023-07-28)
+
+### Bug Fixes
+
+- **deps:** update non-major package dependencies ([#556](https://github.com/zendeskgarden/react-containers/issues/556)) ([6831969](https://github.com/zendeskgarden/react-containers/commit/6831969ebb4390546f0159c5803121d711ef91bd))
+
 ## [3.0.1](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-selection@3.0.0...@zendeskgarden/container-selection@3.0.1) (2023-07-21)
 
 **Note:** Version bump only for package @zendeskgarden/container-selection
