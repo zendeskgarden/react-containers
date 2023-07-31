@@ -37,7 +37,7 @@ describe('AccordionContainer', () => {
   const CONTAINER_ID_PREFIX = 'test';
 
   const BasicExample = (props: IUseAccordionProps = {}) => (
-    <AccordionContainer idPrefix={CONTAINER_ID_PREFIX} {...props}>
+    <AccordionContainer idPrefix={CONTAINER_ID_PREFIX} sections={sections} {...props}>
       {({ getHeaderProps, getTriggerProps, getPanelProps }) => (
         <>
           {sections.map((section, index) => {
@@ -56,7 +56,7 @@ describe('AccordionContainer', () => {
   );
 
   const AdvancedExample = () => (
-    <AccordionContainer>
+    <AccordionContainer sections={sections}>
       {({ getHeaderProps, getTriggerProps, getPanelProps }) => (
         <>
           {sections.map((section, index) => {

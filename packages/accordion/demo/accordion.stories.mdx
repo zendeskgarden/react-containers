@@ -7,10 +7,9 @@ import README from '../README.md';
 <Meta
   title="Packages/Accordion"
   component={AccordionContainer}
-  args={{ as: 'hook', sections: 5 }}
+  args={{ as: 'hook', sections: [0, 1, 2, 3, 4] }}
   argTypes={{
-    as: { options: ['container', 'hook'], control: 'radio', table: { category: 'Story' } },
-    sections: { control: { type: 'range', min: 1, max: 9 }, table: { category: 'Story' } }
+    as: { options: ['container', 'hook'], control: 'radio', table: { category: 'Story' } }
   }}
 />
 

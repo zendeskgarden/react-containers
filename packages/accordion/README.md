@@ -27,9 +27,10 @@ attributes for a group of sections.
 ```jsx
 import { useAccordion } from '@zendeskgarden/container-accordion';
 
-const Accordion = ({ expandable = true, collapsible = true } = {}) => {
+const Accordion = ({ sections = [0, 1, 2], expandable = true, collapsible = true } = {}) => {
   const { getHeaderProps, getTriggerProps, getPanelProps, expandedSections, disabledSections } =
     useAccordion({
+      sections,
       expandedSections: [0],
       expandable,
       collapsible
@@ -82,8 +83,8 @@ return <Accordion expandable={true} collapsible={true} />;
 ```jsx
 import { AccordionContainer } from '@zendeskgarden/container-accordion';
 
-const Accordion = ({ expandable = true, collapsible = true } = {}) => (
-  <AccordionContainer expandable={expandable} collapsible={collapsible}>
+const Accordion = ({ sections = [0, 1, 2], expandable = true, collapsible = true } = {}) => (
+  <AccordionContainer sections={sections} expandable={expandable} collapsible={collapsible}>
     {({ getHeaderProps, getTriggerProps, getPanelProps, expandedSections, disabledSections }) => (
       <>
         {sections.map((section, index) => {

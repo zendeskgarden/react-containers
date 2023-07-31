@@ -8,14 +8,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { useAccordion, IUseAccordionProps, IUseAccordionReturnValue } from './useAccordion';
-
-export interface IAccordionContainerProps extends IUseAccordionProps {
-  /** A render prop function which receives accordion state and prop getters */
-  render?: (options: IUseAccordionReturnValue) => React.ReactNode;
-  /** A children render prop function which receives accordion state and prop getters */
-  children?: (options: IUseAccordionReturnValue) => React.ReactNode;
-}
+import { useAccordion } from './useAccordion';
+import type { IAccordionContainerProps } from './types';
 
 export const AccordionContainer: React.FunctionComponent<IAccordionContainerProps> = props => {
   const { children, render = children, ...options } = props;
