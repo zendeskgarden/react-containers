@@ -40,7 +40,7 @@ export function useAccordion<Value>({
       const expanded: Value[] = [];
       const disabled: Value[] = [];
 
-      sections!.forEach(sectionValue => {
+      sections.forEach(sectionValue => {
         let isExpanded = false;
 
         if (sectionValue === value) {
