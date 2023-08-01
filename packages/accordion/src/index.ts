@@ -13,7 +13,6 @@ export { AccordionContainer } from './AccordionContainer';
 
 export type {
   IUseAccordionReturnValue,
-  IUseAccordionPropGetters,
   IAccordionContainerProps,
   IUseAccordionProps
 } from './types';
