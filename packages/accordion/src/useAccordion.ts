@@ -13,15 +13,9 @@ import {
   useId
 } from '@zendeskgarden/container-utilities';
 
-import {
-  IUseAccordionProps,
-  IUseAccordionReturnValue,
-  IHeaderProps,
-  ITriggerProps,
-  IPanelProps
-} from './types';
+import { IUseAccordionProps, IUseAccordionReturnValue } from './types';
 
-export function useAccordion({
+export function useAccordion<Value>({
   idPrefix,
   sections,
   expandedSections,
@@ -29,41 +23,43 @@ export function useAccordion({
   onChange,
   expandable = true,
   collapsible = true
-}: IUseAccordionProps = {}): IUseAccordionReturnValue {
+}: IUseAccordionProps<Value>): IUseAccordionReturnValue<Value> {
   const prefix = useId(idPrefix);
   const TRIGGER_ID = `${prefix}--trigger`;
   const PANEL_ID = `${prefix}--panel`;
 
   const isControlled = expandedSections !== null && expandedSections !== undefined;
-  const [expandedState, setExpandedState] = useState<number[]>(defaultExpandedSections || [0]);
+  const [expandedState, setExpandedState] = useState<Value[]>(
+    defaultExpandedSections || expandedSections || sections.slice(0, 1)
+  );
   const [disabledState, setDisabledState] = useState(collapsible ? [] : expandedState);
   const internalExpandedState = getControlledValue(expandedSections, expandedState)!;
 
   const toggle = useCallback(
-    (index: number) => {
-      const expanded: number[] = [];
-      const disabled: number[] = [];
+    (value: Value) => {
+      const expanded: Value[] = [];
+      const disabled: Value[] = [];
 
-      sections!.forEach(sectionIndex => {
+      sections!.forEach(sectionValue => {
         let isExpanded = false;
 
-        if (sectionIndex === index) {
-          isExpanded = collapsible ? expandedState.indexOf(sectionIndex) === -1 : true;
+        if (sectionValue === value) {
+          isExpanded = collapsible ? internalExpandedState.includes(sectionValue) === false : true;
         } else if (expandable) {
-          isExpanded = expandedState.indexOf(sectionIndex) !== -1;
+          isExpanded = internalExpandedState.includes(sectionValue);
         }
 
         if (isExpanded) {
-          expanded.push(sectionIndex);
+          expanded.push(sectionValue);
 
           if (!collapsible) {
-            disabled.push(sectionIndex);
+            disabled.push(sectionValue);
           }
         }
       });
 
       if (onChange) {
-        onChange(index);
+        onChange(value);
       }
 
       if (isControlled === false) {
@@ -72,14 +68,14 @@ export function useAccordion({
 
       setDisabledState(disabled);
     },
-    [sections, expandedState, collapsible, expandable, isControlled, onChange]
+    [sections, internalExpandedState, collapsible, expandable, isControlled, onChange]
   );
 
   const getHeaderProps = useCallback(
-    ({ role = 'heading', ariaLevel, ...props }: IHeaderProps = {}) => {
+    ({ role = 'heading', 'aria-level': ariaLevel, ...props } = {}) => {
       if (ariaLevel === undefined) {
         throw new Error(
-          'Accessibility Error: You must apply the `ariaLevel` prop to `getHeaderProps()`'
+          'Accessibility Error: You must apply the `aria-level` prop to `getHeaderProps()`'
         );
       }
 
@@ -95,24 +91,24 @@ export function useAccordion({
   );
 
   const getTriggerProps = useCallback(
-    ({ index, role = 'button', tabIndex = 0, ...props }: ITriggerProps = {}) => {
-      if (index === undefined) {
+    ({ value, role = 'button', tabIndex = 0, ...props } = {}) => {
+      if (value === undefined) {
         throw new Error(
-          'Accessibility Error: You must provide an `index` option to `getTriggerProps()`'
+          'Accessibility Error: You must provide an `value` option to `getTriggerProps()`'
         );
       }
 
       return {
-        id: `${TRIGGER_ID}:${index}`,
+        id: `${TRIGGER_ID}:${value}`,
         role,
         tabIndex,
-        'aria-controls': `${PANEL_ID}:${index}`,
-        'aria-disabled': disabledState.includes(index),
-        'aria-expanded': internalExpandedState.includes(index),
-        onClick: composeEventHandlers(props.onClick, () => toggle(index)),
+        'aria-controls': `${PANEL_ID}:${value}`,
+        'aria-disabled': disabledState.includes(value),
+        'aria-expanded': internalExpandedState.includes(value),
+        onClick: composeEventHandlers(props.onClick, () => toggle(value)),
         onKeyDown: composeEventHandlers(props.onKeyDown, (event: KeyboardEvent) => {
           if (event.keyCode === KEY_CODES.SPACE || event.keyCode === KEY_CODES.ENTER) {
-            toggle(index);
+            toggle(value);
             event.preventDefault();
           }
         }),
@@ -123,18 +119,18 @@ export function useAccordion({
   );
 
   const getPanelProps = useCallback(
-    ({ index, role = 'region', ...props }: IPanelProps = {}) => {
-      if (index === undefined) {
+    ({ value, role = 'region', ...props } = {}) => {
+      if (value === undefined) {
         throw new Error(
-          'Accessibility Error: You must provide an `index` option to `getPanelProps()`'
+          'Accessibility Error: You must provide an `value` option to `getPanelProps()`'
         );
       }
 
       return {
-        id: `${PANEL_ID}:${index}`,
+        id: `${PANEL_ID}:${value}`,
         role,
-        'aria-hidden': !internalExpandedState.includes(index),
-        'aria-labelledby': `${TRIGGER_ID}:${index}`,
+        'aria-hidden': !internalExpandedState.includes(value),
+        'aria-labelledby': `${TRIGGER_ID}:${value}`,
         ...props
       };
     },

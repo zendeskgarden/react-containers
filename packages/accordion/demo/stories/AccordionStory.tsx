@@ -15,8 +15,10 @@ import {
   useAccordion
 } from '@zendeskgarden/container-accordion';
 
-interface IComponentProps extends IUseAccordionReturnValue {
-  sections: IUseAccordionProps['sections'];
+type ISectionValue = number;
+
+interface IComponentProps<T = ISectionValue> extends IUseAccordionReturnValue<T> {
+  sections: IUseAccordionProps<T>['sections'];
 }
 
 const Component = ({
@@ -28,16 +30,16 @@ const Component = ({
   getPanelProps
 }: IComponentProps) => (
   <div style={{ width: 300 }}>
-    {sections!.map((section, index) => {
-      const disabled = disabledSections.indexOf(index) !== -1;
-      const hidden = expandedSections.indexOf(index) === -1;
+    {sections!.map(value => {
+      const disabled = disabledSections.indexOf(value) !== -1;
+      const hidden = expandedSections.indexOf(value) === -1;
 
       return (
-        <div key={section}>
-          <div {...getHeaderProps({ ariaLevel: 2 })}>
+        <div key={value}>
+          <div {...getHeaderProps({ 'aria-level': 2 })}>
             <button
               {...getTriggerProps({
-                index,
+                value,
                 role: null,
                 tabIndex: null,
                 disabled
@@ -45,17 +47,17 @@ const Component = ({
               className="text-left w-full"
               type="button"
             >
-              {`Trigger ${index + 1}`}
+              {`Trigger ${value + 1}`}
             </button>
           </div>
           <section
             {...getPanelProps({
-              index,
+              value,
               role: null,
               hidden
             })}
           >
-            {`[Panel ${index + 1}] `}
+            {`[Panel ${value + 1}] `}
             Veggies es bonus vobis, proinde vos postulo essum magis kohlrabi welsh onion daikon
             amaranth tatsoi tomatillo melon azuki bean garlic.
           </section>
@@ -65,21 +67,21 @@ const Component = ({
   </div>
 );
 
-const Container = (props: IAccordionContainerProps) => (
+const Container = (props: IAccordionContainerProps<ISectionValue>) => (
   <AccordionContainer {...props}>
     {/* eslint-disable-next-line react/destructuring-assignment */}
     {containerProps => <Component sections={props.sections} {...containerProps} />}
   </AccordionContainer>
 );
 
-const Hook = (props: IUseAccordionProps) => {
+const Hook = (props: IUseAccordionProps<ISectionValue>) => {
   const hookProps = useAccordion(props);
 
   // eslint-disable-next-line react/destructuring-assignment
   return <Component sections={props.sections} {...hookProps} />;
 };
 
-interface IArgs extends IAccordionContainerProps {
+interface IArgs extends IAccordionContainerProps<ISectionValue> {
   as: 'hook' | 'container';
 }
 
