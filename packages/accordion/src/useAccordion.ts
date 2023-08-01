@@ -20,7 +20,7 @@ export function useAccordion<Value>({
   sections,
   expandedSections,
   defaultExpandedSections,
-  onChange,
+  onChange = () => undefined,
   expandable = true,
   collapsible = true
 }: IUseAccordionProps<Value>): IUseAccordionReturnValue<Value> {
@@ -58,9 +58,7 @@ export function useAccordion<Value>({
         }
       });
 
-      if (onChange) {
-        onChange(value);
-      }
+      onChange(value);
 
       if (isControlled === false) {
         setExpandedState(expanded);
