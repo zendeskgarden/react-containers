@@ -464,7 +464,7 @@ describe('AccordionContainer', () => {
       const panels = getAllByTestId('panel');
 
       triggers.forEach((trigger, index) => {
-        expect(trigger).toHaveAttribute('aria-disabled', 'false');
+        expect(trigger).not.toHaveAttribute('aria-disabled');
         expect(trigger).toHaveAttribute('aria-expanded', 'false');
         expect(panels[index]).toHaveAttribute('aria-hidden', 'true');
       });
@@ -496,7 +496,7 @@ describe('AccordionContainer', () => {
       const trigger = triggers[1];
       const panel = panels[1];
 
-      expect(trigger).toHaveAttribute('aria-disabled', 'false');
+      expect(trigger).not.toHaveAttribute('aria-disabled');
       expect(trigger).toHaveAttribute('aria-expanded', 'false');
       expect(panel).toHaveAttribute('aria-hidden', 'true');
       await user.click(trigger); // expand!
@@ -527,7 +527,11 @@ describe('AccordionContainer', () => {
         const hidden = index === 0 ? 'false' : 'true';
 
         expect(trigger).toHaveAttribute('aria-expanded', expanded);
-        expect(trigger).toHaveAttribute('aria-disabled', expanded);
+        if (expanded === 'true') {
+          expect(trigger).toHaveAttribute('aria-disabled', expanded);
+        } else {
+          expect(trigger).not.toHaveAttribute('aria-disabled');
+        }
         expect(panels[index]).toHaveAttribute('aria-hidden', hidden);
       });
     });
@@ -543,10 +547,10 @@ describe('AccordionContainer', () => {
           const expanded = _index === index ? 'true' : 'false';
           const hidden = _index === index ? 'false' : 'true';
 
-          console.log(index, expanded, hidden);
-
           expect(_trigger).toHaveAttribute('aria-expanded', expanded);
-          expect(_trigger).toHaveAttribute('aria-disabled', expanded);
+          if (expanded === 'true' || index >= _index) {
+            expect(trigger).toHaveAttribute('aria-disabled', 'true');
+          }
           expect(panels[_index]).toHaveAttribute('aria-hidden', hidden);
         });
       }

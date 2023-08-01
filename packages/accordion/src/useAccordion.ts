@@ -101,7 +101,7 @@ export function useAccordion<Value>({
         role,
         tabIndex,
         'aria-controls': `${PANEL_ID}:${value}`,
-        'aria-disabled': disabledState.includes(value),
+        'aria-disabled': disabledState.includes(value) || null,
         'aria-expanded': internalExpandedState.includes(value),
         onClick: composeEventHandlers(props.onClick, () => toggle(value)),
         onKeyDown: composeEventHandlers(props.onKeyDown, (event: KeyboardEvent) => {
