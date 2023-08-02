@@ -17,7 +17,7 @@ import { IUseAccordionProps, IUseAccordionReturnValue } from './types';
 
 export function useAccordion<Value>({
   idPrefix,
-  sections,
+  sections = [],
   expandedSections,
   defaultExpandedSections,
   onChange = () => undefined,

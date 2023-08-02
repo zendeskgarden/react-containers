@@ -42,7 +42,7 @@ import README from '../README.md';
 <Canvas>
   <Story
     name="Controlled"
-    args={{ expandedSections: [sections[0]] }}
+    args={{ expandedSections: SECTIONS.slice(0, 1) }}
     argTypes={{
       defaultExpandedSections: { control: false },
       collapsible: { control: false },
