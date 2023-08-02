@@ -86,31 +86,30 @@ describe('AccordionContainer', () => {
             return (
               <div key={section}>
                 <h2
+                  data-test-id="header"
                   {...getHeaderProps({
                     role: null,
-                    'aria-level': null,
-                    // @ts-expect-error data-test-id for testing
-                    'data-test-id': 'header'
+                    // @ts-expect-error for testing purposes only
+                    'aria-level': null
                   })}
                 >
                   <button
+                    data-test-id="trigger"
                     {...(getTriggerProps({
                       value: section,
                       role: null,
-                      tabIndex: null,
-                      // @ts-expect-error data-test-id for testing
-                      'data-test-id': 'trigger'
+                      // setting to `null` when semantically implicit (button)
+                      tabIndex: null as any
                     }) as any)}
                   >
                     Trigger
                   </button>
                 </h2>
                 <section
+                  data-test-id="panel"
                   {...getPanelProps({
                     value: section,
-                    role: null,
-                    // @ts-expect-error data-test-id for testing
-                    'data-test-id': 'panel'
+                    role: null
                   })}
                 >
                   Panel
@@ -177,22 +176,6 @@ describe('AccordionContainer', () => {
       getAllByTestId('header').forEach(header => {
         expect(header).not.toHaveAttribute('aria-level');
       });
-    });
-
-    it('throws error if aria-level is not provided', () => {
-      const consoleError = console.error;
-
-      console.error = jest.fn();
-
-      expect(() => {
-        render(
-          <AccordionContainer sections={[]}>
-            {({ getHeaderProps }) => <div {...getHeaderProps()} />}
-          </AccordionContainer>
-        );
-      }).toThrow('aria-level');
-
-      console.error = consoleError;
     });
   });
 
@@ -294,22 +277,6 @@ describe('AccordionContainer', () => {
         expect(firstTrigger).toHaveAttribute('aria-expanded', 'false');
       });
     });
-
-    it('throws error if value is not provided', () => {
-      const consoleError = console.error;
-
-      console.error = jest.fn();
-
-      expect(() => {
-        render(
-          <AccordionContainer sections={[]}>
-            {({ getTriggerProps }) => <div {...getTriggerProps()} />}
-          </AccordionContainer>
-        );
-      }).toThrow('value');
-
-      console.error = consoleError;
-    });
   });
 
   describe('getPanelProps', () => {
@@ -395,22 +362,6 @@ describe('AccordionContainer', () => {
 
         expect(firstPanel).toHaveAttribute('aria-hidden', 'true');
       });
-    });
-
-    it('throws error if value is not provided', () => {
-      const consoleError = console.error;
-
-      console.error = jest.fn();
-
-      expect(() => {
-        render(
-          <AccordionContainer sections={[]}>
-            {({ getPanelProps }) => <div {...getPanelProps()} />}
-          </AccordionContainer>
-        );
-      }).toThrow('value');
-
-      console.error = consoleError;
     });
   });
 

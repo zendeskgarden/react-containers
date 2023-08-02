@@ -10,14 +10,14 @@ import type { HTMLProps } from 'react';
 export interface IUseAccordionProps<Value> {
   /** Prefixes IDs for the accordion trigger and panels  */
   idPrefix?: string;
-  /** Defines the sections for the accordion */
+  /** Provides an ordered list of unique section values */
   sections: Value[];
   /** Sets the expanded sections in a controlled accordion */
   expandedSections?: Value[];
   /** Sets the default expanded sections in a uncontrolled accordion */
   defaultExpandedSections?: Value[];
   /** Handles accordion expansion changes */
-  onChange?: (expanded: Value) => any;
+  onChange?: (expanded: Value) => void;
   /** Determines if multiple panels can be expanded at the same time in an uncontrolled accordion */
   expandable?: boolean;
   /** Determines if panels can be collapsed in an uncontrolled accordion */
@@ -30,20 +30,19 @@ export interface IUseAccordionReturnValue<Value> {
   getHeaderProps: <T extends Element>(
     props?: Omit<HTMLProps<T>, 'role' | 'aria-level'> & {
       role?: 'heading' | null;
-      'aria-level': string | number | null;
+      'aria-level': NonNullable<HTMLProps<T>['aria-level']>;
     }
   ) => HTMLProps<T>;
   getTriggerProps: <T extends Element>(
-    props?: Omit<HTMLProps<T>, 'role' | 'tabIndex'> & {
+    props?: Omit<HTMLProps<T>, 'role'> & {
       role?: 'button' | null;
-      tabIndex?: any | null;
-      value?: Value;
+      value: Value;
     }
   ) => HTMLProps<T>;
   getPanelProps: <T extends Element>(
     props?: Omit<HTMLProps<T>, 'role'> & {
       role?: 'region' | null;
-      value?: Value;
+      value: Value;
     }
   ) => HTMLProps<T>;
 }
@@ -54,8 +53,8 @@ export interface IAccordionContainerProps<Value> extends IUseAccordionProps<Valu
    * @param {function} [options.getHeaderProps] Header props getter
    * @param {function} [options.getTriggerProps] Trigger props getter
    * @param {function} [options.getPanelProps] Panel props getter
-   * @param {number[]|string[]} options.expandedSections Current expanded sections
-   * @param {number[]|string[]} options.disabledSections Current disabled sections
+   * @param {*[]} options.expandedSections Current expanded sections
+   * @param {*[]} options.disabledSections Current disabled sections
    */
   render?: (options: {
     /* prop getters */
@@ -67,6 +66,5 @@ export interface IAccordionContainerProps<Value> extends IUseAccordionProps<Valu
     disabledSections: IUseAccordionReturnValue<Value>['disabledSections'];
   }) => React.ReactNode;
   /** @ignore */
-  /** A children render prop function which receives accordion state and prop getters */
   children?: (options: IUseAccordionReturnValue<Value>) => React.ReactNode;
 }

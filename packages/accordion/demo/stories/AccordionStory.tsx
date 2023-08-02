@@ -30,7 +30,7 @@ const Component = ({
   getPanelProps
 }: IComponentProps) => (
   <div style={{ width: 300 }}>
-    {sections!.map(value => {
+    {sections.map((value, index) => {
       const disabled = disabledSections.indexOf(value) !== -1;
       const hidden = expandedSections.indexOf(value) === -1;
 
@@ -41,13 +41,12 @@ const Component = ({
               {...getTriggerProps({
                 value,
                 role: null,
-                tabIndex: null,
                 disabled
               })}
               className="text-left w-full"
               type="button"
             >
-              {`Trigger ${value + 1}`}
+              {`Trigger ${index + 1}`}
             </button>
           </div>
           <section
@@ -57,7 +56,7 @@ const Component = ({
               hidden
             })}
           >
-            {`[Panel ${value + 1}] `}
+            {`[Panel ${index + 1}] `}
             Veggies es bonus vobis, proinde vos postulo essum magis kohlrabi welsh onion daikon
             amaranth tatsoi tomatillo melon azuki bean garlic.
           </section>

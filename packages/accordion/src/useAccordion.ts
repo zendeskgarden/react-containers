@@ -30,7 +30,7 @@ export function useAccordion<Value>({
 
   const isControlled = expandedSections !== null && expandedSections !== undefined;
   const [expandedState, setExpandedState] = useState<Value[]>(
-    defaultExpandedSections || expandedSections || sections.slice(0, 1)
+    defaultExpandedSections || sections.slice(0, 1)
   );
   const [disabledState, setDisabledState] = useState(collapsible ? [] : expandedState);
   const internalExpandedState = getControlledValue(expandedSections, expandedState)!;
@@ -70,68 +70,44 @@ export function useAccordion<Value>({
   );
 
   const getHeaderProps = useCallback(
-    ({ role = 'heading', 'aria-level': ariaLevel, ...props } = {}) => {
-      if (ariaLevel === undefined) {
-        throw new Error(
-          'Accessibility Error: You must apply the `aria-level` prop to `getHeaderProps()`'
-        );
-      }
-
-      return {
-        role,
-        'aria-level': ariaLevel,
-        'data-garden-container-id': 'containers.accordion',
-        'data-garden-container-version': PACKAGE_VERSION,
-        ...props
-      };
-    },
+    ({ role = 'heading', 'aria-level': ariaLevel, ...props } = {}) => ({
+      role,
+      'aria-level': ariaLevel,
+      'data-garden-container-id': 'containers.accordion',
+      'data-garden-container-version': PACKAGE_VERSION,
+      ...props
+    }),
     []
   );
 
   const getTriggerProps = useCallback(
-    ({ value, role = 'button', tabIndex = 0, ...props } = {}) => {
-      if (value === undefined) {
-        throw new Error(
-          'Accessibility Error: You must provide an `value` option to `getTriggerProps()`'
-        );
-      }
-
-      return {
-        id: `${TRIGGER_ID}:${value}`,
-        role,
-        tabIndex,
-        'aria-controls': `${PANEL_ID}:${value}`,
-        'aria-disabled': disabledState.includes(value) || null,
-        'aria-expanded': internalExpandedState.includes(value),
-        onClick: composeEventHandlers(props.onClick, () => toggle(value)),
-        onKeyDown: composeEventHandlers(props.onKeyDown, (event: KeyboardEvent) => {
-          if (event.keyCode === KEY_CODES.SPACE || event.keyCode === KEY_CODES.ENTER) {
-            toggle(value);
-            event.preventDefault();
-          }
-        }),
-        ...props
-      };
-    },
+    ({ value, role = 'button', tabIndex = 0, ...props } = {}) => ({
+      id: `${TRIGGER_ID}:${value}`,
+      role,
+      tabIndex,
+      'aria-controls': `${PANEL_ID}:${value}`,
+      'aria-disabled': disabledState.includes(value) || null,
+      'aria-expanded': internalExpandedState.includes(value),
+      onClick: composeEventHandlers(props.onClick, () => toggle(value)),
+      onKeyDown: composeEventHandlers(props.onKeyDown, (event: KeyboardEvent) => {
+        if (event.keyCode === KEY_CODES.SPACE || event.keyCode === KEY_CODES.ENTER) {
+          toggle(value);
+          event.preventDefault();
+        }
+      }),
+      ...props
+    }),
     [PANEL_ID, TRIGGER_ID, internalExpandedState, disabledState, toggle]
   );
 
   const getPanelProps = useCallback(
-    ({ value, role = 'region', ...props } = {}) => {
-      if (value === undefined) {
-        throw new Error(
-          'Accessibility Error: You must provide an `value` option to `getPanelProps()`'
-        );
-      }
-
-      return {
-        id: `${PANEL_ID}:${value}`,
-        role,
-        'aria-hidden': !internalExpandedState.includes(value),
-        'aria-labelledby': `${TRIGGER_ID}:${value}`,
-        ...props
-      };
-    },
+    ({ value, role = 'region', ...props } = {}) => ({
+      id: `${PANEL_ID}:${value}`,
+      role,
+      'aria-hidden': !internalExpandedState.includes(value),
+      'aria-labelledby': `${TRIGGER_ID}:${value}`,
+      ...props
+    }),
     [PANEL_ID, TRIGGER_ID, internalExpandedState]
   );
 
