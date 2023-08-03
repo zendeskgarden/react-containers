@@ -28,19 +28,19 @@ export interface IUseAccordionReturnValue<Value> {
   expandedSections: Value[];
   disabledSections: Value[];
   getHeaderProps: <T extends Element>(
-    props?: Omit<HTMLProps<T>, 'role' | 'aria-level'> & {
+    props: Omit<HTMLProps<T>, 'role' | 'aria-level'> & {
       role?: 'heading' | null;
       'aria-level': NonNullable<HTMLProps<T>['aria-level']>;
     }
   ) => HTMLProps<T>;
   getTriggerProps: <T extends Element>(
-    props?: Omit<HTMLProps<T>, 'role'> & {
+    props: Omit<HTMLProps<T>, 'role'> & {
       role?: 'button' | null;
       value: Value;
     }
   ) => HTMLProps<T>;
   getPanelProps: <T extends Element>(
-    props?: Omit<HTMLProps<T>, 'role'> & {
+    props: Omit<HTMLProps<T>, 'role'> & {
       role?: 'region' | null;
       value: Value;
     }

@@ -43,31 +43,13 @@ describe('AccordionContainer', () => {
           {sections.map(section => {
             return (
               <div key={section}>
-                <div
-                  {...getHeaderProps({
-                    'aria-level': 1,
-                    // @ts-expect-error data-test-id for testing
-                    'data-test-id': 'header'
-                  })}
-                >
-                  <div
-                    {...getTriggerProps({
-                      value: section,
-                      // @ts-expect-error data-test-id for testing
-                      'data-test-id': 'trigger'
-                    })}
-                  >
+                <div data-test-id="header" {...getHeaderProps({ 'aria-level': 1 })}>
+                  <div data-test-id="trigger" {...getTriggerProps({ value: section })}>
                     Trigger
                   </div>
                 </div>
 
-                <div
-                  {...getPanelProps({
-                    value: section,
-                    // @ts-expect-error data-test-id for testing
-                    'data-test-id': 'panel'
-                  })}
-                >
+                <div data-test-id="panel" {...getPanelProps({ value: section })}>
                   Panel
                 </div>
               </div>

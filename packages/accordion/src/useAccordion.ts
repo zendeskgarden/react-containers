@@ -70,7 +70,7 @@ export function useAccordion<Value>({
   );
 
   const getHeaderProps = useCallback(
-    ({ role = 'heading', 'aria-level': ariaLevel, ...props } = {}) => ({
+    ({ role = 'heading', 'aria-level': ariaLevel, ...props }) => ({
       role,
       'aria-level': ariaLevel,
       'data-garden-container-id': 'containers.accordion',
@@ -81,7 +81,7 @@ export function useAccordion<Value>({
   );
 
   const getTriggerProps = useCallback(
-    ({ value, role = 'button', tabIndex = 0, ...props } = {}) => ({
+    ({ value, role = 'button', tabIndex = 0, ...props }) => ({
       id: `${TRIGGER_ID}:${value}`,
       role,
       tabIndex,
@@ -101,7 +101,7 @@ export function useAccordion<Value>({
   );
 
   const getPanelProps = useCallback(
-    ({ value, role = 'region', ...props } = {}) => ({
+    ({ value, role = 'region', ...props }) => ({
       id: `${PANEL_ID}:${value}`,
       role,
       'aria-hidden': !internalExpandedState.includes(value),

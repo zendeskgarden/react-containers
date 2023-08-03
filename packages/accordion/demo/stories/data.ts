@@ -5,6 +5,4 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-export const SECTIONS = Array(5)
-  .fill(undefined)
-  .map((_, i) => i);
+export const SECTIONS = ['section-1', 'section-2', 'section-3', 'section-4', 'section-5'];
