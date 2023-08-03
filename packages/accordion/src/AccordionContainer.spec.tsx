@@ -14,10 +14,15 @@ import { AccordionContainer, IUseAccordionReturnValue, IUseAccordionProps } from
 describe('AccordionContainer', () => {
   const user = userEvent.setup();
 
+  const sections = Array(3)
+    .fill(undefined)
+    .map((s, i) => i);
+  const CONTAINER_ID_PREFIX = 'test';
+
   it('renders with expected return values', () => {
     const { getByTestId, getByText } = render(
-      <AccordionContainer>
-        {({ expandedSections, disabledSections }: IUseAccordionReturnValue) => (
+      <AccordionContainer sections={sections}>
+        {({ expandedSections, disabledSections }: IUseAccordionReturnValue<number>) => (
           <div data-test-id="test" hidden={expandedSections.includes(0)}>
             <button disabled={disabledSections.length !== 0}>Trigger</button>
           </div>
@@ -31,22 +36,22 @@ describe('AccordionContainer', () => {
     expect(triggerButton).not.toHaveAttribute('disabled');
   });
 
-  const sections = Array(3)
-    .fill(undefined)
-    .map((s, i) => i);
-  const CONTAINER_ID_PREFIX = 'test';
-
-  const BasicExample = (props: IUseAccordionProps = {}) => (
-    <AccordionContainer idPrefix={CONTAINER_ID_PREFIX} {...props}>
+  const BasicExample = (props: Omit<IUseAccordionProps<number>, 'sections'> = {}) => (
+    <AccordionContainer idPrefix={CONTAINER_ID_PREFIX} sections={sections} {...props}>
       {({ getHeaderProps, getTriggerProps, getPanelProps }) => (
         <>
-          {sections.map((section, index) => {
+          {sections.map(section => {
             return (
               <div key={section}>
-                <div {...getHeaderProps({ ariaLevel: 1, 'data-test-id': 'header' })}>
-                  <div {...getTriggerProps({ index, 'data-test-id': 'trigger' })}>Trigger</div>
+                <div data-test-id="header" {...getHeaderProps({ 'aria-level': 1 })}>
+                  <div data-test-id="trigger" {...getTriggerProps({ value: section })}>
+                    Trigger
+                  </div>
                 </div>
-                <div {...getPanelProps({ index, 'data-test-id': 'panel' })}>Panel</div>
+
+                <div data-test-id="panel" {...getPanelProps({ value: section })}>
+                  Panel
+                </div>
               </div>
             );
           })}
@@ -56,25 +61,39 @@ describe('AccordionContainer', () => {
   );
 
   const AdvancedExample = () => (
-    <AccordionContainer>
+    <AccordionContainer sections={sections}>
       {({ getHeaderProps, getTriggerProps, getPanelProps }) => (
         <>
-          {sections.map((section, index) => {
+          {sections.map(section => {
             return (
               <div key={section}>
-                <h2 {...getHeaderProps({ role: null, ariaLevel: null, 'data-test-id': 'header' })}>
+                <h2
+                  data-test-id="header"
+                  {...getHeaderProps({
+                    role: null,
+                    // @ts-expect-error for testing purposes only
+                    'aria-level': null
+                  })}
+                >
                   <button
-                    {...getTriggerProps({
-                      index,
+                    data-test-id="trigger"
+                    {...(getTriggerProps({
+                      value: section,
                       role: null,
-                      tabIndex: null,
-                      'data-test-id': 'trigger'
-                    })}
+                      // setting to `null` when semantically implicit (button)
+                      tabIndex: null as any
+                    }) as any)}
                   >
                     Trigger
                   </button>
                 </h2>
-                <section {...getPanelProps({ index, role: null, 'data-test-id': 'panel' })}>
+                <section
+                  data-test-id="panel"
+                  {...getPanelProps({
+                    value: section,
+                    role: null
+                  })}
+                >
                   Panel
                 </section>
               </div>
@@ -139,22 +158,6 @@ describe('AccordionContainer', () => {
       getAllByTestId('header').forEach(header => {
         expect(header).not.toHaveAttribute('aria-level');
       });
-    });
-
-    it('throws error if aria level is not provided', () => {
-      const consoleError = console.error;
-
-      console.error = jest.fn();
-
-      expect(() => {
-        render(
-          <AccordionContainer>
-            {({ getHeaderProps }) => <div {...getHeaderProps()} />}
-          </AccordionContainer>
-        );
-      }).toThrow('ariaLevel');
-
-      console.error = consoleError;
     });
   });
 
@@ -256,22 +259,6 @@ describe('AccordionContainer', () => {
         expect(firstTrigger).toHaveAttribute('aria-expanded', 'false');
       });
     });
-
-    it('throws error if index is not provided', () => {
-      const consoleError = console.error;
-
-      console.error = jest.fn();
-
-      expect(() => {
-        render(
-          <AccordionContainer>
-            {({ getTriggerProps }) => <div {...getTriggerProps()} />}
-          </AccordionContainer>
-        );
-      }).toThrow('index');
-
-      console.error = consoleError;
-    });
   });
 
   describe('getPanelProps', () => {
@@ -358,22 +345,6 @@ describe('AccordionContainer', () => {
         expect(firstPanel).toHaveAttribute('aria-hidden', 'true');
       });
     });
-
-    it('throws error if index is not provided', () => {
-      const consoleError = console.error;
-
-      console.error = jest.fn();
-
-      expect(() => {
-        render(
-          <AccordionContainer>
-            {({ getPanelProps }) => <div {...getPanelProps()} />}
-          </AccordionContainer>
-        );
-      }).toThrow('index');
-
-      console.error = consoleError;
-    });
   });
 
   describe('is not expandable (but is collapsible)', () => {
@@ -426,7 +397,7 @@ describe('AccordionContainer', () => {
       const panels = getAllByTestId('panel');
 
       triggers.forEach((trigger, index) => {
-        expect(trigger).toHaveAttribute('aria-disabled', 'false');
+        expect(trigger).not.toHaveAttribute('aria-disabled');
         expect(trigger).toHaveAttribute('aria-expanded', 'false');
         expect(panels[index]).toHaveAttribute('aria-hidden', 'true');
       });
@@ -458,7 +429,7 @@ describe('AccordionContainer', () => {
       const trigger = triggers[1];
       const panel = panels[1];
 
-      expect(trigger).toHaveAttribute('aria-disabled', 'false');
+      expect(trigger).not.toHaveAttribute('aria-disabled');
       expect(trigger).toHaveAttribute('aria-expanded', 'false');
       expect(panel).toHaveAttribute('aria-hidden', 'true');
       await user.click(trigger); // expand!
@@ -489,7 +460,11 @@ describe('AccordionContainer', () => {
         const hidden = index === 0 ? 'false' : 'true';
 
         expect(trigger).toHaveAttribute('aria-expanded', expanded);
-        expect(trigger).toHaveAttribute('aria-disabled', expanded);
+        if (expanded === 'true') {
+          expect(trigger).toHaveAttribute('aria-disabled', expanded);
+        } else {
+          expect(trigger).not.toHaveAttribute('aria-disabled');
+        }
         expect(panels[index]).toHaveAttribute('aria-hidden', hidden);
       });
     });
@@ -506,7 +481,9 @@ describe('AccordionContainer', () => {
           const hidden = _index === index ? 'false' : 'true';
 
           expect(_trigger).toHaveAttribute('aria-expanded', expanded);
-          expect(_trigger).toHaveAttribute('aria-disabled', expanded);
+          if (expanded === 'true' || index >= _index) {
+            expect(trigger).toHaveAttribute('aria-disabled', 'true');
+          }
           expect(panels[_index]).toHaveAttribute('aria-hidden', hidden);
         });
       }

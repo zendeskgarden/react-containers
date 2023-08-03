@@ -6,12 +6,13 @@
  */
 
 /* Hooks */
-export {
-  useAccordion,
-  IUseAccordionReturnValue,
-  IUseAccordionPropGetters,
-  IUseAccordionProps
-} from './useAccordion';
+export { useAccordion } from './useAccordion';
 
 /* Render-props */
-export { AccordionContainer, IAccordionContainerProps } from './AccordionContainer';
+export { AccordionContainer } from './AccordionContainer';
+
+export type {
+  IUseAccordionReturnValue,
+  IAccordionContainerProps,
+  IUseAccordionProps
+} from './types';

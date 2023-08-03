@@ -5,185 +5,120 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import { useState, HTMLProps, useMemo } from 'react';
-import { useUIDSeed } from 'react-uid';
+import { useState, useMemo, useCallback } from 'react';
 import {
-  composeEventHandlers,
   KEY_CODES,
-  getControlledValue
+  composeEventHandlers,
+  getControlledValue,
+  useId
 } from '@zendeskgarden/container-utilities';
 
-export interface IUseAccordionProps {
-  /** Prefixes IDs for the accordion trigger and panels  */
-  idPrefix?: string;
-  /** Sets the expanded sections in a controlled accordion */
-  expandedSections?: number[];
-  /** Sets the default expanded sections in a uncontrolled accordion */
-  defaultExpandedSections?: number[];
-  /** Handles accordion expansion changes */
-  onChange?: (expanded: number) => any;
-  /** Determines if multiple panels can be expanded at the same time in an uncontrolled accordion */
-  expandable?: boolean;
-  /** Determines if panels can be collapsed in an uncontrolled accordion */
-  collapsible?: boolean;
-}
+import { IUseAccordionProps, IUseAccordionReturnValue } from './types';
 
-interface IHeaderProps extends HTMLProps<any> {
-  ariaLevel?: number | null;
-  role?: any;
-}
-
-interface ITriggerProps extends HTMLProps<any> {
-  index?: number;
-  role?: any;
-  tabIndex?: any;
-}
-
-interface IPanelProps extends HTMLProps<any> {
-  index?: number;
-  role?: any;
-}
-
-export interface IUseAccordionPropGetters {
-  getHeaderProps: <T>(options?: T & IHeaderProps) => any;
-  getTriggerProps: <T>(options?: T & ITriggerProps) => any;
-  getPanelProps: <T>(options?: T & IPanelProps) => any;
-}
-
-export interface IUseAccordionReturnValue extends IUseAccordionPropGetters {
-  expandedSections: number[];
-  disabledSections: number[];
-}
-
-export function useAccordion({
+export function useAccordion<Value>({
   idPrefix,
+  sections = [],
   expandedSections,
-  onChange,
+  defaultExpandedSections,
+  onChange = () => undefined,
   expandable = true,
-  collapsible = true,
-  defaultExpandedSections
-}: IUseAccordionProps = {}): IUseAccordionReturnValue {
-  const isControlled = expandedSections !== null && expandedSections !== undefined;
-  const seed = useUIDSeed();
-  const prefix = useMemo<string>(
-    () => idPrefix || seed(`accordion_${PACKAGE_VERSION}`),
-    [idPrefix, seed]
-  );
+  collapsible = true
+}: IUseAccordionProps<Value>): IUseAccordionReturnValue<Value> {
+  const prefix = useId(idPrefix);
   const TRIGGER_ID = `${prefix}--trigger`;
   const PANEL_ID = `${prefix}--panel`;
-  const [expandedState, setExpandedState] = useState<number[]>(defaultExpandedSections || [0]);
 
-  const controlledExpandedState = getControlledValue(expandedSections, expandedState)!;
-
+  const isControlled = expandedSections !== null && expandedSections !== undefined;
+  const [expandedState, setExpandedState] = useState<Value[]>(
+    defaultExpandedSections || sections.slice(0, 1)
+  );
   const [disabledState, setDisabledState] = useState(collapsible ? [] : expandedState);
+  const internalExpandedState = getControlledValue(expandedSections, expandedState)!;
 
-  const sectionIndices: number[] = [];
-  const toggle = (index: number) => {
-    const expanded: number[] = [];
-    const disabled: number[] = [];
+  const toggle = useCallback(
+    (value: Value) => {
+      const expanded: Value[] = [];
+      const disabled: Value[] = [];
 
-    sectionIndices.forEach(sectionIndex => {
-      let isExpanded = false;
+      sections.forEach(sectionValue => {
+        let isExpanded = false;
 
-      if (sectionIndex === index) {
-        isExpanded = collapsible ? expandedState.indexOf(sectionIndex) === -1 : true;
-      } else if (expandable) {
-        isExpanded = expandedState.indexOf(sectionIndex) !== -1;
-      }
-
-      if (isExpanded) {
-        expanded.push(sectionIndex);
-
-        if (!collapsible) {
-          disabled.push(sectionIndex);
+        if (sectionValue === value) {
+          isExpanded = collapsible ? internalExpandedState.includes(sectionValue) === false : true;
+        } else if (expandable) {
+          isExpanded = internalExpandedState.includes(sectionValue);
         }
+
+        if (isExpanded) {
+          expanded.push(sectionValue);
+
+          if (!collapsible) {
+            disabled.push(sectionValue);
+          }
+        }
+      });
+
+      onChange(value);
+
+      if (isControlled === false) {
+        setExpandedState(expanded);
       }
-    });
 
-    if (onChange) {
-      onChange(index);
-    }
+      setDisabledState(disabled);
+    },
+    [sections, internalExpandedState, collapsible, expandable, isControlled, onChange]
+  );
 
-    if (isControlled === false) {
-      setExpandedState(expanded);
-    }
-
-    setDisabledState(disabled);
-  };
-
-  const getHeaderProps = ({ role = 'heading', ariaLevel, ...props }: IHeaderProps = {}) => {
-    if (ariaLevel === undefined) {
-      throw new Error(
-        'Accessibility Error: You must apply the `ariaLevel` prop to the element that contains your heading.'
-      );
-    }
-
-    return {
+  const getHeaderProps = useCallback(
+    ({ role = 'heading', 'aria-level': ariaLevel, ...props }) => ({
       role,
       'aria-level': ariaLevel,
       'data-garden-container-id': 'containers.accordion',
       'data-garden-container-version': PACKAGE_VERSION,
       ...props
-    };
-  };
+    }),
+    []
+  );
 
-  const getTriggerProps = ({
-    index,
-    role = 'button',
-    tabIndex = 0,
-    ...props
-  }: ITriggerProps = {}) => {
-    if (index === undefined) {
-      throw new Error(
-        'Accessibility Error: You must provide an `index` option to `getTriggerProps()`'
-      );
-    }
-
-    sectionIndices.push(index);
-
-    return {
-      id: `${TRIGGER_ID}:${index}`,
+  const getTriggerProps = useCallback(
+    ({ value, role = 'button', tabIndex = 0, ...props }) => ({
+      id: `${TRIGGER_ID}:${value}`,
       role,
       tabIndex,
-      'aria-controls': `${PANEL_ID}:${index}`,
-      'aria-disabled': disabledState.indexOf(index) !== -1,
-      'aria-expanded': isControlled
-        ? controlledExpandedState.includes(index)
-        : expandedState.includes(index),
-      onClick: composeEventHandlers(props.onClick, () => toggle(index)),
+      'aria-controls': `${PANEL_ID}:${value}`,
+      'aria-disabled': disabledState.includes(value) || null,
+      'aria-expanded': internalExpandedState.includes(value),
+      onClick: composeEventHandlers(props.onClick, () => toggle(value)),
       onKeyDown: composeEventHandlers(props.onKeyDown, (event: KeyboardEvent) => {
         if (event.keyCode === KEY_CODES.SPACE || event.keyCode === KEY_CODES.ENTER) {
-          toggle(index);
+          toggle(value);
           event.preventDefault();
         }
       }),
       ...props
-    };
-  };
+    }),
+    [PANEL_ID, TRIGGER_ID, internalExpandedState, disabledState, toggle]
+  );
 
-  const getPanelProps = ({ index, role = 'region', ...props }: IPanelProps = {}) => {
-    if (index === undefined) {
-      throw new Error(
-        'Accessibility Error: You must provide an `index` option to `getSectionProps()`'
-      );
-    }
-
-    return {
-      id: `${PANEL_ID}:${index}`,
+  const getPanelProps = useCallback(
+    ({ value, role = 'region', ...props }) => ({
+      id: `${PANEL_ID}:${value}`,
       role,
-      'aria-hidden': isControlled
-        ? !controlledExpandedState.includes(index)
-        : !expandedState.includes(index),
-      'aria-labelledby': `${TRIGGER_ID}:${index}`,
+      'aria-hidden': !internalExpandedState.includes(value),
+      'aria-labelledby': `${TRIGGER_ID}:${value}`,
       ...props
-    };
-  };
+    }),
+    [PANEL_ID, TRIGGER_ID, internalExpandedState]
+  );
 
-  return {
-    getHeaderProps,
-    getTriggerProps,
-    getPanelProps,
-    expandedSections: controlledExpandedState,
-    disabledSections: disabledState
-  };
+  return useMemo(
+    () => ({
+      getHeaderProps,
+      getTriggerProps,
+      getPanelProps,
+      expandedSections: internalExpandedState,
+      disabledSections: disabledState
+    }),
+    [getHeaderProps, getTriggerProps, getPanelProps, internalExpandedState, disabledState]
+  );
 }

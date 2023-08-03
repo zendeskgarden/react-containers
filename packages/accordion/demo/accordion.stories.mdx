@@ -2,15 +2,18 @@ import { Meta, ArgsTable, Canvas, Story, Markdown } from '@storybook/addon-docs'
 import { useArgs } from '@storybook/client-api';
 import { AccordionContainer } from '@zendeskgarden/container-accordion';
 import { AccordionStory } from './stories/AccordionStory';
+import { SECTIONS } from './stories/data.ts';
 import README from '../README.md';
 
 <Meta
   title="Packages/Accordion"
   component={AccordionContainer}
-  args={{ as: 'hook', sections: 5 }}
+  args={{
+    as: 'hook',
+    sections: SECTIONS
+  }}
   argTypes={{
-    as: { options: ['container', 'hook'], control: 'radio', table: { category: 'Story' } },
-    sections: { control: { type: 'range', min: 1, max: 9 }, table: { category: 'Story' } }
+    as: { options: ['container', 'hook'], control: 'radio', table: { category: 'Story' } }
   }}
 />
 
@@ -39,7 +42,7 @@ import README from '../README.md';
 <Canvas>
   <Story
     name="Controlled"
-    args={{ expandedSections: [0] }}
+    args={{ expandedSections: SECTIONS.slice(0, 1) }}
     argTypes={{
       defaultExpandedSections: { control: false },
       collapsible: { control: false },
@@ -48,10 +51,10 @@ import README from '../README.md';
   >
     {args => {
       const updateArgs = useArgs()[1];
-      const handleChange = index => {
-        const expandedSections = args.expandedSections.includes(index)
-          ? args.expandedSections.filter(section => section !== index)
-          : [...args.expandedSections, index];
+      const handleChange = value => {
+        const expandedSections = args.expandedSections.includes(value)
+          ? args.expandedSections.filter(section => section !== value)
+          : [...args.expandedSections, value];
         updateArgs({ expandedSections });
       };
       return <AccordionStory {...args} onChange={handleChange} />;

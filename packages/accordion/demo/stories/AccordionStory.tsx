@@ -15,8 +15,10 @@ import {
   useAccordion
 } from '@zendeskgarden/container-accordion';
 
-interface IComponentProps extends IUseAccordionReturnValue {
-  sections: number[];
+type ISectionValue = number;
+
+interface IComponentProps<T = ISectionValue> extends IUseAccordionReturnValue<T> {
+  sections: IUseAccordionProps<T>['sections'];
 }
 
 const Component = ({
@@ -28,18 +30,17 @@ const Component = ({
   getPanelProps
 }: IComponentProps) => (
   <div style={{ width: 300 }}>
-    {sections.map((section, index) => {
-      const disabled = disabledSections.indexOf(index) !== -1;
-      const hidden = expandedSections.indexOf(index) === -1;
+    {sections.map((value, index) => {
+      const disabled = disabledSections.indexOf(value) !== -1;
+      const hidden = expandedSections.indexOf(value) === -1;
 
       return (
-        <div key={section}>
-          <div {...getHeaderProps({ ariaLevel: 2 })}>
+        <div key={value}>
+          <div {...getHeaderProps({ 'aria-level': 2 })}>
             <button
               {...getTriggerProps({
-                index,
+                value,
                 role: null,
-                tabIndex: null,
                 disabled
               })}
               className="text-left w-full"
@@ -50,7 +51,7 @@ const Component = ({
           </div>
           <section
             {...getPanelProps({
-              index,
+              value,
               role: null,
               hidden
             })}
@@ -65,38 +66,33 @@ const Component = ({
   </div>
 );
 
-interface IProps extends IUseAccordionProps {
-  sections: number[];
-}
-
-const Container = ({ sections, ...props }: IProps) => (
+const Container = (props: IAccordionContainerProps<ISectionValue>) => (
   <AccordionContainer {...props}>
-    {containerProps => <Component sections={sections} {...containerProps} />}
+    {/* eslint-disable-next-line react/destructuring-assignment */}
+    {containerProps => <Component sections={props.sections} {...containerProps} />}
   </AccordionContainer>
 );
 
-const Hook = ({ sections, ...props }: IProps) => {
+const Hook = (props: IUseAccordionProps<ISectionValue>) => {
   const hookProps = useAccordion(props);
 
-  return <Component sections={sections} {...hookProps} />;
+  // eslint-disable-next-line react/destructuring-assignment
+  return <Component sections={props.sections} {...hookProps} />;
 };
 
-interface IArgs extends IAccordionContainerProps {
+interface IArgs extends IAccordionContainerProps<ISectionValue> {
   as: 'hook' | 'container';
-  sections: number;
 }
 
-export const AccordionStory: Story<IArgs> = ({ as, sections, ...props }: IArgs) => {
+export const AccordionStory: Story<IArgs> = ({ as, ...props }: IArgs) => {
   const Accordion = () => {
-    const _sections = Array.from({ length: sections }, (_, index) => index);
-
     switch (as) {
       case 'container':
-        return <Container sections={_sections} {...props} />;
+        return <Container {...props} />;
 
       case 'hook':
       default:
-        return <Hook sections={_sections} {...props} />;
+        return <Hook {...props} />;
     }
   };
 
