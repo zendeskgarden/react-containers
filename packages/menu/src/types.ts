@@ -32,7 +32,7 @@ export type MenuItemGroup = {
 
 export type MenuItem = IMenuItemBase | MenuItemSeparator | MenuItemGroup;
 
-export type MenuChangeHandler = {
+export type MenuChangeHandlerArgs = {
   type: string;
   isExpanded?: boolean;
   selectedItems?: ISelectedItem[];
@@ -81,7 +81,7 @@ export interface IUseMenuProps<T = HTMLElement, L = HTMLElement> {
    * @param {ISelectedItem[]} [changes.selectedItems] The updated selection values
    * @param {ItemValue} [changes.focusedValue] The updated focused value
    */
-  onChange?: (changes: MenuChangeHandler) => void;
+  onChange?: (changes: MenuChangeHandlerArgs) => void;
   /** Sets the environment where the menu is rendered */
   environment?: Window;
 }

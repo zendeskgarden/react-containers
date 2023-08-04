@@ -192,19 +192,19 @@ export const useMenu = <T extends HTMLElement = HTMLElement, L extends HTMLEleme
         }
       } else {
         const index = values.indexOf(value);
-        let baseIndex: number;
+        let nextIndex: number;
 
         if (key === KEYS.UP) {
-          baseIndex = (index === 0 ? values.length : index) - 1;
+          nextIndex = (index === 0 ? values.length : index) - 1;
         } else if (key === KEYS.DOWN) {
-          baseIndex = (index === values.length - 1 ? -1 : index) + 1;
+          nextIndex = (index === values.length - 1 ? -1 : index) + 1;
         } else if (key === KEYS.END) {
-          baseIndex = values.length - 1;
+          nextIndex = values.length - 1;
         } else if (key === KEYS.HOME) {
-          baseIndex = 0;
+          nextIndex = 0;
         }
 
-        const item = menuItems[baseIndex!];
+        const item = menuItems[nextIndex!];
 
         nextFocusedValue = item.value;
       }
@@ -218,7 +218,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, L extends HTMLEleme
     ({ value, type, name, label, selected }) => {
       let changes: ISelectedItem[] | null = [...controlledSelectedItems];
 
-      if (!type) return controlledSelectedItems;
+      if (!type) return null;
 
       const selectedItem = {
         value,
@@ -241,8 +241,6 @@ export const useMenu = <T extends HTMLElement = HTMLElement, L extends HTMLEleme
         } else {
           changes.push(selectedItem);
         }
-      } else {
-        changes = null;
       }
 
       return changes;
@@ -582,7 +580,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, L extends HTMLEleme
         }
       };
 
-      const handleItemMouseMove = () => {
+      const handleItemMouseEnter = () => {
         const changeType = StateChangeTypes.MenuItemMouseMove;
 
         dispatch({
@@ -603,7 +601,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, L extends HTMLEleme
         ...elementProps,
         onClick: composeEventHandlers(onClick, handleItemClick),
         onKeyDown: composeEventHandlers(onKeyDown, handleItemKeyDown),
-        onMouseEnter: composeEventHandlers(onMouseEnter, handleItemMouseMove)
+        onMouseEnter: composeEventHandlers(onMouseEnter, handleItemMouseEnter)
       });
 
       if (itemProps.ref !== itemRefs[value]) {
