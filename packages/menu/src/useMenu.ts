@@ -54,9 +54,11 @@ export const useMenu = <T extends HTMLElement = HTMLElement, L extends HTMLEleme
   onChange = () => undefined,
   isExpanded,
   initialExpanded = false,
+  // defaultExpanded,
   selectedItems,
   focusedValue,
-  initialFocusedValue
+  initialFocusedValue,
+  defaultFocusedValue
 }: IUseMenuProps<T, L>): IUseMenuReturnValue<T, L> => {
   const prefix = `${useId(idPrefix)}-`;
   const triggerId = `${prefix}menu-trigger`;
@@ -259,19 +261,30 @@ export const useMenu = <T extends HTMLElement = HTMLElement, L extends HTMLEleme
       dispatch({
         type: changeType,
         payload: {
-          focusOnOpen: true,
-          ...(isFocusedValueControlled ? {} : { focusedValue: values[0] }),
-          ...(isExpandedControlled ? {} : { isExpanded: !controlledIsExpanded })
+          ...(isExpandedControlled
+            ? {}
+            : {
+                isExpanded: !controlledIsExpanded,
+                focusOnOpen: !controlledIsExpanded
+              }),
+          ...(isFocusedValueControlled ? {} : { focusedValue: defaultFocusedValue || values[0] })
         }
       });
 
       onChange({
         type: changeType,
-        ...(controlledIsExpanded ? {} : { focusedValue: values[0] }),
+        focusedValue: values[0],
         isExpanded: !controlledIsExpanded
       });
     },
-    [controlledIsExpanded, values, isFocusedValueControlled, isExpandedControlled, onChange]
+    [
+      defaultFocusedValue,
+      controlledIsExpanded,
+      values,
+      isFocusedValueControlled,
+      isExpandedControlled,
+      onChange
+    ]
   );
 
   const handleTriggerKeyDown = useCallback(
@@ -282,14 +295,14 @@ export const useMenu = <T extends HTMLElement = HTMLElement, L extends HTMLEleme
         event.preventDefault();
 
         const changeType = StateChangeTypes[`TriggerKeyDown${key}`];
-        const nextFocusedValue = KEYS.UP === key ? values[values.length - 1] : values[0];
+        const nextFocusedValue =
+          defaultFocusedValue || (KEYS.UP === key ? values[values.length - 1] : values[0]);
 
         dispatch({
           type: changeType,
           payload: {
-            focusOnOpen: true,
-            ...(isFocusedValueControlled ? {} : { focusedValue: nextFocusedValue }),
-            ...(isExpandedControlled ? {} : { isExpanded: true })
+            ...(isExpandedControlled ? {} : { isExpanded: true, focusOnOpen: true }),
+            ...(isFocusedValueControlled ? {} : { focusedValue: nextFocusedValue })
           }
         });
 
@@ -300,7 +313,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, L extends HTMLEleme
         });
       }
     },
-    [isExpandedControlled, isFocusedValueControlled, onChange, values]
+    [defaultFocusedValue, isExpandedControlled, isFocusedValueControlled, onChange, values]
   );
 
   // How to control open/close with keydown
@@ -345,9 +358,11 @@ export const useMenu = <T extends HTMLElement = HTMLElement, L extends HTMLEleme
    * Effects
    */
 
+  /**
+   * Sets a state value to ensure 1 render happens after
+   * opening so a menu item can be focused.
+   */
   useEffect(() => {
-    if (!menuRef.current) return;
-
     setMenuVisible(controlledIsExpanded);
   }, [controlledIsExpanded, menuRef, environment]);
 

@@ -206,6 +206,18 @@ describe('MenuContainer', () => {
           expect(firstItem).toHaveFocus();
         });
 
+        it('focuses defaultFocusedValue', async () => {
+          const { getByTestId, getByText } = render(
+            <TestMenu items={ITEMS} defaultFocusedValue="plant-04" />
+          );
+          const trigger = getByTestId('trigger');
+          const item = getByText('Succulent');
+
+          await user.click(trigger);
+
+          expect(item).toHaveFocus();
+        });
+
         it.each([
           ['Enter', '{Enter}'],
           ['Space', ' '],
