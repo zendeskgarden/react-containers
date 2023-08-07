@@ -110,10 +110,10 @@ export interface IUseMenuReturnValue<T, L> {
     }
   ) => HTMLProps<K>;
   getItemProps: <K extends Element>(
-    props: Omit<HTMLProps<K>, 'role'> &
-      IMenuItemBase & {
-        role?: 'menuitem' | 'menuitemradio' | 'menuitemcheckbox' | null;
-      }
+    props: Omit<HTMLProps<K>, 'role'> & {
+      item: IMenuItemBase;
+      role?: 'menuitem' | 'menuitemradio' | 'menuitemcheckbox' | null;
+    }
   ) => HTMLProps<K>;
   getSeparatorProps: <K extends Element>(
     props?: HTMLProps<K> & {

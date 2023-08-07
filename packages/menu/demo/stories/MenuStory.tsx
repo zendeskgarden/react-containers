@@ -53,7 +53,7 @@ const Item = ({ item, getItemProps, isSelected }: MenuItemProps) => (
       'cursor-pointer': !item.disabled,
       'cursor-default': item.disabled
     })}
-    {...getItemProps({ ...item })}
+    {...getItemProps({ item })}
   >
     <span className="inline-flex justify-center items-center w-4">
       {item?.type === 'radio' && isSelected && '•'}

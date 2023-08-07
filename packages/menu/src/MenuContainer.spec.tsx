@@ -70,7 +70,7 @@ describe('MenuContainer', () => {
                         data-test-id={`group-${item.label}`}
                       >
                         {item.items.map((groupItem: IMenuItemBase) => (
-                          <li key={groupItem.value} {...getItemProps({ ...groupItem })}>
+                          <li key={groupItem.value} {...getItemProps({ item: groupItem })}>
                             {groupItem.label || groupItem.value}
                           </li>
                         ))}
@@ -85,7 +85,7 @@ describe('MenuContainer', () => {
 
                 return (
                   <li
-                    {...getItemProps({ ...item })}
+                    {...getItemProps({ item })}
                     key={item.value}
                     data-test-id={`item-${item.label}`}
                   >

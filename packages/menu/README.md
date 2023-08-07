@@ -40,7 +40,7 @@ const Menu = () => {
       <button {...getTriggerProps()}></button>
       <ul {...getMenuProps()} style={{ visibility: isExpanded ? 'visible' : 'hidden' }}>
         {items.map(item => (
-          <li key={item.value} {...getItemProps({ ...item })}>
+          <li key={item.value} {...getItemProps({ item })}>
             {item.label}
           </li>
         ))}
@@ -71,7 +71,7 @@ const Menu = () => {
           <button {...getTriggerProps()}></button>
           <ul {...getMenuProps()} style={{ visibility: isExpanded ? 'visible' : 'hidden' }}>
             {items.map(item => (
-              <li key={item.value} {...getItemProps({ ...item })}>
+              <li key={item.value} {...getItemProps({ item })}>
                 {item.label}
               </li>
             ))}

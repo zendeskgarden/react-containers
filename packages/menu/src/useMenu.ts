@@ -128,7 +128,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, L extends HTMLEleme
     focusedValue: controlledFocusedValue,
     getGroupProps,
     getElementProps
-  } = useSelection({
+  } = useSelection<ItemValue>({
     values,
     direction: 'vertical',
     selectedValue: focusedValue || state.focusedValue,
@@ -475,14 +475,10 @@ export const useMenu = <T extends HTMLElement = HTMLElement, L extends HTMLEleme
   const getItemProps = useCallback<IUseMenuReturnValue<T, L>['getItemProps']>(
     ({
       role = 'menuitem',
-      disabled: itemDisabled,
       onClick,
       onKeyDown,
       onMouseEnter,
-      type,
-      name,
-      value,
-      label = value,
+      item: { disabled: itemDisabled, type, name, value, label = value },
       ...other
     }) => {
       let itemRole = role;
