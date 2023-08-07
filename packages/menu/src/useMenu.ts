@@ -606,7 +606,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, L extends HTMLEleme
       };
 
       const itemProps = getElementProps({
-        value,
+        value: value as any,
         ...elementProps,
         onClick: composeEventHandlers(onClick, handleItemClick),
         onKeyDown: composeEventHandlers(onKeyDown, handleItemKeyDown),
