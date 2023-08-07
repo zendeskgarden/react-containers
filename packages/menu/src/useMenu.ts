@@ -39,11 +39,6 @@ import {
   ISelectedItem
 } from './types';
 
-const ItemRoles: Record<string, 'menuitemradio' | 'menuitemcheckbox'> = {
-  radio: 'menuitemradio',
-  checkbox: 'menuitemcheckbox'
-};
-
 export const useMenu = <T extends HTMLElement = HTMLElement, L extends HTMLElement = HTMLElement>({
   items: rawItems,
   disabled = false,
@@ -483,8 +478,10 @@ export const useMenu = <T extends HTMLElement = HTMLElement, L extends HTMLEleme
     }) => {
       let itemRole = role;
 
-      if (type) {
-        itemRole = ItemRoles[type];
+      if (type === 'radio') {
+        itemRole = 'menuitemradio';
+      } else if (type === 'checkbox') {
+        itemRole = 'menuitemcheckbox';
       }
 
       const selected = isItemSelected(type, name, value);
