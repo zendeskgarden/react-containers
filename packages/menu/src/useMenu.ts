@@ -415,7 +415,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, L extends HTMLEleme
    */
 
   const getTriggerProps = useCallback<IUseMenuReturnValue<T, L>['getTriggerProps']>(
-    ({ onClick, onKeyDown, role = 'button', ...other } = {}) => ({
+    ({ onClick, onKeyDown, type = 'button', role = 'button', ...other } = {}) => ({
       'data-garden-container-id': 'containers.menu.trigger',
       'data-garden-container-version': PACKAGE_VERSION,
       ref: triggerRef,
@@ -424,6 +424,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, L extends HTMLEleme
       'aria-haspopup': true,
       disabled,
       tabIndex: disabled ? -1 : 0,
+      type: type === null ? undefined : type,
       role: role === null ? undefined : role,
       ...other,
       onKeyDown: composeEventHandlers(onKeyDown, disabled ? undefined : handleTriggerKeyDown),

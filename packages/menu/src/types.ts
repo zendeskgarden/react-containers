@@ -93,7 +93,7 @@ export interface IUseMenuReturnValue<T, L> {
   getTriggerProps: (
     props?: Omit<HTMLProps<T>, 'role' | 'type'> & {
       role?: 'button' | null;
-      type?: 'button';
+      type?: 'button' | null;
     }
   ) => Omit<HTMLProps<T>, 'type'> & {
     type?: ButtonHTMLAttributes<T>['type'];

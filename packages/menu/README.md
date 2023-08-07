@@ -22,9 +22,31 @@ Check out [storybook](https://zendeskgarden.github.io/react-containers) for live
 import { useMenu } from '@zendeskgarden/container-menu';
 
 const Menu = () => {
-  const { getMenuProps } = useMenu();
+  const triggerRef = useRef();
+  const menuRef = useRef();
+  const items = [
+    { value: 'value-1', label: 'One' },
+    { value: 'value-2', label: 'Two' },
+    { value: 'value-3', label: 'Three' }
+  ];
+  const { isExpanded, getTriggerProps, getMenuProps, getItemProps, getSeparatorProps } = useMenu({
+    triggerRef,
+    menuRef,
+    items
+  });
 
-  return <div {...getMenuProps()} />;
+  return (
+    <>
+      <button {...getTriggerProps()}></button>
+      <ul {...getMenuProps()} style={{ visibility: isExpanded ? 'visible' : 'hidden' }}>
+        {items.map(item => (
+          <li key={item.value} {...getItemProps({ ...item })}>
+            {item.label}
+          </li>
+        ))}
+      </ul>
+    </>
+  );
 };
 ```
 
@@ -33,12 +55,30 @@ const Menu = () => {
 ```jsx
 import { MenuContainer } from '@zendeskgarden/container-menu';
 
-<MenuContainer>{({ getMenuProps }) => <div {...getMenuProps()} />}</MenuContainer>;
+const Menu = () => {
+  const triggerRef = useRef();
+  const menuRef = useRef();
+  const items = [
+    { value: 'value-1', label: 'One' },
+    { value: 'value-2', label: 'Two' },
+    { value: 'value-3', label: 'Three' }
+  ];
+
+  return (
+    <MenuContainer triggerRef={triggerRef} menuRef={menuRef} items={items}>
+      {({ isExpanded, getTriggerProps, getMenuProps, getItemProps, getSeparatorProps }) => (
+        <>
+          <button {...getTriggerProps()}></button>
+          <ul {...getMenuProps()} style={{ visibility: isExpanded ? 'visible' : 'hidden' }}>
+            {items.map(item => (
+              <li key={item.value} {...getItemProps({ ...item })}>
+                {item.label}
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+    </MenuContainer>
+  );
+};
 ```
-
-<!--
-  TODO:
-
-  * [ ] Add Menu to root README table.
-  * [ ] Delete this comment block.
--->
