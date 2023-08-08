@@ -22,7 +22,6 @@ MenuContainer.propTypes = {
   items: PropTypes.arrayOf(PropTypes.any).isRequired,
   triggerRef: PropTypes.any.isRequired,
   menuRef: PropTypes.any.isRequired,
-  disabled: PropTypes.bool,
   idPrefix: PropTypes.string,
   environment: PropTypes.any,
   onChange: PropTypes.func,

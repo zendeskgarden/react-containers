@@ -41,7 +41,6 @@ import {
 
 export const useMenu = <T extends HTMLElement = HTMLElement, L extends HTMLElement = HTMLElement>({
   items: rawItems,
-  disabled = false,
   idPrefix,
   environment,
   menuRef,
@@ -409,7 +408,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, L extends HTMLEleme
    */
 
   const getTriggerProps = useCallback<IUseMenuReturnValue<T, L>['getTriggerProps']>(
-    ({ onClick, onKeyDown, type = 'button', role = 'button', ...other } = {}) => ({
+    ({ onClick, onKeyDown, type = 'button', role = 'button', disabled, ...other } = {}) => ({
       'data-garden-container-id': 'containers.menu.trigger',
       'data-garden-container-version': PACKAGE_VERSION,
       ref: triggerRef,
@@ -421,20 +420,17 @@ export const useMenu = <T extends HTMLElement = HTMLElement, L extends HTMLEleme
       type: type === null ? undefined : type,
       role: role === null ? undefined : role,
       ...other,
-      onKeyDown: composeEventHandlers(onKeyDown, disabled ? undefined : handleTriggerKeyDown),
-      onClick: composeEventHandlers(onClick, disabled ? undefined : handleTriggerClick)
+      onKeyDown: composeEventHandlers(onKeyDown, handleTriggerKeyDown),
+      onClick: composeEventHandlers(onClick, handleTriggerClick)
     }),
-    [triggerRef, disabled, state.isExpanded, handleTriggerClick, handleTriggerKeyDown, triggerId]
+    [triggerRef, state.isExpanded, handleTriggerClick, handleTriggerKeyDown, triggerId]
   );
 
   const getMenuProps = useCallback<IUseMenuReturnValue<T, L>['getMenuProps']>(
     ({ role = 'menu', onKeyDown, onMouseLeave, ...other } = {}) => ({
       ...getGroupProps({
-        onKeyDown: composeEventHandlers(onKeyDown, disabled ? undefined : handleMenuKeyDown),
-        onMouseLeave: composeEventHandlers(
-          onMouseLeave,
-          disabled ? undefined : handleMenuMouseLeave
-        )
+        onKeyDown: composeEventHandlers(onKeyDown, handleMenuKeyDown),
+        onMouseLeave: composeEventHandlers(onMouseLeave, handleMenuMouseLeave)
       }),
       'data-garden-container-id': 'containers.menu',
       'data-garden-container-version': PACKAGE_VERSION,
@@ -443,7 +439,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, L extends HTMLEleme
       ref: menuRef,
       ...other
     }),
-    [triggerId, menuRef, getGroupProps, handleMenuMouseLeave, handleMenuKeyDown, disabled]
+    [triggerId, menuRef, getGroupProps, handleMenuMouseLeave, handleMenuKeyDown]
   );
 
   const getSeparatorProps = useCallback<IUseMenuReturnValue<T, L>['getSeparatorProps']>(

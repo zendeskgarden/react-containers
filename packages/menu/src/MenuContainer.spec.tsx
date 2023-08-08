@@ -40,9 +40,12 @@ const ITEMS: MenuItem[] = [
 describe('MenuContainer', () => {
   const user = userEvent.setup();
 
-  const TestMenu = (
-    props: Omit<IUseMenuProps<HTMLButtonElement, HTMLUListElement>, 'triggerRef' | 'menuRef'>
-  ) => {
+  const TestMenu = ({
+    disabled,
+    ...props
+  }: Omit<IUseMenuProps<HTMLButtonElement, HTMLUListElement>, 'triggerRef' | 'menuRef'> & {
+    disabled?: boolean;
+  }) => {
     const triggerRef = useRef<HTMLButtonElement>(null);
     const menuRef = useRef<HTMLUListElement>(null);
 
@@ -57,7 +60,7 @@ describe('MenuContainer', () => {
           getItemProps
         }: IUseMenuReturnValue<HTMLButtonElement, HTMLUListElement>) => (
           <>
-            <button {...getTriggerProps({ type: 'button' })} data-test-id="trigger">
+            <button {...getTriggerProps({ type: 'button', disabled })} data-test-id="trigger">
               Menu
             </button>
             <ul {...getMenuProps({ hidden: !isExpanded })} data-test-id="menu">
@@ -164,14 +167,7 @@ describe('MenuContainer', () => {
       expect(menu).not.toHaveAttribute('hidden');
     });
 
-    it('can disable menu activation', () => {
-      const { getByTestId } = render(<TestMenu items={ITEMS} disabled />);
-      const trigger = getByTestId('trigger');
-
-      expect(trigger).toBeDisabled();
-    });
-
-    it("doesn't open disabled menu", async () => {
+    it("doesn't open menu when trigger is disabled", async () => {
       const { getByTestId } = render(<TestMenu items={ITEMS} disabled />);
       const trigger = getByTestId('trigger');
       const menu = getByTestId('menu');

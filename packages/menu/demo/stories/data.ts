@@ -18,7 +18,7 @@ export const ITEMS: MenuItem[] = [
     items: [
       { value: 'fruit-01', label: 'Apple', type: 'checkbox' },
       { value: 'fruit-02', label: 'Banana', disabled: true, type: 'checkbox' },
-      { value: 'fruit-03', label: 'Cherry', type: 'checkbox' },
+      { value: 'Cherry', type: 'checkbox' },
       { value: 'fruit-04', label: 'Kiwi', type: 'checkbox' }
     ]
   },

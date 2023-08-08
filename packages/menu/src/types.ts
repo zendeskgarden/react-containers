@@ -55,8 +55,6 @@ export interface IUseMenuProps<T = HTMLElement, L = HTMLElement> {
   triggerRef: RefObject<T>;
   /** Provides ref access to the underlying menu element */
   menuRef: RefObject<L>;
-  /** Indicates that the element is not interactive */
-  disabled?: boolean;
   /** Prefixes IDs for the menu */
   idPrefix?: string;
   /** Sets the expansion in a controlled menu */

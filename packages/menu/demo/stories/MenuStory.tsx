@@ -26,19 +26,6 @@ interface IUseMenuComponentProps extends MenuReturnValue {
   items: UseMenuProps['items'];
 }
 
-const MenuItemSeparator = ({
-  getSeparatorProps,
-  ...props
-}: {
-  getSeparatorProps: IUseMenuComponentProps['getSeparatorProps'];
-  role?: 'separator' | 'none';
-}) => (
-  <li
-    className="border-t-0 border-l-0 border-r-0 border-b border-grey-400 border-dotted"
-    {...getSeparatorProps(props)}
-  />
-);
-
 type MenuItemProps = {
   item: IMenuItemBase;
   getItemProps: IUseMenuComponentProps['getItemProps'];
@@ -59,12 +46,11 @@ const Item = ({ item, getItemProps, isSelected }: MenuItemProps) => (
       {item?.type === 'radio' && isSelected && '•'}
       {item?.type === 'checkbox' && isSelected && '✓'}
     </span>
-    {item.label}
+    {item.label || item.value}
   </li>
 );
 
 const Component = ({
-  disabled,
   items,
   selection,
   isExpanded,
@@ -78,15 +64,7 @@ const Component = ({
 
   return (
     <div className="relative">
-      <button
-        className={classNames('mb-1', {
-          'cursor-pointer': !disabled,
-          'cursor-default': disabled
-        })}
-        {...getTriggerProps()}
-      >
-        Menu
-      </button>
+      <button {...getTriggerProps()}>Menu</button>
 
       <ul
         className={classNames('border border-grey-400 border-solid w-32 absolute', {
@@ -99,7 +77,10 @@ const Component = ({
             return (
               <li key={item.label} role="none">
                 <ul {...getItemGroupProps({ 'aria-label': item.label })}>
-                  <MenuItemSeparator getSeparatorProps={getSeparatorProps} role="none" />
+                  <li
+                    className="border-t-0 border-l-0 border-r-0 border-b border-grey-400 border-dotted"
+                    {...getSeparatorProps({ role: 'none' })}
+                  />
                   {item.items.map(groupItem => (
                     <Item
                       key={groupItem.value}
@@ -114,7 +95,13 @@ const Component = ({
           }
 
           if ('separator' in item) {
-            return <MenuItemSeparator key={item.value} getSeparatorProps={getSeparatorProps} />;
+            return (
+              <li
+                key={item.value}
+                className="border-t-0 border-l-0 border-r-0 border-b border-grey-400 border-dotted"
+                {...getSeparatorProps()}
+              />
+            );
           }
 
           return <Item key={item.value} item={item} getItemProps={getItemProps} />;
