@@ -567,12 +567,12 @@ export const useMenu = <T extends HTMLElement = HTMLElement, L extends HTMLEleme
         }
 
         if (isArrowKey || isJumpKey || isAlphanumericChar) {
-          changeType = StateChangeTypes[toMenuItemKeyDownType(key)];
-          const nextFocusedValue = getNextFocusedValue(value, key, isAlphanumericChar);
+          event.preventDefault();
 
-          if (isAlphanumericChar) {
-            changeType = isAlphanumericChar ? StateChangeTypes.MenuItemKeyDown : changeType;
-          }
+          changeType = isAlphanumericChar
+            ? StateChangeTypes.MenuItemKeyDown
+            : StateChangeTypes[toMenuItemKeyDownType(key)];
+          const nextFocusedValue = getNextFocusedValue(value, key, isAlphanumericChar);
 
           payload = {
             ...(isFocusedValueControlled ? {} : { focusedValue: nextFocusedValue })

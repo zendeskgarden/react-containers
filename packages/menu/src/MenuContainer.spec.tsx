@@ -525,12 +525,6 @@ describe('MenuContainer', () => {
   });
 
   describe('controlled', () => {
-    const onChange = jest.fn();
-
-    afterEach(() => {
-      onChange.mockReset();
-    });
-
     it('handles controlled expansion', () => {
       const { getByTestId } = render(<TestMenu items={ITEMS} isExpanded />);
       const menu = getByTestId('menu');
@@ -548,25 +542,76 @@ describe('MenuContainer', () => {
       expect(item).toHaveFocus();
     });
 
+    it('expands menu on trigger arrow keydown with controlled focused value', async () => {
+      const { getByTestId, getByText } = render(<TestMenu items={ITEMS} focusedValue="plant-01" />);
+      const trigger = getByTestId('trigger');
+      const item = getByText('Petunia');
+
+      trigger.focus();
+      await user.keyboard('{ArrowDown}');
+
+      expect(item).toHaveFocus();
+    });
+
     it('handles controlled selection value', () => {
       const { getByText } = render(
         <TestMenu
           items={ITEMS}
           selectedItems={[
             { value: 'fruit-01' },
-            { value: 'fruit-04' },
+            { value: 'fruit-03' },
             { value: 'vegetable-03', name: 'veggies' }
           ]}
         />
       );
 
       const fruit1 = getByText('Apple');
-      const fruit4 = getByText('Apple');
+      const fruit4 = getByText('Kiwi');
       const veg3 = getByText('Brussel sprouts');
 
       expect(fruit1).toHaveAttribute('aria-checked', 'true');
       expect(fruit4).toHaveAttribute('aria-checked', 'true');
       expect(veg3).toHaveAttribute('aria-checked', 'true');
+    });
+
+    it('focuses menu item on trigger click with controlled expansion', async () => {
+      const { getByTestId, getByText } = render(<TestMenu items={ITEMS} isExpanded />);
+      const trigger = getByTestId('trigger');
+      const item = getByText('Petunia');
+
+      await user.click(trigger);
+
+      expect(item).toHaveFocus();
+    });
+
+    it('focuses menu item on trigger arrow keydown with controlled expansion', async () => {
+      const { getByTestId, getByText } = render(<TestMenu items={ITEMS} isExpanded />);
+      const trigger = getByTestId('trigger');
+      const item = getByText('Petunia');
+
+      trigger.focus();
+      await user.keyboard('{ArrowDown}');
+
+      expect(item).toHaveFocus();
+    });
+
+    it('selects item on click with controlled expansion', async () => {
+      const { getByText } = render(<TestMenu items={ITEMS} isExpanded />);
+      const fruit1 = getByText('Apple');
+
+      await user.click(fruit1);
+
+      expect(fruit1).toHaveAttribute('aria-checked', 'true');
+    });
+
+    it('selects item on keydown with controlled expansion', async () => {
+      const { getByText } = render(<TestMenu items={ITEMS} isExpanded />);
+      const fruit1 = getByText('Apple');
+
+      await user.hover(fruit1);
+      await user.keyboard('{Enter}');
+
+      expect(fruit1).toHaveAttribute('aria-checked', 'true');
     });
 
     it('throws if given invalid selection value', () => {
@@ -587,115 +632,123 @@ describe('MenuContainer', () => {
       console.error = consoleError;
     });
 
-    it('calls onChange on trigger click', async () => {
-      const { getByTestId } = render(<TestMenu items={ITEMS} onChange={onChange} />);
-      const trigger = getByTestId('trigger');
+    describe('onChange', () => {
+      const onChange = jest.fn();
 
-      await user.click(trigger);
-
-      const changeTypes = onChange.mock.calls.map(([change]) => change.type);
-
-      expect(changeTypes).toContain(StateChangeTypes.TriggerClick);
-    });
-
-    it.each([
-      ['Space', ' ', StateChangeTypes.TriggerClick],
-      ['Enter', '{Enter}', StateChangeTypes.TriggerClick],
-      ['ArrowUp', '{ArrowUp}', StateChangeTypes.TriggerKeyDownArrowUp],
-      ['ArrowDown', '{ArrowDown}', StateChangeTypes.TriggerKeyDownArrowDown]
-    ])('calls onChange on trigger %s keydown', async (_, input, type) => {
-      const { getByTestId } = render(<TestMenu items={ITEMS} onChange={onChange} />);
-      const trigger = getByTestId('trigger');
-
-      trigger.focus();
-      await user.keyboard(input);
-
-      const changeTypes = onChange.mock.calls.map(([change]) => change.type);
-
-      expect(changeTypes).toContain(type);
-    });
-
-    it.each([
-      ['ArrowDown', '{ArrowDown}', StateChangeTypes.MenuItemKeyDownArrowDown],
-      ['ArrowUp', '{ArrowUp}', StateChangeTypes.MenuItemKeyDownArrowUp],
-      ['Home', '{Home}', StateChangeTypes.MenuItemKeyDownHome],
-      ['End', '{End}', StateChangeTypes.MenuItemKeyDownEnd],
-      ['Alphanumeric character', 'b', StateChangeTypes.MenuItemKeyDown]
-    ])('calls onChange on item %s keydown', async (_, input, type) => {
-      const { getByTestId } = render(<TestMenu items={ITEMS} onChange={onChange} />);
-      const trigger = getByTestId('trigger');
-
-      await user.click(trigger);
-      await user.keyboard(input);
-
-      const changeTypes = onChange.mock.calls.map(([change]) => change.type);
-
-      expect(changeTypes).toContain(type);
-    });
-
-    it('calls onChange on item mouse leave', async () => {
-      const { getByTestId, getByText } = render(<TestMenu items={ITEMS} onChange={onChange} />);
-      const trigger = getByTestId('trigger');
-      const item = getByText('Petunia');
-
-      await user.click(trigger);
-      await user.hover(item);
-      await user.unhover(item);
-
-      const changeTypes = onChange.mock.calls.map(([change]) => change.type);
-
-      expect(changeTypes).toContain(StateChangeTypes.MenuMouseLeave);
-    });
-
-    it('calls onChange on item mouse enter', async () => {
-      const { getByTestId, getByText } = render(<TestMenu items={ITEMS} onChange={onChange} />);
-      const trigger = getByTestId('trigger');
-      const item = getByText('Kale');
-
-      await user.click(trigger);
-      await user.hover(item);
-
-      const changeTypes = onChange.mock.calls.map(([change]) => change.type);
-
-      expect(changeTypes).toContain(StateChangeTypes.MenuItemMouseMove);
-    });
-
-    it('calls onChange on menu blur', async () => {
-      const { getByTestId } = render(<TestMenu items={ITEMS} onChange={onChange} />);
-      const trigger = getByTestId('trigger');
-
-      await act(async () => {
-        await user.click(trigger);
-        await user.click(document.body);
+      afterEach(() => {
+        onChange.mockReset();
       });
 
-      const changeTypes = onChange.mock.calls.map(([change]) => change.type);
+      it('calls onChange on trigger click', async () => {
+        const { getByTestId } = render(<TestMenu items={ITEMS} onChange={onChange} />);
+        const trigger = getByTestId('trigger');
 
-      await waitFor(() => expect(changeTypes).toContain(StateChangeTypes.MenuBlur));
-    });
+        await user.click(trigger);
 
-    it('calls onChange on menu Tab keydown', async () => {
-      const { getByTestId } = render(<TestMenu items={ITEMS} onChange={onChange} />);
-      const trigger = getByTestId('trigger');
+        const changeTypes = onChange.mock.calls.map(([change]) => change.type);
 
-      await user.click(trigger);
-      await user.tab();
+        expect(changeTypes).toContain(StateChangeTypes.TriggerClick);
+      });
 
-      const changeTypes = onChange.mock.calls.map(([change]) => change.type);
+      it.each([
+        ['Space', ' ', StateChangeTypes.TriggerClick],
+        ['Enter', '{Enter}', StateChangeTypes.TriggerClick],
+        ['ArrowUp', '{ArrowUp}', StateChangeTypes.TriggerKeyDownArrowUp],
+        ['ArrowDown', '{ArrowDown}', StateChangeTypes.TriggerKeyDownArrowDown]
+      ])('calls onChange on trigger %s keydown', async (_, input, type) => {
+        const { getByTestId } = render(<TestMenu items={ITEMS} onChange={onChange} />);
+        const trigger = getByTestId('trigger');
 
-      expect(changeTypes).toContain(StateChangeTypes.MenuKeyDownTab);
-    });
+        trigger.focus();
+        await user.keyboard(input);
 
-    it('calls onChange on menu Escape keydown', async () => {
-      const { getByTestId } = render(<TestMenu items={ITEMS} onChange={onChange} />);
-      const trigger = getByTestId('trigger');
+        const changeTypes = onChange.mock.calls.map(([change]) => change.type);
 
-      await user.click(trigger);
-      await user.keyboard('{Escape}');
+        expect(changeTypes).toContain(type);
+      });
 
-      const changeTypes = onChange.mock.calls.map(([change]) => change.type);
+      it.each([
+        ['ArrowDown', '{ArrowDown}', StateChangeTypes.MenuItemKeyDownArrowDown],
+        ['ArrowUp', '{ArrowUp}', StateChangeTypes.MenuItemKeyDownArrowUp],
+        ['Home', '{Home}', StateChangeTypes.MenuItemKeyDownHome],
+        ['End', '{End}', StateChangeTypes.MenuItemKeyDownEnd],
+        ['Alphanumeric character', 'b', StateChangeTypes.MenuItemKeyDown]
+      ])('calls onChange on item %s keydown', async (_, input, type) => {
+        const { getByTestId } = render(<TestMenu items={ITEMS} onChange={onChange} />);
+        const trigger = getByTestId('trigger');
 
-      expect(changeTypes).toContain(StateChangeTypes.MenuKeyDownEscape);
+        await user.click(trigger);
+        await user.keyboard(input);
+
+        const changeTypes = onChange.mock.calls.map(([change]) => change.type);
+
+        expect(changeTypes).toContain(type);
+      });
+
+      it('calls onChange on item mouse leave', async () => {
+        const { getByTestId, getByText } = render(<TestMenu items={ITEMS} onChange={onChange} />);
+        const trigger = getByTestId('trigger');
+        const item = getByText('Petunia');
+
+        await user.click(trigger);
+        await user.hover(item);
+        await user.unhover(item);
+
+        const changeTypes = onChange.mock.calls.map(([change]) => change.type);
+
+        expect(changeTypes).toContain(StateChangeTypes.MenuMouseLeave);
+      });
+
+      it('calls onChange on item mouse enter', async () => {
+        const { getByTestId, getByText } = render(<TestMenu items={ITEMS} onChange={onChange} />);
+        const trigger = getByTestId('trigger');
+        const item = getByText('Kale');
+
+        await user.click(trigger);
+        await user.hover(item);
+
+        const changeTypes = onChange.mock.calls.map(([change]) => change.type);
+
+        expect(changeTypes).toContain(StateChangeTypes.MenuItemMouseMove);
+      });
+
+      it('calls onChange on menu blur', async () => {
+        const { getByTestId } = render(<TestMenu items={ITEMS} onChange={onChange} />);
+        const trigger = getByTestId('trigger');
+
+        await act(async () => {
+          await user.click(trigger);
+          await user.click(document.body);
+        });
+
+        const changeTypes = onChange.mock.calls.map(([change]) => change.type);
+
+        await waitFor(() => expect(changeTypes).toContain(StateChangeTypes.MenuBlur));
+      });
+
+      it('calls onChange on menu Tab keydown', async () => {
+        const { getByTestId } = render(<TestMenu items={ITEMS} onChange={onChange} />);
+        const trigger = getByTestId('trigger');
+
+        await user.click(trigger);
+        await user.tab();
+
+        const changeTypes = onChange.mock.calls.map(([change]) => change.type);
+
+        expect(changeTypes).toContain(StateChangeTypes.MenuKeyDownTab);
+      });
+
+      it('calls onChange on menu Escape keydown', async () => {
+        const { getByTestId } = render(<TestMenu items={ITEMS} onChange={onChange} />);
+        const trigger = getByTestId('trigger');
+
+        await user.click(trigger);
+        await user.keyboard('{Escape}');
+
+        const changeTypes = onChange.mock.calls.map(([change]) => change.type);
+
+        expect(changeTypes).toContain(StateChangeTypes.MenuKeyDownEscape);
+      });
     });
   });
 });
