@@ -447,21 +447,21 @@ export const useMenu = <T extends HTMLElement = HTMLElement, L extends HTMLEleme
   );
 
   const getSeparatorProps = useCallback<IUseMenuReturnValue<T, L>['getSeparatorProps']>(
-    ({ role = 'separator', ...props } = {}) => ({
+    ({ role = 'separator', ...other } = {}) => ({
       'data-garden-container-id': 'containers.menu.separator',
       'data-garden-container-version': PACKAGE_VERSION,
       role: role === null ? undefined : role,
-      ...props
+      ...other
     }),
     []
   );
 
   const getItemGroupProps = useCallback<IUseMenuReturnValue<T, L>['getItemGroupProps']>(
-    ({ role = 'group', ...props }) => ({
+    ({ role = 'group', ...other }) => ({
       'data-garden-container-id': 'containers.menu.item_group',
       'data-garden-container-version': PACKAGE_VERSION,
       role: role === null ? undefined : role,
-      ...props
+      ...other
     }),
     []
   );
