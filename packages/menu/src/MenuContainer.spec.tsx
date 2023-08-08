@@ -640,7 +640,9 @@ describe('MenuContainer', () => {
       });
 
       it('calls onChange on trigger click', async () => {
-        const { getByTestId } = render(<TestMenu items={ITEMS} onChange={onChange} />);
+        const { getByTestId } = render(
+          <TestMenu items={ITEMS} onChange={onChange} isExpanded={false} />
+        );
         const trigger = getByTestId('trigger');
 
         await user.click(trigger);
@@ -656,7 +658,9 @@ describe('MenuContainer', () => {
         ['ArrowUp', '{ArrowUp}', StateChangeTypes.TriggerKeyDownArrowUp],
         ['ArrowDown', '{ArrowDown}', StateChangeTypes.TriggerKeyDownArrowDown]
       ])('calls onChange on trigger %s keydown', async (_, input, type) => {
-        const { getByTestId } = render(<TestMenu items={ITEMS} onChange={onChange} />);
+        const { getByTestId } = render(
+          <TestMenu items={ITEMS} onChange={onChange} isExpanded focusedValue="plant-01" />
+        );
         const trigger = getByTestId('trigger');
 
         trigger.focus();
@@ -674,10 +678,8 @@ describe('MenuContainer', () => {
         ['End', '{End}', StateChangeTypes.MenuItemKeyDownEnd],
         ['Alphanumeric character', 'b', StateChangeTypes.MenuItemKeyDown]
       ])('calls onChange on item %s keydown', async (_, input, type) => {
-        const { getByTestId } = render(<TestMenu items={ITEMS} onChange={onChange} />);
-        const trigger = getByTestId('trigger');
+        render(<TestMenu items={ITEMS} onChange={onChange} isExpanded focusedValue="plant-01" />);
 
-        await user.click(trigger);
         await user.keyboard(input);
 
         const changeTypes = onChange.mock.calls.map(([change]) => change.type);
@@ -686,11 +688,11 @@ describe('MenuContainer', () => {
       });
 
       it('calls onChange on item mouse leave', async () => {
-        const { getByTestId, getByText } = render(<TestMenu items={ITEMS} onChange={onChange} />);
-        const trigger = getByTestId('trigger');
+        const { getByText } = render(
+          <TestMenu items={ITEMS} onChange={onChange} isExpanded focusedValue="plant-02" />
+        );
         const item = getByText('Petunia');
 
-        await user.click(trigger);
         await user.hover(item);
         await user.unhover(item);
 
@@ -700,11 +702,11 @@ describe('MenuContainer', () => {
       });
 
       it('calls onChange on item mouse enter', async () => {
-        const { getByTestId, getByText } = render(<TestMenu items={ITEMS} onChange={onChange} />);
-        const trigger = getByTestId('trigger');
+        const { getByText } = render(
+          <TestMenu items={ITEMS} onChange={onChange} isExpanded focusedValue="plant-01" />
+        );
         const item = getByText('Kale');
 
-        await user.click(trigger);
         await user.hover(item);
 
         const changeTypes = onChange.mock.calls.map(([change]) => change.type);
@@ -713,11 +715,9 @@ describe('MenuContainer', () => {
       });
 
       it('calls onChange on menu blur', async () => {
-        const { getByTestId } = render(<TestMenu items={ITEMS} onChange={onChange} />);
-        const trigger = getByTestId('trigger');
+        render(<TestMenu items={ITEMS} onChange={onChange} isExpanded focusedValue="plant-01" />);
 
         await act(async () => {
-          await user.click(trigger);
           await user.click(document.body);
         });
 
@@ -727,10 +727,8 @@ describe('MenuContainer', () => {
       });
 
       it('calls onChange on menu Tab keydown', async () => {
-        const { getByTestId } = render(<TestMenu items={ITEMS} onChange={onChange} />);
-        const trigger = getByTestId('trigger');
+        render(<TestMenu items={ITEMS} onChange={onChange} isExpanded focusedValue="plant-01" />);
 
-        await user.click(trigger);
         await user.tab();
 
         const changeTypes = onChange.mock.calls.map(([change]) => change.type);
@@ -739,10 +737,8 @@ describe('MenuContainer', () => {
       });
 
       it('calls onChange on menu Escape keydown', async () => {
-        const { getByTestId } = render(<TestMenu items={ITEMS} onChange={onChange} />);
-        const trigger = getByTestId('trigger');
+        render(<TestMenu items={ITEMS} onChange={onChange} isExpanded focusedValue="plant-01" />);
 
-        await user.click(trigger);
         await user.keyboard('{Escape}');
 
         const changeTypes = onChange.mock.calls.map(([change]) => change.type);
