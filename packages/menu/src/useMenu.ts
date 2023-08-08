@@ -49,7 +49,6 @@ export const useMenu = <T extends HTMLElement = HTMLElement, L extends HTMLEleme
   onChange = () => undefined,
   isExpanded,
   initialExpanded = false,
-  // defaultExpanded,
   selectedItems,
   focusedValue,
   initialFocusedValue,

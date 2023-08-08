@@ -61,15 +61,13 @@ export interface IUseMenuProps<T = HTMLElement, L = HTMLElement> {
   idPrefix?: string;
   /** Sets the expansion in a controlled menu */
   isExpanded?: boolean;
-  /** Determines default expansion in an uncontrolled menu */
-  defaultExpanded?: ItemValue;
   /** Determines menu expansion on menu initialization */
   initialExpanded?: boolean;
   /** Sets the focused value in a controlled menu */
   focusedValue?: ItemValue;
   /** Determines default focused value in an uncontrolled menu */
   defaultFocusedValue?: ItemValue;
-  /** Determines focused value expansion on menu initialization */
+  /** Determines focused value on menu initialization */
   initialFocusedValue?: ItemValue;
   /** Sets the selected values in a controlled menu */
   selectedItems?: ISelectedItem[];
