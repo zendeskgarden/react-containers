@@ -77,23 +77,13 @@ export const useMenu = <T extends HTMLElement = HTMLElement, L extends HTMLEleme
 
   const itemRefs = useMemo(
     () =>
-      values.reduce((acc: Record<ItemValue, RefObject<any | null>>, v) => {
+      values.reduce((acc: Record<ItemValue, RefObject<any>>, v) => {
         acc[v] = createRef();
 
         return acc;
       }, {}),
     [values]
   );
-
-  /**
-   * Validate controlled params
-   */
-
-  if (selectedItems !== undefined && selectedItems !== null) {
-    if (!Array.isArray(selectedItems)) {
-      throw new Error('Error: expected useMenu `selectedItems` to be an array.');
-    }
-  }
 
   /**
    * State

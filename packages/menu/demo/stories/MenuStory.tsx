@@ -64,7 +64,7 @@ const Component = ({
 
   return (
     <div className="relative">
-      <button {...getTriggerProps()}>Menu</button>
+      <button {...getTriggerProps()}>{isExpanded ? 'Close' : 'Open'} menu</button>
 
       <ul
         className={classNames('border border-grey-400 border-solid w-32 absolute', {

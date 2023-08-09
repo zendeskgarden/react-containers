@@ -610,24 +610,6 @@ describe('MenuContainer', () => {
       expect(fruit1).toHaveAttribute('aria-checked', 'true');
     });
 
-    it('throws if given invalid selection value', () => {
-      const consoleError = console.error;
-
-      console.error = jest.fn();
-
-      expect(() => {
-        render(
-          <TestMenu
-            items={ITEMS}
-            // @ts-expect-error: The selecteditems prop will error with a non-array value
-            selectedItems="test-1"
-          />
-        );
-      }).toThrow('to be an array');
-
-      console.error = consoleError;
-    });
-
     describe('onChange', () => {
       const onChange = jest.fn();
 
