@@ -37,7 +37,7 @@ const Menu = () => {
 
   return (
     <>
-      <button {...getTriggerProps()}></button>
+      <button {...getTriggerProps()}>Menu</button>
       <ul {...getMenuProps()} style={{ visibility: isExpanded ? 'visible' : 'hidden' }}>
         {items.map(item => (
           <li key={item.value} {...getItemProps({ item })}>
@@ -68,7 +68,7 @@ const Menu = () => {
     <MenuContainer triggerRef={triggerRef} menuRef={menuRef} items={items}>
       {({ isExpanded, getTriggerProps, getMenuProps, getItemProps, getSeparatorProps }) => (
         <>
-          <button {...getTriggerProps()}></button>
+          <button {...getTriggerProps()}>Menu</button>
           <ul {...getMenuProps()} style={{ visibility: isExpanded ? 'visible' : 'hidden' }}>
             {items.map(item => (
               <li key={item.value} {...getItemProps({ item })}>

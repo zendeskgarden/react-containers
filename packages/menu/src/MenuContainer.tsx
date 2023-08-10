@@ -26,8 +26,8 @@ MenuContainer.propTypes = {
   environment: PropTypes.any,
   onChange: PropTypes.func,
   isExpanded: PropTypes.bool,
-  initialExpanded: PropTypes.bool,
+  defaultExpanded: PropTypes.bool,
   selectedItems: PropTypes.arrayOf(PropTypes.any),
-  focusedValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  initialFocusedValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+  focusedValue: PropTypes.oneOfType([PropTypes.string]),
+  defaultFocusedValue: PropTypes.oneOfType([PropTypes.string])
 };

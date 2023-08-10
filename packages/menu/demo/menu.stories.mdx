@@ -29,7 +29,7 @@ import README from '../README.md';
   <Story
     name="Uncontrolled"
     argTypes={{
-      initialFocusedValue: { control: { type: 'string' } },
+      defaultFocusedValue: { control: { type: 'string' } },
       isExpanded: { control: false },
       focusedValue: { control: false },
       selectedItems: { control: false }
@@ -45,8 +45,8 @@ import README from '../README.md';
   <Story
     name="Controlled"
     argTypes={{
-      initialFocusedValue: { control: false },
-      initialExpanded: { control: false },
+      defaultFocusedValue: { control: false },
+      defaultExpanded: { control: false },
       focusedValue: { control: { type: 'text' } }
     }}
     args={{

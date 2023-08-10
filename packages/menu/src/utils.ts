@@ -7,7 +7,7 @@
 
 import { Reducer } from 'react';
 import { KEYS } from '@zendeskgarden/container-utilities';
-import { MenuItem, IMenuItemBase, MenuItemSeparator, ISelectedItem, ItemValue } from './types';
+import { MenuItem, IMenuItemBase, IMenuItemSeparator, ISelectedItem } from './types';
 
 export const StateChangeTypes: Record<string, string> = {
   TriggerClick: 'trigger:click',
@@ -30,19 +30,19 @@ export const StateChangeTypes: Record<string, string> = {
   MenuItemKeyDownEnd: `menuItem:keyDown:${KEYS.END}`
 };
 
+export const isItemGroup = (item: MenuItem) => Object.hasOwn(item, 'items');
+
 export const isValidItem = (item: MenuItem) =>
   !(item as IMenuItemBase).disabled &&
-  !(item as MenuItemSeparator).separator &&
-  !Object.hasOwn(item, 'items');
-
-export const isItemGroup = (item: MenuItem) => Object.hasOwn(item, 'items');
+  !(item as IMenuItemSeparator).separator &&
+  !isItemGroup(item);
 
 export const toMenuItemKeyDownType = (type: string): keyof typeof StateChangeTypes =>
   `MenuItemKeyDown${type === KEYS.SPACE ? 'Space' : type}`;
 
 type ReducerState = {
   focusOnOpen: boolean;
-  focusedValue?: ItemValue;
+  focusedValue?: string;
   selectedItems?: ISelectedItem[];
   isExpanded?: boolean;
 };

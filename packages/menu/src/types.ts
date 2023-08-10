@@ -7,10 +7,8 @@
 
 import { ButtonHTMLAttributes, HTMLProps, ReactNode, RefObject } from 'react';
 
-export type ItemValue = string | number;
-
 export interface ISelectedItem {
-  value: ItemValue;
+  value: string;
   label?: string;
   name?: string;
   type?: 'radio' | 'checkbox';
@@ -20,30 +18,23 @@ export interface IMenuItemBase extends ISelectedItem {
   disabled?: boolean;
 }
 
-export type MenuItemSeparator = {
-  value: ItemValue;
+export interface IMenuItemSeparator {
+  value: string;
   separator: boolean;
-};
+}
 
-export type MenuItemGroup = {
+export interface IMenuItemGroup {
   label: string;
-  items: (IMenuItemBase | MenuItemSeparator)[];
-};
+  items: (IMenuItemBase | IMenuItemSeparator)[];
+}
 
-export type MenuItem = IMenuItemBase | MenuItemSeparator | MenuItemGroup;
+export type MenuItem = IMenuItemBase | IMenuItemSeparator | IMenuItemGroup;
 
-export type MenuChangeHandlerArgs = {
-  type: string;
-  isExpanded?: boolean;
-  selectedItems?: ISelectedItem[];
-  focusedValue?: ItemValue;
-};
-
-export interface IUseMenuProps<T = HTMLElement, L = HTMLElement> {
+export interface IUseMenuProps<T = HTMLButtonElement, M = HTMLElement> {
   /**
    * Provides an ordered list of menu items
    *
-   * @param {ItemValue} item.value Unique item value
+   * @param {string} item.value Unique item value
    * @param {string} item.label Human-readable item display value
    * @param {string} item.name A shared name corresponding to an item radio group.
    * @param {boolean} item.disabled Indicates the item is not interactive
@@ -54,19 +45,17 @@ export interface IUseMenuProps<T = HTMLElement, L = HTMLElement> {
   /** Provides ref access to the underlying trigger element */
   triggerRef: RefObject<T>;
   /** Provides ref access to the underlying menu element */
-  menuRef: RefObject<L>;
+  menuRef: RefObject<M>;
   /** Prefixes IDs for the menu */
   idPrefix?: string;
   /** Sets the expansion in a controlled menu */
   isExpanded?: boolean;
   /** Determines menu expansion on menu initialization */
-  initialExpanded?: boolean;
+  defaultExpanded?: boolean;
   /** Sets the focused value in a controlled menu */
-  focusedValue?: ItemValue;
-  /** Determines default focused value in an uncontrolled menu */
-  defaultFocusedValue?: ItemValue;
+  focusedValue?: string;
   /** Determines focused value on menu initialization */
-  initialFocusedValue?: ItemValue;
+  defaultFocusedValue?: string;
   /** Sets the selected values in a controlled menu */
   selectedItems?: ISelectedItem[];
   /**
@@ -75,50 +64,53 @@ export interface IUseMenuProps<T = HTMLElement, L = HTMLElement> {
    * @param {string} changes.type The event type that triggered the change
    * @param {boolean} [changes.isExpanded] The updated menu expansion
    * @param {ISelectedItem[]} [changes.selectedItems] The updated selection values
-   * @param {ItemValue} [changes.focusedValue] The updated focused value
+   * @param {string} [changes.focusedValue] The updated focused value
    */
-  onChange?: (changes: MenuChangeHandlerArgs) => void;
+  onChange?: (changes: {
+    type: string;
+    isExpanded?: boolean;
+    selectedItems?: ISelectedItem[];
+    focusedValue?: string;
+  }) => void;
   /** Sets the environment where the menu is rendered */
   environment?: Window;
 }
 
-export interface IUseMenuReturnValue<T, L> {
+export interface IUseMenuReturnValue {
   isExpanded: boolean;
   selection: ISelectedItem[];
-  focusedValue?: ItemValue;
+  focusedValue?: string;
   getTriggerProps: (
-    props?: Omit<HTMLProps<T>, 'role' | 'type'> & {
+    props?: Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'role' | 'type'> & {
       role?: 'button' | null;
       type?: 'button' | null;
     }
-  ) => Omit<HTMLProps<T>, 'type'> & {
-    type?: ButtonHTMLAttributes<T>['type'];
-  };
-  getMenuProps: (
-    props?: Omit<HTMLProps<L>, 'role'> & {
+  ) => ButtonHTMLAttributes<HTMLButtonElement>;
+  getMenuProps: <T extends Element>(
+    props?: Omit<HTMLProps<T>, 'role'> & {
       role?: 'menu' | null;
     }
-  ) => HTMLProps<L>;
-  getItemGroupProps: <K extends Element>(
-    props: Omit<HTMLProps<K>, 'role' | 'aria-label'> & {
+  ) => HTMLProps<T>;
+  getItemGroupProps: <T extends Element>(
+    props: Omit<HTMLProps<T>, 'role' | 'aria-label'> & {
       role?: 'group' | null;
-      'aria-label': NonNullable<HTMLProps<K>['aria-label']>;
+      'aria-label': NonNullable<HTMLProps<T>['aria-label']>;
     }
-  ) => HTMLProps<K>;
-  getItemProps: <K extends Element>(
-    props: Omit<HTMLProps<K>, 'role'> & {
+  ) => HTMLProps<T>;
+  getItemProps: <T extends Element>(
+    props: Omit<HTMLProps<T>, 'role'> & {
       item: IMenuItemBase;
       role?: 'menuitem' | 'menuitemradio' | 'menuitemcheckbox' | null;
     }
-  ) => HTMLProps<K>;
-  getSeparatorProps: <K extends Element>(
-    props?: HTMLProps<K> & {
+  ) => HTMLProps<T>;
+  getSeparatorProps: <T extends Element>(
+    props?: HTMLProps<T> & {
       role?: 'separator' | 'none' | null;
     }
-  ) => HTMLProps<K>;
+  ) => HTMLProps<T>;
 }
 
-export interface IMenuContainerProps<T = HTMLElement, L = HTMLElement> extends IUseMenuProps<T, L> {
+export interface IMenuContainerProps<T = HTMLElement, M = HTMLElement> extends IUseMenuProps<T, M> {
   /**
    * Provides menu render prop functions
    *
@@ -128,19 +120,19 @@ export interface IMenuContainerProps<T = HTMLElement, L = HTMLElement> extends I
    * @param {function} [options.getSeparatorProps] Separator item props getter
    * @param {boolean} [options.isExpanded] Current menu expansion
    * @param {ISelectedItem[]} [options.selection] Current selection
-   * @param {ItemValue} [options.focusedValue] Current focused value
+   * @param {string} [options.focusedValue] Current focused value
    */
   render?: (options: {
     /* prop getters */
-    getTriggerProps: IUseMenuReturnValue<T, L>['getTriggerProps'];
-    getMenuProps: IUseMenuReturnValue<T, L>['getMenuProps'];
-    getItemProps: IUseMenuReturnValue<T, L>['getItemProps'];
-    getSeparatorProps: IUseMenuReturnValue<T, L>['getSeparatorProps'];
+    getTriggerProps: IUseMenuReturnValue['getTriggerProps'];
+    getMenuProps: IUseMenuReturnValue['getMenuProps'];
+    getItemProps: IUseMenuReturnValue['getItemProps'];
+    getSeparatorProps: IUseMenuReturnValue['getSeparatorProps'];
     /* state */
-    isExpanded: IUseMenuReturnValue<T, L>['isExpanded'];
-    selection: IUseMenuReturnValue<T, L>['selection'];
-    focusedValue?: IUseMenuReturnValue<T, L>['focusedValue'];
+    isExpanded: IUseMenuReturnValue['isExpanded'];
+    selection: IUseMenuReturnValue['selection'];
+    focusedValue?: IUseMenuReturnValue['focusedValue'];
   }) => ReactNode;
   /** @ignore */
-  children?: (options: IUseMenuReturnValue<T, L>) => ReactNode;
+  children?: (options: IUseMenuReturnValue) => ReactNode;
 }

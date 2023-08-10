@@ -12,12 +12,11 @@ export { useMenu } from './useMenu';
 export { MenuContainer } from './MenuContainer';
 
 export type {
-  ItemValue,
+  MenuItem,
   ISelectedItem,
   IMenuItemBase,
-  MenuItemSeparator,
-  MenuItemGroup,
-  MenuItem,
+  IMenuItemSeparator,
+  IMenuItemGroup,
   IMenuContainerProps,
   IUseMenuProps,
   IUseMenuReturnValue

@@ -20,7 +20,7 @@ import {
 
 type MenuContainerProps = IMenuContainerProps<HTMLButtonElement, HTMLUListElement>;
 type UseMenuProps = IUseMenuProps<HTMLButtonElement, HTMLUListElement>;
-type MenuReturnValue = IUseMenuReturnValue<HTMLButtonElement, HTMLUListElement>;
+type MenuReturnValue = IUseMenuReturnValue;
 
 interface IUseMenuComponentProps extends MenuReturnValue {
   items: UseMenuProps['items'];

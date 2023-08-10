@@ -58,7 +58,7 @@ describe('MenuContainer', () => {
           getTriggerProps,
           getMenuProps,
           getItemProps
-        }: IUseMenuReturnValue<HTMLButtonElement, HTMLUListElement>) => (
+        }: IUseMenuReturnValue) => (
           <>
             <button {...getTriggerProps({ type: 'button', disabled })} data-test-id="trigger">
               Menu
@@ -202,14 +202,11 @@ describe('MenuContainer', () => {
           expect(firstItem).toHaveFocus();
         });
 
-        it('focuses defaultFocusedValue', async () => {
-          const { getByTestId, getByText } = render(
-            <TestMenu items={ITEMS} defaultFocusedValue="plant-04" />
+        it('focuses defaultFocusedValue', () => {
+          const { getByText } = render(
+            <TestMenu items={ITEMS} defaultFocusedValue="plant-04" isExpanded />
           );
-          const trigger = getByTestId('trigger');
           const item = getByText('Succulent');
-
-          await user.click(trigger);
 
           expect(item).toHaveFocus();
         });
