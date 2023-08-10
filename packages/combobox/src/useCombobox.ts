@@ -181,10 +181,6 @@ export const useCombobox = <
               false
           };
 
-        case useDownshift.stateChangeTypes.InputFocus:
-          // Prevent expansion on focus.
-          return { ...state, isOpen: false };
-
         case useDownshift.stateChangeTypes.InputKeyDownArrowDown:
         case useDownshift.stateChangeTypes.FunctionOpenMenu:
           if (state.isOpen !== changes.isOpen && !altKey) {
@@ -300,7 +296,7 @@ export const useCombobox = <
     initialHighlightedIndex: initialActiveIndex,
     onStateChange: handleDownshiftStateChange,
     stateReducer,
-    environment: win
+    environment: win as any /* HACK around Downshift's addition of Node to environment */
   });
 
   const closeListbox = useCallback(() => {
@@ -413,7 +409,7 @@ export const useCombobox = <
 
       previousStateRef.current = {
         ...previousStateRef.current,
-        type: useDownshift.stateChangeTypes.InputFocus
+        type: useDownshift.stateChangeTypes.InputClick
       };
     }
   });
@@ -449,11 +445,11 @@ export const useCombobox = <
       };
 
       if (isEditable && triggerContainsInput) {
-        const handleClick = (event: MouseEvent) => {
+        const handleClick = (event: React.MouseEvent) => {
           if (disabled) {
             event.preventDefault();
           } else if (isAutocomplete) {
-            triggerProps.onClick(event);
+            triggerProps.onClick && triggerProps.onClick(event);
           } else {
             inputRef.current?.focus();
           }
@@ -672,7 +668,7 @@ export const useCombobox = <
         triggerRef.current?.contains(event.target) &&
         event.stopPropagation();
 
-      const handleKeyDown = (event: KeyboardEvent) => {
+      const handleKeyDown = (event: React.KeyboardEvent) => {
         if (event.key === KEYS.BACKSPACE || event.key === KEYS.DELETE) {
           setDownshiftSelection(option.value);
         } else {
@@ -699,7 +695,7 @@ export const useCombobox = <
               triggerRef.current?.focus();
             }
 
-            inputProps.onKeyDown(event);
+            inputProps.onKeyDown && inputProps.onKeyDown(event);
           }
         }
       };

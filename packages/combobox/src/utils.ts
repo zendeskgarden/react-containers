@@ -20,7 +20,7 @@ const typeMap: Record<string, string> = {
   [useDownshift.stateChangeTypes.FunctionSetInputValue]: 'fn:setInputValue',
   [useDownshift.stateChangeTypes.InputBlur]: 'input:blur',
   [useDownshift.stateChangeTypes.InputChange]: 'input:change',
-  [useDownshift.stateChangeTypes.InputFocus]: 'input:focus',
+  [useDownshift.stateChangeTypes.InputClick]: 'input:click',
   [useDownshift.stateChangeTypes.InputKeyDownArrowDown]: `input:keyDown:${KEYS.DOWN}`,
   [useDownshift.stateChangeTypes.InputKeyDownArrowUp]: `input:keyDown:${KEYS.UP}`,
   [useDownshift.stateChangeTypes.InputKeyDownEnd]: `input:keyDown:${KEYS.END}`,
