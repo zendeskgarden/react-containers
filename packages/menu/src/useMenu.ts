@@ -328,10 +328,10 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
   }, [onChange]);
 
   const handleItemClick = useCallback(
-    ({ value, type, name, label, selected }) => {
+    item => {
       const changeType = StateChangeTypes.MenuItemClick;
 
-      const nextSelection = getSelectionValue({ value, type, name, label, selected });
+      const nextSelection = getSelectionValue(item);
 
       if (!isExpandedControlled || !isSelectionValueControlled) {
         dispatch({
@@ -355,7 +355,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
   );
 
   const handleItemKeyDown = useCallback(
-    (event, { value, type, name, label, selected }) => {
+    (event, item) => {
       const { key } = event;
       const isJumpKey = [KEYS.HOME, KEYS.END].includes(key);
       const isSelectKey = [KEYS.SPACE, KEYS.ENTER].includes(key);
@@ -363,23 +363,19 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
       const isAlphanumericChar = key.length === 1 && /\S/u.test(key);
 
       let changeType;
-      let payload;
-      let changes;
+      let payload = {};
+      let changes = {};
 
       if (isSelectKey) {
         event.preventDefault();
 
         changeType = StateChangeTypes[toMenuItemKeyDownType(key)];
-        const nextSelection = getSelectionValue({ value, type, name, label, selected });
+        const nextSelection = getSelectionValue(item);
 
-        if (!isExpandedControlled || !isSelectionValueControlled) {
-          payload = {
-            ...(isExpandedControlled ? {} : { isExpanded: false }),
-            ...(!isSelectionValueControlled && nextSelection
-              ? { selectedItems: nextSelection }
-              : {})
-          };
-        }
+        payload = {
+          ...(isExpandedControlled ? {} : { isExpanded: false }),
+          ...(!isSelectionValueControlled && nextSelection ? { selectedItems: nextSelection } : {})
+        };
 
         changes = {
           isExpanded: false,
@@ -393,7 +389,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
         changeType = isAlphanumericChar
           ? StateChangeTypes.MenuItemKeyDown
           : StateChangeTypes[toMenuItemKeyDownType(key)];
-        const nextFocusedValue = getNextFocusedValue(value, key, isAlphanumericChar);
+        const nextFocusedValue = getNextFocusedValue(item.value, key, isAlphanumericChar);
 
         payload = {
           ...(isFocusedValueControlled ? {} : { focusedValue: nextFocusedValue })
@@ -403,8 +399,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
       }
 
       if (changeType) {
-        payload && dispatch({ type: changeType, payload });
-
+        dispatch({ type: changeType, payload });
         onChange({ type: changeType, ...changes });
       }
     },
@@ -499,6 +494,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
 
   const getTriggerProps = useCallback<IUseMenuReturnValue['getTriggerProps']>(
     ({ onClick, onKeyDown, type = 'button', role = 'button', disabled, ...other } = {}) => ({
+      ...other,
       'data-garden-container-id': 'containers.menu.trigger',
       'data-garden-container-version': PACKAGE_VERSION,
       ref: triggerRef,
@@ -509,7 +505,6 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
       tabIndex: disabled ? -1 : 0,
       type: type === null ? undefined : type,
       role: role === null ? undefined : role,
-      ...other,
       onKeyDown: composeEventHandlers(onKeyDown, handleTriggerKeyDown),
       onClick: composeEventHandlers(onClick, handleTriggerClick)
     }),
@@ -518,6 +513,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
 
   const getMenuProps = useCallback<IUseMenuReturnValue['getMenuProps']>(
     ({ role = 'menu', onKeyDown, onMouseLeave, ...other } = {}) => ({
+      ...other,
       ...getGroupProps({
         onKeyDown: composeEventHandlers(onKeyDown, handleMenuKeyDown),
         onMouseLeave: composeEventHandlers(onMouseLeave, handleMenuMouseLeave)
@@ -526,41 +522,34 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
       'data-garden-container-version': PACKAGE_VERSION,
       'aria-labelledby': triggerId,
       role: role === null ? undefined : role,
-      ref: menuRef as any,
-      ...other
+      ref: menuRef as any
     }),
     [triggerId, menuRef, getGroupProps, handleMenuMouseLeave, handleMenuKeyDown]
   );
 
   const getSeparatorProps = useCallback<IUseMenuReturnValue['getSeparatorProps']>(
     ({ role = 'separator', ...other } = {}) => ({
+      ...other,
       'data-garden-container-id': 'containers.menu.separator',
       'data-garden-container-version': PACKAGE_VERSION,
-      role: role === null ? undefined : role,
-      ...other
+      role: role === null ? undefined : role
     }),
     []
   );
 
   const getItemGroupProps = useCallback<IUseMenuReturnValue['getItemGroupProps']>(
     ({ role = 'group', ...other }) => ({
+      ...other,
       'data-garden-container-id': 'containers.menu.item_group',
       'data-garden-container-version': PACKAGE_VERSION,
-      role: role === null ? undefined : role,
-      ...other
+      role: role === null ? undefined : role
     }),
     []
   );
 
   const getItemProps = useCallback<IUseMenuReturnValue['getItemProps']>(
-    ({
-      role = 'menuitem',
-      onClick,
-      onKeyDown,
-      onMouseEnter,
-      item: { disabled: itemDisabled, type, name, value, label = value },
-      ...other
-    }) => {
+    ({ role = 'menuitem', onClick, onKeyDown, onMouseEnter, item, ...other }) => {
+      const { disabled: itemDisabled, type, name, value, label = value } = item;
       let itemRole = role;
 
       if (type === 'radio') {
