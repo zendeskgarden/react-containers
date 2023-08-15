@@ -24,6 +24,9 @@
     "test:watch": "yarn test --watch",
     "version": "yarn build && git add -A"
   },
+  "resolutions": {
+    "string-width": "4.2.3"
+  },
   "devDependencies": {
     "@babel/cli": "7.22.9",
     "@babel/core": "7.22.9",
