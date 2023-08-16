@@ -587,13 +587,7 @@ export const useCombobox = <
   );
 
   const getInputProps = useCallback<IUseComboboxReturnValue['getInputProps']>(
-    ({
-      role = isEditable ? 'combobox' : null,
-      'aria-labelledby': ariaLabeledBy = null,
-      onClick,
-      onFocus,
-      ...other
-    } = {}) => {
+    ({ role = isEditable ? 'combobox' : null, onClick, onFocus, ...other } = {}) => {
       const inputProps = {
         'data-garden-container-id': 'containers.combobox.input',
         'data-garden-container-version': PACKAGE_VERSION,
@@ -609,11 +603,10 @@ export const useCombobox = <
           triggerRef.current?.contains(event.target) &&
           event.stopPropagation();
 
-        return getDownshiftInputProps({
+        return getDownshiftInputProps<any>({
           ...inputProps,
           disabled,
           role,
-          'aria-labelledby': ariaLabeledBy,
           'aria-autocomplete': isAutocomplete ? 'list' : undefined,
           onClick: composeEventHandlers(onClick, handleClick),
           ...getFieldInputProps(),
@@ -712,13 +705,12 @@ export const useCombobox = <
   );
 
   const getListboxProps = useCallback<IUseComboboxReturnValue['getListboxProps']>(
-    ({ role = 'listbox', 'aria-labelledby': ariaLabeledBy = null, ...other }) =>
-      getDownshiftListboxProps({
+    ({ role = 'listbox', ...other }) =>
+      getDownshiftListboxProps<any>({
         'data-garden-container-id': 'containers.combobox.listbox',
         'data-garden-container-version': PACKAGE_VERSION,
         ref: listboxRef,
         role,
-        'aria-labelledby': ariaLabeledBy,
         'aria-multiselectable': isMultiselectable ? true : undefined,
         ...other
       } as IDownshiftListboxProps),
@@ -768,9 +760,10 @@ export const useCombobox = <
         };
       }
 
-      return getDownshiftOptionProps({
+      return getDownshiftOptionProps<any>({
         item: option.value,
         index: values.indexOf(option.value),
+        'aria-disabled': undefined,
         'aria-selected': ariaSelected,
         ...optionProps
       } as IDownshiftOptionProps<OptionValue>);
