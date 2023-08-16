@@ -280,6 +280,24 @@ describe('ComboboxContainer', () => {
         }
       });
 
+      describe('on click', () => {
+        it('expands and collapses the listbox', async () => {
+          const { getByTestId } = render(<TestCombobox layout={layout} options={options} />);
+          const trigger = getByTestId('trigger');
+          const input = getByTestId('input');
+
+          expect(input).toHaveAttribute('aria-expanded', 'false');
+
+          await user.click(trigger);
+
+          expect(input).toHaveAttribute('aria-expanded', 'true');
+
+          await user.click(trigger);
+
+          expect(input).toHaveAttribute('aria-expanded', 'false');
+        });
+      });
+
       describe('when focused', () => {
         let input: HTMLElement;
         let listboxOptions: HTMLElement[];
