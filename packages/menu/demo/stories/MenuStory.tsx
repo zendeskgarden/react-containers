@@ -29,13 +29,14 @@ interface IUseMenuComponentProps extends MenuReturnValue {
 type MenuItemProps = {
   item: IMenuItemBase;
   getItemProps: IUseMenuComponentProps['getItemProps'];
+  focusedValue: IUseMenuComponentProps['focusedValue'];
   isSelected?: boolean;
 };
 
-const Item = ({ item, getItemProps, isSelected }: MenuItemProps) => (
+const Item = ({ item, getItemProps, focusedValue, isSelected }: MenuItemProps) => (
   <li
     className={classNames({
-      'hover:bg-grey-200': !item.disabled,
+      'hover:bg-blue-100': !item.disabled && focusedValue === item.value,
       'text-grey-400': item.disabled,
       'cursor-pointer': !item.disabled,
       'cursor-default': item.disabled
@@ -53,6 +54,7 @@ const Item = ({ item, getItemProps, isSelected }: MenuItemProps) => (
 const Component = ({
   items,
   selection,
+  focusedValue,
   isExpanded,
   getTriggerProps,
   getMenuProps,
@@ -76,16 +78,15 @@ const Component = ({
           if ('items' in item) {
             return (
               <li key={item.label} role="none">
+                <b className="block mt-1">{item.label}</b>
+                <hr aria-hidden="true" className="my-1 border-grey-200" {...getSeparatorProps()} />
                 <ul {...getItemGroupProps({ 'aria-label': item.label })}>
-                  <li
-                    className="border-t-0 border-l-0 border-r-0 border-b border-grey-400 border-dotted"
-                    {...getSeparatorProps({ role: 'none' })}
-                  />
                   {item.items.map(groupItem => (
                     <Item
                       key={groupItem.value}
                       item={{ ...groupItem, name: item.label }}
                       getItemProps={getItemProps}
+                      focusedValue={focusedValue}
                       isSelected={selectedValues.includes(groupItem.value)}
                     />
                   ))}
@@ -98,13 +99,20 @@ const Component = ({
             return (
               <li
                 key={item.value}
-                className="border-t-0 border-l-0 border-r-0 border-b border-grey-400 border-dotted"
+                className="my-1 border-0 border-b border-solid border-grey-200"
                 {...getSeparatorProps()}
               />
             );
           }
 
-          return <Item key={item.value} item={item} getItemProps={getItemProps} />;
+          return (
+            <Item
+              key={item.value}
+              item={item}
+              focusedValue={focusedValue}
+              getItemProps={getItemProps}
+            />
+          );
         })}
       </ul>
     </div>

@@ -12,7 +12,7 @@ export const ITEMS = [
   { value: 'plant-03', label: 'Violet' },
   { value: 'plant-04', label: 'Succulent' },
   {
-    label: 'Fruits',
+    label: 'Choose favorites',
     items: [
       { value: 'fruit-01', label: 'Apple', type: 'checkbox' },
       { value: 'fruit-02', label: 'Banana', disabled: true, type: 'checkbox' },
@@ -21,7 +21,7 @@ export const ITEMS = [
     ]
   },
   {
-    label: 'Veggies',
+    label: 'Select one',
     items: [
       { value: 'vegetable-01', label: 'Asparagus', type: 'radio' },
       { value: 'vegetable-02', label: 'Broccoli', disabled: true, type: 'radio' },

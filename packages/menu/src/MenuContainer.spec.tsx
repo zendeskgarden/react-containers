@@ -123,7 +123,6 @@ describe('MenuContainer', () => {
       const menu = getByTestId('menu');
 
       expect(menu).toHaveAttribute('aria-labelledby', 'test-menu-trigger');
-      expect(menu).toHaveAttribute('hidden');
       expect(menu).toHaveAttribute('role', 'menu');
     });
 
@@ -164,7 +163,7 @@ describe('MenuContainer', () => {
       await user.click(trigger);
 
       expect(trigger).toHaveAttribute('aria-expanded', 'true');
-      expect(menu).not.toHaveAttribute('hidden');
+      expect(menu).toBeVisible();
     });
 
     it("doesn't open menu when trigger is disabled", async () => {
@@ -192,12 +191,13 @@ describe('MenuContainer', () => {
 
     describe('focus', () => {
       describe('trigger', () => {
-        it('focuses first item on trigger click', async () => {
+        it('focuses first item on arrow keydown', async () => {
           const { getByTestId, getByText } = render(<TestMenu items={ITEMS} />);
           const trigger = getByTestId('trigger');
           const firstItem = getByText('Petunia');
 
-          await user.click(trigger);
+          trigger.focus();
+          await user.keyboard('{ArrowDown}');
 
           expect(firstItem).toHaveFocus();
         });
@@ -237,26 +237,13 @@ describe('MenuContainer', () => {
           expect(lastItem).toHaveFocus();
         });
 
-        it('focuses trigger when item clicked', async () => {
-          const { getByTestId, getByText } = render(<TestMenu items={ITEMS} />);
-          const trigger = getByTestId('trigger');
-          const item = getByText('Violet');
-
-          await user.click(trigger);
-          await user.click(item);
-
-          await waitFor(() => expect(trigger).toHaveFocus());
-        });
-
-        it.each([
-          ['Escape', '{Escape}'],
-          ['Tab', '{Tab}']
-        ])('focuses trigger when %s key pressed in expanded menu', async (_, input) => {
+        it('focuses trigger when Escape key pressed in expanded menu', async () => {
           const { getByTestId } = render(<TestMenu items={ITEMS} />);
           const trigger = getByTestId('trigger');
 
-          await user.click(trigger);
-          await user.keyboard(input);
+          trigger.focus();
+          await user.keyboard('{ArrowDown}');
+          await user.keyboard('{Escape}');
 
           await waitFor(() => expect(trigger).toHaveFocus());
         });
@@ -280,7 +267,8 @@ describe('MenuContainer', () => {
           noLabelItem = getByText('Violet');
           trigger = getByTestId('trigger');
 
-          await user.click(trigger);
+          trigger.focus();
+          await user.keyboard('{ArrowDown}');
         });
 
         it('focuses next item on ArrowDown keydown', async () => {
@@ -370,7 +358,8 @@ describe('MenuContainer', () => {
         const trigger = getByTestId('trigger');
         const menu = getByTestId('menu');
 
-        await user.click(trigger);
+        trigger.focus();
+        await user.keyboard('{ArrowDown}');
         await user.keyboard('{Enter}');
 
         expect(menu).not.toBeVisible();
@@ -381,7 +370,8 @@ describe('MenuContainer', () => {
         const trigger = getByTestId('trigger');
         const menu = getByTestId('menu');
 
-        await user.click(trigger);
+        trigger.focus();
+        await user.keyboard('{ArrowDown}');
         await user.keyboard(' ');
 
         expect(menu).not.toBeVisible();
@@ -456,7 +446,7 @@ describe('MenuContainer', () => {
       let trigger: HTMLElement;
       let menu: HTMLElement;
 
-      beforeEach(() => {
+      beforeEach(async () => {
         const {
           rerender: _rerender,
           getByText,
@@ -477,6 +467,9 @@ describe('MenuContainer', () => {
         menu = getByTestId('menu');
         disabledItem = getByText('Cherry');
         lastItem = getByText('Kiwi');
+
+        trigger.focus();
+        await user.keyboard('{ArrowDown}');
       });
 
       it('applies correct accessibility attributes to items', () => {
@@ -485,14 +478,12 @@ describe('MenuContainer', () => {
       });
 
       it('prevents selection on disabled item click', async () => {
-        await user.click(trigger);
         await user.click(disabledItem);
 
         expect(menu).toBeVisible();
       });
 
       it('skips item focus', async () => {
-        await user.click(trigger);
         await user.keyboard('{ArrowDown}');
 
         expect(lastItem).toHaveFocus();
@@ -509,7 +500,6 @@ describe('MenuContainer', () => {
           />
         );
 
-        await user.click(trigger);
         await user.click(disabledItem);
 
         expect(menu).not.toBeVisible();
@@ -530,7 +520,8 @@ describe('MenuContainer', () => {
       const trigger = getByTestId('trigger');
       const item = getByText('Apple');
 
-      await user.click(trigger);
+      trigger.focus();
+      await user.keyboard('{ArrowDown}');
 
       expect(item).toHaveFocus();
     });
@@ -567,14 +558,13 @@ describe('MenuContainer', () => {
       expect(veg3).toHaveAttribute('aria-checked', 'true');
     });
 
-    it('focuses menu item on trigger click with controlled expansion', async () => {
-      const { getByTestId, getByText } = render(<TestMenu items={ITEMS} isExpanded />);
+    it('does not focus menu item on trigger click with controlled expansion', async () => {
+      const { getByTestId } = render(<TestMenu items={ITEMS} isExpanded />);
       const trigger = getByTestId('trigger');
-      const item = getByText('Petunia');
 
       await user.click(trigger);
 
-      expect(item).toHaveFocus();
+      expect(trigger).toHaveFocus();
     });
 
     it('focuses menu item on trigger arrow keydown with controlled expansion', async () => {
@@ -628,8 +618,8 @@ describe('MenuContainer', () => {
       });
 
       it.each([
-        ['Space', ' ', StateChangeTypes.TriggerClick],
-        ['Enter', '{Enter}', StateChangeTypes.TriggerClick],
+        ['Space', ' ', StateChangeTypes.TriggerKeyDownSpace],
+        ['Enter', '{Enter}', StateChangeTypes.TriggerKeyDownEnter],
         ['ArrowUp', '{ArrowUp}', StateChangeTypes.TriggerKeyDownArrowUp],
         ['ArrowDown', '{ArrowDown}', StateChangeTypes.TriggerKeyDownArrowDown]
       ])('calls onChange on trigger %s keydown', async (_, input, type) => {

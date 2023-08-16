@@ -5,16 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import {
-  RefObject,
-  createRef,
-  useCallback,
-  useEffect,
-  useMemo,
-  useReducer,
-  useRef,
-  useState
-} from 'react';
+import { RefObject, createRef, useCallback, useEffect, useMemo, useReducer, useState } from 'react';
 import { useSelection } from '@zendeskgarden/container-selection';
 import {
   KEYS,
@@ -88,7 +79,6 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
    * State
    */
 
-  const returnFocusRef = useRef<T | null>(null);
   const [menuVisible, setMenuVisible] = useState<boolean>(false);
 
   const [state, dispatch] = useReducer(stateReducer, {
@@ -241,37 +231,44 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
       dispatch({
         type: changeType,
         payload: {
-          focusOnOpen: !controlledIsExpanded,
-          ...(isExpandedControlled ? {} : { isExpanded: !controlledIsExpanded }),
-          ...(isFocusedValueControlled ? {} : { focusedValue: values[0] })
+          ...(isExpandedControlled ? {} : { isExpanded: !controlledIsExpanded })
         }
       });
 
       onChange({
         type: changeType,
-        focusedValue: values[0],
         isExpanded: !controlledIsExpanded
       });
     },
-    [controlledIsExpanded, values, isFocusedValueControlled, isExpandedControlled, onChange]
+    [controlledIsExpanded, isExpandedControlled, onChange]
   );
 
   const handleTriggerKeyDown = useCallback(
     event => {
       const { key } = event;
+      const isArrowKey = [KEYS.DOWN, KEYS.UP].includes(key);
+      const isSelectKey = [KEYS.ENTER, KEYS.SPACE].includes(key);
 
-      if ([KEYS.DOWN, KEYS.UP].includes(key)) {
+      let changeType;
+      let nextFocusedValue;
+
+      if (isArrowKey) {
+        changeType = StateChangeTypes[`TriggerKeyDown${key}`];
+        nextFocusedValue = KEYS.UP === key ? values[values.length - 1] : values[0];
+      } else if (isSelectKey) {
+        changeType = StateChangeTypes[`TriggerKeyDown${key === KEYS.SPACE ? 'Space' : key}`];
+        nextFocusedValue = values[0];
+      }
+
+      if (changeType) {
         event.preventDefault();
-
-        const changeType = StateChangeTypes[`TriggerKeyDown${key}`];
-        const nextFocusedValue = KEYS.UP === key ? values[values.length - 1] : values[0];
 
         dispatch({
           type: changeType,
           payload: {
             focusOnOpen: true,
-            ...(isExpandedControlled ? {} : { isExpanded: true }),
-            ...(isFocusedValueControlled ? {} : { focusedValue: nextFocusedValue })
+            ...(isFocusedValueControlled ? {} : { focusedValue: nextFocusedValue }),
+            ...(isExpandedControlled ? {} : { isExpanded: true })
           }
         });
 
@@ -293,10 +290,8 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
 
         closeMenu(type);
 
-        const triggerEl = triggerRef?.current;
-
-        if (triggerEl && KEYS.TAB === key) {
-          triggerEl.focus();
+        if (triggerRef?.current && KEYS.ESCAPE === key) {
+          triggerRef.current.focus();
         }
       }
     },
@@ -377,6 +372,10 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
           isExpanded: false,
           ...(nextSelection ? { selectedItems: nextSelection } : {})
         };
+
+        if (triggerRef?.current) {
+          triggerRef.current.focus();
+        }
       } else if (key === KEYS.RIGHT) {
         if (rtl && isPrevious) {
           changeType = StateChangeTypes.MenuItemKeyDownPrevious;
@@ -414,6 +413,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
 
       if (changeType) {
         event.preventDefault();
+        event.stopPropagation();
 
         dispatch({ type: changeType, payload });
         onChange({ type: changeType, ...changes });
@@ -421,6 +421,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
     },
     [
       rtl,
+      triggerRef,
       isExpandedControlled,
       isFocusedValueControlled,
       isSelectionValueControlled,
@@ -477,22 +478,6 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
       win.document.removeEventListener('click', handleMenuBlur, true);
     };
   }, [controlledIsExpanded, handleMenuBlur, environment]);
-
-  /**
-   * Return focus to trigger when menu closes
-   */
-  useEffect(() => {
-    if (controlledIsExpanded && !returnFocusRef.current) {
-      returnFocusRef.current = triggerRef.current;
-    }
-
-    if (!controlledIsExpanded && returnFocusRef.current) {
-      setTimeout(() => {
-        returnFocusRef.current!.focus();
-        returnFocusRef.current = null;
-      });
-    }
-  }, [triggerRef, controlledIsExpanded]);
 
   /**
    * Focus initial item when menu opens

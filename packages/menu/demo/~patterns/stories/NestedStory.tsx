@@ -29,7 +29,7 @@ export const NestedStory: StoryFn<{ rtl: boolean }> = ({ rtl }) => {
     if (isNext || isPrev) {
       setArgs({
         items: isNext ? NESTED_ITEMS : BASE_ITEMS,
-        focusedValue: isNext ? 'Strawberry' : 'Berry',
+        focusedValue: isNext ? 'Fruits' : 'Berry',
         isExpanded: true
       });
 
@@ -44,7 +44,14 @@ export const NestedStory: StoryFn<{ rtl: boolean }> = ({ rtl }) => {
     }));
   }, []);
 
-  const { isExpanded, getTriggerProps, getMenuProps, getItemProps, getSeparatorProps } = useMenu({
+  const {
+    focusedValue,
+    isExpanded,
+    getTriggerProps,
+    getMenuProps,
+    getItemProps,
+    getSeparatorProps
+  } = useMenu({
     ...args,
     triggerRef,
     menuRef,
@@ -67,7 +74,7 @@ export const NestedStory: StoryFn<{ rtl: boolean }> = ({ rtl }) => {
             return (
               <li
                 key={item.value}
-                className="border-t-0 border-l-0 border-r-0 border-b border-grey-400 border-dotted"
+                className="my-1 border-0 border-b border-solid border-grey-200"
                 {...getSeparatorProps()}
               />
             );
@@ -82,7 +89,9 @@ export const NestedStory: StoryFn<{ rtl: boolean }> = ({ rtl }) => {
                 isPrevious,
                 isNext
               })}
-              className="flex hover:bg-grey-200 cursor-default"
+              className={classNames('flex cursor-default', {
+                'bg-blue-100': focusedValue === value
+              })}
               key={value}
             >
               <span className="inline-flex justify-center items-center w-4">

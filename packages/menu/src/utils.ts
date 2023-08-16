@@ -11,6 +11,8 @@ import { MenuItem, IMenuItemBase, IMenuItemSeparator, ISelectedItem } from './ty
 
 export const StateChangeTypes: Record<string, string> = {
   TriggerClick: 'trigger:click',
+  TriggerKeyDownEnter: `trigger:keyDown:${KEYS.ENTER}`,
+  TriggerKeyDownSpace: `trigger:keyDown:Space`,
   TriggerKeyDownArrowDown: `trigger:keyDown:${KEYS.DOWN}`,
   TriggerKeyDownArrowUp: `trigger:keyDown:${KEYS.UP}`,
   MenuKeyDownEscape: `menu:keyDown:${KEYS.ESCAPE}`,
@@ -68,6 +70,8 @@ export const stateReducer: Reducer<ReducerState, ReducerAction> = (state, action
     case StateChangeTypes.MenuKeyDownEscape:
     case StateChangeTypes.MenuKeyDownTab:
     case StateChangeTypes.TriggerClick:
+    case StateChangeTypes.TriggerKeyDownEnter:
+    case StateChangeTypes.TriggerKeyDownSpace:
     case StateChangeTypes.TriggerKeyDownArrowDown:
     case StateChangeTypes.TriggerKeyDownArrowUp: {
       const { focusOnOpen, focusedValue, isExpanded } = action.payload;
