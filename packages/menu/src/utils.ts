@@ -18,12 +18,14 @@ export const StateChangeTypes: Record<string, string> = {
   MenuBlur: 'menu:blur',
   MenuMouseLeave: 'menu:mouseLeave',
   MenuItemClick: 'menuItem:click',
+  MenuItemClickPrevious: `menuItem:click:previous`,
+  MenuItemClickNext: `menuItem:click:next`,
   MenuItemMouseMove: `menuItem:mouseMove`,
   MenuItemKeyDown: 'menuItem:keyDown',
+  MenuItemKeyDownPrevious: `menuItem:keyDown:previous`,
+  MenuItemKeyDownNext: `menuItem:keyDown:next`,
   MenuItemKeyDownEnter: `menuItem:keyDown:${KEYS.ENTER}`,
   MenuItemKeyDownSpace: `menuItem:keyDown:Space`,
-  MenuItemKeyDownArrowLeft: `menuItem:keyDown:${KEYS.LEFT}`,
-  MenuItemKeyDownArrowRight: `menuItem:keyDown:${KEYS.RIGHT}`,
   MenuItemKeyDownArrowUp: `menuItem:keyDown:${KEYS.UP}`,
   MenuItemKeyDownArrowDown: `menuItem:keyDown:${KEYS.DOWN}`,
   MenuItemKeyDownHome: `menuItem:keyDown:${KEYS.HOME}`,
@@ -83,6 +85,8 @@ export const stateReducer: Reducer<ReducerState, ReducerAction> = (state, action
     }
 
     case StateChangeTypes.MenuItemClick:
+    case StateChangeTypes.MenuItemClickNext:
+    case StateChangeTypes.MenuItemClickPrevious:
     case StateChangeTypes.MenuItemKeyDownSpace:
     case StateChangeTypes.MenuItemKeyDownEnter: {
       const { selectedItems, isExpanded } = action.payload;
@@ -98,10 +102,10 @@ export const stateReducer: Reducer<ReducerState, ReducerAction> = (state, action
       break;
     }
 
-    case StateChangeTypes.MenuItemKeyDownArrowLeft:
-    case StateChangeTypes.MenuItemKeyDownArrowRight:
     case StateChangeTypes.MenuItemKeyDownArrowUp:
     case StateChangeTypes.MenuItemKeyDownArrowDown:
+    case StateChangeTypes.MenuItemKeyDownNext:
+    case StateChangeTypes.MenuItemKeyDownPrevious:
     case StateChangeTypes.MenuItemKeyDownHome:
     case StateChangeTypes.MenuItemKeyDownEnd:
     case StateChangeTypes.MenuItemKeyDown:

@@ -1,0 +1,16 @@
+import { Meta, Canvas, Story } from '@storybook/addon-docs';
+import { NestedStory } from './stories/NestedStory';
+
+<Meta title="Packages/Menu/[patterns]" />
+
+# Patterns
+
+## Focus
+
+Demonstrate nested menu.
+
+<Canvas>
+  <Story name="Nested" args={{ rtl: false }}>
+    {args => <NestedStory {...args} />}
+  </Story>
+</Canvas>

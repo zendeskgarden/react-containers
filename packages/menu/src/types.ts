@@ -16,6 +16,8 @@ export interface ISelectedItem {
 
 export interface IMenuItemBase extends ISelectedItem {
   disabled?: boolean;
+  isNext?: boolean;
+  isPrevious?: boolean;
 }
 
 export interface IMenuItemSeparator {
@@ -46,6 +48,8 @@ export interface IUseMenuProps<T = HTMLButtonElement, M = HTMLElement> {
   triggerRef: RefObject<T>;
   /** Provides ref access to the underlying menu element */
   menuRef: RefObject<M>;
+  /** Determines right-to-left layout */
+  rtl?: boolean;
   /** Prefixes IDs for the menu */
   idPrefix?: string;
   /** Sets the expansion in a controlled menu */
@@ -100,6 +104,8 @@ export interface IUseMenuReturnValue {
   getItemProps: <T extends Element>(
     props: Omit<HTMLProps<T>, 'role'> & {
       item: IMenuItemBase;
+      isNext?: boolean;
+      isPrevious?: boolean;
       role?: 'menuitem' | 'menuitemradio' | 'menuitemcheckbox' | null;
     }
   ) => HTMLProps<T>;
