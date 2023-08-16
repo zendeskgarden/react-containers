@@ -14,10 +14,9 @@ import { BASE_ITEMS, NESTED_ITEMS } from './data';
 type UseMenuProps = IUseMenuProps<HTMLButtonElement, HTMLUListElement>;
 
 export const NestedStory: StoryFn<{ rtl: boolean }> = ({ rtl }) => {
-  const [args, setArgs] = useState<Pick<UseMenuProps, 'items' | 'focusedValue' | 'isExpanded'>>({
+  const [args, setArgs] = useState<Pick<UseMenuProps, 'items' | 'focusedValue'>>({
     items: BASE_ITEMS,
-    focusedValue: undefined,
-    isExpanded: false
+    focusedValue: 'Orange'
   });
   const triggerRef = useRef(null);
   const menuRef = useRef(null);
@@ -27,11 +26,10 @@ export const NestedStory: StoryFn<{ rtl: boolean }> = ({ rtl }) => {
     const isPrev = type.indexOf('previous') > -1;
 
     if (isNext || isPrev) {
-      setArgs({
+      setArgs(() => ({
         items: isNext ? NESTED_ITEMS : BASE_ITEMS,
-        focusedValue: isNext ? 'Fruits' : 'Berry',
-        isExpanded: true
-      });
+        focusedValue: isNext ? 'Fruits' : 'Berry'
+      }));
 
       return;
     }
@@ -39,7 +37,6 @@ export const NestedStory: StoryFn<{ rtl: boolean }> = ({ rtl }) => {
     setArgs(state => ({
       ...state,
       ...(isExpanded === false ? { items: BASE_ITEMS } : {}),
-      ...(isExpanded === undefined ? {} : { isExpanded }),
       ...(focusedValue === undefined ? {} : { focusedValue })
     }));
   }, []);

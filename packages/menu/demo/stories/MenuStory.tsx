@@ -36,7 +36,7 @@ type MenuItemProps = {
 const Item = ({ item, getItemProps, focusedValue, isSelected }: MenuItemProps) => (
   <li
     className={classNames({
-      'hover:bg-blue-100': !item.disabled && focusedValue === item.value,
+      'bg-blue-100': !item.disabled && focusedValue === item.value,
       'text-grey-400': item.disabled,
       'cursor-pointer': !item.disabled,
       'cursor-default': item.disabled

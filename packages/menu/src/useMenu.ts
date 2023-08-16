@@ -333,14 +333,14 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
       dispatch({
         type: changeType,
         payload: {
-          ...(isExpandedControlled ? {} : { isExpanded: false }),
+          ...(isExpandedControlled ? {} : { isExpanded: isNext || isPrevious }),
           ...(!isSelectionValueControlled && nextSelection ? { selectedItems: nextSelection } : {})
         }
       });
 
       onChange({
         type: changeType,
-        isExpanded: false,
+        isExpanded: isNext || isPrevious,
         ...(nextSelection ? { selectedItems: nextSelection } : {})
       });
     },
@@ -364,12 +364,12 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
         const nextSelection = getSelectionValue(item);
 
         payload = {
-          ...(isExpandedControlled ? {} : { isExpanded: false }),
+          ...(isExpandedControlled ? {} : { isExpanded: isNext || isPrevious }),
           ...(!isSelectionValueControlled && nextSelection ? { selectedItems: nextSelection } : {})
         };
 
         changes = {
-          isExpanded: false,
+          isExpanded: isNext || isPrevious,
           ...(nextSelection ? { selectedItems: nextSelection } : {})
         };
 
