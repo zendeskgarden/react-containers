@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.6](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-combobox@1.0.5...@zendeskgarden/container-combobox@1.0.6) (2023-08-17)
+
+### Bug Fixes
+
+- **deps:** update dependency downshift to v8 ([#565](https://github.com/zendeskgarden/react-containers/issues/565)) ([2ae2248](https://github.com/zendeskgarden/react-containers/commit/2ae224897cf76c9dda3b2931787d06ea140a2159))
+
 ## [1.0.5](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-combobox@1.0.4...@zendeskgarden/container-combobox@1.0.5) (2023-07-28)
 
 ### Bug Fixes
