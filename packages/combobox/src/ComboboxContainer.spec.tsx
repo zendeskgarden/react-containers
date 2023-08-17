@@ -280,22 +280,19 @@ describe('ComboboxContainer', () => {
         }
       });
 
-      describe('on click', () => {
-        it('expands and collapses the listbox', async () => {
-          const { getByTestId } = render(<TestCombobox layout={layout} options={options} />);
-          const trigger = getByTestId('trigger');
-          const input = getByTestId('input');
+      it('expands and collapses the listbox on input click', async () => {
+        const { getByTestId } = render(<TestCombobox layout={layout} options={options} />);
+        const input = getByTestId('input');
 
-          expect(input).toHaveAttribute('aria-expanded', 'false');
+        expect(input).toHaveAttribute('aria-expanded', 'false');
 
-          await user.click(trigger);
+        await user.click(input);
 
-          expect(input).toHaveAttribute('aria-expanded', 'true');
+        expect(input).toHaveAttribute('aria-expanded', 'true');
 
-          await user.click(trigger);
+        await user.click(input);
 
-          expect(input).toHaveAttribute('aria-expanded', 'false');
-        });
+        expect(input).toHaveAttribute('aria-expanded', 'false');
       });
 
       describe('when focused', () => {
@@ -687,6 +684,19 @@ describe('ComboboxContainer', () => {
             expect(trigger).not.toHaveAttribute('aria-controls');
             expect(trigger).not.toHaveAttribute('aria-expanded');
           }
+        });
+
+        it('remains collapsed on input click', async () => {
+          const { getByTestId } = render(
+            <TestCombobox isAutocomplete={false} layout={layout} options={options} />
+          );
+          const input = getByTestId('input');
+
+          expect(input).toHaveAttribute('aria-expanded', 'false');
+
+          await user.click(input);
+
+          expect(input).toHaveAttribute('aria-expanded', 'false');
         });
       });
 

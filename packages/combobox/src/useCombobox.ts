@@ -181,6 +181,14 @@ export const useCombobox = <
               false
           };
 
+        case useDownshift.stateChangeTypes.InputClick:
+          if (!isAutocomplete) {
+            // Prevent input click listbox expansion on non-autocomplete comboboxes.
+            changes.isOpen = state.isOpen;
+          }
+
+          break;
+
         case useDownshift.stateChangeTypes.InputKeyDownArrowDown:
         case useDownshift.stateChangeTypes.FunctionOpenMenu:
           if (state.isOpen !== changes.isOpen && !altKey) {
