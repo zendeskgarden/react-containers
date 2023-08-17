@@ -6,6 +6,7 @@
  */
 
 import React, { createRef, PropsWithChildren } from 'react';
+import { act } from 'react-dom/test-utils';
 import { render, RenderResult } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComboboxContainer, useCombobox } from './';
@@ -279,11 +280,26 @@ describe('ComboboxContainer', () => {
         }
       });
 
+      it('expands and collapses the listbox on input click', async () => {
+        const { getByTestId } = render(<TestCombobox layout={layout} options={options} />);
+        const input = getByTestId('input');
+
+        expect(input).toHaveAttribute('aria-expanded', 'false');
+
+        await user.click(input);
+
+        expect(input).toHaveAttribute('aria-expanded', 'true');
+
+        await user.click(input);
+
+        expect(input).toHaveAttribute('aria-expanded', 'false');
+      });
+
       describe('when focused', () => {
         let input: HTMLElement;
         let listboxOptions: HTMLElement[];
 
-        beforeEach(async () => {
+        beforeEach(() => {
           const { getByTestId, getAllByRole } = render(
             <TestCombobox layout={layout} options={options} />
           );
@@ -291,7 +307,7 @@ describe('ComboboxContainer', () => {
           input = getByTestId('input');
           listboxOptions = getAllByRole('option');
 
-          await user.click(input);
+          input.focus();
         });
 
         it('expands and activates the first option on down arrow', async () => {
@@ -395,7 +411,7 @@ describe('ComboboxContainer', () => {
         let listboxOptions: HTMLElement[];
         let rerender: RenderResult['rerender'];
 
-        beforeEach(async () => {
+        beforeEach(() => {
           const {
             getByTestId,
             getAllByRole,
@@ -415,7 +431,7 @@ describe('ComboboxContainer', () => {
           listboxOptions = getAllByRole('option');
           rerender = _rerender;
 
-          await user.click(input);
+          input.focus();
         });
 
         it('applies the correct accessibility attributes', () => {
@@ -548,7 +564,9 @@ describe('ComboboxContainer', () => {
           expect(listboxOptions[1]).toHaveAttribute('aria-selected', 'false');
           expect(listboxOptions[3]).toHaveAttribute('aria-selected', 'true');
 
-          await user.click(tags[1]);
+          await act(async () => {
+            await user.click(tags[1]);
+          });
 
           expect(tags[1]).toHaveFocus();
 
@@ -667,6 +685,19 @@ describe('ComboboxContainer', () => {
             expect(trigger).not.toHaveAttribute('aria-expanded');
           }
         });
+
+        it('remains collapsed on input click', async () => {
+          const { getByTestId } = render(
+            <TestCombobox isAutocomplete={false} layout={layout} options={options} />
+          );
+          const input = getByTestId('input');
+
+          expect(input).toHaveAttribute('aria-expanded', 'false');
+
+          await user.click(input);
+
+          expect(input).toHaveAttribute('aria-expanded', 'false');
+        });
       });
 
       describe('with disabled options', () => {
@@ -694,7 +725,7 @@ describe('ComboboxContainer', () => {
           listboxOptions = getAllByRole('option');
           rerender = _rerender;
 
-          await user.click(input);
+          input.focus();
           await user.keyboard('{ArrowDown}');
         });
 
@@ -769,11 +800,11 @@ describe('ComboboxContainer', () => {
           await user.click(input);
           await user.keyboard('{ArrowDown}');
 
-          expect(handleChange).toHaveBeenCalledTimes(1);
+          expect(handleChange).toHaveBeenCalledTimes(2);
 
           const changeTypes = handleChange.mock.calls.map(([change]) => change.type);
 
-          expect(changeTypes).toMatchObject(['input:keyDown:ArrowDown']);
+          expect(changeTypes).toMatchObject(['input:click', 'input:keyDown:ArrowDown']);
         });
 
         it('handles controlled selection as expected', () => {
@@ -864,7 +895,12 @@ describe('ComboboxContainer', () => {
       const triggerRef = createRef<HTMLDivElement>();
       const inputRef = createRef<HTMLInputElement>();
       const listboxRef = createRef<HTMLUListElement>();
-      const { selection: _selection, removeSelection: _removeSelection } = useCombobox({
+      const {
+        selection: _selection,
+        removeSelection: _removeSelection,
+        getInputProps,
+        getListboxProps
+      } = useCombobox({
         triggerRef,
         inputRef,
         listboxRef,
@@ -875,7 +911,13 @@ describe('ComboboxContainer', () => {
       selection = _selection;
       removeSelection = _removeSelection;
 
-      return <>{children}</>;
+      return (
+        <>
+          <input {...getInputProps()} />
+          {children}
+          <ul {...getListboxProps({ 'aria-label': 'Options' })} />
+        </>
+      );
     };
 
     it('clears multiselectable values', async () => {
@@ -1014,7 +1056,10 @@ describe('ComboboxContainer', () => {
       const trigger = getByTestId('trigger');
 
       await user.click(trigger);
-      await user.click(document.body);
+
+      await act(async () => {
+        await user.click(document.body);
+      });
 
       expect(input).toHaveAttribute('aria-expanded', 'false');
     });
@@ -1092,7 +1137,7 @@ describe('ComboboxContainer', () => {
         <TestCombobox
           layout="Garden"
           isMultiselectable
-          options={[{ value: 'test-1' }, { value: 'test-2', selected: true }, { value: 'test-2' }]}
+          options={[{ value: 'test-1' }, { value: 'test-2', selected: true }, { value: 'test-3' }]}
         />
       );
       const tag = getByTestId('tag');
@@ -1123,7 +1168,7 @@ describe('ComboboxContainer', () => {
           layout="Garden"
           isEditable={false}
           isMultiselectable
-          options={[{ value: 'test-1' }, { value: 'test-2', selected: true }, { value: 'test-2' }]}
+          options={[{ value: 'test-1' }, { value: 'test-2', selected: true }, { value: 'test-3' }]}
         />
       );
       const tag = getByTestId('tag');

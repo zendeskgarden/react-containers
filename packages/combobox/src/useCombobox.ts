@@ -181,9 +181,13 @@ export const useCombobox = <
               false
           };
 
-        case useDownshift.stateChangeTypes.InputFocus:
-          // Prevent expansion on focus.
-          return { ...state, isOpen: false };
+        case useDownshift.stateChangeTypes.InputClick:
+          if (!isAutocomplete) {
+            // Prevent input click listbox expansion on non-autocomplete comboboxes.
+            changes.isOpen = state.isOpen;
+          }
+
+          break;
 
         case useDownshift.stateChangeTypes.InputKeyDownArrowDown:
         case useDownshift.stateChangeTypes.FunctionOpenMenu:
@@ -300,7 +304,7 @@ export const useCombobox = <
     initialHighlightedIndex: initialActiveIndex,
     onStateChange: handleDownshiftStateChange,
     stateReducer,
-    environment: win
+    environment: win as any /* HACK around Downshift's addition of Node to environment */
   });
 
   const closeListbox = useCallback(() => {
@@ -413,7 +417,7 @@ export const useCombobox = <
 
       previousStateRef.current = {
         ...previousStateRef.current,
-        type: useDownshift.stateChangeTypes.InputFocus
+        type: useDownshift.stateChangeTypes.InputClick
       };
     }
   });
@@ -449,11 +453,11 @@ export const useCombobox = <
       };
 
       if (isEditable && triggerContainsInput) {
-        const handleClick = (event: MouseEvent) => {
+        const handleClick = (event: React.MouseEvent) => {
           if (disabled) {
             event.preventDefault();
           } else if (isAutocomplete) {
-            triggerProps.onClick(event);
+            triggerProps.onClick && triggerProps.onClick(event);
           } else {
             inputRef.current?.focus();
           }
@@ -591,13 +595,7 @@ export const useCombobox = <
   );
 
   const getInputProps = useCallback<IUseComboboxReturnValue['getInputProps']>(
-    ({
-      role = isEditable ? 'combobox' : null,
-      'aria-labelledby': ariaLabeledBy = null,
-      onClick,
-      onFocus,
-      ...other
-    } = {}) => {
+    ({ role = isEditable ? 'combobox' : null, onClick, onFocus, ...other } = {}) => {
       const inputProps = {
         'data-garden-container-id': 'containers.combobox.input',
         'data-garden-container-version': PACKAGE_VERSION,
@@ -613,11 +611,10 @@ export const useCombobox = <
           triggerRef.current?.contains(event.target) &&
           event.stopPropagation();
 
-        return getDownshiftInputProps({
+        return getDownshiftInputProps<any>({
           ...inputProps,
           disabled,
           role,
-          'aria-labelledby': ariaLabeledBy,
           'aria-autocomplete': isAutocomplete ? 'list' : undefined,
           onClick: composeEventHandlers(onClick, handleClick),
           ...getFieldInputProps(),
@@ -672,7 +669,7 @@ export const useCombobox = <
         triggerRef.current?.contains(event.target) &&
         event.stopPropagation();
 
-      const handleKeyDown = (event: KeyboardEvent) => {
+      const handleKeyDown = (event: React.KeyboardEvent) => {
         if (event.key === KEYS.BACKSPACE || event.key === KEYS.DELETE) {
           setDownshiftSelection(option.value);
         } else {
@@ -699,7 +696,7 @@ export const useCombobox = <
               triggerRef.current?.focus();
             }
 
-            inputProps.onKeyDown(event);
+            inputProps.onKeyDown && inputProps.onKeyDown(event);
           }
         }
       };
@@ -716,13 +713,12 @@ export const useCombobox = <
   );
 
   const getListboxProps = useCallback<IUseComboboxReturnValue['getListboxProps']>(
-    ({ role = 'listbox', 'aria-labelledby': ariaLabeledBy = null, ...other }) =>
-      getDownshiftListboxProps({
+    ({ role = 'listbox', ...other }) =>
+      getDownshiftListboxProps<any>({
         'data-garden-container-id': 'containers.combobox.listbox',
         'data-garden-container-version': PACKAGE_VERSION,
         ref: listboxRef,
         role,
-        'aria-labelledby': ariaLabeledBy,
         'aria-multiselectable': isMultiselectable ? true : undefined,
         ...other
       } as IDownshiftListboxProps),
@@ -772,9 +768,10 @@ export const useCombobox = <
         };
       }
 
-      return getDownshiftOptionProps({
+      return getDownshiftOptionProps<any>({
         item: option.value,
         index: values.indexOf(option.value),
+        'aria-disabled': undefined,
         'aria-selected': ariaSelected,
         ...optionProps
       } as IDownshiftOptionProps<OptionValue>);
