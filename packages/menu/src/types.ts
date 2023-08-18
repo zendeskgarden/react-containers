@@ -57,7 +57,7 @@ export interface IUseMenuProps<T = HTMLButtonElement, M = HTMLElement> {
   /** Determines menu expansion on menu initialization */
   defaultExpanded?: boolean;
   /** Sets the focused value in a controlled menu */
-  focusedValue?: string;
+  focusedValue?: string | null;
   /** Determines focused value on menu initialization */
   defaultFocusedValue?: string;
   /** Sets the selected values in a controlled menu */
@@ -68,13 +68,13 @@ export interface IUseMenuProps<T = HTMLButtonElement, M = HTMLElement> {
    * @param {string} changes.type The event type that triggered the change
    * @param {boolean} [changes.isExpanded] The updated menu expansion
    * @param {ISelectedItem[]} [changes.selectedItems] The updated selection values
-   * @param {string} [changes.focusedValue] The updated focused value
+   * @param {string | null} [changes.focusedValue] The updated focused value
    */
   onChange?: (changes: {
     type: string;
     isExpanded?: boolean;
     selectedItems?: ISelectedItem[];
-    focusedValue?: string;
+    focusedValue?: string | null;
   }) => void;
   /** Sets the environment where the menu is rendered */
   environment?: Window;
@@ -83,7 +83,7 @@ export interface IUseMenuProps<T = HTMLButtonElement, M = HTMLElement> {
 export interface IUseMenuReturnValue {
   isExpanded: boolean;
   selection: ISelectedItem[];
-  focusedValue?: string;
+  focusedValue?: string | null;
   getTriggerProps: (
     props?: Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'role' | 'type'> & {
       role?: 'button' | null;
@@ -126,7 +126,7 @@ export interface IMenuContainerProps<T = HTMLElement, M = HTMLElement> extends I
    * @param {function} [options.getSeparatorProps] Separator item props getter
    * @param {boolean} [options.isExpanded] Current menu expansion
    * @param {ISelectedItem[]} [options.selection] Current selection
-   * @param {string} [options.focusedValue] Current focused value
+   * @param {string | null} [options.focusedValue] Current focused value
    */
   render?: (options: {
     /* prop getters */

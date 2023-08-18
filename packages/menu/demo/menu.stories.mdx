@@ -46,12 +46,11 @@ import README from '../README.md';
     name="Controlled"
     argTypes={{
       defaultFocusedValue: { control: false },
-      defaultExpanded: { control: false },
-      focusedValue: { control: { type: 'text' } }
+      defaultExpanded: { control: false }
     }}
     args={{
       isExpanded: false,
-      focusedValue: ITEMS[0].value,
+      focusedValue: null,
       selectedItems: [{ value: 'fruit-03', label: 'Cherry', type: 'checkbox' }]
     }}
   >

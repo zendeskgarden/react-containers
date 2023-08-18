@@ -16,28 +16,27 @@ type UseMenuProps = IUseMenuProps<HTMLButtonElement, HTMLUListElement>;
 export const NestedStory: StoryFn<{ rtl: boolean }> = ({ rtl }) => {
   const [args, setArgs] = useState<Pick<UseMenuProps, 'items' | 'focusedValue'>>({
     items: BASE_ITEMS,
-    focusedValue: 'Orange'
+    focusedValue: null
   });
   const triggerRef = useRef(null);
   const menuRef = useRef(null);
 
   const onChange = useCallback(({ type, isExpanded, focusedValue }) => {
-    const isNext = type.indexOf('next') > -1;
-    const isPrev = type.indexOf('previous') > -1;
+    const isNext = type.includes('next');
+    const isPrev = type.includes('previous');
 
     if (isNext || isPrev) {
-      setArgs(() => ({
+      setArgs({
         items: isNext ? NESTED_ITEMS : BASE_ITEMS,
         focusedValue: isNext ? 'Fruits' : 'Berry'
-      }));
+      });
 
       return;
     }
 
     setArgs(state => ({
-      ...state,
-      ...(isExpanded === false ? { items: BASE_ITEMS } : {}),
-      ...(focusedValue === undefined ? {} : { focusedValue })
+      items: isExpanded === false ? BASE_ITEMS : state.items,
+      focusedValue
     }));
   }, []);
 
