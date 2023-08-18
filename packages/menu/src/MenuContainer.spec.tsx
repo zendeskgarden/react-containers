@@ -320,7 +320,7 @@ describe('MenuContainer', () => {
           expect(firstItem).toHaveFocus();
         });
 
-        it('focuses item on MouseEnter keydown', async () => {
+        it('focuses item on MouseEnter', async () => {
           await user.hover(otherItem);
 
           expect(otherItem).toHaveFocus();

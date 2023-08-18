@@ -46,7 +46,7 @@ export const toMenuItemKeyDownType = (type: string): keyof typeof StateChangeTyp
 
 type ReducerState = {
   focusOnOpen: boolean;
-  focusedValue?: string;
+  focusedValue?: string | null;
   selectedItems?: ISelectedItem[];
   isExpanded?: boolean;
 };
@@ -113,7 +113,6 @@ export const stateReducer: Reducer<ReducerState, ReducerAction> = (state, action
     case StateChangeTypes.MenuItemKeyDownHome:
     case StateChangeTypes.MenuItemKeyDownEnd:
     case StateChangeTypes.MenuItemKeyDown:
-    case StateChangeTypes.MenuMouseLeave:
     case StateChangeTypes.MenuItemMouseMove: {
       const { focusedValue } = action.payload;
 

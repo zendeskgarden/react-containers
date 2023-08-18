@@ -90,6 +90,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
 
   const controlledIsExpanded = getControlledValue(isExpanded, state.isExpanded)!;
   const controlledSelectedItems = getControlledValue(selectedItems, state.selectedItems)!;
+  const uncontrolledFocusedValue = state.focusedValue === null ? undefined : state.focusedValue;
 
   /**
    * selection isn't a single-item construct in menus, so it
@@ -103,8 +104,8 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
   } = useSelection<string>({
     values,
     direction: 'vertical',
-    selectedValue: focusedValue || state.focusedValue,
-    focusedValue: focusedValue || state.focusedValue
+    selectedValue: focusedValue || uncontrolledFocusedValue,
+    focusedValue: focusedValue || uncontrolledFocusedValue
   });
 
   /**
@@ -174,6 +175,8 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
           nextIndex = values.length - 1;
         } else if (key === KEYS.HOME) {
           nextIndex = 0;
+        } else {
+          nextIndex = 0;
         }
 
         const item = menuItems[nextIndex!];
@@ -186,7 +189,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
     [menuItems, values]
   );
 
-  const getSelectionValue = useCallback(
+  const getSelectedItems = useCallback(
     ({ value, type, name, label, selected }) => {
       let changes: ISelectedItem[] | null = [...controlledSelectedItems];
 
@@ -231,16 +234,18 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
       dispatch({
         type: changeType,
         payload: {
+          ...(isFocusedValueControlled ? {} : { focusedValue: null }),
           ...(isExpandedControlled ? {} : { isExpanded: !controlledIsExpanded })
         }
       });
 
       onChange({
         type: changeType,
+        focusedValue: null,
         isExpanded: !controlledIsExpanded
       });
     },
-    [controlledIsExpanded, isExpandedControlled, onChange]
+    [controlledIsExpanded, isFocusedValueControlled, isExpandedControlled, onChange]
   );
 
   const handleTriggerKeyDown = useCallback(
@@ -310,17 +315,13 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
   );
 
   const handleMenuMouseLeave = useCallback(() => {
-    dispatch({
-      type: StateChangeTypes.MenuMouseLeave,
-      payload: {}
-    });
-
     onChange({ type: StateChangeTypes.MenuMouseLeave });
   }, [onChange]);
 
   const handleItemClick = useCallback(
     (item, isNext, isPrevious) => {
       let changeType = StateChangeTypes.MenuItemClick;
+      const isTransitionItem = isNext || isPrevious;
 
       if (isNext) {
         changeType = StateChangeTypes.MenuItemClickNext;
@@ -328,23 +329,23 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
         changeType = StateChangeTypes.MenuItemClickPrevious;
       }
 
-      const nextSelection = getSelectionValue(item);
+      const nextSelection = getSelectedItems(item);
 
       dispatch({
         type: changeType,
         payload: {
-          ...(isExpandedControlled ? {} : { isExpanded: isNext || isPrevious }),
+          ...(isExpandedControlled ? {} : { isExpanded: isTransitionItem }),
           ...(!isSelectionValueControlled && nextSelection ? { selectedItems: nextSelection } : {})
         }
       });
 
       onChange({
         type: changeType,
-        isExpanded: isNext || isPrevious,
+        ...(isTransitionItem ? {} : { isExpanded: false }),
         ...(nextSelection ? { selectedItems: nextSelection } : {})
       });
     },
-    [getSelectionValue, isExpandedControlled, isSelectionValueControlled, onChange]
+    [getSelectedItems, isExpandedControlled, isSelectionValueControlled, onChange]
   );
 
   const handleItemKeyDown = useCallback(
@@ -352,8 +353,9 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
       const { key } = event;
       const isJumpKey = [KEYS.HOME, KEYS.END].includes(key);
       const isSelectKey = [KEYS.SPACE, KEYS.ENTER].includes(key);
-      const isVerticalArrowKeys = [KEYS.UP, KEYS.DOWN, KEYS.LEFT, KEYS.RIGHT].includes(key);
+      const isVerticalArrowKeys = [KEYS.UP, KEYS.DOWN].includes(key);
       const isAlphanumericChar = key.length === 1 && /\S/u.test(key);
+      const isTransitionItem = isNext || isPrevious;
 
       let changeType;
       let payload = {};
@@ -361,19 +363,25 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
 
       if (isSelectKey) {
         changeType = StateChangeTypes[toMenuItemKeyDownType(key)];
-        const nextSelection = getSelectionValue(item);
+        const nextSelection = getSelectedItems(item);
+
+        if (isNext) {
+          changeType = StateChangeTypes.MenuItemKeyDownNext;
+        } else if (isPrevious) {
+          changeType = StateChangeTypes.MenuItemKeyDownPrevious;
+        }
 
         payload = {
-          ...(isExpandedControlled ? {} : { isExpanded: isNext || isPrevious }),
+          ...(isExpandedControlled ? {} : { isExpanded: isTransitionItem }),
           ...(!isSelectionValueControlled && nextSelection ? { selectedItems: nextSelection } : {})
         };
 
         changes = {
-          isExpanded: isNext || isPrevious,
+          ...(isTransitionItem ? {} : { isExpanded: false }),
           ...(nextSelection ? { selectedItems: nextSelection } : {})
         };
 
-        if (triggerRef?.current) {
+        if (triggerRef?.current && !isNext && !isPrevious) {
           triggerRef.current.focus();
         }
       } else if (key === KEYS.RIGHT) {
@@ -426,7 +434,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
       isFocusedValueControlled,
       isSelectionValueControlled,
       getNextFocusedValue,
-      getSelectionValue,
+      getSelectedItems,
       onChange
     ]
   );
@@ -460,7 +468,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
    */
   useEffect(() => {
     setMenuVisible(controlledIsExpanded);
-  }, [controlledIsExpanded, menuRef, environment]);
+  }, [controlledIsExpanded]);
 
   /**
    * Respond to clicks outside the  open menu
