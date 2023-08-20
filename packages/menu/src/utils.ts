@@ -10,6 +10,8 @@ import { KEYS } from '@zendeskgarden/container-utilities';
 import { MenuItem, IMenuItemBase, IMenuItemSeparator, ISelectedItem } from './types';
 
 export const StateChangeTypes: Record<string, string> = {
+  FnResetPrevValues: 'fn:resetPrevValues',
+  FnMenuTransitionFinish: 'fn:menuTransitionFinish',
   TriggerClick: 'trigger:click',
   TriggerKeyDownEnter: `trigger:keyDown:${KEYS.ENTER}`,
   TriggerKeyDownSpace: `trigger:keyDown:Space`,
@@ -45,7 +47,15 @@ export const toMenuItemKeyDownType = (type: string): keyof typeof StateChangeTyp
   `MenuItemKeyDown${type === KEYS.SPACE ? 'Space' : type}`;
 
 type ReducerState = {
+  /** Nested menu transition state */
   focusOnOpen: boolean;
+  isTransitionNext: boolean;
+  isTransitionPrevious: boolean;
+  transitionType: string | null;
+  nestedPathIds: string[];
+  prevValues: string[];
+
+  /** Uncontrolled state */
   focusedValue?: string | null;
   selectedItems?: ISelectedItem[];
   isExpanded?: boolean;
@@ -93,12 +103,30 @@ export const stateReducer: Reducer<ReducerState, ReducerAction> = (state, action
     case StateChangeTypes.MenuItemClickPrevious:
     case StateChangeTypes.MenuItemKeyDownSpace:
     case StateChangeTypes.MenuItemKeyDownEnter: {
-      const { selectedItems, isExpanded } = action.payload;
+      const {
+        selectedItems,
+        isExpanded,
+        nestedPathIds,
+        transitionType,
+        isTransitionNext,
+        isTransitionPrevious
+      } = action.payload;
 
-      if (isExpanded !== undefined || selectedItems !== undefined) {
+      if (
+        isExpanded !== undefined ||
+        selectedItems !== undefined ||
+        nestedPathIds !== undefined ||
+        transitionType !== undefined ||
+        isTransitionPrevious !== undefined ||
+        isTransitionNext !== undefined
+      ) {
         changes = {
           ...(changes || state),
           ...(isExpanded === undefined ? {} : { isExpanded }),
+          ...(nestedPathIds === undefined ? {} : { nestedPathIds }),
+          ...(transitionType === undefined ? {} : { transitionType }),
+          ...(isTransitionPrevious === undefined ? {} : { isTransitionPrevious }),
+          ...(isTransitionNext === undefined ? {} : { isTransitionNext }),
           ...(selectedItems === undefined ? {} : { selectedItems })
         };
       }
@@ -114,11 +142,62 @@ export const stateReducer: Reducer<ReducerState, ReducerAction> = (state, action
     case StateChangeTypes.MenuItemKeyDownEnd:
     case StateChangeTypes.MenuItemKeyDown:
     case StateChangeTypes.MenuItemMouseMove: {
-      const { focusedValue } = action.payload;
+      const {
+        focusedValue,
+        nestedPathIds,
+        transitionType,
+        isTransitionNext,
+        isTransitionPrevious
+      } = action.payload;
 
-      if (focusedValue !== undefined) {
-        changes = { ...(changes || state), focusedValue };
+      if (
+        focusedValue !== undefined ||
+        nestedPathIds !== undefined ||
+        transitionType !== undefined ||
+        isTransitionPrevious !== undefined ||
+        isTransitionNext !== undefined
+      ) {
+        changes = {
+          ...(changes || state),
+          ...(nestedPathIds === undefined ? {} : { nestedPathIds }),
+          ...(transitionType === undefined ? {} : { transitionType }),
+          ...(isTransitionPrevious === undefined ? {} : { isTransitionPrevious }),
+          ...(isTransitionNext === undefined ? {} : { isTransitionNext }),
+          focusedValue
+        };
       }
+
+      break;
+    }
+
+    case StateChangeTypes.FnMenuTransitionFinish: {
+      const { focusOnOpen, focusedValue, nestedPathIds, prevValues } = action.payload;
+
+      if (
+        focusOnOpen !== undefined ||
+        focusedValue !== undefined ||
+        nestedPathIds !== undefined ||
+        prevValues !== undefined
+      ) {
+        changes = {
+          ...(changes || state),
+          ...(prevValues === undefined ? {} : { prevValues }),
+          ...(nestedPathIds === undefined ? {} : { nestedPathIds }),
+          ...(focusOnOpen === undefined ? {} : { focusOnOpen }),
+          ...(focusedValue === undefined ? {} : { focusedValue }),
+          transitionType: null,
+          isTransitionNext: false,
+          isTransitionPrevious: false
+        };
+      }
+
+      break;
+    }
+
+    case StateChangeTypes.FnResetPrevValues: {
+      const { prevValues } = action.payload;
+
+      changes = { ...(changes || state), prevValues };
 
       break;
     }

@@ -5,7 +5,16 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import { RefObject, createRef, useCallback, useEffect, useMemo, useReducer, useState } from 'react';
+import {
+  MouseEvent,
+  RefObject,
+  createRef,
+  useCallback,
+  useEffect,
+  useMemo,
+  useReducer,
+  useState
+} from 'react';
 import { useSelection } from '@zendeskgarden/container-selection';
 import {
   KEYS,
@@ -85,7 +94,12 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
     focusedValue: defaultFocusedValue,
     isExpanded: defaultExpanded,
     selectedItems: [],
-    focusOnOpen: false
+    prevValues: values,
+    focusOnOpen: false,
+    isTransitionNext: false,
+    isTransitionPrevious: false,
+    transitionType: null,
+    nestedPathIds: []
   });
 
   const controlledIsExpanded = getControlledValue(isExpanded, state.isExpanded)!;
@@ -326,7 +340,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
   }, [onChange]);
 
   const handleItemClick = useCallback(
-    (item, isNext, isPrevious) => {
+    (e, item, isNext, isPrevious) => {
       let changeType = StateChangeTypes.MenuItemClick;
       const isTransitionItem = isNext || isPrevious;
 
@@ -341,24 +355,33 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
       dispatch({
         type: changeType,
         payload: {
+          ...(isTransitionItem && !isFocusedValueControlled
+            ? {
+                ...(isNext ? { nestedPathIds: [...state.nestedPathIds, item.value] } : {}),
+                transitionType: changeType,
+                isTransitionNext: isNext,
+                isTransitionPrevious: isPrevious
+              }
+            : {}),
           ...(isFocusedValueControlled ? {} : { focusedValue: null }),
           ...(isExpandedControlled ? {} : { isExpanded: isTransitionItem }),
+          ...(isTransitionItem ? {} : { nestedPathIds: [] }),
           ...(!isSelectionValueControlled && nextSelection ? { selectedItems: nextSelection } : {})
         }
       });
 
       onChange({
         type: changeType,
-        isExpanded: isTransitionItem,
-        focusedValue: null,
+        ...(isTransitionItem ? {} : { isExpanded: false }),
         ...(nextSelection ? { selectedItems: nextSelection } : {})
       });
     },
     [
-      getSelectionValue,
+      state.nestedPathIds,
       isFocusedValueControlled,
       isExpandedControlled,
       isSelectionValueControlled,
+      getSelectionValue,
       onChange
     ]
   );
@@ -369,6 +392,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
       const isJumpKey = [KEYS.HOME, KEYS.END].includes(key);
       const isSelectKey = [KEYS.SPACE, KEYS.ENTER].includes(key);
       const isVerticalArrowKeys = [KEYS.UP, KEYS.DOWN].includes(key);
+      const isHorizontalArrowKeys = [KEYS.RIGHT, KEYS.LEFT].includes(key);
       const isAlphanumericChar = key.length === 1 && /\S/u.test(key);
       const isTransitionItem = isNext || isPrevious;
 
@@ -388,34 +412,37 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
 
         payload = {
           ...(isExpandedControlled ? {} : { isExpanded: isTransitionItem }),
-          ...(isFocusedValueControlled ? {} : { focusedValue: null }),
+          ...(isTransitionItem ? {} : { nestedPathIds: [] }),
           ...(!isSelectionValueControlled && nextSelection ? { selectedItems: nextSelection } : {})
         };
 
         changes = {
-          isExpanded: isTransitionItem,
-          focusedValue: null,
+          ...(!isTransitionItem && { isExpanded: false }),
           ...(nextSelection ? { selectedItems: nextSelection } : {})
         };
 
-        if (triggerRef?.current && !isNext && !isPrevious) {
+        if (triggerRef?.current && !isTransitionItem) {
           triggerRef.current.focus();
         }
-      } else if (key === KEYS.RIGHT) {
-        if (rtl && isPrevious) {
-          changeType = StateChangeTypes.MenuItemKeyDownPrevious;
+      } else if (isHorizontalArrowKeys) {
+        if (key === KEYS.RIGHT) {
+          if (rtl && isPrevious) {
+            changeType = StateChangeTypes.MenuItemKeyDownPrevious;
+          }
+
+          if (!rtl && isNext) {
+            changeType = StateChangeTypes.MenuItemKeyDownNext;
+          }
         }
 
-        if (!rtl && isNext) {
-          changeType = StateChangeTypes.MenuItemKeyDownNext;
-        }
-      } else if (key === KEYS.LEFT) {
-        if (rtl && isNext) {
-          changeType = StateChangeTypes.MenuItemKeyDownNext;
-        }
+        if (key === KEYS.LEFT) {
+          if (rtl && isNext) {
+            changeType = StateChangeTypes.MenuItemKeyDownNext;
+          }
 
-        if (!rtl && isPrevious) {
-          changeType = StateChangeTypes.MenuItemKeyDownPrevious;
+          if (!rtl && isPrevious) {
+            changeType = StateChangeTypes.MenuItemKeyDownPrevious;
+          }
         }
       } else if (isVerticalArrowKeys || isJumpKey || isAlphanumericChar) {
         changeType = isAlphanumericChar
@@ -440,13 +467,31 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
         event.preventDefault();
         event.stopPropagation();
 
-        dispatch({ type: changeType, payload });
+        const transitionNext = changeType.includes('next');
+        const willTransition = changeType.includes('previous') || transitionNext;
+
+        dispatch({
+          type: changeType,
+          payload: {
+            ...payload,
+            ...(willTransition && !isFocusedValueControlled
+              ? {
+                  ...(isNext ? { nestedPathIds: [...state.nestedPathIds, item.value] } : {}),
+                  transitionType: changeType,
+                  isTransitionNext: isNext,
+                  isTransitionPrevious: isPrevious
+                }
+              : {})
+          }
+        });
+
         onChange({ type: changeType, ...changes });
       }
     },
     [
       rtl,
       triggerRef,
+      state.nestedPathIds,
       isExpandedControlled,
       isFocusedValueControlled,
       isSelectionValueControlled,
@@ -509,11 +554,68 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
    */
   useEffect(() => {
     if (state.focusOnOpen && menuVisible && controlledFocusedValue && controlledIsExpanded) {
-      const ref = itemRefs[controlledFocusedValue]?.current;
+      let ref = itemRefs[controlledFocusedValue]?.current;
+
+      /**
+       * If the ref can't be matched, fall back to the first menu item
+       */
+      if (!ref) {
+        ref = itemRefs[values[0]].current;
+      }
 
       ref && ref.focus();
     }
-  }, [menuVisible, itemRefs, controlledFocusedValue, state.focusOnOpen, controlledIsExpanded]);
+  }, [
+    values,
+    menuVisible,
+    itemRefs,
+    controlledFocusedValue,
+    state.focusOnOpen,
+    controlledIsExpanded
+  ]);
+
+  /**
+   * Handle the uncontrolled focus transition between root and nested menu states
+   */
+  useEffect(() => {
+    const valuesChanged = JSON.stringify(values) !== JSON.stringify(state.prevValues);
+
+    if (valuesChanged && !state.isTransitionNext && !state.isTransitionPrevious) {
+      dispatch({
+        type: StateChangeTypes.FnResetPrevValues,
+        payload: { prevValues: values }
+      });
+    }
+
+    if ((state.isTransitionNext || state.isTransitionPrevious) && valuesChanged) {
+      const nextFocusedValue = state.isTransitionNext
+        ? values[0]
+        : state.nestedPathIds.slice(-1)[0];
+
+      dispatch({
+        type: StateChangeTypes.FnMenuTransitionFinish,
+        payload: {
+          prevValues: values,
+          focusOnOpen: true,
+          nestedPathIds: state.isTransitionNext
+            ? state.nestedPathIds
+            : state.nestedPathIds.slice(0, -1),
+          ...(isFocusedValueControlled ? {} : { focusedValue: nextFocusedValue })
+        }
+      });
+
+      onChange({ type: StateChangeTypes.FnMenuTransitionFinish, focusedValue: nextFocusedValue });
+    }
+  }, [
+    values,
+    isFocusedValueControlled,
+    state.prevValues,
+    state.transitionType,
+    state.isTransitionNext,
+    state.isTransitionPrevious,
+    state.nestedPathIds,
+    onChange
+  ]);
 
   /**
    * Prop getters
@@ -624,8 +726,8 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
       const itemProps = getElementProps({
         value: value as any,
         ...elementProps,
-        onClick: composeEventHandlers(onClick, () =>
-          handleItemClick({ type, name, value, label, selected }, isNext, isPrevious)
+        onClick: composeEventHandlers(onClick, (e: MouseEvent) =>
+          handleItemClick(e, { type, name, value, label, selected }, isNext, isPrevious)
         ),
         onKeyDown: composeEventHandlers(onKeyDown, (e: KeyboardEvent) =>
           handleItemKeyDown(e, { type, name, value, label, selected }, isNext, isPrevious)

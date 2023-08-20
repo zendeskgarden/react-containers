@@ -1,5 +1,8 @@
 import { Meta, Canvas, Story } from '@storybook/addon-docs';
+import { useArgs } from '@storybook/client-api';
+import { useEffect, useCallback } from 'react';
 import { NestedStory } from './stories/NestedStory';
+import { BASE_ITEMS, NESTED_ITEMS } from './stories/data';
 
 <Meta title="Packages/Menu/[patterns]" />
 
@@ -10,7 +13,19 @@ import { NestedStory } from './stories/NestedStory';
 Demonstrate nested menu.
 
 <Canvas>
-  <Story name="Nested" args={{ rtl: false }}>
-    {args => <NestedStory {...args} />}
+  <Story name="Nested" args={{ rtl: false, items: BASE_ITEMS }}>
+    {args => {
+      const [_, updateArgs, resetArgs] = useArgs();
+      const onChange = useCallback(({ type, isExpanded }) => {
+        const isNext = type.includes('next');
+        const isPrev = type.includes('previous');
+        if (isNext || isPrev) {
+          updateArgs({ items: isNext ? NESTED_ITEMS : BASE_ITEMS });
+        } else if (isExpanded === false) {
+          resetArgs(['items']);
+        }
+      }, []);
+      return <NestedStory {...args} onChange={onChange} />;
+    }}
   </Story>
 </Canvas>

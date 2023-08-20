@@ -5,40 +5,16 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { StoryFn } from '@storybook/react';
 import classNames from 'classnames';
 import { IUseMenuProps, IMenuItemBase, useMenu } from '@zendeskgarden/container-menu';
-import { BASE_ITEMS, NESTED_ITEMS } from './data';
 
 type UseMenuProps = IUseMenuProps<HTMLButtonElement, HTMLUListElement>;
 
-export const NestedStory: StoryFn<{ rtl: boolean }> = ({ rtl }) => {
-  const [args, setArgs] = useState<Pick<UseMenuProps, 'items' | 'focusedValue'>>({
-    items: BASE_ITEMS,
-    focusedValue: null
-  });
+export const NestedStory: StoryFn<UseMenuProps> = ({ rtl, onChange, items }) => {
   const triggerRef = useRef(null);
   const menuRef = useRef(null);
-
-  const onChange = useCallback(({ type, isExpanded, focusedValue }) => {
-    const isNext = type.includes('next');
-    const isPrev = type.includes('previous');
-
-    if (isNext || isPrev) {
-      setArgs({
-        items: isNext ? NESTED_ITEMS : BASE_ITEMS,
-        focusedValue: isNext ? 'Fruits' : 'Berry'
-      });
-
-      return;
-    }
-
-    setArgs(state => ({
-      items: isExpanded === false ? BASE_ITEMS : state.items,
-      focusedValue
-    }));
-  }, []);
 
   const {
     focusedValue,
@@ -48,7 +24,7 @@ export const NestedStory: StoryFn<{ rtl: boolean }> = ({ rtl }) => {
     getItemProps,
     getSeparatorProps
   } = useMenu({
-    ...args,
+    items,
     triggerRef,
     menuRef,
     onChange,
@@ -65,7 +41,7 @@ export const NestedStory: StoryFn<{ rtl: boolean }> = ({ rtl }) => {
         })}
         {...getMenuProps()}
       >
-        {args.items.map(item => {
+        {items.map(item => {
           if ('separator' in item) {
             return (
               <li
@@ -80,11 +56,7 @@ export const NestedStory: StoryFn<{ rtl: boolean }> = ({ rtl }) => {
 
           return (
             <li
-              {...getItemProps({
-                item: item as IMenuItemBase,
-                isPrevious,
-                isNext
-              })}
+              {...getItemProps({ item: item as IMenuItemBase, isPrevious, isNext })}
               className={classNames('flex cursor-default', {
                 'bg-blue-100': focusedValue === value
               })}

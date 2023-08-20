@@ -1,4 +1,5 @@
 import { Meta, ArgsTable, Canvas, Story, Markdown } from '@storybook/addon-docs';
+import { useCallback } from 'react';
 import { useArgs } from '@storybook/client-api';
 import { MenuContainer } from '@zendeskgarden/container-menu';
 import { MenuStory } from './stories/MenuStory';
@@ -56,10 +57,10 @@ import README from '../README.md';
   >
     {args => {
       const updateArgs = useArgs()[1];
-      const handleChange = changes => {
+      const handleChange = useCallback(changes => {
         const { type, ...args } = changes;
         updateArgs(args);
-      };
+      }, []);
       return <MenuStory {...args} onChange={handleChange} />;
     }}
   </Story>
