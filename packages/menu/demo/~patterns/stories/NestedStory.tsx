@@ -56,7 +56,7 @@ export const NestedStory: StoryFn<UseMenuProps> = ({ rtl, onChange, items }) => 
 
           return (
             <li
-              {...getItemProps({ item: item as IMenuItemBase, isPrevious, isNext })}
+              {...getItemProps({ item: item as IMenuItemBase })}
               className={classNames('flex cursor-default', {
                 'bg-blue-100': focusedValue === value
               })}

@@ -10,7 +10,7 @@ import { KEYS } from '@zendeskgarden/container-utilities';
 import { MenuItem, IMenuItemBase, IMenuItemSeparator, ISelectedItem } from './types';
 
 export const StateChangeTypes: Record<string, string> = {
-  FnResetPrevValues: 'fn:resetPrevValues',
+  FnSetStateRefs: 'fn:setStateRefs',
   FnMenuTransitionFinish: 'fn:menuTransitionFinish',
   TriggerClick: 'trigger:click',
   TriggerKeyDownEnter: `trigger:keyDown:${KEYS.ENTER}`,
@@ -53,7 +53,7 @@ type ReducerState = {
   isTransitionPrevious: boolean;
   transitionType: string | null;
   nestedPathIds: string[];
-  prevValues: string[];
+  valuesRef: string[];
 
   /** Uncontrolled state */
   focusedValue?: string | null;
@@ -171,17 +171,17 @@ export const stateReducer: Reducer<ReducerState, ReducerAction> = (state, action
     }
 
     case StateChangeTypes.FnMenuTransitionFinish: {
-      const { focusOnOpen, focusedValue, nestedPathIds, prevValues } = action.payload;
+      const { focusOnOpen, focusedValue, nestedPathIds, valuesRef } = action.payload;
 
       if (
         focusOnOpen !== undefined ||
         focusedValue !== undefined ||
         nestedPathIds !== undefined ||
-        prevValues !== undefined
+        valuesRef !== undefined
       ) {
         changes = {
           ...(changes || state),
-          ...(prevValues === undefined ? {} : { prevValues }),
+          ...(valuesRef === undefined ? {} : { valuesRef }),
           ...(nestedPathIds === undefined ? {} : { nestedPathIds }),
           ...(focusOnOpen === undefined ? {} : { focusOnOpen }),
           ...(focusedValue === undefined ? {} : { focusedValue }),
@@ -194,10 +194,10 @@ export const stateReducer: Reducer<ReducerState, ReducerAction> = (state, action
       break;
     }
 
-    case StateChangeTypes.FnResetPrevValues: {
-      const { prevValues } = action.payload;
+    case StateChangeTypes.FnSetStateRefs: {
+      const { ...props } = action.payload;
 
-      changes = { ...(changes || state), prevValues };
+      changes = { ...(changes || state), ...props };
 
       break;
     }

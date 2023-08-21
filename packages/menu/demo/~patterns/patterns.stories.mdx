@@ -8,12 +8,12 @@ import { BASE_ITEMS, NESTED_ITEMS } from './stories/data';
 
 # Patterns
 
-## Focus
+## Nested Focus Uncontrolled
 
-Demonstrate nested menu.
+Demonstrate nested menu with uncontrolled focus.
 
 <Canvas>
-  <Story name="Nested" args={{ rtl: false, items: BASE_ITEMS }}>
+  <Story name="Nested Focus Uncontrolled" args={{ rtl: false, items: BASE_ITEMS }}>
     {args => {
       const [_, updateArgs, resetArgs] = useArgs();
       const onChange = useCallback(({ type, isExpanded }) => {
@@ -25,6 +25,49 @@ Demonstrate nested menu.
           resetArgs(['items']);
         }
       }, []);
+      return <NestedStory {...args} onChange={onChange} />;
+    }}
+  </Story>
+</Canvas>
+
+## Nested Focus Controlled
+
+Demonstrate nested menu with controlled focus.
+
+<Canvas>
+  <Story
+    name="Nested Focus Controlled"
+    argTypes={{
+      focusedValue: { control: { type: 'text' } }
+    }}
+    args={{
+      rtl: false,
+      items: BASE_ITEMS,
+      focusedValue: null
+    }}
+  >
+    {args => {
+      const updateArgs = useArgs()[1];
+      const onChange = useCallback(
+        ({ type, focusedValue, isExpanded }) => {
+          const isNext = type.includes('next');
+          const isPrev = type.includes('previous');
+          const _focusedValue = focusedValue || args.focusedValue;
+          if (isNext || isPrev) {
+            updateArgs({
+              items: isNext ? NESTED_ITEMS : BASE_ITEMS,
+              focusedValue: isNext ? 'Fruits' : 'Berry'
+            });
+          } else if (isExpanded === false) {
+            updateArgs({ items: BASE_ITEMS, focusedValue: _focusedValue });
+          } else {
+            updateArgs({
+              focusedValue: _focusedValue
+            });
+          }
+        },
+        [args.focusedValue]
+      );
       return <NestedStory {...args} onChange={onChange} />;
     }}
   </Story>

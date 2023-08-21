@@ -104,8 +104,6 @@ export interface IUseMenuReturnValue {
   getItemProps: <T extends Element>(
     props: Omit<HTMLProps<T>, 'role'> & {
       item: IMenuItemBase;
-      isNext?: boolean;
-      isPrevious?: boolean;
       role?: 'menuitem' | 'menuitemradio' | 'menuitemcheckbox' | null;
     }
   ) => HTMLProps<T>;
