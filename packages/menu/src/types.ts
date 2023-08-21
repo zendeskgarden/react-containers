@@ -38,9 +38,11 @@ export interface IUseMenuProps<T = HTMLButtonElement, M = HTMLElement> {
    *
    * @param {string} item.value Unique item value
    * @param {string} item.label Human-readable item display value
-   * @param {string} item.name A shared name corresponding to an item radio group.
+   * @param {string} item.name A shared name corresponding to an item radio group
    * @param {boolean} item.disabled Indicates the item is not interactive
-   * @param {boolean} item.separator Indicates the item is a placeholder for a separator.
+   * @param {boolean} item.isNext - Indicates the item transitions to a nested menu
+   * @param {boolean} item.isPrevious - Indicates the item will transition back from a nested menu
+   * @param {boolean} item.separator Indicates the item is a placeholder for a separator
    * @param {IMenuItemBase[]} item.items Groups a list of items
    */
   items: MenuItem[];
@@ -104,8 +106,6 @@ export interface IUseMenuReturnValue {
   getItemProps: <T extends Element>(
     props: Omit<HTMLProps<T>, 'role'> & {
       item: IMenuItemBase;
-      isNext?: boolean;
-      isPrevious?: boolean;
       role?: 'menuitem' | 'menuitemradio' | 'menuitemcheckbox' | null;
     }
   ) => HTMLProps<T>;

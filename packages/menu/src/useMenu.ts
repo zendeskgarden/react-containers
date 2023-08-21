@@ -175,8 +175,6 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
           nextIndex = values.length - 1;
         } else if (key === KEYS.HOME) {
           nextIndex = 0;
-        } else {
-          nextIndex = 0;
         }
 
         const item = menuItems[nextIndex!];
@@ -319,13 +317,13 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
   }, [onChange]);
 
   const handleItemClick = useCallback(
-    (item, isNext, isPrevious) => {
+    item => {
       let changeType = StateChangeTypes.MenuItemClick;
-      const isTransitionItem = isNext || isPrevious;
+      const isTransitionItem = item.isNext || item.isPrevious;
 
-      if (isNext) {
+      if (item.isNext) {
         changeType = StateChangeTypes.MenuItemClickNext;
-      } else if (isPrevious) {
+      } else if (item.isPrevious) {
         changeType = StateChangeTypes.MenuItemClickPrevious;
       }
 
@@ -349,13 +347,13 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
   );
 
   const handleItemKeyDown = useCallback(
-    (event, item, isNext, isPrevious) => {
+    (event, item) => {
       const { key } = event;
       const isJumpKey = [KEYS.HOME, KEYS.END].includes(key);
       const isSelectKey = [KEYS.SPACE, KEYS.ENTER].includes(key);
       const isVerticalArrowKeys = [KEYS.UP, KEYS.DOWN].includes(key);
       const isAlphanumericChar = key.length === 1 && /\S/u.test(key);
-      const isTransitionItem = isNext || isPrevious;
+      const isTransitionItem = item.isNext || item.isPrevious;
 
       let changeType;
       let payload = {};
@@ -365,9 +363,9 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
         changeType = StateChangeTypes[toMenuItemKeyDownType(key)];
         const nextSelection = getSelectedItems(item);
 
-        if (isNext) {
+        if (item.isNext) {
           changeType = StateChangeTypes.MenuItemKeyDownNext;
-        } else if (isPrevious) {
+        } else if (item.isPrevious) {
           changeType = StateChangeTypes.MenuItemKeyDownPrevious;
         }
 
@@ -381,23 +379,23 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
           ...(nextSelection ? { selectedItems: nextSelection } : {})
         };
 
-        if (triggerRef?.current && !isNext && !isPrevious) {
+        if (triggerRef?.current && !item.isNext && !item.isPrevious) {
           triggerRef.current.focus();
         }
       } else if (key === KEYS.RIGHT) {
-        if (rtl && isPrevious) {
+        if (rtl && item.isPrevious) {
           changeType = StateChangeTypes.MenuItemKeyDownPrevious;
         }
 
-        if (!rtl && isNext) {
+        if (!rtl && item.isNext) {
           changeType = StateChangeTypes.MenuItemKeyDownNext;
         }
       } else if (key === KEYS.LEFT) {
-        if (rtl && isNext) {
+        if (rtl && item.isNext) {
           changeType = StateChangeTypes.MenuItemKeyDownNext;
         }
 
-        if (!rtl && isPrevious) {
+        if (!rtl && item.isPrevious) {
           changeType = StateChangeTypes.MenuItemKeyDownPrevious;
         }
       } else if (isVerticalArrowKeys || isJumpKey || isAlphanumericChar) {
@@ -406,10 +404,10 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
           : StateChangeTypes[toMenuItemKeyDownType(key)];
         const nextFocusedValue = getNextFocusedValue({
           value: item.value,
-          key,
+          isPrevious: item.isPrevious,
+          isNext: item.isNext,
           isAlphanumericChar,
-          isPrevious,
-          isNext
+          key
         });
 
         payload = {
@@ -558,17 +556,16 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
   );
 
   const getItemProps = useCallback<IUseMenuReturnValue['getItemProps']>(
-    ({
-      role = 'menuitem',
-      isNext = false,
-      isPrevious = false,
-      onClick,
-      onKeyDown,
-      onMouseEnter,
-      item,
-      ...other
-    }) => {
-      const { disabled: itemDisabled, type, name, value, label = value } = item;
+    ({ role = 'menuitem', onClick, onKeyDown, onMouseEnter, item, ...other }) => {
+      const {
+        disabled: itemDisabled,
+        type,
+        name,
+        value,
+        isNext = false,
+        isPrevious = false,
+        label = value
+      } = item;
       let itemRole = role;
 
       if (type === 'radio') {
@@ -608,10 +605,10 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
         value: value as any,
         ...elementProps,
         onClick: composeEventHandlers(onClick, () =>
-          handleItemClick({ type, name, value, label, selected }, isNext, isPrevious)
+          handleItemClick({ ...item, isNext, isPrevious, label, selected })
         ),
         onKeyDown: composeEventHandlers(onKeyDown, (e: KeyboardEvent) =>
-          handleItemKeyDown(e, { type, name, value, label, selected }, isNext, isPrevious)
+          handleItemKeyDown(e, { ...item, isNext, isPrevious, label, selected })
         ),
         onMouseEnter: composeEventHandlers(onMouseEnter, () => handleItemMouseEnter(value))
       });

@@ -81,9 +81,7 @@ export const NestedStory: StoryFn<{ rtl: boolean }> = ({ rtl }) => {
           return (
             <li
               {...getItemProps({
-                item: item as IMenuItemBase,
-                isPrevious,
-                isNext
+                item: item as IMenuItemBase
               })}
               className={classNames('flex cursor-default', {
                 'bg-blue-100': focusedValue === value

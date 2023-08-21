@@ -37,6 +37,15 @@ const ITEMS: MenuItem[] = [
   }
 ];
 
+const NEXT_ITEMS: MenuItem[] = [
+  { value: 'fruit-01', label: 'Orange' },
+  { value: 'next', label: 'Berry', isNext: true }
+];
+const PREV_ITEMS: MenuItem[] = [
+  { value: 'prev', label: 'Fruits', isPrevious: true },
+  { value: 'berry-01', label: 'Strawberry' }
+];
+
 describe('MenuContainer', () => {
   const user = userEvent.setup();
 
@@ -64,7 +73,7 @@ describe('MenuContainer', () => {
               Menu
             </button>
             <ul {...getMenuProps({ hidden: !isExpanded })} data-test-id="menu">
-              {ITEMS.map((item: MenuItem) => {
+              {props.items.map((item: MenuItem) => {
                 if ('items' in item) {
                   return (
                     <li key={item.label}>
@@ -709,6 +718,134 @@ describe('MenuContainer', () => {
         const changeTypes = onChange.mock.calls.map(([change]) => change.type);
 
         expect(changeTypes).toContain(StateChangeTypes.MenuKeyDownEscape);
+      });
+
+      it('calls onChange for "next" click', async () => {
+        const { getByText } = render(
+          <TestMenu items={NEXT_ITEMS} onChange={onChange} isExpanded />
+        );
+
+        await user.click(getByText('Berry'));
+
+        const changeTypes = onChange.mock.calls.map(([change]) => change.type);
+
+        expect(changeTypes).toContain(StateChangeTypes.MenuItemClickNext);
+      });
+
+      it('calls onChange for "previous" click', async () => {
+        const { getByText } = render(
+          <TestMenu items={PREV_ITEMS} onChange={onChange} isExpanded />
+        );
+
+        await user.click(getByText('Fruits'));
+
+        const changeTypes = onChange.mock.calls.map(([change]) => change.type);
+
+        expect(changeTypes).toContain(StateChangeTypes.MenuItemClickPrevious);
+      });
+
+      it('calls onChange for "next" Enter keydown', async () => {
+        const { getByText } = render(
+          <TestMenu items={NEXT_ITEMS} onChange={onChange} isExpanded />
+        );
+
+        getByText('Berry').focus();
+        await user.keyboard('{Enter}');
+
+        const changeTypes = onChange.mock.calls.map(([change]) => change.type);
+
+        expect(changeTypes).toContain(StateChangeTypes.MenuItemKeyDownNext);
+      });
+
+      it('calls onChange for "next" Space keydown', async () => {
+        const { getByText } = render(
+          <TestMenu items={NEXT_ITEMS} onChange={onChange} isExpanded />
+        );
+
+        getByText('Berry').focus();
+        await user.keyboard(' ');
+
+        const changeTypes = onChange.mock.calls.map(([change]) => change.type);
+
+        expect(changeTypes).toContain(StateChangeTypes.MenuItemKeyDownNext);
+      });
+
+      it('calls onChange for "previous" Enter keydown', async () => {
+        const { getByText } = render(
+          <TestMenu items={PREV_ITEMS} onChange={onChange} isExpanded />
+        );
+
+        getByText('Fruits').focus();
+        await user.keyboard('{Enter}');
+
+        const changeTypes = onChange.mock.calls.map(([change]) => change.type);
+
+        expect(changeTypes).toContain(StateChangeTypes.MenuItemKeyDownPrevious);
+      });
+
+      it('calls onChange for "previous" Space keydown', async () => {
+        const { getByText } = render(
+          <TestMenu items={PREV_ITEMS} onChange={onChange} isExpanded />
+        );
+
+        getByText('Fruits').focus();
+        await user.keyboard(' ');
+
+        const changeTypes = onChange.mock.calls.map(([change]) => change.type);
+
+        expect(changeTypes).toContain(StateChangeTypes.MenuItemKeyDownPrevious);
+      });
+
+      it('calls onChange for "next" ArrowRight keydown', async () => {
+        const { getByText } = render(
+          <TestMenu items={NEXT_ITEMS} onChange={onChange} isExpanded />
+        );
+
+        getByText('Berry').focus();
+        await user.keyboard('{ArrowRight}');
+
+        const changeTypes = onChange.mock.calls.map(([change]) => change.type);
+
+        expect(changeTypes).toContain(StateChangeTypes.MenuItemKeyDownNext);
+      });
+
+      it('calls onChange for "next" ArrowLeft keydown in rtl', async () => {
+        const { getByText } = render(
+          <TestMenu items={NEXT_ITEMS} rtl onChange={onChange} isExpanded />
+        );
+
+        getByText('Berry').focus();
+        await user.keyboard('{ArrowLeft}');
+
+        const changeTypes = onChange.mock.calls.map(([change]) => change.type);
+
+        expect(changeTypes).toContain(StateChangeTypes.MenuItemKeyDownNext);
+      });
+
+      it('calls onChange for "previous" ArrowLeft keydown', async () => {
+        const { getByText } = render(
+          <TestMenu items={PREV_ITEMS} onChange={onChange} isExpanded />
+        );
+
+        getByText('Fruits').focus();
+        await user.keyboard('{ArrowLeft}');
+
+        const changeTypes = onChange.mock.calls.map(([change]) => change.type);
+
+        expect(changeTypes).toContain(StateChangeTypes.MenuItemKeyDownPrevious);
+      });
+
+      it('calls onChange for "previous" ArrowRight keydown in rtl', async () => {
+        const { getByText } = render(
+          <TestMenu items={PREV_ITEMS} rtl onChange={onChange} isExpanded />
+        );
+
+        getByText('Fruits').focus();
+        await user.keyboard('{ArrowRight}');
+
+        const changeTypes = onChange.mock.calls.map(([change]) => change.type);
+
+        expect(changeTypes).toContain(StateChangeTypes.MenuItemKeyDownPrevious);
       });
     });
   });
