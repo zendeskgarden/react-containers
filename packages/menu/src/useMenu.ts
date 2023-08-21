@@ -118,7 +118,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
     changeType => {
       dispatch({
         type: changeType,
-        payload: { ...(isExpandedControlled ? {} : { isExpanded: false }) }
+        payload: { ...(!isExpandedControlled && { isExpanded: false }) }
       });
 
       onChange({ type: changeType, isExpanded: false });
@@ -197,7 +197,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
         value,
         type,
         label,
-        ...(name ? { name } : {})
+        ...(name && { name })
       };
 
       if (type === 'checkbox') {
@@ -232,8 +232,8 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
       dispatch({
         type: changeType,
         payload: {
-          ...(isFocusedValueControlled ? {} : { focusedValue: null }),
-          ...(isExpandedControlled ? {} : { isExpanded: !controlledIsExpanded })
+          ...(!isFocusedValueControlled && { focusedValue: null }),
+          ...(!isExpandedControlled && { isExpanded: !controlledIsExpanded })
         }
       });
 
@@ -270,8 +270,8 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
           type: changeType,
           payload: {
             focusOnOpen: true,
-            ...(isFocusedValueControlled ? {} : { focusedValue: nextFocusedValue }),
-            ...(isExpandedControlled ? {} : { isExpanded: true })
+            ...(!isFocusedValueControlled && { focusedValue: nextFocusedValue }),
+            ...(!isExpandedControlled && { isExpanded: true })
           }
         });
 
@@ -332,15 +332,15 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
       dispatch({
         type: changeType,
         payload: {
-          ...(isExpandedControlled ? {} : { isExpanded: isTransitionItem }),
-          ...(!isSelectionValueControlled && nextSelection ? { selectedItems: nextSelection } : {})
+          ...(!isExpandedControlled && !isTransitionItem && { isExpanded: false }),
+          ...(!isSelectionValueControlled && nextSelection && { selectedItems: nextSelection })
         }
       });
 
       onChange({
         type: changeType,
-        ...(isTransitionItem ? {} : { isExpanded: false }),
-        ...(nextSelection ? { selectedItems: nextSelection } : {})
+        ...(!isTransitionItem && { isExpanded: false }),
+        ...(nextSelection && { selectedItems: nextSelection })
       });
     },
     [getSelectedItems, isExpandedControlled, isSelectionValueControlled, onChange]
@@ -370,13 +370,13 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
         }
 
         payload = {
-          ...(isExpandedControlled ? {} : { isExpanded: isTransitionItem }),
-          ...(!isSelectionValueControlled && nextSelection ? { selectedItems: nextSelection } : {})
+          ...(!isExpandedControlled && !isTransitionItem && { isExpanded: false }),
+          ...(!isSelectionValueControlled && nextSelection && { selectedItems: nextSelection })
         };
 
         changes = {
-          ...(isTransitionItem ? {} : { isExpanded: false }),
-          ...(nextSelection ? { selectedItems: nextSelection } : {})
+          ...(!isTransitionItem && { isExpanded: false }),
+          ...(nextSelection && { selectedItems: nextSelection })
         };
 
         if (triggerRef?.current && !item.isNext && !item.isPrevious) {
@@ -411,7 +411,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
         });
 
         payload = {
-          ...(isFocusedValueControlled ? {} : { focusedValue: nextFocusedValue })
+          ...(!isFocusedValueControlled && { focusedValue: nextFocusedValue })
         };
 
         changes = { focusedValue: nextFocusedValue };
@@ -444,7 +444,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
       dispatch({
         type: changeType,
         payload: {
-          ...(isFocusedValueControlled ? {} : { focusedValue: value })
+          ...(!isFocusedValueControlled && { focusedValue: value })
         }
       });
 
