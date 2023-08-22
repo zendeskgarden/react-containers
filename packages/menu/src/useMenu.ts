@@ -126,11 +126,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
         payload: { ...(!isExpandedControlled && { isExpanded: false }) }
       });
 
-      onChange({
-        type: changeType,
-        focusedValue: null,
-        isExpanded: false
-      });
+      onChange({ type: changeType, isExpanded: false });
     },
     [onChange, isExpandedControlled]
   );
@@ -183,8 +179,6 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
         } else if (key === KEYS.END) {
           nextIndex = values.length - 1;
         } else if (key === KEYS.HOME) {
-          nextIndex = 0;
-        } else {
           nextIndex = 0;
         }
 
@@ -350,7 +344,6 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
             isTransitionNext: isNext,
             isTransitionPrevious: isPrevious
           }),
-          ...(!isFocusedValueControlled && { focusedValue: null }),
           ...(!isExpandedControlled && !isTransitionItem && { isExpanded: false }),
           ...(!isTransitionItem && { nestedPathIds: [] }),
           ...(!isSelectionValueControlled && nextSelection && { selectedItems: nextSelection })
@@ -365,7 +358,6 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
     },
     [
       state.nestedPathIds,
-      isFocusedValueControlled,
       isExpandedControlled,
       isSelectionValueControlled,
       getSelectedItems,
@@ -452,17 +444,19 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
         const transitionNext = changeType.includes('next');
         const willTransition = changeType.includes('previous') || transitionNext;
 
+        payload = {
+          ...payload,
+          ...(willTransition && {
+            ...(isNext && { nestedPathIds: [...state.nestedPathIds, item.value] }),
+            transitionType: changeType,
+            isTransitionNext: isNext,
+            isTransitionPrevious: isPrevious
+          })
+        };
+
         dispatch({
           type: changeType,
-          payload: {
-            ...payload,
-            ...(willTransition && {
-              ...(isNext && { nestedPathIds: [...state.nestedPathIds, item.value] }),
-              transitionType: changeType,
-              isTransitionNext: isNext,
-              isTransitionPrevious: isPrevious
-            })
-          }
+          payload
         });
 
         onChange({ type: changeType, ...changes });

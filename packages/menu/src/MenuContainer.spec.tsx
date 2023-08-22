@@ -5,9 +5,8 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React, { useRef } from 'react';
-import { RenderResult, render, waitFor } from '@testing-library/react';
-import { act } from 'react-dom/test-utils';
+import React, { useCallback, useRef, useState } from 'react';
+import { RenderResult, render, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MenuItem, IMenuItemBase, IUseMenuProps, IUseMenuReturnValue } from './types';
 import { MenuContainer } from './';
@@ -37,13 +36,14 @@ const ITEMS: MenuItem[] = [
   }
 ];
 
-const NEXT_ITEMS: MenuItem[] = [
-  { value: 'fruit-01', label: 'Orange' },
-  { value: 'next', label: 'Berry', isNext: true }
+const ROOT_ITEMS: IMenuItemBase[] = [
+  { value: 'next', label: 'Next', isNext: true },
+  { value: 'item', label: 'Item' }
 ];
-const PREV_ITEMS: MenuItem[] = [
-  { value: 'prev', label: 'Fruits', isPrevious: true },
-  { value: 'berry-01', label: 'Strawberry' }
+
+const NEXT_ITEMS: IMenuItemBase[] = [
+  { value: 'prev', label: 'Previous', isPrevious: true },
+  { value: 'inner-item', label: 'Inner item' }
 ];
 
 describe('MenuContainer', () => {
@@ -58,7 +58,7 @@ describe('MenuContainer', () => {
     const triggerRef = useRef<HTMLButtonElement>(null);
     const menuRef = useRef<HTMLUListElement>(null);
 
-    const Fixture = () => (
+    return (
       <MenuContainer triggerRef={triggerRef} menuRef={menuRef} {...props}>
         {({
           isExpanded,
@@ -69,7 +69,7 @@ describe('MenuContainer', () => {
           getItemProps
         }: IUseMenuReturnValue) => (
           <>
-            <button {...getTriggerProps({ type: 'button', disabled })} data-test-id="trigger">
+            <button {...getTriggerProps({ disabled })} data-test-id="trigger">
               Menu
             </button>
             <ul {...getMenuProps({ hidden: !isExpanded })} data-test-id="menu">
@@ -110,8 +110,57 @@ describe('MenuContainer', () => {
         )}
       </MenuContainer>
     );
+  };
 
-    return <Fixture />;
+  const TestMenuNested = (
+    props: Omit<
+      IUseMenuProps<HTMLButtonElement, HTMLUListElement>,
+      'triggerRef' | 'menuRef' | 'items' | 'onChange'
+    >
+  ) => {
+    const triggerRef = useRef<HTMLButtonElement>(null);
+    const menuRef = useRef<HTMLUListElement>(null);
+    const [items, setItems] = useState(ROOT_ITEMS);
+
+    const handleChange = useCallback(({ type, isExpanded }) => {
+      const isNext = type.includes('next');
+      const isPrev = type.includes('previous');
+
+      if (isNext || isPrev) {
+        setItems(isNext ? NEXT_ITEMS : ROOT_ITEMS);
+      } else if (isExpanded === false) {
+        setItems(ROOT_ITEMS);
+      }
+    }, []);
+
+    return (
+      <MenuContainer
+        {...props}
+        items={items}
+        onChange={handleChange}
+        triggerRef={triggerRef}
+        menuRef={menuRef}
+      >
+        {({ isExpanded, getTriggerProps, getMenuProps, getItemProps }: IUseMenuReturnValue) => (
+          <>
+            <button {...getTriggerProps()} data-test-id="trigger">
+              Menu
+            </button>
+            <ul {...getMenuProps({ hidden: !isExpanded })} data-test-id="menu">
+              {items.map(item => (
+                <li
+                  {...getItemProps({ item })}
+                  key={item.value}
+                  data-test-id={`item-${item.label}`}
+                >
+                  {item.label}
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+      </MenuContainer>
+    );
   };
 
   describe('uncontrolled', () => {
@@ -514,6 +563,55 @@ describe('MenuContainer', () => {
         expect(menu).not.toBeVisible();
       });
     });
+
+    describe('submenu', () => {
+      it('focuses first item in "next" menu items', async () => {
+        const { getByText, getByTestId } = render(<TestMenuNested />);
+        const trigger = getByTestId('trigger');
+
+        trigger.focus();
+        await user.keyboard('{ArrowDown}');
+        await user.keyboard('{Enter}');
+
+        expect(getByText('Previous')).toHaveFocus();
+      });
+
+      it('returns focus to correct item if "previous" item selected', async () => {
+        const { getByText, getByTestId } = render(<TestMenuNested />);
+        const trigger = getByTestId('trigger');
+
+        trigger.focus();
+        await user.keyboard('{ArrowDown}');
+        await user.keyboard('{Enter}');
+
+        expect(getByText('Previous')).toHaveFocus();
+
+        await user.keyboard('{Enter}');
+
+        expect(getByText('Next')).toHaveFocus();
+      });
+
+      it('correctly focuses items after nested menu closed', async () => {
+        const { getByText, getByTestId } = render(<TestMenuNested />);
+        const trigger = getByTestId('trigger');
+
+        trigger.focus();
+        await user.keyboard('{ArrowDown}');
+        await user.keyboard('{Enter}');
+
+        expect(getByText('Previous')).toHaveFocus();
+
+        await user.keyboard('{ArrowDown}');
+        await user.keyboard('{Enter}');
+        await user.keyboard('{ArrowDown}');
+
+        expect(getByText('Next')).toHaveFocus();
+
+        await user.keyboard('{Enter}');
+
+        expect(getByText('Previous')).toHaveFocus();
+      });
+    });
   });
 
   describe('controlled', () => {
@@ -722,10 +820,10 @@ describe('MenuContainer', () => {
 
       it('calls onChange for "next" click', async () => {
         const { getByText } = render(
-          <TestMenu items={NEXT_ITEMS} onChange={onChange} isExpanded />
+          <TestMenu items={ROOT_ITEMS} onChange={onChange} isExpanded />
         );
 
-        await user.click(getByText('Berry'));
+        await user.click(getByText('Next'));
 
         const changeTypes = onChange.mock.calls.map(([change]) => change.type);
 
@@ -734,10 +832,10 @@ describe('MenuContainer', () => {
 
       it('calls onChange for "previous" click', async () => {
         const { getByText } = render(
-          <TestMenu items={PREV_ITEMS} onChange={onChange} isExpanded />
+          <TestMenu items={NEXT_ITEMS} onChange={onChange} isExpanded />
         );
 
-        await user.click(getByText('Fruits'));
+        await user.click(getByText('Previous'));
 
         const changeTypes = onChange.mock.calls.map(([change]) => change.type);
 
@@ -746,10 +844,10 @@ describe('MenuContainer', () => {
 
       it('calls onChange for "next" Enter keydown', async () => {
         const { getByText } = render(
-          <TestMenu items={NEXT_ITEMS} onChange={onChange} isExpanded />
+          <TestMenu items={ROOT_ITEMS} onChange={onChange} isExpanded />
         );
 
-        getByText('Berry').focus();
+        getByText('Next').focus();
         await user.keyboard('{Enter}');
 
         const changeTypes = onChange.mock.calls.map(([change]) => change.type);
@@ -759,10 +857,10 @@ describe('MenuContainer', () => {
 
       it('calls onChange for "next" Space keydown', async () => {
         const { getByText } = render(
-          <TestMenu items={NEXT_ITEMS} onChange={onChange} isExpanded />
+          <TestMenu items={ROOT_ITEMS} onChange={onChange} isExpanded />
         );
 
-        getByText('Berry').focus();
+        getByText('Next').focus();
         await user.keyboard(' ');
 
         const changeTypes = onChange.mock.calls.map(([change]) => change.type);
@@ -772,10 +870,10 @@ describe('MenuContainer', () => {
 
       it('calls onChange for "previous" Enter keydown', async () => {
         const { getByText } = render(
-          <TestMenu items={PREV_ITEMS} onChange={onChange} isExpanded />
+          <TestMenu items={NEXT_ITEMS} onChange={onChange} isExpanded />
         );
 
-        getByText('Fruits').focus();
+        getByText('Previous').focus();
         await user.keyboard('{Enter}');
 
         const changeTypes = onChange.mock.calls.map(([change]) => change.type);
@@ -785,10 +883,10 @@ describe('MenuContainer', () => {
 
       it('calls onChange for "previous" Space keydown', async () => {
         const { getByText } = render(
-          <TestMenu items={PREV_ITEMS} onChange={onChange} isExpanded />
+          <TestMenu items={NEXT_ITEMS} onChange={onChange} isExpanded />
         );
 
-        getByText('Fruits').focus();
+        getByText('Previous').focus();
         await user.keyboard(' ');
 
         const changeTypes = onChange.mock.calls.map(([change]) => change.type);
@@ -798,10 +896,10 @@ describe('MenuContainer', () => {
 
       it('calls onChange for "next" ArrowRight keydown', async () => {
         const { getByText } = render(
-          <TestMenu items={NEXT_ITEMS} onChange={onChange} isExpanded />
+          <TestMenu items={ROOT_ITEMS} onChange={onChange} isExpanded />
         );
 
-        getByText('Berry').focus();
+        getByText('Next').focus();
         await user.keyboard('{ArrowRight}');
 
         const changeTypes = onChange.mock.calls.map(([change]) => change.type);
@@ -811,10 +909,10 @@ describe('MenuContainer', () => {
 
       it('calls onChange for "next" ArrowLeft keydown in rtl', async () => {
         const { getByText } = render(
-          <TestMenu items={NEXT_ITEMS} rtl onChange={onChange} isExpanded />
+          <TestMenu items={ROOT_ITEMS} rtl onChange={onChange} isExpanded />
         );
 
-        getByText('Berry').focus();
+        getByText('Next').focus();
         await user.keyboard('{ArrowLeft}');
 
         const changeTypes = onChange.mock.calls.map(([change]) => change.type);
@@ -824,10 +922,10 @@ describe('MenuContainer', () => {
 
       it('calls onChange for "previous" ArrowLeft keydown', async () => {
         const { getByText } = render(
-          <TestMenu items={PREV_ITEMS} onChange={onChange} isExpanded />
+          <TestMenu items={NEXT_ITEMS} onChange={onChange} isExpanded />
         );
 
-        getByText('Fruits').focus();
+        getByText('Previous').focus();
         await user.keyboard('{ArrowLeft}');
 
         const changeTypes = onChange.mock.calls.map(([change]) => change.type);
@@ -837,10 +935,10 @@ describe('MenuContainer', () => {
 
       it('calls onChange for "previous" ArrowRight keydown in rtl', async () => {
         const { getByText } = render(
-          <TestMenu items={PREV_ITEMS} rtl onChange={onChange} isExpanded />
+          <TestMenu items={NEXT_ITEMS} rtl onChange={onChange} isExpanded />
         );
 
-        getByText('Fruits').focus();
+        getByText('Previous').focus();
         await user.keyboard('{ArrowRight}');
 
         const changeTypes = onChange.mock.calls.map(([change]) => change.type);

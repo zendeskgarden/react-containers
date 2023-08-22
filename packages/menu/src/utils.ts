@@ -88,7 +88,6 @@ export const stateReducer: Reducer<ReducerState, ReducerAction> = (state, action
     case StateChangeTypes.TriggerKeyDownArrowDown:
     case StateChangeTypes.TriggerKeyDownArrowUp: {
       const { focusOnOpen, focusedValue, isExpanded } = action.payload;
-
       const stateChanges = { focusOnOpen, focusedValue, isExpanded };
 
       if (Object.values(stateChanges).some(hasValue)) {
@@ -114,7 +113,6 @@ export const stateReducer: Reducer<ReducerState, ReducerAction> = (state, action
         isTransitionNext,
         isTransitionPrevious
       } = action.payload;
-
       const stateChanges = {
         selectedItems,
         isExpanded,
@@ -149,7 +147,6 @@ export const stateReducer: Reducer<ReducerState, ReducerAction> = (state, action
         isTransitionNext,
         isTransitionPrevious
       } = action.payload;
-
       const stateChanges = {
         focusedValue,
         nestedPathIds,
@@ -170,7 +167,6 @@ export const stateReducer: Reducer<ReducerState, ReducerAction> = (state, action
 
     case StateChangeTypes.FnMenuTransitionFinish: {
       const { focusOnOpen, focusedValue, nestedPathIds, valuesRef } = action.payload;
-
       const stateChanges = { focusOnOpen, focusedValue, nestedPathIds, valuesRef };
 
       if (Object.values(stateChanges).some(hasValue)) {
