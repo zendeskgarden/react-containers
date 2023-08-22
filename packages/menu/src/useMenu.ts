@@ -454,11 +454,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
           })
         };
 
-        dispatch({
-          type: changeType,
-          payload
-        });
-
+        dispatch({ type: changeType, payload });
         onChange({ type: changeType, ...changes });
       }
     },

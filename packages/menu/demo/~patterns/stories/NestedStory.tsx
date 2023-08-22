@@ -62,12 +62,15 @@ export const NestedStory: StoryFn<UseMenuProps> = ({ rtl, onChange, items }) => 
               })}
               key={value}
             >
+              {isPrevious && <span className="sr-only">Back to main menu</span>}
+              {isNext && <span className="sr-only">Go to submenu</span>}
+
               <span className="inline-flex justify-center items-center w-4">
-                {isPrevious && '<'}
+                {isPrevious && <span aria-hidden="true">&lt;</span>}
               </span>
               {value}
               <span className="ms-auto inline-flex justify-center items-center w-4">
-                {isNext && '>'}
+                {isNext && <span aria-hidden="true">&gt;</span>}
               </span>
             </li>
           );
