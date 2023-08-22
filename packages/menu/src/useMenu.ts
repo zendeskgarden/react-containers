@@ -201,7 +201,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
     [menuItems, values]
   );
 
-  const getSelectionValue = useCallback(
+  const getSelectedItems = useCallback(
     ({ value, type, name, label, selected }) => {
       let changes: ISelectedItem[] | null = [...controlledSelectedItems];
 
@@ -342,7 +342,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
         changeType = StateChangeTypes.MenuItemClickPrevious;
       }
 
-      const nextSelection = getSelectionValue(item);
+      const nextSelection = getSelectedItems(item);
 
       dispatch({
         type: changeType,
@@ -371,7 +371,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
       isFocusedValueControlled,
       isExpandedControlled,
       isSelectionValueControlled,
-      getSelectionValue,
+      getSelectedItems,
       onChange
     ]
   );
@@ -384,7 +384,6 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
       const isJumpKey = [KEYS.HOME, KEYS.END].includes(key);
       const isSelectKey = [KEYS.SPACE, KEYS.ENTER].includes(key);
       const isVerticalArrowKeys = [KEYS.UP, KEYS.DOWN].includes(key);
-      const isHorizontalArrowKeys = [KEYS.RIGHT, KEYS.LEFT].includes(key);
       const isAlphanumericChar = key.length === 1 && /\S/u.test(key);
 
       const isTransitionItem = isNext || isPrevious;
@@ -395,7 +394,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
 
       if (isSelectKey) {
         changeType = StateChangeTypes[toMenuItemKeyDownType(key)];
-        const nextSelection = getSelectionValue(item);
+        const nextSelection = getSelectedItems(item);
 
         if (isNext) {
           changeType = StateChangeTypes.MenuItemKeyDownNext;
@@ -417,25 +416,21 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
         if (triggerRef?.current && !isTransitionItem) {
           triggerRef.current.focus();
         }
-      } else if (isHorizontalArrowKeys) {
-        if (key === KEYS.RIGHT) {
-          if (rtl && isPrevious) {
-            changeType = StateChangeTypes.MenuItemKeyDownPrevious;
-          }
-
-          if (!rtl && isNext) {
-            changeType = StateChangeTypes.MenuItemKeyDownNext;
-          }
+      } else if (key === KEYS.RIGHT) {
+        if (rtl && isPrevious) {
+          changeType = StateChangeTypes.MenuItemKeyDownPrevious;
         }
 
-        if (key === KEYS.LEFT) {
-          if (rtl && isNext) {
-            changeType = StateChangeTypes.MenuItemKeyDownNext;
-          }
+        if (!rtl && isNext) {
+          changeType = StateChangeTypes.MenuItemKeyDownNext;
+        }
+      } else if (key === KEYS.LEFT) {
+        if (rtl && isNext) {
+          changeType = StateChangeTypes.MenuItemKeyDownNext;
+        }
 
-          if (!rtl && isPrevious) {
-            changeType = StateChangeTypes.MenuItemKeyDownPrevious;
-          }
+        if (!rtl && isPrevious) {
+          changeType = StateChangeTypes.MenuItemKeyDownPrevious;
         }
       } else if (isVerticalArrowKeys || isJumpKey || isAlphanumericChar) {
         changeType = isAlphanumericChar
@@ -444,9 +439,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
         const nextFocusedValue = getNextFocusedValue({
           value: item.value,
           key,
-          isAlphanumericChar,
-          isPrevious,
-          isNext
+          isAlphanumericChar
         });
 
         payload = {
@@ -487,7 +480,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
       isFocusedValueControlled,
       isSelectionValueControlled,
       getNextFocusedValue,
-      getSelectionValue,
+      getSelectedItems,
       onChange
     ]
   );
