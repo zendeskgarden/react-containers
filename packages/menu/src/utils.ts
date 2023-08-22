@@ -7,6 +7,7 @@
 
 import { Reducer } from 'react';
 import { KEYS } from '@zendeskgarden/container-utilities';
+import pickBy from 'lodash.pickby';
 import { MenuItem, IMenuItemBase, IMenuItemSeparator, ISelectedItem } from './types';
 
 export const StateChangeTypes: Record<string, string> = {
@@ -45,6 +46,8 @@ export const isValidItem = (item: MenuItem) =>
 
 export const toMenuItemKeyDownType = (type: string): keyof typeof StateChangeTypes =>
   `MenuItemKeyDown${type === KEYS.SPACE ? 'Space' : type}`;
+
+const hasValue = (v: any) => v !== undefined;
 
 type ReducerState = {
   /** Nested menu transition state */
@@ -86,12 +89,12 @@ export const stateReducer: Reducer<ReducerState, ReducerAction> = (state, action
     case StateChangeTypes.TriggerKeyDownArrowUp: {
       const { focusOnOpen, focusedValue, isExpanded } = action.payload;
 
-      if (isExpanded !== undefined || focusOnOpen !== undefined || focusedValue !== undefined) {
+      const stateChanges = { focusOnOpen, focusedValue, isExpanded };
+
+      if (Object.values(stateChanges).some(hasValue)) {
         changes = {
           ...(changes || state),
-          ...(isExpanded === undefined ? {} : { isExpanded }),
-          ...(focusedValue === undefined ? {} : { focusedValue }),
-          ...(focusOnOpen === undefined ? {} : { focusOnOpen })
+          ...pickBy(stateChanges, hasValue)
         };
       }
 
@@ -112,22 +115,19 @@ export const stateReducer: Reducer<ReducerState, ReducerAction> = (state, action
         isTransitionPrevious
       } = action.payload;
 
-      if (
-        isExpanded !== undefined ||
-        selectedItems !== undefined ||
-        nestedPathIds !== undefined ||
-        transitionType !== undefined ||
-        isTransitionPrevious !== undefined ||
-        isTransitionNext !== undefined
-      ) {
+      const stateChanges = {
+        selectedItems,
+        isExpanded,
+        nestedPathIds,
+        transitionType,
+        isTransitionNext,
+        isTransitionPrevious
+      };
+
+      if (Object.values(stateChanges).some(hasValue)) {
         changes = {
           ...(changes || state),
-          ...(isExpanded === undefined ? {} : { isExpanded }),
-          ...(nestedPathIds === undefined ? {} : { nestedPathIds }),
-          ...(transitionType === undefined ? {} : { transitionType }),
-          ...(isTransitionPrevious === undefined ? {} : { isTransitionPrevious }),
-          ...(isTransitionNext === undefined ? {} : { isTransitionNext }),
-          ...(selectedItems === undefined ? {} : { selectedItems })
+          ...pickBy(stateChanges, hasValue)
         };
       }
 
@@ -150,20 +150,18 @@ export const stateReducer: Reducer<ReducerState, ReducerAction> = (state, action
         isTransitionPrevious
       } = action.payload;
 
-      if (
-        focusedValue !== undefined ||
-        nestedPathIds !== undefined ||
-        transitionType !== undefined ||
-        isTransitionPrevious !== undefined ||
-        isTransitionNext !== undefined
-      ) {
+      const stateChanges = {
+        focusedValue,
+        nestedPathIds,
+        transitionType,
+        isTransitionNext,
+        isTransitionPrevious
+      };
+
+      if (Object.values(stateChanges).some(hasValue)) {
         changes = {
           ...(changes || state),
-          ...(nestedPathIds === undefined ? {} : { nestedPathIds }),
-          ...(transitionType === undefined ? {} : { transitionType }),
-          ...(isTransitionPrevious === undefined ? {} : { isTransitionPrevious }),
-          ...(isTransitionNext === undefined ? {} : { isTransitionNext }),
-          focusedValue
+          ...pickBy(stateChanges, hasValue)
         };
       }
 
@@ -173,18 +171,12 @@ export const stateReducer: Reducer<ReducerState, ReducerAction> = (state, action
     case StateChangeTypes.FnMenuTransitionFinish: {
       const { focusOnOpen, focusedValue, nestedPathIds, valuesRef } = action.payload;
 
-      if (
-        focusOnOpen !== undefined ||
-        focusedValue !== undefined ||
-        nestedPathIds !== undefined ||
-        valuesRef !== undefined
-      ) {
+      const stateChanges = { focusOnOpen, focusedValue, nestedPathIds, valuesRef };
+
+      if (Object.values(stateChanges).some(hasValue)) {
         changes = {
           ...(changes || state),
-          ...(valuesRef === undefined ? {} : { valuesRef }),
-          ...(nestedPathIds === undefined ? {} : { nestedPathIds }),
-          ...(focusOnOpen === undefined ? {} : { focusOnOpen }),
-          ...(focusedValue === undefined ? {} : { focusedValue }),
+          ...pickBy(stateChanges, hasValue),
           transitionType: null,
           isTransitionNext: false,
           isTransitionPrevious: false

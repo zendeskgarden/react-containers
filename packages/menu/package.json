@@ -22,12 +22,16 @@
   "dependencies": {
     "@babel/runtime": "^7.8.4",
     "@zendeskgarden/container-selection": "^3.0.2",
-    "@zendeskgarden/container-utilities": "^1.0.8"
+    "@zendeskgarden/container-utilities": "^1.0.8",
+    "lodash.pickby": "^4.6.0"
   },
   "peerDependencies": {
     "prop-types": "^15.6.1",
     "react": ">=16.8.0",
     "react-dom": ">=16.8.0"
+  },
+  "devDependencies": {
+    "@types/lodash.pickby": "^4.6.7"
   },
   "keywords": [
     "a11y",
