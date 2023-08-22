@@ -318,12 +318,13 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
 
   const handleItemClick = useCallback(
     item => {
+      const { isNext, isPrevious } = item;
+      const isTransitionItem = isNext || isPrevious;
       let changeType = StateChangeTypes.MenuItemClick;
-      const isTransitionItem = item.isNext || item.isPrevious;
 
-      if (item.isNext) {
+      if (isNext) {
         changeType = StateChangeTypes.MenuItemClickNext;
-      } else if (item.isPrevious) {
+      } else if (isPrevious) {
         changeType = StateChangeTypes.MenuItemClickPrevious;
       }
 
@@ -349,11 +350,12 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
   const handleItemKeyDown = useCallback(
     (event, item) => {
       const { key } = event;
+      const { isNext, isPrevious } = item;
       const isJumpKey = [KEYS.HOME, KEYS.END].includes(key);
       const isSelectKey = [KEYS.SPACE, KEYS.ENTER].includes(key);
       const isVerticalArrowKeys = [KEYS.UP, KEYS.DOWN].includes(key);
       const isAlphanumericChar = key.length === 1 && /\S/u.test(key);
-      const isTransitionItem = item.isNext || item.isPrevious;
+      const isTransitionItem = isNext || isPrevious;
 
       let changeType;
       let payload = {};
@@ -363,9 +365,9 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
         changeType = StateChangeTypes[toMenuItemKeyDownType(key)];
         const nextSelection = getSelectedItems(item);
 
-        if (item.isNext) {
+        if (isNext) {
           changeType = StateChangeTypes.MenuItemKeyDownNext;
-        } else if (item.isPrevious) {
+        } else if (isPrevious) {
           changeType = StateChangeTypes.MenuItemKeyDownPrevious;
         }
 
@@ -379,23 +381,23 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
           ...(nextSelection && { selectedItems: nextSelection })
         };
 
-        if (triggerRef?.current && !item.isNext && !item.isPrevious) {
+        if (triggerRef?.current && !isNext && !isPrevious) {
           triggerRef.current.focus();
         }
       } else if (key === KEYS.RIGHT) {
-        if (rtl && item.isPrevious) {
+        if (rtl && isPrevious) {
           changeType = StateChangeTypes.MenuItemKeyDownPrevious;
         }
 
-        if (!rtl && item.isNext) {
+        if (!rtl && isNext) {
           changeType = StateChangeTypes.MenuItemKeyDownNext;
         }
       } else if (key === KEYS.LEFT) {
-        if (rtl && item.isNext) {
+        if (rtl && isNext) {
           changeType = StateChangeTypes.MenuItemKeyDownNext;
         }
 
-        if (!rtl && item.isPrevious) {
+        if (!rtl && isPrevious) {
           changeType = StateChangeTypes.MenuItemKeyDownPrevious;
         }
       } else if (isVerticalArrowKeys || isJumpKey || isAlphanumericChar) {
@@ -404,8 +406,6 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
           : StateChangeTypes[toMenuItemKeyDownType(key)];
         const nextFocusedValue = getNextFocusedValue({
           value: item.value,
-          isPrevious: item.isPrevious,
-          isNext: item.isNext,
           isAlphanumericChar,
           key
         });
