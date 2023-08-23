@@ -16,4 +16,4 @@ let idCounter = 0;
  *
  * @returns A generated ID that can be passed to accessibility attributes
  */
-export const useId = (id: any): string | number => useReachId(id) || `id:${idCounter++}`;
+export const useId = (id: any) => useReachId(id) || `id:${idCounter++}`;
