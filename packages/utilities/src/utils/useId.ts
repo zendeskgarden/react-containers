@@ -5,7 +5,15 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
+import { useId as useReachId } from '@reach/auto-id';
+
+let idCounter = 0;
+
 /**
- * Autogenerate IDs to facilitate WAI-ARIA and server rendering from @reach, https://reach.tech/auto-id.
+ * Hook for generating a unique ID
+ *
+ * @param id A user provided ID
+ *
+ * @returns A generated ID that can be passed to accessibility attributes
  */
-export * from '@reach/auto-id';
+export const useId = (id: any) => useReachId(id) || `id:${idCounter++}`;
