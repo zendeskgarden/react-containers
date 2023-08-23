@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.0.1](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-accordion@3.0.0...@zendeskgarden/container-accordion@3.0.1) (2023-08-23)
+
+**Note:** Version bump only for package @zendeskgarden/container-accordion
+
 # [3.0.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-accordion@2.0.8...@zendeskgarden/container-accordion@3.0.0) (2023-08-03)
 
 - **feat(accordion)!:** add sections prop ([#572](https://github.com/zendeskgarden/react-containers/issues/572)) ([e5cc2e1](https://github.com/zendeskgarden/react-containers/commit/e5cc2e1659fb0ed75a070cb808c21ec6a475f69b))
