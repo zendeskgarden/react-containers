@@ -7,7 +7,6 @@
 
 import { Reducer } from 'react';
 import { KEYS } from '@zendeskgarden/container-utilities';
-import pickBy from 'lodash.pickby';
 import { MenuItem, IMenuItemBase, IMenuItemSeparator, ISelectedItem } from './types';
 
 export const StateChangeTypes: Record<string, string> = {
@@ -47,7 +46,18 @@ export const isValidItem = (item: MenuItem) =>
 export const toMenuItemKeyDownType = (type: string): keyof typeof StateChangeTypes =>
   `MenuItemKeyDown${type === KEYS.SPACE ? 'Space' : type}`;
 
-const hasValue = (v: any) => v !== undefined;
+const getStateChanges = (changes: Record<string, any>): Record<string, any> | null => {
+  let retVal = null;
+
+  for (const change in changes) {
+    if (changes[change] === undefined) continue;
+
+    retVal ||= {} as Record<string, any>;
+    retVal[change] = changes[change];
+  }
+
+  return retVal;
+};
 
 type ReducerState = {
   /** Nested menu transition state */
@@ -88,12 +98,12 @@ export const stateReducer: Reducer<ReducerState, ReducerAction> = (state, action
     case StateChangeTypes.TriggerKeyDownArrowDown:
     case StateChangeTypes.TriggerKeyDownArrowUp: {
       const { focusOnOpen, focusedValue, isExpanded } = action.payload;
-      const stateChanges = { focusOnOpen, focusedValue, isExpanded };
+      const stateChanges = getStateChanges({ focusOnOpen, focusedValue, isExpanded });
 
-      if (Object.values(stateChanges).some(hasValue)) {
+      if (stateChanges) {
         changes = {
           ...(changes || state),
-          ...pickBy(stateChanges, hasValue)
+          ...stateChanges
         };
       }
 
@@ -113,19 +123,19 @@ export const stateReducer: Reducer<ReducerState, ReducerAction> = (state, action
         isTransitionNext,
         isTransitionPrevious
       } = action.payload;
-      const stateChanges = {
+      const stateChanges = getStateChanges({
         selectedItems,
         isExpanded,
         nestedPathIds,
         transitionType,
         isTransitionNext,
         isTransitionPrevious
-      };
+      });
 
-      if (Object.values(stateChanges).some(hasValue)) {
+      if (stateChanges) {
         changes = {
           ...(changes || state),
-          ...pickBy(stateChanges, hasValue)
+          ...stateChanges
         };
       }
 
@@ -147,18 +157,18 @@ export const stateReducer: Reducer<ReducerState, ReducerAction> = (state, action
         isTransitionNext,
         isTransitionPrevious
       } = action.payload;
-      const stateChanges = {
+      const stateChanges = getStateChanges({
         focusedValue,
         nestedPathIds,
         transitionType,
         isTransitionNext,
         isTransitionPrevious
-      };
+      });
 
-      if (Object.values(stateChanges).some(hasValue)) {
+      if (stateChanges) {
         changes = {
           ...(changes || state),
-          ...pickBy(stateChanges, hasValue)
+          ...stateChanges
         };
       }
 
@@ -167,12 +177,12 @@ export const stateReducer: Reducer<ReducerState, ReducerAction> = (state, action
 
     case StateChangeTypes.FnMenuTransitionFinish: {
       const { focusOnOpen, focusedValue, nestedPathIds, valuesRef } = action.payload;
-      const stateChanges = { focusOnOpen, focusedValue, nestedPathIds, valuesRef };
+      const stateChanges = getStateChanges({ focusOnOpen, focusedValue, nestedPathIds, valuesRef });
 
-      if (Object.values(stateChanges).some(hasValue)) {
+      if (stateChanges) {
         changes = {
           ...(changes || state),
-          ...pickBy(stateChanges, hasValue),
+          ...stateChanges,
           transitionType: null,
           isTransitionNext: false,
           isTransitionPrevious: false
