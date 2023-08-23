@@ -18,9 +18,13 @@ describe('useId()', () => {
   });
 
   it('generates ID', () => {
-    const { result } = renderHook(() => useId(undefined));
+    const { result, hydrate } = renderHook(() => useId(undefined));
 
     expect(result.current).toContain('id:');
+
+    hydrate();
+
+    expect(result.current).toBeGreaterThanOrEqual(0);
   });
 
   it('accepts an ID', () => {
