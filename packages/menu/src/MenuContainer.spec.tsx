@@ -260,11 +260,28 @@ describe('MenuContainer', () => {
           expect(firstItem).toHaveFocus();
         });
 
-        it('focuses defaultFocusedValue', () => {
-          const { getByText } = render(
-            <TestMenu items={ITEMS} defaultFocusedValue="plant-04" isExpanded />
+        it('focuses defaultFocusedValue on ArrowDown keydown', async () => {
+          const { getByText, getByTestId } = render(
+            <TestMenu items={ITEMS} defaultFocusedValue="plant-04" />
           );
+          const trigger = getByTestId('trigger');
           const item = getByText('Succulent');
+
+          trigger.focus();
+          await user.keyboard('{ArrowDown}');
+
+          expect(item).toHaveFocus();
+        });
+
+        it('focuses defaultFocusedValue on Enter keydown', async () => {
+          const { getByText, getByTestId } = render(
+            <TestMenu items={ITEMS} defaultFocusedValue="plant-04" />
+          );
+          const trigger = getByTestId('trigger');
+          const item = getByText('Succulent');
+
+          trigger.focus();
+          await user.keyboard('{Enter}');
 
           expect(item).toHaveFocus();
         });

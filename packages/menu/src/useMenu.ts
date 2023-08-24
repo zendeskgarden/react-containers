@@ -90,8 +90,8 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
   const [menuVisible, setMenuVisible] = useState<boolean>(false);
 
   const [state, dispatch] = useReducer(stateReducer, {
-    focusedValue: defaultFocusedValue,
-    isExpanded: defaultExpanded,
+    focusedValue: focusedValue || defaultFocusedValue,
+    isExpanded: isExpanded || defaultExpanded,
     selectedItems: [],
     valuesRef: values,
     focusOnOpen: false,
@@ -291,19 +291,21 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
           type: changeType,
           payload: {
             focusOnOpen: true,
-            ...(!isFocusedValueControlled && { focusedValue: nextFocusedValue }),
+            ...(!isFocusedValueControlled && {
+              focusedValue: defaultFocusedValue || nextFocusedValue
+            }),
             ...(!isExpandedControlled && { isExpanded: true })
           }
         });
 
         onChange({
           type: changeType,
-          focusedValue: nextFocusedValue,
+          focusedValue: defaultFocusedValue || nextFocusedValue,
           isExpanded: true
         });
       }
     },
-    [isExpandedControlled, isFocusedValueControlled, onChange, values]
+    [isExpandedControlled, isFocusedValueControlled, defaultFocusedValue, onChange, values]
   );
 
   // How to control open/close with keydown
