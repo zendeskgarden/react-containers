@@ -17,10 +17,14 @@ describe('useId()', () => {
     console.error = jest.fn();
   });
 
-  it('generates ID', () => {
-    const { result, hydrate } = renderHook(() => useId(undefined));
+  it('generates SSR ID', () => {
+    const { result } = renderHook(() => useId());
 
     expect(result.current).toContain('id:');
+  });
+
+  it('generates CSR ID', () => {
+    const { result, hydrate } = renderHook(() => useId());
 
     hydrate();
 
