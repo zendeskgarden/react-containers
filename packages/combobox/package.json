@@ -1,6 +1,6 @@
 {
   "name": "@zendeskgarden/container-combobox",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Containers relating to Combobox in the Garden Design System",
   "license": "Apache-2.0",
   "author": "Zendesk Garden <garden@zendesk.com>",
@@ -21,8 +21,8 @@
   "types": "dist/typings/index.d.ts",
   "dependencies": {
     "@babel/runtime": "^7.8.4",
-    "@zendeskgarden/container-field": "^3.0.8",
-    "@zendeskgarden/container-utilities": "^1.0.9",
+    "@zendeskgarden/container-field": "^3.0.9",
+    "@zendeskgarden/container-utilities": "^1.0.10",
     "downshift": "^8.0.0"
   },
   "peerDependencies": {
