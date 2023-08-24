@@ -58,10 +58,10 @@ export const useCombobox = <
     altKey?: boolean;
   }
 
-  const prefix = `${useId(idPrefix)}-`;
   const [triggerContainsInput, setTriggerContainsInput] = useState<boolean>();
   const [matchValue, setMatchValue] = useState('');
   const matchTimeoutRef = useRef<number>();
+  const prefixRef = useRef(`${useId(idPrefix)}-`);
   const previousStateRef = useRef<IPreviousState>();
   const labels: Record<string, string> = useMemo(() => ({}), []);
   const selectedValues: OptionValue[] = useMemo(() => [], []);
@@ -266,8 +266,8 @@ export const useCombobox = <
 
   const getOptionId = useCallback(
     (index: number, isDisabled?: boolean) =>
-      `${prefix}-option${isDisabled ? '-disabled' : ''}-${index}`,
-    [prefix]
+      `${prefixRef.current}-option${isDisabled ? '-disabled' : ''}-${index}`,
+    []
   );
 
   /** Hooks */
@@ -286,9 +286,9 @@ export const useCombobox = <
     setHighlightedIndex,
     selectItem
   } = useDownshift<OptionValue | OptionValue[]>({
-    id: prefix,
-    toggleButtonId: `${prefix}-trigger`,
-    menuId: `${prefix}-listbox`,
+    id: prefixRef.current,
+    toggleButtonId: `${prefixRef.current}-trigger`,
+    menuId: `${prefixRef.current}-listbox`,
     getItemId: getOptionId,
     items: values,
     inputValue,
