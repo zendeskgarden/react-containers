@@ -8,7 +8,7 @@
 import React, { useRef } from 'react';
 import { StoryFn } from '@storybook/react';
 import classNames from 'classnames';
-import { IUseMenuProps, IMenuItemBase, useMenu } from '@zendeskgarden/container-menu';
+import { IUseMenuProps, useMenu } from '@zendeskgarden/container-menu';
 
 type UseMenuProps = IUseMenuProps<HTMLButtonElement, HTMLUListElement>;
 
@@ -29,7 +29,7 @@ export const NestedStory: StoryFn<UseMenuProps> = ({ rtl, onChange, items }) => 
     menuRef,
     onChange,
     rtl
-  } as UseMenuProps);
+  });
 
   return (
     <div className="relative" dir={rtl ? 'rtl' : 'ltr'}>
@@ -52,28 +52,32 @@ export const NestedStory: StoryFn<UseMenuProps> = ({ rtl, onChange, items }) => 
             );
           }
 
-          const { value, isNext, isPrevious } = item as IMenuItemBase;
+          if ('value' in item) {
+            const { value, isNext, isPrevious } = item;
 
-          return (
-            <li
-              {...getItemProps({ item: item as IMenuItemBase })}
-              className={classNames('flex cursor-default', {
-                'bg-blue-100': focusedValue === value
-              })}
-              key={value}
-            >
-              {isPrevious && <span className="sr-only">Back to main menu</span>}
-              {isNext && <span className="sr-only">Go to submenu</span>}
+            return (
+              <li
+                {...getItemProps({ item })}
+                className={classNames('flex cursor-default', {
+                  'bg-blue-100': focusedValue === value
+                })}
+                key={value}
+              >
+                {isPrevious && <span className="sr-only">Back to main menu</span>}
+                {isNext && <span className="sr-only">Go to submenu</span>}
 
-              <span className="inline-flex justify-center items-center w-4">
-                {isPrevious && <span aria-hidden="true">&lt;</span>}
-              </span>
-              {value}
-              <span className="ms-auto inline-flex justify-center items-center w-4">
-                {isNext && <span aria-hidden="true">&gt;</span>}
-              </span>
-            </li>
-          );
+                <span className="inline-flex justify-center items-center w-4">
+                  {isPrevious && <span aria-hidden="true">&lt;</span>}
+                </span>
+                {value}
+                <span className="ms-auto inline-flex justify-center items-center w-4">
+                  {isNext && <span aria-hidden="true">&gt;</span>}
+                </span>
+              </li>
+            );
+          }
+
+          return null;
         })}
       </ul>
     </div>

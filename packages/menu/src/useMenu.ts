@@ -5,7 +5,15 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import { RefObject, createRef, useCallback, useEffect, useMemo, useReducer, useState } from 'react';
+import React, {
+  RefObject,
+  createRef,
+  useCallback,
+  useEffect,
+  useMemo,
+  useReducer,
+  useState
+} from 'react';
 import { useSelection } from '@zendeskgarden/container-selection';
 import {
   KEYS,
@@ -120,7 +128,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
   // Internal
 
   const closeMenu = useCallback(
-    changeType => {
+    (changeType: string) => {
       dispatch({
         type: changeType,
         payload: { ...(!isExpandedControlled && { isExpanded: false }) }
@@ -132,7 +140,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
   );
 
   const isItemSelected = useCallback(
-    (type, name, value) => {
+    (value: string, type?: string, name?: string): boolean | undefined => {
       switch (type) {
         case 'checkbox': {
           return !!controlledSelectedItems.find(item => item.value === value);
@@ -155,7 +163,15 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
   );
 
   const getNextFocusedValue = useCallback(
-    ({ value, key, isAlphanumericChar }) => {
+    ({
+      value,
+      key,
+      isAlphanumericChar
+    }: {
+      value: string;
+      key: string;
+      isAlphanumericChar?: boolean;
+    }) => {
       let nextFocusedValue = value;
 
       if (isAlphanumericChar) {
@@ -229,7 +245,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
   // Event
 
   const handleTriggerClick = useCallback(
-    event => {
+    (event: React.MouseEvent) => {
       event.stopPropagation();
 
       const changeType = StateChangeTypes.TriggerClick;
@@ -252,7 +268,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
   );
 
   const handleTriggerKeyDown = useCallback(
-    event => {
+    (event: React.KeyboardEvent) => {
       const { key } = event;
       const isArrowKey = [KEYS.DOWN, KEYS.UP].includes(key);
       const isSelectKey = [KEYS.ENTER, KEYS.SPACE].includes(key);
@@ -292,7 +308,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
 
   // How to control open/close with keydown
   const handleMenuKeyDown = useCallback(
-    ({ key }) => {
+    ({ key }: { key: string }) => {
       if ([KEYS.ESCAPE, KEYS.TAB].includes(key)) {
         const type = StateChangeTypes[key === KEYS.ESCAPE ? 'MenuKeyDownEscape' : 'MenuKeyDownTab'];
 
@@ -307,10 +323,10 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
   );
 
   const handleMenuBlur = useCallback(
-    event => {
+    (event: MouseEvent) => {
       const path = event.composedPath();
 
-      if (!path.includes(menuRef.current) && !path.includes(triggerRef.current)) {
+      if (!path.includes(menuRef.current!) && !path.includes(triggerRef.current!)) {
         closeMenu(StateChangeTypes.MenuBlur);
       }
     },
@@ -322,7 +338,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
   }, [onChange]);
 
   const handleItemClick = useCallback(
-    item => {
+    (item: IMenuItemBase & { selected?: boolean }) => {
       let changeType = StateChangeTypes.MenuItemClick;
       const { isNext, isPrevious } = item;
       const isTransitionItem = isNext || isPrevious;
@@ -366,7 +382,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
   );
 
   const handleItemKeyDown = useCallback(
-    (event, item) => {
+    (event: React.KeyboardEvent, item: IMenuItemBase & { selected?: boolean }) => {
       const { key } = event;
       const { isNext, isPrevious } = item;
 
@@ -472,7 +488,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
   );
 
   const handleItemMouseEnter = useCallback(
-    value => {
+    (value: string) => {
       const changeType = StateChangeTypes.MenuItemMouseMove;
 
       dispatch({
@@ -665,7 +681,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
         itemRole = 'menuitemcheckbox';
       }
 
-      const selected = isItemSelected(type, name, value);
+      const selected = isItemSelected(value, type, name);
 
       /**
        * The "select" of useSelection isn't
@@ -698,7 +714,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
         onClick: composeEventHandlers(onClick, () =>
           handleItemClick({ ...item, label, selected, isNext, isPrevious })
         ),
-        onKeyDown: composeEventHandlers(onKeyDown, (e: KeyboardEvent) =>
+        onKeyDown: composeEventHandlers(onKeyDown, (e: React.KeyboardEvent) =>
           handleItemKeyDown(e, { ...item, label, selected, isNext, isPrevious })
         ),
         onMouseEnter: composeEventHandlers(onMouseEnter, () => handleItemMouseEnter(value))
