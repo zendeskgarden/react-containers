@@ -638,6 +638,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
       'data-garden-container-id': 'containers.menu',
       'data-garden-container-version': PACKAGE_VERSION,
       'aria-labelledby': triggerId,
+      tabIndex: -1,
       role: role === null ? undefined : role,
       ref: menuRef as any
     }),

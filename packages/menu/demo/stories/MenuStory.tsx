@@ -66,7 +66,7 @@ const Component = ({
 
   return (
     <div className="relative">
-      <button {...getTriggerProps()}>{isExpanded ? 'Close' : 'Open'} menu</button>
+      <button {...getTriggerProps()}>Produce</button>
 
       <ul
         className={classNames('border border-grey-400 border-solid w-32 absolute', {
@@ -78,7 +78,9 @@ const Component = ({
           if ('items' in item) {
             return (
               <li key={item.label} role="none">
-                <b className="block mt-1">{item.label}</b>
+                <b aria-hidden="true" className="block mt-1 ms-1">
+                  {item.label}
+                </b>
                 <hr aria-hidden="true" className="my-1 border-grey-200" {...getSeparatorProps()} />
                 <ul {...getItemGroupProps({ 'aria-label': item.label })}>
                   {item.items.map(groupItem => (
