@@ -308,10 +308,14 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
     [isExpandedControlled, isFocusedValueControlled, defaultFocusedValue, onChange, values]
   );
 
-  // How to control open/close with keydown
   const handleMenuKeyDown = useCallback(
-    ({ key }: { key: string }) => {
+    (event: KeyboardEvent) => {
+      const { key } = event;
+
       if ([KEYS.ESCAPE, KEYS.TAB].includes(key)) {
+        event.preventDefault();
+        event.stopPropagation();
+
         const type = StateChangeTypes[key === KEYS.ESCAPE ? 'MenuKeyDownEscape' : 'MenuKeyDownTab'];
 
         closeMenu(type);
@@ -528,14 +532,16 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
 
     if (controlledIsExpanded) {
       win.document.addEventListener('click', handleMenuBlur, true);
+      win.document.addEventListener('keydown', handleMenuKeyDown, true);
     } else if (!controlledIsExpanded) {
       win.document.removeEventListener('click', handleMenuBlur, true);
+      win.document.removeEventListener('keydown', handleMenuKeyDown, true);
     }
 
     return () => {
       win.document.removeEventListener('click', handleMenuBlur, true);
     };
-  }, [controlledIsExpanded, handleMenuBlur, environment]);
+  }, [controlledIsExpanded, handleMenuBlur, handleMenuKeyDown, environment]);
 
   /**
    * Focus initial item when menu opens or changes due to sub-menu transition
@@ -629,10 +635,9 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
   );
 
   const getMenuProps = useCallback<IUseMenuReturnValue['getMenuProps']>(
-    ({ role = 'menu', onKeyDown, onMouseLeave, ...other } = {}) => ({
+    ({ role = 'menu', onMouseLeave, ...other } = {}) => ({
       ...other,
       ...getGroupProps({
-        onKeyDown: composeEventHandlers(onKeyDown, handleMenuKeyDown),
         onMouseLeave: composeEventHandlers(onMouseLeave, handleMenuMouseLeave)
       }),
       'data-garden-container-id': 'containers.menu',
@@ -642,7 +647,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
       role: role === null ? undefined : role,
       ref: menuRef as any
     }),
-    [triggerId, menuRef, getGroupProps, handleMenuMouseLeave, handleMenuKeyDown]
+    [triggerId, menuRef, getGroupProps, handleMenuMouseLeave]
   );
 
   const getSeparatorProps = useCallback<IUseMenuReturnValue['getSeparatorProps']>(
