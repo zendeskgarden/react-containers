@@ -29,9 +29,6 @@
     "react": ">=16.8.0",
     "react-dom": ">=16.8.0"
   },
-  "devDependencies": {
-    "@types/lodash.pickby": "^4.6.7"
-  },
   "keywords": [
     "a11y",
     "accessible",
