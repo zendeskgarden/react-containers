@@ -1,0 +1,69 @@
+import { Meta, ArgsTable, Canvas, Story, Markdown } from '@storybook/addon-docs';
+import { useCallback } from 'react';
+import { useArgs } from '@storybook/client-api';
+import { MenuContainer } from '@zendeskgarden/container-menu';
+import { MenuStory } from './stories/MenuStory';
+import { ITEMS } from './stories/data';
+import README from '../README.md';
+
+<Meta
+  title="Packages/Menu"
+  component={MenuContainer}
+  args={{
+    as: 'hook',
+    items: ITEMS
+  }}
+  argTypes={{
+    as: { options: ['container', 'hook'], control: 'radio', table: { category: 'Story' } },
+    menuRef: { control: false },
+    triggerRef: { control: false }
+  }}
+/>
+
+# API
+
+<ArgsTable />
+
+# Uncontrolled
+
+<Canvas>
+  <Story
+    name="Uncontrolled"
+    argTypes={{
+      isExpanded: { control: false },
+      focusedValue: { control: false },
+      selectedItems: { control: false }
+    }}
+  >
+    {args => <MenuStory {...args} />}
+  </Story>
+</Canvas>
+
+# Controlled
+
+<Canvas>
+  <Story
+    name="Controlled"
+    argTypes={{
+      defaultFocusedValue: { control: false },
+      defaultExpanded: { control: false },
+      focusedValue: { control: { type: 'text' } }
+    }}
+    args={{
+      isExpanded: false,
+      focusedValue: 'plant-01',
+      selectedItems: [{ value: 'Cherry', type: 'checkbox' }]
+    }}
+  >
+    {args => {
+      const updateArgs = useArgs()[1];
+      const handleChange = useCallback(changes => {
+        const { type, ...args } = changes;
+        updateArgs(args);
+      }, []);
+      return <MenuStory {...args} onChange={handleChange} />;
+    }}
+  </Story>
+</Canvas>
+
+<Markdown>{README}</Markdown>

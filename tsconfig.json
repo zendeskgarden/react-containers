@@ -19,6 +19,7 @@
       "@zendeskgarden/container-focusvisible": ["./packages/focusvisible/src/index.ts"],
       "@zendeskgarden/container-grid": ["./packages/grid/src/index.ts"],
       "@zendeskgarden/container-keyboardfocus": ["./packages/keyboardfocus/src/index.ts"],
+      "@zendeskgarden/container-menu": ["./packages/menu/src/index.ts"],
       "@zendeskgarden/container-modal": ["./packages/modal/src/index.ts"],
       "@zendeskgarden/container-pagination": ["./packages/pagination/src/index.ts"],
       "@zendeskgarden/container-schedule": ["./packages/schedule/src/index.ts"],
