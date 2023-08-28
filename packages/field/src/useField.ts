@@ -42,23 +42,31 @@ export const useField = ({
   );
 
   const getInputProps = useCallback<IUseFieldReturnValue['getInputProps']>(
-    ({ id = inputId, ...other } = {}) => {
-      const describedBy = [];
+    ({ id = inputId, 'aria-describedby': ariaDescribedBy, ...other } = {}) => {
+      const getDescribedBy = () => {
+        if (ariaDescribedBy) {
+          return ariaDescribedBy;
+        }
 
-      if (hasHint) {
-        describedBy.push(hintId);
-      }
+        const describedBy = [];
 
-      if (hasMessage) {
-        describedBy.push(messageId);
-      }
+        if (hasHint) {
+          describedBy.push(hintId);
+        }
+
+        if (hasMessage) {
+          describedBy.push(messageId);
+        }
+
+        return describedBy.length > 0 ? describedBy.join(' ') : undefined;
+      };
 
       return {
         'data-garden-container-id': 'containers.field.input',
         'data-garden-container-version': PACKAGE_VERSION,
         id,
         'aria-labelledby': labelId,
-        'aria-describedby': describedBy.length > 0 ? describedBy.join(' ') : undefined,
+        'aria-describedby': getDescribedBy(),
         ...other
       };
     },

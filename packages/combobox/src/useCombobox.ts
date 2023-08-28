@@ -61,7 +61,17 @@ export const useCombobox = <
   const [triggerContainsInput, setTriggerContainsInput] = useState<boolean>();
   const [matchValue, setMatchValue] = useState('');
   const matchTimeoutRef = useRef<number>();
-  const prefixRef = useRef(`${useId(idPrefix)}-`);
+  const prefix = useId(idPrefix);
+  const idRef = useRef({
+    label: `${prefix}--label`,
+    hint: `${prefix}--hint`,
+    trigger: `${prefix}--trigger`,
+    input: `${prefix}--input`,
+    listbox: `${prefix}--listbox`,
+    message: `${prefix}--message`,
+    getOptionId: (index: number, isDisabled?: boolean) =>
+      `${prefix}--option${isDisabled ? '-disabled' : ''}-${index}`
+  });
   const previousStateRef = useRef<IPreviousState>();
   const labels: Record<string, string> = useMemo(() => ({}), []);
   const selectedValues: OptionValue[] = useMemo(() => [], []);
@@ -264,12 +274,6 @@ export const useCombobox = <
 
   const transformValue = (value: OptionValue | null) => (value ? toLabel(labels, value) : '');
 
-  const getOptionId = useCallback(
-    (index: number, isDisabled?: boolean) =>
-      `${prefixRef.current}-option${isDisabled ? '-disabled' : ''}-${index}`,
-    []
-  );
-
   /** Hooks */
 
   const {
@@ -286,10 +290,9 @@ export const useCombobox = <
     setHighlightedIndex,
     selectItem
   } = useDownshift<OptionValue | OptionValue[]>({
-    id: prefixRef.current,
-    toggleButtonId: `${prefixRef.current}-trigger`,
-    menuId: `${prefixRef.current}-listbox`,
-    getItemId: getOptionId,
+    toggleButtonId: idRef.current.trigger,
+    menuId: idRef.current.listbox,
+    getItemId: idRef.current.getOptionId,
     items: values,
     inputValue,
     initialInputValue,
@@ -341,10 +344,10 @@ export const useCombobox = <
 
   const {
     getLabelProps: getFieldLabelProps,
-    getHintProps,
+    getHintProps: getFieldHintProps,
     getInputProps: getFieldInputProps,
-    getMessageProps
-  } = useField({ idPrefix, hasHint, hasMessage });
+    getMessageProps: getFieldMessageProps
+  } = useField({ hasHint, hasMessage });
 
   /*
    * Effects
@@ -478,7 +481,6 @@ export const useCombobox = <
       } else if (!isEditable) {
         const { 'aria-activedescendant': ariaActiveDescendant, onKeyDown: onDownshiftKeyDown } =
           getDownshiftInputProps({}, { suppressRefError: true });
-        const { 'aria-labelledby': ariaLabeledBy } = getFieldInputProps();
 
         const handleKeyDown = (event: KeyboardEvent) => {
           event.stopPropagation();
@@ -544,7 +546,7 @@ export const useCombobox = <
           ...triggerProps,
           'aria-activedescendant': ariaActiveDescendant,
           'aria-haspopup': 'listbox',
-          'aria-labelledby': ariaLabeledBy,
+          'aria-labelledby': idRef.current.label,
           'aria-disabled': disabled || undefined,
           disabled: undefined,
           role: 'combobox',
@@ -559,7 +561,6 @@ export const useCombobox = <
     [
       getDownshiftTriggerProps,
       getDownshiftInputProps,
-      getFieldInputProps,
       triggerRef,
       disabled,
       _selectionValue,
@@ -582,7 +583,11 @@ export const useCombobox = <
 
   const getLabelProps = useCallback<IUseComboboxReturnValue['getLabelProps']>(
     ({ onClick, ...other } = {}) => {
-      const { htmlFor, ...labelProps } = getFieldLabelProps(other);
+      const { htmlFor, ...labelProps } = getFieldLabelProps({
+        id: idRef.current.label,
+        htmlFor: idRef.current.input,
+        ...other
+      });
       const handleClick = () => !isEditable && triggerRef.current?.focus();
 
       return {
@@ -592,6 +597,11 @@ export const useCombobox = <
       };
     },
     [getFieldLabelProps, isEditable, triggerRef]
+  );
+
+  const getHintProps = useCallback<IUseComboboxReturnValue['getHintProps']>(
+    props => getFieldHintProps({ id: idRef.current.hint, ...props }),
+    [getFieldHintProps]
   );
 
   const getInputProps = useCallback<IUseComboboxReturnValue['getInputProps']>(
@@ -611,13 +621,27 @@ export const useCombobox = <
           triggerRef.current?.contains(event.target) &&
           event.stopPropagation();
 
+        const describedBy = [];
+
+        if (hasHint) {
+          describedBy.push(idRef.current.hint);
+        }
+
+        if (hasMessage) {
+          describedBy.push(idRef.current.message);
+        }
+
         return getDownshiftInputProps<any>({
           ...inputProps,
           disabled,
           role,
           'aria-autocomplete': isAutocomplete ? 'list' : undefined,
           onClick: composeEventHandlers(onClick, handleClick),
-          ...getFieldInputProps(),
+          ...getFieldInputProps({
+            id: idRef.current.input,
+            'aria-labelledby': idRef.current.label,
+            'aria-describedby': describedBy.length > 0 ? describedBy.join(' ') : undefined
+          }),
           ...other
         } as IDownshiftInputProps);
       }
@@ -653,6 +677,8 @@ export const useCombobox = <
     [
       getDownshiftInputProps,
       getFieldInputProps,
+      hasHint,
+      hasMessage,
       inputRef,
       triggerRef,
       disabled,
@@ -761,7 +787,7 @@ export const useCombobox = <
           'aria-disabled': true,
           'aria-selected': ariaSelected,
           id: option
-            ? getOptionId(disabledValues.indexOf(option.value), option.disabled)
+            ? idRef.current.getOptionId(disabledValues.indexOf(option.value), option.disabled)
             : undefined,
           ...optionProps,
           onMouseDown: composeEventHandlers(onMouseDown, handleMouseDown)
@@ -776,7 +802,12 @@ export const useCombobox = <
         ...optionProps
       } as IDownshiftOptionProps<OptionValue>);
     },
-    [getDownshiftOptionProps, disabledValues, values, _selectionValue, getOptionId]
+    [getDownshiftOptionProps, disabledValues, values, _selectionValue]
+  );
+
+  const getMessageProps = useCallback<IUseComboboxReturnValue['getMessageProps']>(
+    props => getFieldMessageProps({ id: idRef.current.message, ...props }),
+    [getFieldMessageProps]
   );
 
   /** Actions */
