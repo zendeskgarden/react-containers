@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.0.10](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-field@3.0.9...@zendeskgarden/container-field@3.0.10) (2023-08-29)
+
+### Bug Fixes
+
+- **combobox:** stabilize ID usage ([#580](https://github.com/zendeskgarden/react-containers/issues/580)) ([01a9d63](https://github.com/zendeskgarden/react-containers/commit/01a9d63a943c88f7a3bf8c948580b8813f4fe8e8))
+
 ## [3.0.9](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-field@3.0.8...@zendeskgarden/container-field@3.0.9) (2023-08-24)
 
 **Note:** Version bump only for package @zendeskgarden/container-field
