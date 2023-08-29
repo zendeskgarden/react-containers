@@ -74,6 +74,18 @@ describe('FieldContainer', () => {
           .trim()
       );
     });
+
+    it('overrides `aria-describedby` if provided', () => {
+      const { getByTestId } = render(
+        <FieldContainer>
+          {({ getInputProps }) => (
+            <input data-test-id="input" {...getInputProps({ 'aria-describedby': 'test' })} />
+          )}
+        </FieldContainer>
+      );
+
+      expect(getByTestId('input')).toHaveAttribute('aria-describedby', 'test');
+    });
   });
 
   describe('getHintProps', () => {
