@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useRef, useState } from 'react';
-import { RenderResult, render, waitFor, act } from '@testing-library/react';
+import { RenderResult, render, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MenuItem, IMenuItemBase, IUseMenuProps, IUseMenuReturnValue } from './types';
 import { MenuContainer } from './';
@@ -218,7 +218,9 @@ describe('MenuContainer', () => {
       const trigger = getByTestId('trigger');
       const menu = getByTestId('menu');
 
-      await user.click(trigger);
+      await act(async () => {
+        await user.click(trigger);
+      });
 
       expect(trigger).toHaveAttribute('aria-expanded', 'true');
       expect(menu).toBeVisible();
@@ -229,7 +231,9 @@ describe('MenuContainer', () => {
       const trigger = getByTestId('trigger');
       const menu = getByTestId('menu');
 
-      await user.click(trigger);
+      await act(async () => {
+        await user.click(trigger);
+      });
 
       expect(menu).not.toBeVisible();
     });
@@ -255,7 +259,10 @@ describe('MenuContainer', () => {
           const firstItem = getByText('Petunia');
 
           trigger.focus();
-          await user.keyboard('{ArrowDown}');
+
+          await act(async () => {
+            await user.keyboard('{ArrowDown}');
+          });
 
           expect(firstItem).toHaveFocus();
         });
@@ -268,7 +275,10 @@ describe('MenuContainer', () => {
           const item = getByText('Succulent');
 
           trigger.focus();
-          await user.keyboard('{ArrowDown}');
+
+          await act(async () => {
+            await user.keyboard('{ArrowDown}');
+          });
 
           expect(item).toHaveFocus();
         });
@@ -281,7 +291,10 @@ describe('MenuContainer', () => {
           const item = getByText('Succulent');
 
           trigger.focus();
-          await user.keyboard('{Enter}');
+
+          await act(async () => {
+            await user.keyboard('{Enter}');
+          });
 
           expect(item).toHaveFocus();
         });
@@ -296,7 +309,10 @@ describe('MenuContainer', () => {
           const firstItem = getByText('Petunia');
 
           trigger.focus();
-          await user.keyboard(input);
+
+          await act(async () => {
+            await user.keyboard(input);
+          });
 
           expect(firstItem).toHaveFocus();
         });
@@ -307,7 +323,10 @@ describe('MenuContainer', () => {
           const lastItem = getByText('Kale');
 
           trigger.focus();
-          await user.keyboard('{ArrowUp}');
+
+          await act(async () => {
+            await user.keyboard('{ArrowUp}');
+          });
 
           expect(lastItem).toHaveFocus();
         });
@@ -317,10 +336,13 @@ describe('MenuContainer', () => {
           const trigger = getByTestId('trigger');
 
           trigger.focus();
-          await user.keyboard('{ArrowDown}');
-          await user.keyboard('{Escape}');
 
-          await waitFor(() => expect(trigger).toHaveFocus());
+          await act(async () => {
+            await user.keyboard('{ArrowDown}');
+            await user.keyboard('{Escape}');
+          });
+
+          expect(trigger).toHaveFocus();
         });
       });
 
@@ -343,72 +365,97 @@ describe('MenuContainer', () => {
           trigger = getByTestId('trigger');
 
           trigger.focus();
-          await user.keyboard('{ArrowDown}');
+
+          await act(async () => {
+            await user.keyboard('{ArrowDown}');
+          });
         });
 
         it('focuses next item on ArrowDown keydown', async () => {
-          await user.keyboard('{ArrowDown}');
+          await act(async () => {
+            await user.keyboard('{ArrowDown}');
+          });
 
           expect(secondItem).toHaveFocus();
         });
 
         it('focuses first item on last item ArrowDown keydown', async () => {
-          await user.keyboard('{ArrowUp}');
-          await user.keyboard('{ArrowDown}');
+          await act(async () => {
+            await user.keyboard('{ArrowUp}');
+            await user.keyboard('{ArrowDown}');
+          });
 
           expect(firstItem).toHaveFocus();
         });
 
         it('focuses previous item on ArrowUp keydown', async () => {
-          await user.keyboard('{ArrowDown}');
-          await user.keyboard('{ArrowUp}');
+          await act(async () => {
+            await user.keyboard('{ArrowDown}');
+            await user.keyboard('{ArrowUp}');
+          });
 
           expect(firstItem).toHaveFocus();
         });
 
         it('focuses last item on first item ArrowUp keydown', async () => {
-          await user.keyboard('{ArrowUp}');
+          await act(async () => {
+            await user.keyboard('{ArrowUp}');
+          });
 
           expect(lastItem).toHaveFocus();
         });
 
         it('focuses first item when ArrowDown pressed on last item keydown', async () => {
-          await user.keyboard('{ArrowUp}');
-          await user.keyboard('{ArrowDown}');
+          await act(async () => {
+            await user.keyboard('{ArrowUp}');
+            await user.keyboard('{ArrowDown}');
+          });
 
           expect(firstItem).toHaveFocus();
         });
 
         it('focuses last item on End keydown', async () => {
-          await user.keyboard('{End}');
+          await act(async () => {
+            await user.keyboard('{End}');
+          });
 
           expect(lastItem).toHaveFocus();
         });
 
         it('focuses first item on Home keydown', async () => {
-          await user.keyboard('{End}');
+          await act(async () => {
+            await user.keyboard('{End}');
+          });
 
           expect(lastItem).toHaveFocus();
 
-          await user.keyboard('{Home}');
+          await act(async () => {
+            await user.keyboard('{Home}');
+          });
 
           expect(firstItem).toHaveFocus();
         });
 
         it('focuses item on MouseEnter', async () => {
-          await user.hover(otherItem);
+          await act(async () => {
+            await user.hover(otherItem);
+          });
 
           expect(otherItem).toHaveFocus();
         });
 
         it('focuses matched item on character keydown', async () => {
-          await user.keyboard('a');
+          await act(async () => {
+            await user.keyboard('a');
+          });
 
           expect(otherItem).toHaveFocus();
         });
 
         it('focuses matched item using value if no label is given', async () => {
-          await user.keyboard('v');
+          await act(async () => {
+            await user.keyboard('v');
+          });
 
           expect(noLabelItem).toHaveFocus();
         });
@@ -422,8 +469,10 @@ describe('MenuContainer', () => {
         const menu = getByTestId('menu');
         const item = getByText('Violet');
 
-        await user.click(trigger);
-        await user.click(item);
+        await act(async () => {
+          await user.click(trigger);
+          await user.click(item);
+        });
 
         expect(menu).not.toBeVisible();
       });
@@ -434,8 +483,11 @@ describe('MenuContainer', () => {
         const menu = getByTestId('menu');
 
         trigger.focus();
-        await user.keyboard('{ArrowDown}');
-        await user.keyboard('{Enter}');
+
+        await act(async () => {
+          await user.keyboard('{ArrowDown}');
+          await user.keyboard('{Enter}');
+        });
 
         expect(menu).not.toBeVisible();
       });
@@ -446,8 +498,11 @@ describe('MenuContainer', () => {
         const menu = getByTestId('menu');
 
         trigger.focus();
-        await user.keyboard('{ArrowDown}');
-        await user.keyboard(' ');
+
+        await act(async () => {
+          await user.keyboard('{ArrowDown}');
+          await user.keyboard(' ');
+        });
 
         expect(menu).not.toBeVisible();
       });
@@ -468,44 +523,56 @@ describe('MenuContainer', () => {
           secondRadioItem = getByText('Kale');
           trigger = getByTestId('trigger');
 
-          await user.click(trigger);
+          await act(async () => {
+            await user.click(trigger);
+          });
         });
 
         it('applies correct accessibility attributes to radio items', async () => {
-          await user.click(firstRadioItem);
+          await act(async () => {
+            await user.click(firstRadioItem);
+          });
 
           expect(firstRadioItem).toHaveAttribute('aria-checked', 'true');
         });
 
         it('moves selection between radio items', async () => {
-          await user.click(firstRadioItem);
-          await user.click(trigger);
-          await user.click(secondRadioItem);
+          await act(async () => {
+            await user.click(firstRadioItem);
+            await user.click(trigger);
+            await user.click(secondRadioItem);
+          });
 
           expect(firstRadioItem).toHaveAttribute('aria-checked', 'false');
           expect(secondRadioItem).toHaveAttribute('aria-checked', 'true');
         });
 
         it('applies correct accessibility attributes to checkbox item', async () => {
-          await user.click(firstCheckboxItem);
+          await act(async () => {
+            await user.click(firstCheckboxItem);
+          });
 
           expect(firstCheckboxItem).toHaveAttribute('aria-checked', 'true');
         });
 
         it('applies correct accessibility attributes to deselected checkbox item', async () => {
-          await user.click(firstCheckboxItem);
-          await user.click(trigger);
-          await user.click(firstCheckboxItem);
+          await act(async () => {
+            await user.click(firstCheckboxItem);
+            await user.click(trigger);
+            await user.click(firstCheckboxItem);
+          });
 
           expect(firstCheckboxItem).toHaveAttribute('aria-checked', 'false');
         });
 
         it('sets correct selection to multiple item types', async () => {
-          await user.click(firstCheckboxItem);
-          await user.click(trigger);
-          await user.click(secondCheckboxItem);
-          await user.click(trigger);
-          await user.click(firstRadioItem);
+          await act(async () => {
+            await user.click(firstCheckboxItem);
+            await user.click(trigger);
+            await user.click(secondCheckboxItem);
+            await user.click(trigger);
+            await user.click(firstRadioItem);
+          });
 
           expect(firstCheckboxItem).toHaveAttribute('aria-checked', 'true');
           expect(secondCheckboxItem).toHaveAttribute('aria-checked', 'true');
@@ -544,7 +611,10 @@ describe('MenuContainer', () => {
         lastItem = getByText('Kiwi');
 
         trigger.focus();
-        await user.keyboard('{ArrowDown}');
+
+        await act(async () => {
+          await user.keyboard('{ArrowDown}');
+        });
       });
 
       it('applies correct accessibility attributes to items', () => {
@@ -553,13 +623,17 @@ describe('MenuContainer', () => {
       });
 
       it('prevents selection on disabled item click', async () => {
-        await user.click(disabledItem);
+        await act(async () => {
+          await user.click(disabledItem);
+        });
 
         expect(menu).toBeVisible();
       });
 
       it('skips item focus', async () => {
-        await user.keyboard('{ArrowDown}');
+        await act(async () => {
+          await user.keyboard('{ArrowDown}');
+        });
 
         expect(lastItem).toHaveFocus();
       });
@@ -575,7 +649,9 @@ describe('MenuContainer', () => {
           />
         );
 
-        await user.click(disabledItem);
+        await act(async () => {
+          await user.click(disabledItem);
+        });
 
         expect(menu).not.toBeVisible();
       });
@@ -587,8 +663,11 @@ describe('MenuContainer', () => {
         const trigger = getByTestId('trigger');
 
         trigger.focus();
-        await user.keyboard('{ArrowDown}');
-        await user.keyboard('{Enter}');
+
+        await act(async () => {
+          await user.keyboard('{ArrowDown}');
+          await user.keyboard('{Enter}');
+        });
 
         expect(getByText('Previous')).toHaveFocus();
       });
@@ -598,12 +677,17 @@ describe('MenuContainer', () => {
         const trigger = getByTestId('trigger');
 
         trigger.focus();
-        await user.keyboard('{ArrowDown}');
-        await user.keyboard('{Enter}');
+
+        await act(async () => {
+          await user.keyboard('{ArrowDown}');
+          await user.keyboard('{Enter}');
+        });
 
         expect(getByText('Previous')).toHaveFocus();
 
-        await user.keyboard('{Enter}');
+        await act(async () => {
+          await user.keyboard('{Enter}');
+        });
 
         expect(getByText('Next')).toHaveFocus();
       });
@@ -613,18 +697,25 @@ describe('MenuContainer', () => {
         const trigger = getByTestId('trigger');
 
         trigger.focus();
-        await user.keyboard('{ArrowDown}');
-        await user.keyboard('{Enter}');
+
+        await act(async () => {
+          await user.keyboard('{ArrowDown}');
+          await user.keyboard('{Enter}');
+        });
 
         expect(getByText('Previous')).toHaveFocus();
 
-        await user.keyboard('{ArrowDown}');
-        await user.keyboard('{Enter}');
-        await user.keyboard('{ArrowDown}');
+        await act(async () => {
+          await user.keyboard('{ArrowDown}');
+          await user.keyboard('{Enter}');
+          await user.keyboard('{ArrowDown}');
+        });
 
         expect(getByText('Next')).toHaveFocus();
 
-        await user.keyboard('{Enter}');
+        await act(async () => {
+          await user.keyboard('{Enter}');
+        });
 
         expect(getByText('Previous')).toHaveFocus();
       });
@@ -645,7 +736,10 @@ describe('MenuContainer', () => {
       const item = getByText('Apple');
 
       trigger.focus();
-      await user.keyboard('{ArrowDown}');
+
+      await act(async () => {
+        await user.keyboard('{ArrowDown}');
+      });
 
       expect(item).toHaveFocus();
     });
@@ -656,7 +750,10 @@ describe('MenuContainer', () => {
       const item = getByText('Petunia');
 
       trigger.focus();
-      await user.keyboard('{ArrowDown}');
+
+      await act(async () => {
+        await user.keyboard('{ArrowDown}');
+      });
 
       expect(item).toHaveFocus();
     });
@@ -686,7 +783,9 @@ describe('MenuContainer', () => {
       const { getByTestId } = render(<TestMenu items={ITEMS} isExpanded />);
       const trigger = getByTestId('trigger');
 
-      await user.click(trigger);
+      await act(async () => {
+        await user.click(trigger);
+      });
 
       expect(trigger).toHaveFocus();
     });
@@ -697,7 +796,10 @@ describe('MenuContainer', () => {
       const item = getByText('Petunia');
 
       trigger.focus();
-      await user.keyboard('{ArrowDown}');
+
+      await act(async () => {
+        await user.keyboard('{ArrowDown}');
+      });
 
       expect(item).toHaveFocus();
     });
@@ -706,7 +808,9 @@ describe('MenuContainer', () => {
       const { getByText } = render(<TestMenu items={ITEMS} isExpanded />);
       const fruit1 = getByText('Apple');
 
-      await user.click(fruit1);
+      await act(async () => {
+        await user.click(fruit1);
+      });
 
       expect(fruit1).toHaveAttribute('aria-checked', 'true');
     });
@@ -715,8 +819,10 @@ describe('MenuContainer', () => {
       const { getByText } = render(<TestMenu items={ITEMS} isExpanded />);
       const fruit1 = getByText('Apple');
 
-      await user.hover(fruit1);
-      await user.keyboard('{Enter}');
+      await act(async () => {
+        await user.hover(fruit1);
+        await user.keyboard('{Enter}');
+      });
 
       expect(fruit1).toHaveAttribute('aria-checked', 'true');
     });
@@ -734,7 +840,9 @@ describe('MenuContainer', () => {
         );
         const trigger = getByTestId('trigger');
 
-        await user.click(trigger);
+        await act(async () => {
+          await user.click(trigger);
+        });
 
         const changeTypes = onChange.mock.calls.map(([change]) => change.type);
 
@@ -753,7 +861,10 @@ describe('MenuContainer', () => {
         const trigger = getByTestId('trigger');
 
         trigger.focus();
-        await user.keyboard(input);
+
+        await act(async () => {
+          await user.keyboard(input);
+        });
 
         const changeTypes = onChange.mock.calls.map(([change]) => change.type);
 
@@ -769,7 +880,9 @@ describe('MenuContainer', () => {
       ])('calls onChange on item %s keydown', async (_, input, type) => {
         render(<TestMenu items={ITEMS} onChange={onChange} isExpanded focusedValue="plant-01" />);
 
-        await user.keyboard(input);
+        await act(async () => {
+          await user.keyboard(input);
+        });
 
         const changeTypes = onChange.mock.calls.map(([change]) => change.type);
 
@@ -782,8 +895,10 @@ describe('MenuContainer', () => {
         );
         const item = getByText('Petunia');
 
-        await user.hover(item);
-        await user.unhover(item);
+        await act(async () => {
+          await user.hover(item);
+          await user.unhover(item);
+        });
 
         const changeTypes = onChange.mock.calls.map(([change]) => change.type);
 
@@ -796,7 +911,9 @@ describe('MenuContainer', () => {
         );
         const item = getByText('Kale');
 
-        await user.hover(item);
+        await act(async () => {
+          await user.hover(item);
+        });
 
         const changeTypes = onChange.mock.calls.map(([change]) => change.type);
 
@@ -812,13 +929,15 @@ describe('MenuContainer', () => {
 
         const changeTypes = onChange.mock.calls.map(([change]) => change.type);
 
-        await waitFor(() => expect(changeTypes).toContain(StateChangeTypes.MenuBlur));
+        expect(changeTypes).toContain(StateChangeTypes.MenuBlur);
       });
 
       it('calls onChange on menu Tab keydown', async () => {
         render(<TestMenu items={ITEMS} onChange={onChange} isExpanded focusedValue="plant-01" />);
 
-        await user.tab();
+        await act(async () => {
+          await user.tab();
+        });
 
         const changeTypes = onChange.mock.calls.map(([change]) => change.type);
 
@@ -828,7 +947,9 @@ describe('MenuContainer', () => {
       it('calls onChange on menu Escape keydown', async () => {
         render(<TestMenu items={ITEMS} onChange={onChange} isExpanded focusedValue="plant-01" />);
 
-        await user.keyboard('{Escape}');
+        await act(async () => {
+          await user.keyboard('{Escape}');
+        });
 
         const changeTypes = onChange.mock.calls.map(([change]) => change.type);
 
@@ -840,7 +961,9 @@ describe('MenuContainer', () => {
           <TestMenu items={ROOT_ITEMS} onChange={onChange} isExpanded />
         );
 
-        await user.click(getByText('Next'));
+        await act(async () => {
+          await user.click(getByText('Next'));
+        });
 
         const changeTypes = onChange.mock.calls.map(([change]) => change.type);
 
@@ -852,7 +975,9 @@ describe('MenuContainer', () => {
           <TestMenu items={NEXT_ITEMS} onChange={onChange} isExpanded />
         );
 
-        await user.click(getByText('Previous'));
+        await act(async () => {
+          await user.click(getByText('Previous'));
+        });
 
         const changeTypes = onChange.mock.calls.map(([change]) => change.type);
 
@@ -865,7 +990,10 @@ describe('MenuContainer', () => {
         );
 
         getByText('Next').focus();
-        await user.keyboard('{Enter}');
+
+        await act(async () => {
+          await user.keyboard('{Enter}');
+        });
 
         const changeTypes = onChange.mock.calls.map(([change]) => change.type);
 
@@ -878,7 +1006,10 @@ describe('MenuContainer', () => {
         );
 
         getByText('Next').focus();
-        await user.keyboard(' ');
+
+        await act(async () => {
+          await user.keyboard(' ');
+        });
 
         const changeTypes = onChange.mock.calls.map(([change]) => change.type);
 
@@ -891,7 +1022,10 @@ describe('MenuContainer', () => {
         );
 
         getByText('Previous').focus();
-        await user.keyboard('{Enter}');
+
+        await act(async () => {
+          await user.keyboard('{Enter}');
+        });
 
         const changeTypes = onChange.mock.calls.map(([change]) => change.type);
 
@@ -904,7 +1038,10 @@ describe('MenuContainer', () => {
         );
 
         getByText('Previous').focus();
-        await user.keyboard(' ');
+
+        await act(async () => {
+          await user.keyboard(' ');
+        });
 
         const changeTypes = onChange.mock.calls.map(([change]) => change.type);
 
@@ -917,7 +1054,10 @@ describe('MenuContainer', () => {
         );
 
         getByText('Next').focus();
-        await user.keyboard('{ArrowRight}');
+
+        await act(async () => {
+          await user.keyboard('{ArrowRight}');
+        });
 
         const changeTypes = onChange.mock.calls.map(([change]) => change.type);
 
@@ -930,7 +1070,10 @@ describe('MenuContainer', () => {
         );
 
         getByText('Next').focus();
-        await user.keyboard('{ArrowLeft}');
+
+        await act(async () => {
+          await user.keyboard('{ArrowLeft}');
+        });
 
         const changeTypes = onChange.mock.calls.map(([change]) => change.type);
 
@@ -943,7 +1086,10 @@ describe('MenuContainer', () => {
         );
 
         getByText('Previous').focus();
-        await user.keyboard('{ArrowLeft}');
+
+        await act(async () => {
+          await user.keyboard('{ArrowLeft}');
+        });
 
         const changeTypes = onChange.mock.calls.map(([change]) => change.type);
 
@@ -956,7 +1102,10 @@ describe('MenuContainer', () => {
         );
 
         getByText('Previous').focus();
-        await user.keyboard('{ArrowRight}');
+
+        await act(async () => {
+          await user.keyboard('{ArrowRight}');
+        });
 
         const changeTypes = onChange.mock.calls.map(([change]) => change.type);
 

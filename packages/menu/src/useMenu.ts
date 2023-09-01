@@ -700,7 +700,6 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
        * by useSelection.
        */
       const elementProps = {
-        ...other,
         'data-garden-container-id': 'containers.menu.item',
         'data-garden-container-version': PACKAGE_VERSION,
         'aria-selected': undefined,
@@ -709,7 +708,8 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
         role: itemRole === null ? undefined : itemRole,
         onClick,
         onKeyDown,
-        onMouseEnter
+        onMouseEnter,
+        ...other
       };
 
       if (itemDisabled) {
