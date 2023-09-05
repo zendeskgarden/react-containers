@@ -40,7 +40,7 @@
     "@babel/preset-typescript": "7.22.5",
     "@babel/runtime": "7.22.6",
     "@brodybits/rollup-plugin-size-snapshot": "0.14.1",
-    "@rollup/plugin-babel": "^6.0.3",
+    "@rollup/plugin-babel": "6.0.3",
     "@rollup/plugin-commonjs": "25.0.3",
     "@rollup/plugin-node-resolve": "15.1.0",
     "@rollup/plugin-replace": "5.0.2",
