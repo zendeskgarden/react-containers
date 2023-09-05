@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.1](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-menu@0.1.0...@zendeskgarden/container-menu@0.1.1) (2023-09-05)
+
+### Bug Fixes
+
+- **menu:** allow prop spread override in getItemProps ([#583](https://github.com/zendeskgarden/react-containers/issues/583)) ([e9599c8](https://github.com/zendeskgarden/react-containers/commit/e9599c8c912fe3304ed29b19563ea3a0a20dd561))
+
 # 0.1.0 (2023-08-29)
 
 ### Features

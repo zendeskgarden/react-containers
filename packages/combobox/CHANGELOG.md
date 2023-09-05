@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.10](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-combobox@1.0.9...@zendeskgarden/container-combobox@1.0.10) (2023-09-05)
+
+### Bug Fixes
+
+- **combobox:** stable ID regression ([#585](https://github.com/zendeskgarden/react-containers/issues/585)) ([78f1aa2](https://github.com/zendeskgarden/react-containers/commit/78f1aa22dbc617d2525ccc2bc66b3fc8f81ddaa9))
+
 ## [1.0.9](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-combobox@1.0.8...@zendeskgarden/container-combobox@1.0.9) (2023-08-29)
 
 ### Bug Fixes
