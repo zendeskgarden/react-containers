@@ -54,9 +54,8 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
   const prefix = `${useId(idPrefix)}-`;
   const triggerId = `${prefix}menu-trigger`;
   const isExpandedControlled = isExpanded !== undefined;
-  const isSelectionValueControlled = selectedItems !== undefined;
+  const isSelectedItemsControlled = selectedItems !== undefined;
   const isFocusedValueControlled = focusedValue !== undefined;
-
   const menuItems = useMemo(
     () =>
       rawItems.reduce((items, item: MenuItem) => {
@@ -70,9 +69,14 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
       }, [] as IMenuItemBase[]),
     [rawItems]
   );
-
+  const initialSelectedItems = useMemo(
+    () =>
+      menuItems.filter(
+        item => !!(item.type && ['radio', 'checkbox'].includes(item.type) && item.selected)
+      ),
+    [menuItems]
+  );
   const values = useMemo(() => menuItems.map(item => item.value), [menuItems]);
-
   const itemRefs = useMemo(
     () =>
       values.reduce((acc: Record<string, RefObject<any>>, v) => {
@@ -92,7 +96,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
   const [state, dispatch] = useReducer(stateReducer, {
     focusedValue: focusedValue || defaultFocusedValue,
     isExpanded: isExpanded || defaultExpanded,
-    selectedItems: [],
+    selectedItems: initialSelectedItems,
     valuesRef: values,
     focusOnOpen: false,
     isTransitionNext: false,
@@ -141,23 +145,17 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
 
   const isItemSelected = useCallback(
     (value: string, type?: string, name?: string): boolean | undefined => {
-      switch (type) {
-        case 'checkbox': {
-          return !!controlledSelectedItems.find(item => item.value === value);
-        }
-        case 'radio': {
-          const match = controlledSelectedItems.filter(item => item.name === name)[0];
+      let isSelected;
 
-          if (match) {
-            return match.value === value;
-          }
+      if (type === 'checkbox') {
+        isSelected = !!controlledSelectedItems.find(item => item.value === value);
+      } else if (type === 'radio') {
+        const match = controlledSelectedItems.filter(item => item.name === name)[0];
 
-          return false;
-        }
-        default: {
-          return undefined;
-        }
+        isSelected = match?.value === value;
       }
+
+      return isSelected;
     },
     [controlledSelectedItems]
   );
@@ -368,7 +366,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
           }),
           ...(!isExpandedControlled && !isTransitionItem && { isExpanded: false }),
           ...(!isTransitionItem && { nestedPathIds: [] }),
-          ...(!isSelectionValueControlled && nextSelection && { selectedItems: nextSelection })
+          ...(!isSelectedItemsControlled && nextSelection && { selectedItems: nextSelection })
         }
       });
 
@@ -381,7 +379,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
     [
       state.nestedPathIds,
       isExpandedControlled,
-      isSelectionValueControlled,
+      isSelectedItemsControlled,
       getSelectedItems,
       onChange
     ]
@@ -415,7 +413,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
         payload = {
           ...(!isExpandedControlled && !isTransitionItem && { isExpanded: false }),
           ...(!isTransitionItem && { nestedPathIds: [] }),
-          ...(!isSelectionValueControlled && nextSelection && { selectedItems: nextSelection })
+          ...(!isSelectedItemsControlled && nextSelection && { selectedItems: nextSelection })
         };
 
         changes = {
@@ -486,7 +484,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
       state.nestedPathIds,
       isExpandedControlled,
       isFocusedValueControlled,
-      isSelectionValueControlled,
+      isSelectedItemsControlled,
       getNextFocusedValue,
       getSelectedItems,
       onChange

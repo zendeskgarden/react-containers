@@ -86,7 +86,7 @@ const Component = ({
                   {item.items.map(groupItem => (
                     <Item
                       key={groupItem.value}
-                      item={{ ...groupItem, name: item.label }}
+                      item={{ ...groupItem }}
                       getItemProps={getItemProps}
                       focusedValue={focusedValue}
                       isSelected={selectedValues.includes(groupItem.value)}
