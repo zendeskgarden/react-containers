@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-menu@0.1.1...@zendeskgarden/container-menu@0.2.0) (2023-09-18)
+
+### Features
+
+- **menu:** enables initial selected items ([#587](https://github.com/zendeskgarden/react-containers/issues/587)) ([7dab124](https://github.com/zendeskgarden/react-containers/commit/7dab1241c08001226ee41cba0173eecbe4b81a7a))
+
 ## [0.1.1](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-menu@0.1.0...@zendeskgarden/container-menu@0.1.1) (2023-09-05)
 
 ### Bug Fixes
