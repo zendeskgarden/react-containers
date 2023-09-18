@@ -12,10 +12,11 @@ export interface ISelectedItem {
   label?: string;
   name?: string;
   type?: 'radio' | 'checkbox';
+  disabled?: boolean;
 }
 
 export interface IMenuItemBase extends ISelectedItem {
-  disabled?: boolean;
+  selected?: boolean;
   isNext?: boolean;
   isPrevious?: boolean;
 }
@@ -37,13 +38,14 @@ export interface IUseMenuProps<T = HTMLButtonElement, M = HTMLElement> {
    * Provides an ordered list of menu items
    *
    * @param {string} item.value Unique item value
-   * @param {string} item.label Human-readable item display value
+   * @param {string} item.label Optional human-readable text value (defaults to `item.value`)
    * @param {string} item.name A shared name corresponding to an item radio group
    * @param {boolean} item.disabled Indicates the item is not interactive
+   * @param {boolean} item.selected Sets initial selection for the option
    * @param {boolean} item.isNext - Indicates the item transitions to a nested menu
    * @param {boolean} item.isPrevious - Indicates the item will transition back from a nested menu
    * @param {boolean} item.separator Indicates the item is a placeholder for a separator
-   * @param {IMenuItemBase[]} item.items Groups a list of items
+   * @param {(IMenuItemBase | IMenuItemSeparator)[]} item.items Groups a list of items
    */
   items: MenuItem[];
   /** Provides ref access to the underlying trigger element */

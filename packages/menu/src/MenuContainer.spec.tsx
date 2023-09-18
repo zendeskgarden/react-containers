@@ -463,6 +463,25 @@ describe('MenuContainer', () => {
     });
 
     describe('selection', () => {
+      it('applies initial selected items', () => {
+        const { getByText } = render(
+          <TestMenu
+            items={[
+              {
+                label: 'Group',
+                items: [
+                  { value: 'One', type: 'checkbox' },
+                  { value: 'Two', type: 'checkbox', selected: true },
+                  { value: 'Three', type: 'checkbox' }
+                ]
+              }
+            ]}
+          />
+        );
+
+        expect(getByText('Two')).toHaveAttribute('aria-checked', 'true');
+      });
+
       it('closes menu when item is clicked', async () => {
         const { getByTestId, getByText } = render(<TestMenu items={ITEMS} />);
         const trigger = getByTestId('trigger');

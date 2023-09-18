@@ -23,10 +23,31 @@ export const ITEMS = [
   {
     label: 'Select one',
     items: [
-      { value: 'vegetable-01', label: 'Asparagus', type: 'radio' },
-      { value: 'vegetable-02', label: 'Broccoli', disabled: true, type: 'radio' },
-      { value: 'vegetable-03', label: 'Brussel sprouts', type: 'radio' },
-      { value: 'vegetable-04', label: 'Kale', type: 'radio' }
+      {
+        value: 'vegetable-01',
+        label: 'Asparagus',
+        type: 'radio',
+        name: 'veggies'
+      },
+      {
+        value: 'vegetable-02',
+        label: 'Broccoli',
+        disabled: true,
+        type: 'radio',
+        name: 'veggies'
+      },
+      {
+        value: 'vegetable-03',
+        label: 'Brussel sprouts',
+        type: 'radio',
+        name: 'veggies'
+      },
+      {
+        value: 'vegetable-04',
+        label: 'Kale',
+        type: 'radio',
+        name: 'veggies'
+      }
     ]
   }
 ];
