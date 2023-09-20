@@ -1,0 +1,15 @@
+import { Meta, Canvas, Story } from '@storybook/addon-docs';
+import { IMEStory } from './stories/IMEStory';
+
+<Meta title="Packages/Combobox/[patterns]" />
+
+# Patterns
+
+## IME
+
+Demonstrate a simple (sans `useArgs`) controlled combobox for testing input
+method editor (IME) values.
+
+<Canvas>
+  <Story name="IME">{args => <IMEStory {...args} />}</Story>
+</Canvas>
