@@ -54,6 +54,7 @@ export const IMEStory: Story = () => {
           className={classNames('mt-1', 'border', 'border-solid', 'absolute', 'w-full', {
             invisible: !isExpanded
           })}
+          style={{ left: 0, top: '100%' }}
           {...getListboxProps({ 'aria-label': 'Options' })}
         >
           {OPTIONS.map((option, index) => (
