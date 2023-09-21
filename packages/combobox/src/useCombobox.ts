@@ -5,7 +5,15 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import {
+  ChangeEvent,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState
+} from 'react';
 import { useField } from '@zendeskgarden/container-field';
 import { composeEventHandlers, KEYS, useId } from '@zendeskgarden/container-utilities';
 import {
@@ -148,20 +156,17 @@ export const useCombobox = <
 
   const handleDownshiftStateChange: IUseDownshiftProps<
     OptionValue | OptionValue[]
-  >['onStateChange'] = ({
-    type,
-    isOpen,
-    selectedItem,
-    inputValue: _inputValue,
-    highlightedIndex
-  }) =>
-    onChange({
-      type: toType(type),
-      ...(isOpen !== undefined && { isExpanded: isOpen }),
-      ...(selectedItem !== undefined && { selectionValue: selectedItem }),
-      ...(_inputValue !== undefined && { inputValue: _inputValue }),
-      ...(highlightedIndex !== undefined && { activeIndex: highlightedIndex })
-    });
+  >['onStateChange'] = useCallback(
+    ({ type, isOpen, selectedItem, inputValue: _inputValue, highlightedIndex }) =>
+      onChange({
+        type: toType(type),
+        ...(isOpen !== undefined && { isExpanded: isOpen }),
+        ...(selectedItem !== undefined && { selectionValue: selectedItem }),
+        ...(_inputValue !== undefined && { inputValue: _inputValue }),
+        ...(highlightedIndex !== undefined && { activeIndex: highlightedIndex })
+      }),
+    [onChange]
+  );
 
   const stateReducer: IUseDownshiftProps<any /* vs. state/changes `selectedItem` type flipping */>['stateReducer'] =
     (state, { type, changes, altKey }) => {
@@ -605,17 +610,36 @@ export const useCombobox = <
   );
 
   const getInputProps = useCallback<IUseComboboxReturnValue['getInputProps']>(
-    ({ role = isEditable ? 'combobox' : null, onClick, onFocus, ...other } = {}) => {
+    ({
+      role = isEditable ? 'combobox' : null,
+      onChange: _onChange,
+      onClick,
+      onFocus,
+      ...other
+    } = {}) => {
       const inputProps = {
         'data-garden-container-id': 'containers.combobox.input',
         'data-garden-container-version': PACKAGE_VERSION,
         ref: inputRef,
         role: role === null ? undefined : role,
+        onChange: _onChange,
         onClick,
         onFocus
       };
 
       if (isEditable) {
+        const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+          // Override needed to workaround Downshift IME bug.
+          // https://github.com/downshift-js/downshift/issues/1452
+          if (inputValue !== undefined && (event.nativeEvent as InputEvent).isComposing) {
+            /* istanbul ignore next */
+            handleDownshiftStateChange({
+              type: useDownshift.stateChangeTypes.InputChange,
+              inputValue: event.target.value
+            });
+          }
+        };
+
         const handleClick = (event: MouseEvent) =>
           event.target instanceof Element &&
           triggerRef.current?.contains(event.target) &&
@@ -636,6 +660,7 @@ export const useCombobox = <
           disabled,
           role,
           'aria-autocomplete': isAutocomplete ? 'list' : undefined,
+          onChange: composeEventHandlers(_onChange, handleChange),
           onClick: composeEventHandlers(onClick, handleClick),
           ...getFieldInputProps({
             id: idRef.current.input,
@@ -677,8 +702,10 @@ export const useCombobox = <
     [
       getDownshiftInputProps,
       getFieldInputProps,
+      handleDownshiftStateChange,
       hasHint,
       hasMessage,
+      inputValue,
       inputRef,
       triggerRef,
       disabled,

@@ -7,7 +7,7 @@
 
 import React, { createRef, PropsWithChildren } from 'react';
 import { act } from 'react-dom/test-utils';
-import { render, RenderResult } from '@testing-library/react';
+import { fireEvent, render, RenderResult } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComboboxContainer, useCombobox } from './';
 import { IUseComboboxProps, IUseComboboxReturnValue } from './types';
@@ -805,6 +805,17 @@ describe('ComboboxContainer', () => {
           const changeTypes = handleChange.mock.calls.map(([change]) => change.type);
 
           expect(changeTypes).toMatchObject(['input:click', 'input:keyDown:ArrowDown']);
+        });
+
+        it('handles IME input as expected', () => {
+          fireEvent.change(input, { target: { value: '´' }, nativeEvent: { isComposing: true } });
+          fireEvent.change(input, { target: { value: 'á' }, nativeEvent: { isComposing: true } });
+
+          expect(handleChange).toHaveBeenCalledTimes(2);
+
+          const changeTypes = handleChange.mock.calls.map(([change]) => change.type);
+
+          expect(changeTypes).toMatchObject(['input:change', 'input:change']);
         });
 
         it('handles controlled selection as expected', () => {
