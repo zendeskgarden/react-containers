@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.11](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-combobox@1.0.10...@zendeskgarden/container-combobox@1.0.11) (2023-09-21)
+
+### Bug Fixes
+
+- **combobox:** handle IME via controlled input `onChange` override ([#588](https://github.com/zendeskgarden/react-containers/issues/588)) ([569e785](https://github.com/zendeskgarden/react-containers/commit/569e7859cdbb22e62f53a65b4796812336c0ab94))
+
 ## [1.0.10](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-combobox@1.0.9...@zendeskgarden/container-combobox@1.0.10) (2023-09-05)
 
 ### Bug Fixes
