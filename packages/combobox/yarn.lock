@@ -9,34 +9,6 @@
   dependencies:
     regenerator-runtime "^0.14.0"
 
-"@reach/auto-id@^0.18.0":
-  version "0.18.0"
-  resolved "https://registry.yarnpkg.com/@reach/auto-id/-/auto-id-0.18.0.tgz#4b97085cd1cf1360a9bedc6e9c78e97824014f0d"
-  integrity sha512-XwY1IwhM7mkHZFghhjiqjQ6dstbOdpbFLdggeke75u8/8icT8uEHLbovFUgzKjy9qPvYwZIB87rLiR8WdtOXCg==
-  dependencies:
-    "@reach/utils" "0.18.0"
-
-"@reach/utils@0.18.0":
-  version "0.18.0"
-  resolved "https://registry.yarnpkg.com/@reach/utils/-/utils-0.18.0.tgz#4f3cebe093dd436eeaff633809bf0f68f4f9d2ee"
-  integrity sha512-KdVMdpTgDyK8FzdKO9SCpiibuy/kbv3pwgfXshTI6tEcQT1OOwj7BAksnzGC0rPz0UholwC+AgkqEl3EJX3M1A==
-
-"@zendeskgarden/container-field@^3.0.10":
-  version "3.0.10"
-  resolved "https://registry.yarnpkg.com/@zendeskgarden/container-field/-/container-field-3.0.10.tgz#55c0876104b71fe6221a968ff41c19719ba38936"
-  integrity sha512-TiFqgD1QeSPHm5jwy5SHAbWqZY8pFytyc6PykYRA7kmdEM3pED/ULa4jx5XldZ6OdJXxli+rGaaF64a/Fr2FzQ==
-  dependencies:
-    "@babel/runtime" "^7.8.4"
-    "@zendeskgarden/container-utilities" "^1.0.10"
-
-"@zendeskgarden/container-utilities@^1.0.10":
-  version "1.0.10"
-  resolved "https://registry.yarnpkg.com/@zendeskgarden/container-utilities/-/container-utilities-1.0.10.tgz#1550160d221bfb4b3be4ec850f632acf21c800dc"
-  integrity sha512-c1x3xph/7IE5+zNSDF8B27nbh6LSURQ0pFMdyusbbxo9fIUerh/85+kCk8t1wElYFeNFeB6vVABqKbhO4nlFqw==
-  dependencies:
-    "@babel/runtime" "^7.8.4"
-    "@reach/auto-id" "^0.18.0"
-
 compute-scroll-into-view@^3.0.3:
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/compute-scroll-into-view/-/compute-scroll-into-view-3.0.3.tgz#c418900a5c56e2b04b885b54995df164535962b1"
