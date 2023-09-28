@@ -538,6 +538,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
 
     return () => {
       win.document.removeEventListener('click', handleMenuBlur, true);
+      win.document.removeEventListener('keydown', handleMenuKeyDown, true);
     };
   }, [controlledIsExpanded, handleMenuBlur, handleMenuKeyDown, environment]);
 
@@ -620,7 +621,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
       'data-garden-container-version': PACKAGE_VERSION,
       ref: triggerRef,
       id: triggerId,
-      'aria-expanded': state.isExpanded,
+      'aria-expanded': controlledIsExpanded,
       'aria-haspopup': true,
       disabled,
       tabIndex: disabled ? -1 : 0,
@@ -629,7 +630,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
       onKeyDown: composeEventHandlers(onKeyDown, handleTriggerKeyDown),
       onClick: composeEventHandlers(onClick, handleTriggerClick)
     }),
-    [triggerRef, state.isExpanded, handleTriggerClick, handleTriggerKeyDown, triggerId]
+    [triggerRef, controlledIsExpanded, handleTriggerClick, handleTriggerKeyDown, triggerId]
   );
 
   const getMenuProps = useCallback<IUseMenuReturnValue['getMenuProps']>(
