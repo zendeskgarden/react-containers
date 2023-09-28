@@ -6,7 +6,10 @@
  */
 
 import '@testing-library/jest-dom/extend-expect';
-
+/* eslint-disable-next-line */
+import { TextEncoder } from 'util';
 import { configure } from '@testing-library/react';
+
+Object.assign(global, { TextEncoder });
 
 configure({ testIdAttribute: 'data-test-id' });

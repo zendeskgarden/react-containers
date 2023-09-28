@@ -207,7 +207,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
   );
 
   const getSelectedItems = useCallback(
-    ({ value, type, name, label, selected }) => {
+    ({ value, type, name, label, selected }: IMenuItemBase) => {
       let changes: ISelectedItem[] | null = [...controlledSelectedItems];
 
       if (!type) return null;
@@ -342,7 +342,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
   }, [onChange]);
 
   const handleItemClick = useCallback(
-    (item: IMenuItemBase & { selected?: boolean }) => {
+    (item: IMenuItemBase) => {
       let changeType = StateChangeTypes.MenuItemClick;
       const { isNext, isPrevious } = item;
       const isTransitionItem = isNext || isPrevious;
@@ -386,7 +386,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
   );
 
   const handleItemKeyDown = useCallback(
-    (event: React.KeyboardEvent, item: IMenuItemBase & { selected?: boolean }) => {
+    (event: React.KeyboardEvent, item: IMenuItemBase) => {
       const { key } = event;
       const { isNext, isPrevious } = item;
 

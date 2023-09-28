@@ -42,7 +42,7 @@ describe('useGrid', () => {
                       })}
                       type="button"
                     >
-                      {rowItem}
+                      {rowItem as string}
                     </button>
                   </td>
                 ))}

@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-// import { renderHook } from '@testing-library/react-hooks';
+import React from 'react';
 import { renderHook } from '@testing-library/react-hooks/server';
 import { useId } from './useId';
 
@@ -19,8 +19,9 @@ describe('useId()', () => {
 
   it('generates SSR ID', () => {
     const { result } = renderHook(() => useId());
+    const expected = Object.hasOwn(React, 'useId') ? ':R0:' : 'id:';
 
-    expect(result.current).toContain('id:');
+    expect(result.current).toContain(expected);
   });
 
   it('generates CSR ID', () => {
@@ -28,7 +29,11 @@ describe('useId()', () => {
 
     hydrate();
 
-    expect(result.current).toBeGreaterThanOrEqual(0);
+    if (Object.hasOwn(React, 'useId')) {
+      expect(result.current).toBe(':R0:');
+    } else {
+      expect(result.current).toBeGreaterThanOrEqual(0);
+    }
   });
 
   it('accepts an ID', () => {

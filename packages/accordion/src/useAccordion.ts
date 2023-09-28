@@ -69,9 +69,9 @@ export function useAccordion<Value>({
     [sections, internalExpandedState, collapsible, expandable, isControlled, onChange]
   );
 
-  const getHeaderProps = useCallback(
+  const getHeaderProps = useCallback<IUseAccordionReturnValue<any>['getHeaderProps']>(
     ({ role = 'heading', 'aria-level': ariaLevel, ...props }) => ({
-      role,
+      role: role === null ? undefined : role,
       'aria-level': ariaLevel,
       'data-garden-container-id': 'containers.accordion',
       'data-garden-container-version': PACKAGE_VERSION,
@@ -80,13 +80,13 @@ export function useAccordion<Value>({
     []
   );
 
-  const getTriggerProps = useCallback(
+  const getTriggerProps = useCallback<IUseAccordionReturnValue<any>['getTriggerProps']>(
     ({ value, role = 'button', tabIndex = 0, ...props }) => ({
       id: `${TRIGGER_ID}:${value}`,
-      role,
+      role: role === null ? undefined : role,
       tabIndex,
       'aria-controls': `${PANEL_ID}:${value}`,
-      'aria-disabled': disabledState.includes(value) || null,
+      'aria-disabled': disabledState.includes(value) || undefined,
       'aria-expanded': internalExpandedState.includes(value),
       onClick: composeEventHandlers(props.onClick, () => toggle(value)),
       onKeyDown: composeEventHandlers(props.onKeyDown, (event: KeyboardEvent) => {
@@ -100,10 +100,10 @@ export function useAccordion<Value>({
     [PANEL_ID, TRIGGER_ID, internalExpandedState, disabledState, toggle]
   );
 
-  const getPanelProps = useCallback(
+  const getPanelProps = useCallback<IUseAccordionReturnValue<any>['getPanelProps']>(
     ({ value, role = 'region', ...props }) => ({
       id: `${PANEL_ID}:${value}`,
-      role,
+      role: role === null ? undefined : role,
       'aria-hidden': !internalExpandedState.includes(value),
       'aria-labelledby': `${TRIGGER_ID}:${value}`,
       ...props

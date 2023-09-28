@@ -97,7 +97,7 @@ describe('ComboboxContainer', () => {
                       {...getTagProps({ 'aria-label': 'tag', option })}
                       type="button"
                     >
-                      {option.label || option.value}
+                      {option.label || option.value.toString()}
                     </button>
                   ))}
                 <input data-test-id={inputTestId} {...getInputProps()} />
@@ -116,7 +116,7 @@ describe('ComboboxContainer', () => {
                       {...getTagProps({ 'aria-label': 'tag', option })}
                       type="button"
                     >
-                      {option.label || option.value}
+                      {option.label || option.value.toString()}
                     </button>
                   ))}
                 <input data-test-id={inputTestId} {...getInputProps()} />
@@ -144,7 +144,7 @@ describe('ComboboxContainer', () => {
                           data-test-id={`${optionTestIdPrefix}-${index + 1}.${groupIndex + 1}`}
                           {...getOptionProps({ option: groupOption })}
                         >
-                          {groupOption.label || groupOption.value}
+                          {groupOption.label || groupOption.value.toString()}
                         </li>
                       ))}
                     </ul>
@@ -155,7 +155,7 @@ describe('ComboboxContainer', () => {
                     data-test-id={`${optionTestIdPrefix}-${index + 1}`}
                     {...getOptionProps({ option })}
                   >
-                    {option.label || option.value}
+                    {option.label || option.value.toString()}
                   </li>
                 )
               )}
