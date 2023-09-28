@@ -7,7 +7,7 @@
   "index.esm.js": {
     "bundled": 3703,
     "minified": 1950,
-    "gzipped": 795,
+    "gzipped": 791,
     "treeshaked": {
       "rollup": {
         "code": 131,

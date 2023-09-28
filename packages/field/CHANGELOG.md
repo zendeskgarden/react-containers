@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.0.11](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-field@3.0.10...@zendeskgarden/container-field@3.0.11) (2023-09-28)
+
+### Bug Fixes
+
+- **deps:** update non-major package dependencies ([#590](https://github.com/zendeskgarden/react-containers/issues/590)) ([80c4e81](https://github.com/zendeskgarden/react-containers/commit/80c4e8131ec657b38d3e8932aa688fcd141e8cb8))
+
 ## [3.0.10](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-field@3.0.9...@zendeskgarden/container-field@3.0.10) (2023-08-29)
 
 ### Bug Fixes
