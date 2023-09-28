@@ -62,7 +62,7 @@
     "@types/react-dom": "18.2.8",
     "@typescript-eslint/eslint-plugin": "6.7.3",
     "@typescript-eslint/parser": "6.7.3",
-    "@zendeskgarden/eslint-config": "34.0.0",
+    "@zendeskgarden/eslint-config": "35.0.0",
     "@zendeskgarden/react-theming": "8.70.1",
     "@zendeskgarden/scripts": "2.0.2",
     "@zendeskgarden/tailwindcss": "3.1.1",
