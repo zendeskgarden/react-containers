@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.1](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-menu@0.2.0...@zendeskgarden/container-menu@0.2.1) (2023-09-28)
+
+### Bug Fixes
+
+- **deps:** update non-major package dependencies ([#590](https://github.com/zendeskgarden/react-containers/issues/590)) ([80c4e81](https://github.com/zendeskgarden/react-containers/commit/80c4e8131ec657b38d3e8932aa688fcd141e8cb8))
+- **menu:** removes document event listeners when menu closes + fixes trigger expansion attributes ([#602](https://github.com/zendeskgarden/react-containers/issues/602)) ([fd3906b](https://github.com/zendeskgarden/react-containers/commit/fd3906bef20a5ed88a8f6089e56d60ce0c4266a0))
+
 # [0.2.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-menu@0.1.1...@zendeskgarden/container-menu@0.2.0) (2023-09-18)
 
 ### Features
