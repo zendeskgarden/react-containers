@@ -846,6 +846,27 @@ describe('MenuContainer', () => {
       expect(fruit1).toHaveAttribute('aria-checked', 'true');
     });
 
+    it('returns normal keyboard navigation after menu closes', async () => {
+      const { getByText, getByTestId } = render(
+        <>
+          <TestMenu items={ITEMS} />
+          <button>focus me</button>
+        </>
+      );
+      const trigger = getByTestId('trigger');
+      const nextFocusedElement = getByText('focus me');
+
+      trigger.focus();
+
+      await act(async () => {
+        await user.keyboard('{Enter}'); // select trigger
+        await user.keyboard('{Enter}'); // select first item
+        await user.keyboard('{Tab}');
+      });
+
+      expect(nextFocusedElement).toHaveFocus();
+    });
+
     describe('onChange', () => {
       const onChange = jest.fn();
 
