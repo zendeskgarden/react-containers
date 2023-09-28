@@ -38,16 +38,14 @@ export const useFocusJail = <T extends Element = Element>(
 
   const focusElement = useCallback<IUseFocusJailReturnValue['focusElement']>(
     element => {
-      if (element) {
-        const htmlElement = element as unknown as HTMLElement;
+      const htmlElement = element as unknown as HTMLElement;
 
-        // This is to help with testing since jsdom doesn't seem to call the
-        // React synthetic event onFocus callback
-        if (focusElem) {
-          focusElem(htmlElement);
-        } else {
-          htmlElement.focus();
-        }
+      // This is to help with testing since jsdom doesn't seem to call the
+      // React synthetic event onFocus callback
+      if (focusElem) {
+        focusElem(htmlElement);
+      } else {
+        htmlElement && htmlElement.focus();
       }
     },
     [focusElem]
@@ -112,7 +110,7 @@ export const useFocusJail = <T extends Element = Element>(
 
     restoreFocusElement.current = activeElement(doc);
 
-    if (focusOnMount && currentRef) {
+    if (focusOnMount) {
       focusElement(currentRef);
     }
 

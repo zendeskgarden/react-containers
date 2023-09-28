@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useRef, useState } from 'react';
-import { RenderResult, render, act } from '@testing-library/react';
+import { RenderResult, render, act, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MenuItem, IMenuItemBase, IUseMenuProps, IUseMenuReturnValue } from './types';
 import { MenuContainer } from './';
@@ -246,7 +246,7 @@ describe('MenuContainer', () => {
       const trigger = getByTestId('trigger');
       const menu = getByTestId('menu');
 
-      await act(async () => {
+      await waitFor(async () => {
         await user.click(trigger);
         await user.click(document.body);
       });
@@ -340,7 +340,7 @@ describe('MenuContainer', () => {
 
           trigger.focus();
 
-          await act(async () => {
+          await waitFor(async () => {
             await user.keyboard('{ArrowDown}');
             await user.keyboard('{Escape}');
           });
@@ -383,7 +383,7 @@ describe('MenuContainer', () => {
         });
 
         it('focuses first item on last item ArrowDown keydown', async () => {
-          await act(async () => {
+          await waitFor(async () => {
             await user.keyboard('{ArrowUp}');
             await user.keyboard('{ArrowDown}');
           });
@@ -392,7 +392,7 @@ describe('MenuContainer', () => {
         });
 
         it('focuses previous item on ArrowUp keydown', async () => {
-          await act(async () => {
+          await waitFor(async () => {
             await user.keyboard('{ArrowDown}');
             await user.keyboard('{ArrowUp}');
           });
@@ -409,7 +409,7 @@ describe('MenuContainer', () => {
         });
 
         it('focuses first item when ArrowDown pressed on last item keydown', async () => {
-          await act(async () => {
+          await waitFor(async () => {
             await user.keyboard('{ArrowUp}');
             await user.keyboard('{ArrowDown}');
           });
@@ -506,7 +506,7 @@ describe('MenuContainer', () => {
 
         trigger.focus();
 
-        await act(async () => {
+        await waitFor(async () => {
           await user.keyboard('{ArrowDown}');
           await user.keyboard('{Enter}');
         });
@@ -521,7 +521,7 @@ describe('MenuContainer', () => {
 
         trigger.focus();
 
-        await act(async () => {
+        await waitFor(async () => {
           await user.keyboard('{ArrowDown}');
           await user.keyboard(' ');
         });
@@ -578,7 +578,7 @@ describe('MenuContainer', () => {
         });
 
         it('applies correct accessibility attributes to deselected checkbox item', async () => {
-          await act(async () => {
+          await waitFor(async () => {
             await user.click(firstCheckboxItem);
             await user.click(trigger);
             await user.click(firstCheckboxItem);
@@ -588,7 +588,7 @@ describe('MenuContainer', () => {
         });
 
         it('sets correct selection to multiple item types', async () => {
-          await act(async () => {
+          await waitFor(async () => {
             await user.click(firstCheckboxItem);
             await user.click(trigger);
             await user.click(secondCheckboxItem);
@@ -686,7 +686,7 @@ describe('MenuContainer', () => {
 
         trigger.focus();
 
-        await act(async () => {
+        await waitFor(async () => {
           await user.keyboard('{ArrowDown}');
           await user.keyboard('{Enter}');
         });
@@ -700,7 +700,7 @@ describe('MenuContainer', () => {
 
         trigger.focus();
 
-        await act(async () => {
+        await waitFor(async () => {
           await user.keyboard('{ArrowDown}');
           await user.keyboard('{Enter}');
         });
@@ -720,7 +720,7 @@ describe('MenuContainer', () => {
 
         trigger.focus();
 
-        await act(async () => {
+        await waitFor(async () => {
           await user.keyboard('{ArrowDown}');
           await user.keyboard('{Enter}');
         });
@@ -841,7 +841,7 @@ describe('MenuContainer', () => {
       const { getByText } = render(<TestMenu items={ITEMS} isExpanded />);
       const fruit1 = getByText('Apple');
 
-      await act(async () => {
+      await waitFor(async () => {
         await user.hover(fruit1);
         await user.keyboard('{Enter}');
       });

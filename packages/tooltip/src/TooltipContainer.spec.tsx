@@ -7,7 +7,7 @@
 
 import React from 'react';
 import userEvent from '@testing-library/user-event';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, waitFor } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 import { KEY_CODES } from '@zendeskgarden/container-utilities';
 
@@ -81,11 +81,10 @@ describe('TooltipContainer', () => {
         expect(getByRole('tooltip')).toHaveAttribute('aria-hidden', 'false');
 
         await user.tab();
-        act(() => {
-          jest.runOnlyPendingTimers();
-        });
 
-        expect(getByText('tooltip')).toHaveAttribute('aria-hidden', 'true');
+        await waitFor(() => {
+          expect(getByText('tooltip')).toHaveAttribute('aria-hidden', 'true');
+        });
       });
     });
 
