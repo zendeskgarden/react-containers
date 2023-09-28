@@ -861,7 +861,7 @@ describe('MenuContainer', () => {
 
       trigger.focus();
 
-      await act(async () => {
+      await waitFor(async () => {
         await user.keyboard('{Enter}'); // select trigger
         await user.keyboard('{Enter}'); // select first item
         await user.keyboard('{Tab}');
