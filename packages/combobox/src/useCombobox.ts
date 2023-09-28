@@ -154,9 +154,9 @@ export const useCombobox = <
    * Handlers
    */
 
-  const handleDownshiftStateChange: IUseDownshiftProps<
-    OptionValue | OptionValue[]
-  >['onStateChange'] = useCallback(
+  const handleDownshiftStateChange = useCallback<
+    NonNullable<IUseDownshiftProps<OptionValue | OptionValue[]>['onStateChange']>
+  >(
     ({ type, isOpen, selectedItem, inputValue: _inputValue, highlightedIndex }) =>
       onChange({
         type: toType(type),
@@ -325,7 +325,7 @@ export const useCombobox = <
     onChange({ type: toType(useDownshift.stateChangeTypes.FunctionOpenMenu), isExpanded: true });
   }, [openMenu, onChange]);
 
-  const setActiveIndex = useCallback(
+  const setActiveIndex = useCallback<(index: number) => void>(
     index => {
       setHighlightedIndex(index);
       onChange({

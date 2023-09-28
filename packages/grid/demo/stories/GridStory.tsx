@@ -42,7 +42,7 @@ const Component = ({
 
                 return (
                   <td key={colIndex} className="w-5 h-5 text-center" role={role} {...props}>
-                    {matrix[rowIndex][colIndex]}
+                    {matrix[rowIndex][colIndex] as number}
                   </td>
                 );
               }
@@ -79,7 +79,7 @@ const Component = ({
                 return (
                   <td key={colIndex} role={role}>
                     <label>
-                      <span className="sr-only">{matrix[rowIndex][colIndex]}</span>
+                      <span className="sr-only">{matrix[rowIndex][colIndex] as number}</span>
                       <input
                         className="w-5 h-5"
                         name="demo"
@@ -102,7 +102,7 @@ const Component = ({
                 return (
                   <td key={colIndex} role={role}>
                     <button className="h-7 w-7" {...props} type="button">
-                      {matrix[rowIndex][colIndex]}
+                      {matrix[rowIndex][colIndex] as number}
                     </button>
                   </td>
                 );

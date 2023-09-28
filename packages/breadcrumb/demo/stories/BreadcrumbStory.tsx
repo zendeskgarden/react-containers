@@ -14,13 +14,21 @@ import {
   useBreadcrumb
 } from '@zendeskgarden/container-breadcrumb';
 
-interface IProps extends HTMLProps<HTMLDivElement> {
+interface IProps extends Omit<HTMLProps<HTMLDivElement>, 'children'> {
   'aria-label': NonNullable<HTMLProps<HTMLDivElement>['aria-label']>;
+  children?: IBreadcrumbContainerProps['children'];
 }
 
 interface IComponentProps extends IUseBreadcrumbReturnValue, IProps {}
 
-const Component = ({ getContainerProps, getCurrentPageProps, role, ...props }: IComponentProps) => (
+const Component = ({
+  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+  children,
+  getContainerProps,
+  getCurrentPageProps,
+  role,
+  ...props
+}: IComponentProps) => (
   <div role={role} {...getContainerProps(props)}>
     <a href="#foo">Home</a>
     <span aria-hidden="true" className="mx-2">

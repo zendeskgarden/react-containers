@@ -122,16 +122,19 @@ describe('MenuContainer', () => {
     const menuRef = useRef<HTMLUListElement>(null);
     const [items, setItems] = useState(ROOT_ITEMS);
 
-    const handleChange = useCallback(({ type, isExpanded }) => {
-      const isNext = type.includes('next');
-      const isPrev = type.includes('previous');
+    const handleChange = useCallback<NonNullable<IUseMenuProps['onChange']>>(
+      ({ type, isExpanded }) => {
+        const isNext = type.includes('next');
+        const isPrev = type.includes('previous');
 
-      if (isNext || isPrev) {
-        setItems(isNext ? NEXT_ITEMS : ROOT_ITEMS);
-      } else if (isExpanded === false) {
-        setItems(ROOT_ITEMS);
-      }
-    }, []);
+        if (isNext || isPrev) {
+          setItems(isNext ? NEXT_ITEMS : ROOT_ITEMS);
+        } else if (isExpanded === false) {
+          setItems(ROOT_ITEMS);
+        }
+      },
+      []
+    );
 
     return (
       <MenuContainer
