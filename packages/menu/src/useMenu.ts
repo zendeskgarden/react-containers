@@ -229,10 +229,10 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
         const index = changes.findIndex(item => item.name === name);
 
         if (index > -1) {
-          changes.splice(index, 1, selectedItem);
-        } else {
-          changes.push(selectedItem);
+          changes.splice(index, 1);
         }
+
+        changes.push(selectedItem);
       }
 
       return changes;
