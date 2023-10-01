@@ -36,25 +36,25 @@ your PR is merged.
 
 ## Development Workflow
 
-Before you start, be sure [yarn](https://yarnpkg.com/en/) is installed
-on your system. After you clone this repo, run `yarn` to install
-dependencies needed for development. After installation, the following
-commands are available:
+Before you start, be sure [npm](https://www.npmjs.com/package/npm) is installed
+on your system. After you clone this repo, run `npm install` to install
+dependencies needed for development. After installation, the following commands
+are available:
 
-- `yarn start` to launch Storybook with live reload.
-- `yarn test` to run Jest testing.
-- `yarn lint` to enforce consistent JavaScript and
+- `npm start` to launch Storybook with live reload.
+- `npm test` to run Jest testing.
+- `npm run lint` to enforce consistent JavaScript and
   markdown code conventions across all container packages. Note this is
   run as a git `pre-commit` hook.
-- `yarn format` to enforce code style with opinionated
+- `npm run format` to enforce code style with opinionated
   formats across all container packages. Note this is run as a git
   `pre-commit` hook.
-- `yarn build` to rebuild distributions across all packages.
+- `npm run build` to rebuild distributions across all packages.
   The build runs as part of the initial install. Operates as a facade
   over a Lerna command; operation may be modified using option
   [flags](https://github.com/lerna/lerna#flags) (i.e. `scope`, `since`,
   or `ignore`).
-- `yarn new` to generate a new React container based on a package
+- `npm run new` to generate a new React container based on a package
   template.
 
 See our [development documentation](DEVELOPMENT.md) for package

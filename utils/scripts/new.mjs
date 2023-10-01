@@ -33,7 +33,7 @@ const bootstrap = async (component, spinner) => {
     `@zendeskgarden/container-${component.toLowerCase()}`
   ];
 
-  await execa('yarn', lernaArgs, { stdin: process.stdin, stdout: process.stdout });
+  await execa('npm', 'exec', '--', lernaArgs, { stdin: process.stdin, stdout: process.stdout });
 };
 
 /**

@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { renderHook } from '@testing-library/react-hooks/server';
+import { renderHook } from '@testing-library/react/server';
 import { useId } from './useId';
 
 describe('useId()', () => {
