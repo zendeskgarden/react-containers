@@ -70,15 +70,17 @@ export interface IUseMenuProps<T = HTMLButtonElement, M = HTMLElement> {
    * Handles menu state changes
    *
    * @param {string} changes.type The event type that triggered the change
+   * @param {string} [changes.value] The item value
    * @param {boolean} [changes.isExpanded] The updated menu expansion
-   * @param {ISelectedItem[]} [changes.selectedItems] The updated selection values
    * @param {string | null} [changes.focusedValue] The updated focused value
+   * @param {ISelectedItem[]} [changes.selectedItems] The updated selected items
    */
   onChange?: (changes: {
     type: string;
+    value?: string;
     isExpanded?: boolean;
-    selectedItems?: ISelectedItem[];
     focusedValue?: string | null;
+    selectedItems?: ISelectedItem[];
   }) => void;
   /** Sets the environment where the menu is rendered */
   environment?: Window;
