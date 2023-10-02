@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.2](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-menu@0.2.1...@zendeskgarden/container-menu@0.2.2) (2023-10-02)
+
+### Bug Fixes
+
+- **menu:** ensures most recent selected item is last in change handler selectedItems arg ([#603](https://github.com/zendeskgarden/react-containers/issues/603)) ([bbc7b40](https://github.com/zendeskgarden/react-containers/commit/bbc7b4096a5374b9f9fe0af32b50833c528baf7b))
+
 ## [0.2.1](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-menu@0.2.0...@zendeskgarden/container-menu@0.2.1) (2023-09-28)
 
 ### Bug Fixes
