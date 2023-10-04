@@ -12,6 +12,7 @@ import React, {
   useEffect,
   useMemo,
   useReducer,
+  useRef,
   useState
 } from 'react';
 import { useSelection } from '@zendeskgarden/container-selection';
@@ -92,6 +93,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
    */
 
   const [menuVisible, setMenuVisible] = useState<boolean>(false);
+  const focusTriggerRef = useRef<boolean>(false);
 
   const [state, dispatch] = useReducer(stateReducer, {
     focusedValue: focusedValue || defaultFocusedValue,
@@ -316,14 +318,14 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
 
         const type = StateChangeTypes[key === KEYS.ESCAPE ? 'MenuKeyDownEscape' : 'MenuKeyDownTab'];
 
-        closeMenu(type);
-
-        if (triggerRef?.current && KEYS.ESCAPE === key) {
-          triggerRef.current.focus();
+        if (KEYS.ESCAPE === key) {
+          focusTriggerRef.current = true;
         }
+
+        closeMenu(type);
       }
     },
-    [closeMenu, triggerRef]
+    [closeMenu, focusTriggerRef]
   );
 
   const handleMenuBlur = useCallback(
@@ -423,8 +425,8 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
           ...(nextSelection && { selectedItems: nextSelection })
         };
 
-        if (triggerRef?.current && !isTransitionItem) {
-          triggerRef.current.focus();
+        if (!isTransitionItem) {
+          focusTriggerRef.current = true;
         }
       } else if (key === KEYS.RIGHT) {
         if (rtl && isPrevious) {
@@ -490,11 +492,11 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
     },
     [
       rtl,
-      triggerRef,
       state.nestedPathIds,
       isExpandedControlled,
       isFocusedValueControlled,
       isSelectedItemsControlled,
+      focusTriggerRef,
       getNextFocusedValue,
       getSelectedItems,
       onChange
@@ -553,7 +555,12 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
   }, [controlledIsExpanded, handleMenuBlur, handleMenuKeyDown, environment]);
 
   /**
-   * Focus initial item when menu opens or changes due to sub-menu transition
+   * Handles focus depending on menu state:
+   * - When opened, focus the menu via `focusedValue`
+   * - When closed, focus the trigger via `triggerRef`
+   *
+   * This effect is intended to prevent focusing the trigger or menu
+   * unless the menu is in the right expansion state.
    */
   useEffect(() => {
     if (state.focusOnOpen && menuVisible && controlledFocusedValue && controlledIsExpanded) {
@@ -568,13 +575,20 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
 
       ref && ref.focus();
     }
+
+    if (!menuVisible && !controlledIsExpanded && focusTriggerRef.current) {
+      triggerRef?.current?.focus();
+      focusTriggerRef.current = false;
+    }
   }, [
+    focusTriggerRef,
     values,
     menuVisible,
     itemRefs,
     controlledFocusedValue,
     state.focusOnOpen,
-    controlledIsExpanded
+    controlledIsExpanded,
+    triggerRef
   ]);
 
   /**
