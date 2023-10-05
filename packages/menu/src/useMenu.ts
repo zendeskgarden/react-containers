@@ -372,6 +372,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
 
       onChange({
         type: changeType,
+        value: item.value,
         ...(!isTransitionItem && { isExpanded: false }),
         ...(nextSelection && { selectedItems: nextSelection })
       });
@@ -417,6 +418,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
         };
 
         changes = {
+          value: item.value,
           ...(!isTransitionItem && { isExpanded: false }),
           ...(nextSelection && { selectedItems: nextSelection })
         };
@@ -432,6 +434,10 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
         if (!rtl && isNext) {
           changeType = StateChangeTypes.MenuItemKeyDownNext;
         }
+
+        if (changeType) {
+          changes = { value: item.value };
+        }
       } else if (key === KEYS.LEFT) {
         if (rtl && isNext) {
           changeType = StateChangeTypes.MenuItemKeyDownNext;
@@ -439,6 +445,10 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
 
         if (!rtl && isPrevious) {
           changeType = StateChangeTypes.MenuItemKeyDownPrevious;
+        }
+
+        if (changeType) {
+          changes = { value: item.value };
         }
       } else if (isVerticalArrowKeys || isJumpKey || isAlphanumericChar) {
         changeType = isAlphanumericChar
