@@ -87,7 +87,7 @@
     "markdownlint-cli": "0.37.0",
     "ora": "7.0.1",
     "postcss": "8.4.31",
-    "prettier": "2.8.8",
+    "prettier": "3.0.3",
     "prettier-package-json": "2.8.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
