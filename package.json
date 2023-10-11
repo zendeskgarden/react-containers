@@ -7,8 +7,8 @@
     "build:demo": "storybook build -o demo",
     "format": "prettier-package-json --write && npm run -- format:package_json --write && npm run -- format:js --write && npm run -- format:md --write",
     "format:all": "prettier-package-json --list-different && npm run -- format:package_json --list-different && npm run -- format:js --check && npm run -- format:md --check",
-    "format:js": "prettier --loglevel warn '{packages,utils}/**/*.{js,mjs,ts,tsx}' '!packages/.template' '!packages/**/dist/**'",
-    "format:md": "prettier --loglevel warn 'packages/**/!(CHANGELOG)*.md'",
+    "format:js": "prettier --log-level warn '{packages,utils}/**/*.{js,mjs,ts,tsx}' '!packages/.template' '!packages/**/dist/**'",
+    "format:md": "prettier --log-level warn 'packages/**/!(CHANGELOG)*.md'",
     "format:package_json": "lerna exec -- prettier-package-json",
     "postinstall": "husky install && lerna bootstrap",
     "lint": "npm run lint:js && npm run lint:md",
@@ -21,7 +21,7 @@
     "tag": "lerna version --conventional-commits --force-git-tag",
     "test": "jest --config=utils/test/jest.config.js",
     "test:ci": "npm test --coverage --runInBand",
-    "test:watch": "npm test --watch",
+    "test:watch": "npm test -- --watch",
     "version": "npm run build && git add -A"
   },
   "devDependencies": {
