@@ -892,6 +892,37 @@ describe('MenuContainer', () => {
         expect(changeTypes).toContain(StateChangeTypes.TriggerClick);
       });
 
+      it('calls onChange with selected value on item mouse click', async () => {
+        const { getByText } = render(
+          <TestMenu items={ITEMS} onChange={onChange} isExpanded focusedValue="plant-01" />
+        );
+
+        const item = getByText('Kale');
+
+        await act(() => user.click(item));
+
+        const values = onChange.mock.calls.map(([change]) => change.value);
+
+        expect(values).toContain('vegetable-04');
+      });
+
+      it('calls onChange with selected value on item keyboard selection', async () => {
+        const { getByTestId } = render(
+          <TestMenu items={ITEMS} onChange={onChange} focusedValue="plant-01" />
+        );
+
+        const trigger = getByTestId('trigger');
+
+        trigger.focus();
+
+        await act(() => user.keyboard('{ArrowDown}'));
+        await act(() => user.keyboard('{Enter}'));
+
+        const values = onChange.mock.calls.map(([change]) => change.value);
+
+        expect(values).toContain('plant-01');
+      });
+
       it.each([
         ['Space', ' ', StateChangeTypes.TriggerKeyDownSpace],
         ['Enter', '{Enter}', StateChangeTypes.TriggerKeyDownEnter],

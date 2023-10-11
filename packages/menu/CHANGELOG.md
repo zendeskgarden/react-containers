@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-menu@0.2.2...@zendeskgarden/container-menu@0.3.0) (2023-10-05)
+
+### Bug Fixes
+
+- **menu:** prevents focus from moving out of the menu unless it is actually closed ([#605](https://github.com/zendeskgarden/react-containers/issues/605)) ([8efc805](https://github.com/zendeskgarden/react-containers/commit/8efc805b625022b74b0a3bc14d1a2aa4edcc95fe))
+
+### Features
+
+- **menu:** passes clicked item's value to onChange ([#604](https://github.com/zendeskgarden/react-containers/issues/604)) ([ccb8729](https://github.com/zendeskgarden/react-containers/commit/ccb87294fd004aa31c0449deaae9103dcc72507d))
+
+## [0.2.2](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-menu@0.2.1...@zendeskgarden/container-menu@0.2.2) (2023-10-02)
+
+### Bug Fixes
+
+- **menu:** ensures most recent selected item is last in change handler selectedItems arg ([#603](https://github.com/zendeskgarden/react-containers/issues/603)) ([bbc7b40](https://github.com/zendeskgarden/react-containers/commit/bbc7b4096a5374b9f9fe0af32b50833c528baf7b))
+
 ## [0.2.1](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-menu@0.2.0...@zendeskgarden/container-menu@0.2.1) (2023-09-28)
 
 ### Bug Fixes
