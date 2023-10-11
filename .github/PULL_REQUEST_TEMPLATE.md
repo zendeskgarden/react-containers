@@ -22,7 +22,7 @@
 <!-- check the items below that will be completed prior to merge.
      strikethrough any item text that does not apply to this PR. -->
 
-- [ ] :globe_with_meridians: demo is up-to-date (`yarn start`)
+- [ ] :globe_with_meridians: demo is up-to-date (`npm start`)
 - [ ] :guardsman: includes new unit tests
 - [ ] :wheelchair: tested for [WCAG 2.1](https://www.w3.org/TR/WCAG21) AA compliance
 - [ ] :memo: tested in Chrome, Firefox, Safari, and Edge

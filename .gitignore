@@ -1,12 +1,7 @@
-# General ignores
 .env
 node_modules
+yarn.lock
 *.log
 .cache/
-
-# Package specific
 packages/**/dist
-package-lock.json
-
-# Demo specific
 demo/**/*
