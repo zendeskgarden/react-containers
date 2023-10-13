@@ -6,7 +6,7 @@
  */
 
 /* eslint-disable-next-line no-undef */
-const lib = jest.requireActual('../../../../packages/focusjail/node_modules/tabbable');
+const lib = jest.requireActual('../../../../node_modules/tabbable');
 
 const tabbable = {
   ...lib,
