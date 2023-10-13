@@ -18,19 +18,20 @@ const program = new Command();
 const info = (message, spinner) => spinner.info(message).start();
 
 /**
- * Bootstrap the new package.
+ * Build the new package.
  *
  * @param {String} component Component name.
  * @param {Ora} spinner Terminal spinner.
  */
-const bootstrap = async (component, spinner) => {
-  info(`Bootstrapping package...`, spinner);
+const build = async (component, spinner) => {
+  info(`Building package...`, spinner);
 
   const lernaArgs = [
     'exec',
     'lerna',
     '--',
-    'bootstrap',
+    'run',
+    'build',
     '--scope',
     `@zendeskgarden/container-${component.toLowerCase()}`
   ];
@@ -70,7 +71,7 @@ program
 
       const path = await generate(component, spinner);
 
-      await bootstrap(component, spinner);
+      await build(component, spinner);
       spinner.succeed(`Success.\nThe new package – ${path} – is ready for development.`);
     } catch (error) {
       spinner.fail(error.message || error);
