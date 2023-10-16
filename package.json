@@ -20,7 +20,7 @@
     "start:demo": "npm run build:demo && live-server demo",
     "tag": "lerna version --conventional-commits --force-git-tag",
     "test": "jest --config=utils/test/jest.config.js",
-    "test:ci": "npm test --coverage --runInBand",
+    "test:ci": "npm test -- --coverage --runInBand",
     "test:watch": "npm test -- --watch",
     "version": "npm run build && git add -A"
   },
