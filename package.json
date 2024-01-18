@@ -89,7 +89,7 @@
     "lerna": "8.0.2",
     "lint-staged": "15.2.0",
     "markdownlint-cli": "0.38.0",
-    "ora": "7.0.1",
+    "ora": "8.0.1",
     "postcss": "8.4.33",
     "prettier": "3.2.4",
     "prettier-package-json": "2.8.0",
