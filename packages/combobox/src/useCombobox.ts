@@ -819,6 +819,7 @@ export const useCombobox = <
 
       if (option?.hidden) {
         return {
+          'aria-disabled': option.disabled ? true : undefined,
           'aria-hidden': true,
           'aria-selected': ariaSelected,
           id: option
