@@ -37,7 +37,8 @@ const Option = ({ option, isGrouped, activeValue, selection, getOptionProps }: I
       'bg-blue-100': option.value === activeValue,
       'cursor-default': option.disabled,
       'cursor-pointer': !option.disabled,
-      'text-grey-400': option.disabled
+      'text-grey-400': option.disabled,
+      'sr-only': option.hidden
     })}
     {...getOptionProps({ option })}
   >
@@ -68,7 +69,9 @@ const Tags = ({ selection, getTagProps }: ITagsProps) => {
             selection.map((option, index) => {
               const tagProps = getTagProps<HTMLButtonElement>({
                 option,
-                'aria-label': 'Press delete or backspace to remove'
+                'aria-label': option.disabled
+                  ? ''
+                  : `Press delete or backspace to remove ${toString(option)}`
               });
               const previousDisabledOptions = selection.filter(
                 (_option, _index) => _option.disabled && _index < index

@@ -14,6 +14,7 @@ interface ISelectedOption {
   value: OptionValue;
   label?: string;
   disabled?: boolean;
+  hidden?: boolean;
 }
 
 export interface IOption extends ISelectedOption {

@@ -15,7 +15,8 @@ export const OPTIONS: IUseComboboxProps['options'] = [
       { value: 'fruit-02', label: 'Banana', disabled: true },
       { value: 'fruit-03', label: 'Cherry' },
       { value: 'fruit-04', label: 'Grape' },
-      { value: 'fruit-05', label: 'Kiwi' }
+      { value: 'fruit-05', label: 'Kiwi' },
+      { value: 'fruit-06', label: 'Watermeal', hidden: true }
     ]
   },
   {
@@ -25,7 +26,8 @@ export const OPTIONS: IUseComboboxProps['options'] = [
       { value: 'vegetable-02', label: 'Broccoli', disabled: true },
       { value: 'vegetable-03', label: 'Brussel sprouts' },
       { value: 'vegetable-04', label: 'Cauliflower' },
-      { value: 'vegetable-07', label: 'Kale' }
+      { value: 'vegetable-05', label: 'Kale' },
+      { value: 'vegetable-06', label: 'Mankai', hidden: true }
     ]
   }
 ];
