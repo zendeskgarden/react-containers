@@ -766,6 +766,68 @@ describe('ComboboxContainer', () => {
         });
       });
 
+      describe('with hidden options', () => {
+        let input: HTMLElement;
+        let listboxOptions: HTMLElement[];
+        let rerender: RenderResult['rerender'];
+
+        beforeEach(async () => {
+          const {
+            getByTestId,
+            getAllByRole,
+            rerender: _rerender
+          } = render(
+            <TestCombobox
+              layout={layout}
+              options={[
+                { value: 'test-1' },
+                { value: 'test-2', hidden: true },
+                { value: 'test-3' }
+              ]}
+            />
+          );
+
+          input = getByTestId('input');
+          listboxOptions = getAllByRole('option', { hidden: true });
+          rerender = _rerender;
+
+          input.focus();
+          await user.keyboard('{ArrowDown}');
+        });
+
+        it('applies correct accessibility attributes', () => {
+          expect(listboxOptions[1]).toHaveAttribute('aria-hidden', 'true');
+        });
+
+        it('prevents hidden option activation', async () => {
+          await user.keyboard('{ArrowDown}');
+
+          expect(input).toHaveAttribute(
+            'aria-activedescendant',
+            listboxOptions[2].getAttribute('id')
+          );
+
+          await user.hover(listboxOptions[1]);
+
+          expect(input).not.toHaveAttribute(
+            'aria-activedescendant',
+            listboxOptions[1].getAttribute('id')
+          );
+        });
+
+        it('unhides options as expected', () => {
+          rerender(
+            /* simulate dynamic option unhiding */
+            <TestCombobox
+              layout={layout}
+              options={[{ value: 'test-1' }, { value: 'test-2' }, { value: 'test-3' }]}
+            />
+          );
+
+          expect(listboxOptions[1]).not.toHaveAttribute('aria-hidden');
+        });
+      });
+
       describe('controlled', () => {
         const handleChange = jest.fn();
         let input: HTMLElement;

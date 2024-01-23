@@ -78,26 +78,37 @@ export const useCombobox = <
     input: `${prefix}--input`,
     listbox: `${prefix}--listbox`,
     message: `${prefix}--message`,
-    getOptionId: (index: number, isDisabled?: boolean) =>
-      `${prefix}--option${isDisabled ? '-disabled' : ''}-${index}`
+    getOptionId: (index: number, isDisabled?: boolean, isHidden?: boolean) =>
+      `${prefix}--option${isDisabled ? '-disabled' : ''}${isHidden ? '-hidden' : ''}-${index}`
   });
   const labels: Record<string, string> = useMemo(() => ({}), []);
   const selectedValues: OptionValue[] = useMemo(() => [], []);
   const disabledValues: OptionValue[] = useMemo(() => [], []);
+  const hiddenValues: OptionValue[] = useMemo(() => [], []);
   const values = useMemo(() => {
     const retVal: OptionValue[] = [];
     const setValues = (option: IOption) => {
-      if (option.disabled) {
-        if (!disabledValues.includes(option.value)) {
+      if (option.disabled || option.hidden) {
+        if (option.disabled && !disabledValues.includes(option.value)) {
           disabledValues.push(option.value);
+        }
+
+        if (option.hidden && !hiddenValues.includes(option.value)) {
+          hiddenValues.push(option.value);
         }
       } else {
         retVal.push(option.value);
 
-        const index = disabledValues.indexOf(option.value);
+        const disabledIndex = disabledValues.indexOf(option.value);
 
-        if (index !== -1) {
-          disabledValues.splice(index, 1);
+        if (disabledIndex !== -1) {
+          disabledValues.splice(disabledIndex, 1);
+        }
+
+        const hiddenIndex = hiddenValues.indexOf(option.value);
+
+        if (hiddenIndex !== -1) {
+          hiddenValues.splice(hiddenIndex, 1);
         }
       }
 
@@ -119,7 +130,7 @@ export const useCombobox = <
     });
 
     return retVal;
-  }, [options, disabledValues, selectedValues, labels]);
+  }, [options, disabledValues, hiddenValues, selectedValues, labels]);
   const initialSelectionValue = isMultiselectable ? selectedValues : selectedValues[0];
   const initialInputValue = isMultiselectable ? '' : toLabel(labels, initialSelectionValue);
   const _defaultActiveIndex = useMemo(() => {
@@ -806,6 +817,22 @@ export const useCombobox = <
           : _selectionValue === option?.value;
       }
 
+      if (option?.hidden) {
+        return {
+          'aria-disabled': option.disabled ? true : undefined,
+          'aria-hidden': true,
+          'aria-selected': ariaSelected,
+          id: option
+            ? idRef.current.getOptionId(
+                hiddenValues.indexOf(option.value),
+                option.disabled,
+                option.hidden
+              )
+            : undefined,
+          ...optionProps
+        };
+      }
+
       if (option === undefined || option.disabled) {
         // Prevent downshift listbox mouse leave event.
         const handleMouseDown = (event: MouseEvent) => event.preventDefault();
@@ -814,7 +841,11 @@ export const useCombobox = <
           'aria-disabled': true,
           'aria-selected': ariaSelected,
           id: option
-            ? idRef.current.getOptionId(disabledValues.indexOf(option.value), option.disabled)
+            ? idRef.current.getOptionId(
+                disabledValues.indexOf(option.value),
+                option.disabled,
+                option.hidden
+              )
             : undefined,
           ...optionProps,
           onMouseDown: composeEventHandlers(onMouseDown, handleMouseDown)
@@ -825,11 +856,12 @@ export const useCombobox = <
         item: option.value,
         index: values.indexOf(option.value),
         'aria-disabled': undefined,
+        'aria-hidden': undefined,
         'aria-selected': ariaSelected,
         ...optionProps
       } as IDownshiftOptionProps<OptionValue>);
     },
-    [getDownshiftOptionProps, disabledValues, values, _selectionValue]
+    [getDownshiftOptionProps, disabledValues, hiddenValues, values, _selectionValue]
   );
 
   const getMessageProps = useCallback<IUseComboboxReturnValue['getMessageProps']>(
@@ -867,18 +899,20 @@ export const useCombobox = <
       return _selectionValue.map(value => ({
         value,
         label: labels[value],
-        disabled: disabledValues.includes(value)
+        disabled: disabledValues.includes(value),
+        hidden: hiddenValues.includes(value)
       }));
     } else if (_selectionValue) {
       return {
         value: _selectionValue,
         label: toLabel(labels, _selectionValue),
-        disabled: disabledValues.includes(_selectionValue)
+        disabled: disabledValues.includes(_selectionValue),
+        hidden: hiddenValues.includes(_selectionValue)
       };
     }
 
     return null;
-  }, [_selectionValue, disabledValues, labels]);
+  }, [_selectionValue, disabledValues, hiddenValues, labels]);
 
   return useMemo<IUseComboboxReturnValue>(
     () => ({
