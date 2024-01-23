@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.1](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-menu@0.3.0...@zendeskgarden/container-menu@0.3.1) (2024-01-23)
+
+**Note:** Version bump only for package @zendeskgarden/container-menu
+
 # [0.3.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-menu@0.2.2...@zendeskgarden/container-menu@0.3.0) (2023-10-05)
 
 ### Bug Fixes

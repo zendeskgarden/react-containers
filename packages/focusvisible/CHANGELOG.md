@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.3](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-focusvisible@2.0.2...@zendeskgarden/container-focusvisible@2.0.3) (2024-01-23)
+
+**Note:** Version bump only for package @zendeskgarden/container-focusvisible
+
 ## [2.0.2](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-focusvisible@2.0.1...@zendeskgarden/container-focusvisible@2.0.2) (2023-09-28)
 
 ### Bug Fixes

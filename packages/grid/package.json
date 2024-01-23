@@ -1,6 +1,6 @@
 {
   "name": "@zendeskgarden/container-grid",
-  "version": "3.0.11",
+  "version": "3.0.12",
   "description": "Containers relating to Grid in the Garden Design System",
   "license": "Apache-2.0",
   "author": "Zendesk Garden <garden@zendesk.com>",
@@ -21,7 +21,7 @@
   "types": "dist/typings/index.d.ts",
   "dependencies": {
     "@babel/runtime": "^7.8.4",
-    "@zendeskgarden/container-utilities": "^1.0.12"
+    "@zendeskgarden/container-utilities": "^1.0.13"
   },
   "peerDependencies": {
     "prop-types": "^15.6.1",

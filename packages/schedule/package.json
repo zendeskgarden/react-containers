@@ -1,6 +1,6 @@
 {
   "name": "@zendeskgarden/container-schedule",
-  "version": "2.0.8",
+  "version": "2.0.9",
   "description": "Containers relating to schedule in the Garden Design System",
   "license": "Apache-2.0",
   "author": "Zendesk Garden <garden@zendesk.com>",

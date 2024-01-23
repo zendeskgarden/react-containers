@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.1.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-combobox@1.0.13...@zendeskgarden/container-combobox@1.1.0) (2024-01-23)
+
+### Features
+
+- **combobox:** add support for `hidden` options ([#621](https://github.com/zendeskgarden/react-containers/issues/621)) ([c30e9a8](https://github.com/zendeskgarden/react-containers/commit/c30e9a872496b2c203c1f8b0a325389346b090a9))
+
 ## [1.0.13](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-combobox@1.0.12...@zendeskgarden/container-combobox@1.0.13) (2023-10-02)
 
 **Note:** Version bump only for package @zendeskgarden/container-combobox
