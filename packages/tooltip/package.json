@@ -1,6 +1,6 @@
 {
   "name": "@zendeskgarden/container-tooltip",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "description": "Containers relating to tooltip in the Garden Design System",
   "license": "Apache-2.0",
   "author": "Zendesk Garden <garden@zendesk.com>",
