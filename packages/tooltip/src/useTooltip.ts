@@ -7,7 +7,7 @@
 
 import { useState, useMemo, useEffect, useRef } from 'react';
 import { useUIDSeed } from 'react-uid';
-import { composeEventHandlers, KEY_CODES } from '@zendeskgarden/container-utilities';
+import { KEYS, composeEventHandlers } from '@zendeskgarden/container-utilities';
 
 export interface IUseTooltipProps {
   /** Milliseconds of delay before open/close of tooltip is initiated  */
@@ -92,7 +92,7 @@ export const useTooltip = ({
       // Close menu immediately when blurred
       onBlur: composeEventHandlers(onBlur, () => closeTooltip(0)),
       onKeyDown: composeEventHandlers(onKeyDown, (event: KeyboardEvent) => {
-        if (event.keyCode === KEY_CODES.ESCAPE && visibility) {
+        if (event.key === KEYS.ESCAPE && visibility) {
           closeTooltip(0);
         }
       }),

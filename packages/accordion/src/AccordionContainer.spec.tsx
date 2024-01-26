@@ -8,7 +8,7 @@
 import React from 'react';
 import userEvent from '@testing-library/user-event';
 import { render, fireEvent, screen } from '@testing-library/react';
-import { KEY_CODES } from '@zendeskgarden/container-utilities';
+import { KEYS } from '@zendeskgarden/container-utilities';
 import { AccordionContainer, IUseAccordionReturnValue, IUseAccordionProps } from './';
 
 describe('AccordionContainer', () => {
@@ -236,7 +236,7 @@ describe('AccordionContainer', () => {
         const { getAllByTestId } = render(<BasicExample />);
         const secondTrigger = getAllByTestId('trigger')[1];
 
-        fireEvent.keyDown(secondTrigger, { keyCode: KEY_CODES.SPACE });
+        fireEvent.keyDown(secondTrigger, { key: KEYS.SPACE });
 
         expect(secondTrigger).toHaveAttribute('aria-expanded', 'true');
       });
@@ -245,7 +245,7 @@ describe('AccordionContainer', () => {
         const { getAllByTestId } = render(<BasicExample />);
         const secondTrigger = getAllByTestId('trigger')[1];
 
-        fireEvent.keyDown(secondTrigger, { keyCode: KEY_CODES.ENTER });
+        fireEvent.keyDown(secondTrigger, { key: KEYS.ENTER });
 
         expect(secondTrigger).toHaveAttribute('aria-expanded', 'true');
       });
@@ -254,7 +254,7 @@ describe('AccordionContainer', () => {
         const { getAllByTestId } = render(<BasicExample />);
         const firstTrigger = getAllByTestId('trigger')[1];
 
-        fireEvent.keyDown(firstTrigger, { keyCode: KEY_CODES.DOWN });
+        fireEvent.keyDown(firstTrigger, { key: KEYS.DOWN });
 
         expect(firstTrigger).toHaveAttribute('aria-expanded', 'false');
       });
@@ -320,7 +320,7 @@ describe('AccordionContainer', () => {
         const firstTrigger = getAllByTestId('trigger')[0];
         const firstPanel = getAllByTestId('panel')[0];
 
-        fireEvent.keyDown(firstTrigger, { keyCode: KEY_CODES.SPACE });
+        fireEvent.keyDown(firstTrigger, { key: KEYS.SPACE });
 
         expect(firstPanel).toHaveAttribute('aria-hidden', 'false');
       });
@@ -330,7 +330,7 @@ describe('AccordionContainer', () => {
         const firstTrigger = getAllByTestId('trigger')[0];
         const firstPanel = getAllByTestId('panel')[0];
 
-        fireEvent.keyDown(firstTrigger, { keyCode: KEY_CODES.ENTER });
+        fireEvent.keyDown(firstTrigger, { key: KEYS.ENTER });
 
         expect(firstPanel).toHaveAttribute('aria-hidden', 'false');
       });
@@ -340,7 +340,7 @@ describe('AccordionContainer', () => {
         const firstTrigger = getAllByTestId('trigger')[1];
         const firstPanel = getAllByTestId('panel')[1];
 
-        fireEvent.keyDown(firstTrigger, { keyCode: KEY_CODES.DOWN });
+        fireEvent.keyDown(firstTrigger, { key: KEYS.DOWN });
 
         expect(firstPanel).toHaveAttribute('aria-hidden', 'true');
       });
