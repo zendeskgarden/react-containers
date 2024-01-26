@@ -16,7 +16,6 @@ import analyze from 'rollup-plugin-analyzer';
 import license from 'rollup-plugin-license';
 import cleanup from 'rollup-plugin-cleanup';
 import del from 'rollup-plugin-delete';
-import jsx from 'acorn-jsx';
 import { DEFAULT_EXTENSIONS } from '@babel/core';
 import tsc from 'typescript';
 
@@ -43,7 +42,6 @@ export default [
      * These are not included in the bundlesize.
      */
     external: id => externalPackages.includes(id),
-    acornInjectPlugins: [jsx()],
     plugins: [
       /**
        * Remove existing dist files and type definitions
