@@ -8,8 +8,6 @@
 export { composeEventHandlers } from './utils/composeEventHandlers';
 export { generateId, setIdCounter } from './utils/IdManager';
 export { getControlledValue } from './utils/getControlledValue';
-export { useCombinedRefs } from './utils/useCombinedRefs';
 export { convertToMatrix } from './utils/convertToMatrix';
-export { KEY_CODES, KEYS } from './utils/KeyboardEventValues';
-export { DocumentPosition } from './utils/DocumentPosition';
+export { KEYS } from './utils/KeyboardEventValues';
 export { useId } from './utils/useId';
