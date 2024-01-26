@@ -17,7 +17,6 @@ module.exports = {
     '!**/node_modules/**',
     '!**/vendor/**',
     // constant files that are not tested
-    '!<rootDir>/packages/utilities/src/utils/DocumentPosition.ts',
     '!<rootDir>/packages/utilities/src/utils/KeyboardEventValues.ts',
     '!<rootDir>/packages/utilities/src/utils/useId.ts'
   ],
