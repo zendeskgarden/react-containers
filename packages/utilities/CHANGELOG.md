@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-utilities@1.0.14...@zendeskgarden/container-utilities@2.0.0) (2024-01-26)
+
+- chore!: remove deprecated container and utilities (#624) ([e529826](https://github.com/zendeskgarden/react-containers/commit/e5298261e2cff7566643f4fc5e3ade991329bed6)), closes [#624](https://github.com/zendeskgarden/react-containers/issues/624)
+
+### BREAKING CHANGES
+
+- removes the following deprecations
+
+* `keyboardfocus` container (use `focusvisible` instead)
+* `useCombinedRefs` utility (use `react-merge-refs` instead)
+* `KEY_CODES` constant (use `KEYS` instead)
+* `DocumentPosition` enum
+
 ## [1.0.14](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-utilities@1.0.13...@zendeskgarden/container-utilities@1.0.14) (2024-01-26)
 
 **Note:** Version bump only for package @zendeskgarden/container-utilities
