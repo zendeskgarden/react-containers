@@ -9,7 +9,7 @@
  * Inspired by the jQuery UI keyCode constants
  * https://api.jqueryui.com/jQuery.ui.keyCode/
  *
- * @component
+ * @deprecated Use `KEYS` instead
  */
 export const KEY_CODES = {
   ALT: 18,

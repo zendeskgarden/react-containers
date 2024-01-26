@@ -41,7 +41,7 @@
  * </tr>
  * </table>
  *
- * @enum
+ * @deprecated
  */
 export enum DocumentPosition {
   /**
