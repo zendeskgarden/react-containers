@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.14](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-focusjail@2.0.13...@zendeskgarden/container-focusjail@2.0.14) (2024-01-26)
+
+**Note:** Version bump only for package @zendeskgarden/container-focusjail
+
 ## [2.0.13](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-focusjail@2.0.12...@zendeskgarden/container-focusjail@2.0.13) (2024-01-23)
 
 **Note:** Version bump only for package @zendeskgarden/container-focusjail

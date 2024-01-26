@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.9](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-tabs@2.0.8...@zendeskgarden/container-tabs@2.0.9) (2024-01-26)
+
+**Note:** Version bump only for package @zendeskgarden/container-tabs
+
 ## [2.0.8](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-tabs@2.0.7...@zendeskgarden/container-tabs@2.0.8) (2024-01-23)
 
 **Note:** Version bump only for package @zendeskgarden/container-tabs
