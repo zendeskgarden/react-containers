@@ -7,7 +7,7 @@
 
 import { useState, useMemo, useCallback } from 'react';
 import {
-  KEY_CODES,
+  KEYS,
   composeEventHandlers,
   getControlledValue,
   useId
@@ -90,7 +90,7 @@ export function useAccordion<Value>({
       'aria-expanded': internalExpandedState.includes(value),
       onClick: composeEventHandlers(props.onClick, () => toggle(value)),
       onKeyDown: composeEventHandlers(props.onKeyDown, (event: KeyboardEvent) => {
-        if (event.keyCode === KEY_CODES.SPACE || event.keyCode === KEY_CODES.ENTER) {
+        if (event.key === KEYS.SPACE || event.key === KEYS.ENTER) {
           toggle(value);
           event.preventDefault();
         }

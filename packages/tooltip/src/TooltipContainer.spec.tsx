@@ -9,8 +9,7 @@ import React from 'react';
 import userEvent from '@testing-library/user-event';
 import { render, fireEvent, waitFor } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
-import { KEY_CODES } from '@zendeskgarden/container-utilities';
-
+import { KEYS } from '@zendeskgarden/container-utilities';
 import { TooltipContainer, ITooltipContainerProps } from './';
 
 jest.useFakeTimers();
@@ -163,7 +162,7 @@ describe('TooltipContainer', () => {
           jest.runOnlyPendingTimers();
         });
 
-        fireEvent.keyDown(trigger, { keyCode: KEY_CODES.ESCAPE });
+        fireEvent.keyDown(trigger, { key: KEYS.ESCAPE });
         act(() => {
           jest.runOnlyPendingTimers();
         });
