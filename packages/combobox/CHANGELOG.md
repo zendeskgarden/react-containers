@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.3](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-combobox@1.1.2...@zendeskgarden/container-combobox@1.1.3) (2024-02-08)
+
+### Bug Fixes
+
+- **combobox:** workaround Downshift cursor bug ([#625](https://github.com/zendeskgarden/react-containers/issues/625)) ([8e9c494](https://github.com/zendeskgarden/react-containers/commit/8e9c49430e3dc00cdb752fa9bfae287fc1503b1c))
+
 ## [1.1.2](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-combobox@1.1.1...@zendeskgarden/container-combobox@1.1.2) (2024-01-26)
 
 **Note:** Version bump only for package @zendeskgarden/container-combobox
