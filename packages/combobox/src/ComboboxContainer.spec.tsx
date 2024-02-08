@@ -830,7 +830,7 @@ describe('ComboboxContainer', () => {
 
       describe('controlled', () => {
         const handleChange = jest.fn();
-        let input: HTMLElement;
+        let input: HTMLInputElement;
         let listboxOptions: HTMLElement[];
         let rerender: RenderResult['rerender'];
 
@@ -853,7 +853,7 @@ describe('ComboboxContainer', () => {
             />
           );
 
-          input = getByTestId('input');
+          input = getByTestId('input') as HTMLInputElement;
           listboxOptions = getAllByRole('option');
           rerender = _rerender;
         });
@@ -867,6 +867,19 @@ describe('ComboboxContainer', () => {
           const changeTypes = handleChange.mock.calls.map(([change]) => change.type);
 
           expect(changeTypes).toMatchObject(['input:click', 'input:keyDown:ArrowDown']);
+        });
+
+        it('retains cursor position on input change', async () => {
+          await user.type(input, 'tet');
+          await user.keyboard('{ArrowLeft}');
+
+          expect(input.selectionStart).toBe(2);
+
+          await user.keyboard('s');
+
+          expect(input).toHaveValue('test');
+          expect(input.selectionStart).toBe(3);
+          expect(handleChange).toHaveBeenCalledTimes(5);
         });
 
         it('handles IME input as expected', () => {
