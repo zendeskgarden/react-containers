@@ -67,6 +67,7 @@ export const useCombobox = <
   }
 
   const [triggerContainsInput, setTriggerContainsInput] = useState<boolean>();
+  const [downshiftInputValue, setDownshiftInputValue] = useState(inputValue);
   const [matchValue, setMatchValue] = useState('');
   const matchTimeoutRef = useRef<number>();
   const previousStateRef = useRef<IPreviousState>();
@@ -310,7 +311,7 @@ export const useCombobox = <
     menuId: idRef.current.listbox,
     getItemId: idRef.current.getOptionId,
     items: values,
-    inputValue,
+    inputValue: downshiftInputValue,
     initialInputValue,
     itemToString: transformValue as any /* HACK around Downshift's generic type overuse */,
     selectedItem: selectionValue,
@@ -640,14 +641,20 @@ export const useCombobox = <
 
       if (isEditable) {
         const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-          // Override needed to workaround Downshift IME bug.
-          // https://github.com/downshift-js/downshift/issues/1452
-          if (inputValue !== undefined && (event.nativeEvent as InputEvent).isComposing) {
-            /* istanbul ignore next */
-            handleDownshiftStateChange({
-              type: useDownshift.stateChangeTypes.InputChange,
-              inputValue: event.target.value
-            });
+          if (inputValue !== undefined) {
+            // Override needed to workaround Downshift cursor bug.
+            // https://github.com/downshift-js/downshift/issues/1108
+            setDownshiftInputValue(event.target.value);
+
+            // Override needed to workaround Downshift IME bug.
+            // https://github.com/downshift-js/downshift/issues/1452
+            if ((event.nativeEvent as InputEvent).isComposing) {
+              /* istanbul ignore next */
+              handleDownshiftStateChange({
+                type: useDownshift.stateChangeTypes.InputChange,
+                inputValue: event.target.value
+              });
+            }
           }
         };
 
