@@ -894,14 +894,16 @@ describe('ComboboxContainer', () => {
         });
 
         it('handles controlled selection as expected', () => {
+          const _options = [{ value: 'test-1' }, { value: 'test-2' }, { value: 'test-3' }];
+
           expect(listboxOptions[0]).toHaveAttribute('aria-selected', 'false');
 
           rerender(
             <TestCombobox
               layout={layout}
-              options={[{ value: 'test-1' }, { value: 'test-2' }, { value: 'test-3' }]}
+              options={_options}
               isExpanded={false}
-              inputValue=""
+              inputValue="test-1"
               activeIndex={-1}
               selectionValue="test-1"
               onChange={handleChange}
@@ -909,6 +911,23 @@ describe('ComboboxContainer', () => {
           );
 
           expect(listboxOptions[0]).toHaveAttribute('aria-selected', 'true');
+          expect(input).toHaveValue('test-1');
+
+          // simulate controlled selection change
+          rerender(
+            <TestCombobox
+              layout={layout}
+              options={_options}
+              isExpanded={false}
+              inputValue="test-2"
+              activeIndex={-1}
+              selectionValue="test-2"
+              onChange={handleChange}
+            />
+          );
+
+          expect(listboxOptions[1]).toHaveAttribute('aria-selected', 'true');
+          expect(input).toHaveValue('test-2');
         });
 
         it('handles controlled multiple selection as expected', () => {
