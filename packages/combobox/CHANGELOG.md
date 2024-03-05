@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.4](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-combobox@1.1.3...@zendeskgarden/container-combobox@1.1.4) (2024-03-05)
+
+### Bug Fixes
+
+- **combobox:** keep local `inputValue` state in sync with Downshift ([#628](https://github.com/zendeskgarden/react-containers/issues/628)) ([a41b48d](https://github.com/zendeskgarden/react-containers/commit/a41b48d2516a947988c3115b44e368acb3626490))
+
 ## [1.1.3](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-combobox@1.1.2...@zendeskgarden/container-combobox@1.1.3) (2024-02-08)
 
 ### Bug Fixes
