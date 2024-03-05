@@ -69,6 +69,7 @@ export const useCombobox = <
   const [triggerContainsInput, setTriggerContainsInput] = useState<boolean>();
   const [downshiftInputValue, setDownshiftInputValue] = useState(inputValue);
   const [matchValue, setMatchValue] = useState('');
+  const useInputValueRef = useRef(true);
   const matchTimeoutRef = useRef<number>();
   const previousStateRef = useRef<IPreviousState>();
   const prefix = useId(idPrefix);
@@ -141,6 +142,13 @@ export const useCombobox = <
 
     return defaultActiveIndex;
   }, [defaultActiveIndex, isAutocomplete, isEditable]);
+
+  if (useInputValueRef.current && inputValue !== downshiftInputValue) {
+    // Update local state with Downshift `inputValue` for non-buggy cases.
+    setDownshiftInputValue(inputValue);
+  } else {
+    useInputValueRef.current = true;
+  }
 
   /*
    * Validation
@@ -645,6 +653,7 @@ export const useCombobox = <
             // Override needed to workaround Downshift cursor bug.
             // https://github.com/downshift-js/downshift/issues/1108
             setDownshiftInputValue(event.target.value);
+            useInputValueRef.current = false;
 
             // Override needed to workaround Downshift IME bug.
             // https://github.com/downshift-js/downshift/issues/1452
