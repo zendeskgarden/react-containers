@@ -10,7 +10,7 @@
     "format:js": "prettier --log-level warn '{packages,utils}/**/*.{js,mjs,ts,tsx}' '!packages/.template' '!packages/**/dist/**'",
     "format:md": "prettier --log-level warn 'packages/**/!(CHANGELOG)*.md'",
     "format:package_json": "lerna exec -- prettier-package-json",
-    "postinstall": "husky install",
+    "postinstall": "husky",
     "lint": "npm run lint:js && npm run lint:md",
     "lint:js": "eslint .storybook/ packages/ utils/ --ext js,mjs,ts,tsx --max-warnings 0",
     "lint:md": "markdownlint README.md packages/*/src/**/*.md packages/*/src/*.md packages/*/README.md",
