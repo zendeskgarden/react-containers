@@ -31,7 +31,7 @@ ComboboxContainer.propTypes = {
   hasMessage: PropTypes.bool,
   options: PropTypes.arrayOf(PropTypes.any).isRequired,
   inputValue: PropTypes.string,
-  selectionValue: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
+  selectionValue: PropTypes.any,
   isExpanded: PropTypes.bool,
   defaultExpanded: PropTypes.bool,
   initialExpanded: PropTypes.bool,

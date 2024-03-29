@@ -8,10 +8,8 @@
 import { IUseFieldReturnValue } from '@zendeskgarden/container-field';
 import { HTMLProps, ReactNode, RefObject } from 'react';
 
-export type OptionValue = string | object;
-
 interface ISelectedOption {
-  value: OptionValue;
+  value: string;
   label?: string;
   disabled?: boolean;
   hidden?: boolean;
@@ -45,7 +43,7 @@ export interface IUseComboboxProps<T = HTMLElement, L = HTMLElement> {
   /**
    * Provides an ordered list of option groups and options
    *
-   * @param {OptionValue} option.value Unique option value
+   * @param {string} option.value Unique option value
    * @param {string} option.label Optional human-readable text (defaults to `option.value`)
    * @param {boolean} option.selected Sets initial selection for the option
    * @param {boolean} option.disabled Indicates that the option is not interactive
@@ -55,7 +53,7 @@ export interface IUseComboboxProps<T = HTMLElement, L = HTMLElement> {
   /** Sets the input value in a controlled combobox */
   inputValue?: string;
   /** Sets the selection value (or `isMultiselectable` values) in a controlled combobox */
-  selectionValue?: OptionValue | OptionValue[] | null;
+  selectionValue?: string | string[] | null;
   /** Determines listbox expansion in a controlled combobox */
   isExpanded?: boolean;
   /** Determines default listbox expansion in an uncontrolled combobox */
@@ -73,14 +71,14 @@ export interface IUseComboboxProps<T = HTMLElement, L = HTMLElement> {
    *
    * @param {string} changes.type The event type that triggered the change
    * @param {boolean} [changes.isExpanded] The updated listbox expansion
-   * @param {OptionValue|OptionValue[]} [changes.selectionValue] The updated selection value(s)
+   * @param {string|string[]} [changes.selectionValue] The updated selection value(s)
    * @param {string} [changes.inputValue] The updated input value
    * @param {number} [changes.activeIndex] The updated active option index
    */
   onChange?: (changes: {
     type: string;
     isExpanded?: boolean;
-    selectionValue?: OptionValue | OptionValue[] | null;
+    selectionValue?: string | string[] | null;
     inputValue?: string;
     activeIndex?: number;
   }) => void;
@@ -90,7 +88,7 @@ export interface IUseComboboxProps<T = HTMLElement, L = HTMLElement> {
 
 export interface IUseComboboxReturnValue {
   isExpanded: boolean;
-  activeValue?: OptionValue;
+  activeValue?: string;
   selection: ISelectedOption | ISelectedOption[] | null;
   inputValue?: string;
   getLabelProps: IUseFieldReturnValue['getLabelProps'];
@@ -126,7 +124,7 @@ export interface IUseComboboxReturnValue {
     }
   ) => HTMLProps<T>;
   getMessageProps: IUseFieldReturnValue['getMessageProps'];
-  removeSelection: (value?: ISelectedOption | OptionValue) => void;
+  removeSelection: (value?: ISelectedOption | string) => void;
 }
 
 export interface IComboboxContainerProps<T = HTMLElement, L = HTMLElement>
@@ -144,7 +142,7 @@ export interface IComboboxContainerProps<T = HTMLElement, L = HTMLElement>
    * @param {function} [options.getOptionProps] Option props getter
    * @param {function} [options.getMessageProps] Message props getter
    * @param {boolean} options.isExpanded Current listbox expansion
-   * @param {OptionValue} [options.activeValue] Current active option value
+   * @param {string} [options.activeValue] Current active option value
    * @param {object|object[]} options.selection Current selection
    * @param {string} [options.inputValue] Current input value
    * @param {function} [options.removeSelection] Remove the specified selection value or all values if unspecified

@@ -19,8 +19,7 @@ import {
 } from '@zendeskgarden/container-combobox';
 import { useGrid } from '@zendeskgarden/container-grid';
 
-const toString = (option: IOption) =>
-  option.label || (typeof option.value === 'string' ? option.value : JSON.stringify(option.value));
+const getLabel = (option: IOption) => option.label || option.value;
 
 interface IOptionProps extends LiHTMLAttributes<HTMLLIElement> {
   option: IOption;
@@ -45,7 +44,7 @@ const Option = ({ option, isGrouped, activeValue, selection, getOptionProps }: I
     {(Array.isArray(selection)
       ? selection.find(value => value.value === option.value) !== undefined
       : selection && selection.value === option.value) && '✓ '}
-    {toString(option)}
+    {getLabel(option)}
   </li>
 );
 
@@ -71,7 +70,7 @@ const Tags = ({ selection, getTagProps }: ITagsProps) => {
                 option,
                 'aria-label': option.disabled
                   ? ''
-                  : `Press delete or backspace to remove ${toString(option)}`
+                  : `Press delete or backspace to remove ${getLabel(option)}`
               });
               const previousDisabledOptions = selection.filter(
                 (_option, _index) => _option.disabled && _index < index
@@ -87,7 +86,7 @@ const Tags = ({ selection, getTagProps }: ITagsProps) => {
               return (
                 <td key={index} role={role} className="inline">
                   <button className="mr-1 px-1" disabled={option.disabled} {...props} type="button">
-                    {toString(option)}
+                    {getLabel(option)}
                   </button>
                 </td>
               );
@@ -286,7 +285,7 @@ export const ComboboxStory: Story<IArgs> = ({ as, ...props }) => {
 
         const regex = new RegExp(value.replace(/[.*+?^${}()|[\]\\]/giu, '\\$&'), 'gui');
 
-        setOptions(_options.filter(option => toString(option).match(regex)));
+        setOptions(_options.filter(option => getLabel(option).match(regex)));
       }
     }
   };
