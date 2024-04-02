@@ -91,7 +91,7 @@ describe('ComboboxContainer', () => {
                 {Array.isArray(selection) &&
                   selection.map(option => (
                     <button
-                      key={option.value as string}
+                      key={option.value}
                       data-test-id={tagTestId}
                       disabled={option.disabled}
                       {...getTagProps({ 'aria-label': 'tag', option })}
@@ -110,7 +110,7 @@ describe('ComboboxContainer', () => {
                 {Array.isArray(selection) &&
                   selection.map(option => (
                     <button
-                      key={option.value as string}
+                      key={option.value}
                       data-test-id={tagTestId}
                       disabled={option.disabled}
                       {...getTagProps({ 'aria-label': 'tag', option })}
@@ -140,7 +140,7 @@ describe('ComboboxContainer', () => {
                     >
                       {option.options.map((groupOption, groupIndex) => (
                         <li
-                          key={(groupOption.value as string) || groupIndex}
+                          key={groupOption.value || groupIndex}
                           data-test-id={`${optionTestIdPrefix}-${index + 1}.${groupIndex + 1}`}
                           {...getOptionProps({ option: groupOption })}
                         >
@@ -151,7 +151,7 @@ describe('ComboboxContainer', () => {
                   </li>
                 ) : (
                   <li
-                    key={(option.value as string) || index}
+                    key={option.value || index}
                     data-test-id={`${optionTestIdPrefix}-${index + 1}`}
                     {...getOptionProps({ option })}
                   >

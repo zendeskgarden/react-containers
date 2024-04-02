@@ -118,9 +118,7 @@ export const useCombobox = <
         selectedValues.push(option.value);
       }
 
-      const key = typeof option.value === 'string' ? option.value : JSON.stringify(option.value);
-
-      labels[key] = option.label || key;
+      labels[option.value] = option.label || option.value;
     };
 
     options.forEach(option => {
@@ -134,7 +132,9 @@ export const useCombobox = <
     return retVal;
   }, [options, disabledValues, hiddenValues, selectedValues, labels]);
   const initialSelectionValue = isMultiselectable ? selectedValues : selectedValues[0];
-  const initialInputValue = isMultiselectable ? '' : toLabel(labels, initialSelectionValue);
+  const initialInputValue = isMultiselectable
+    ? ''
+    : toLabel(labels, initialSelectionValue as string);
   const _defaultActiveIndex = useMemo(() => {
     if (defaultActiveIndex === undefined) {
       return isAutocomplete && isEditable ? 0 : undefined;

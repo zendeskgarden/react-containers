@@ -54,12 +54,10 @@ export const toType = (downshiftType: string) => {
  *
  * @returns A label from the `labels` record based on the given value.
  */
-export const toLabel = (labels: Record<string, string>, value: OptionValue) => {
+export const toLabel = (labels: Record<string, string>, value?: OptionValue) => {
   if (value === undefined) {
     return '';
   }
 
-  const key = typeof value === 'string' ? value : JSON.stringify(value);
-
-  return labels[key];
+  return labels[value];
 };
