@@ -26,7 +26,7 @@ import {
   UseComboboxState as IDownshiftState,
   UseComboboxStateChangeTypes as IDownshiftStateChangeType
 } from 'downshift';
-import { IOption, IUseComboboxProps, IUseComboboxReturnValue } from './types';
+import { IOption, IUseComboboxProps, IUseComboboxReturnValue, OptionValue } from './types';
 import { toLabel, toType } from './utils';
 
 export const useCombobox = <
@@ -61,7 +61,7 @@ export const useCombobox = <
    * State
    */
 
-  interface IPreviousState extends IDownshiftState<string> {
+  interface IPreviousState extends IDownshiftState<OptionValue> {
     type: IDownshiftStateChangeType;
     altKey?: boolean;
   }
@@ -84,11 +84,11 @@ export const useCombobox = <
       `${prefix}--option${isDisabled ? '-disabled' : ''}${isHidden ? '-hidden' : ''}-${index}`
   });
   const labels: Record<string, string> = useMemo(() => ({}), []);
-  const selectedValues: string[] = useMemo(() => [], []);
-  const disabledValues: string[] = useMemo(() => [], []);
-  const hiddenValues: string[] = useMemo(() => [], []);
+  const selectedValues: OptionValue[] = useMemo(() => [], []);
+  const disabledValues: OptionValue[] = useMemo(() => [], []);
+  const hiddenValues: OptionValue[] = useMemo(() => [], []);
   const values = useMemo(() => {
-    const retVal: string[] = [];
+    const retVal: OptionValue[] = [];
     const setValues = (option: IOption) => {
       if (option.disabled || option.hidden) {
         if (option.disabled && !disabledValues.includes(option.value)) {
@@ -175,7 +175,7 @@ export const useCombobox = <
    */
 
   const handleDownshiftStateChange = useCallback<
-    NonNullable<IUseDownshiftProps<string | string[]>['onStateChange']>
+    NonNullable<IUseDownshiftProps<OptionValue | OptionValue[]>['onStateChange']>
   >(
     ({ type, isOpen, selectedItem, inputValue: _inputValue, highlightedIndex }) =>
       onChange({
@@ -279,7 +279,7 @@ export const useCombobox = <
           changes.selectedItem !== null
         ) {
           if (state.selectedItem.includes(changes.selectedItem)) {
-            changes.selectedItem = (state.selectedItem as string[]).filter(
+            changes.selectedItem = (state.selectedItem as OptionValue[]).filter(
               value => value !== changes.selectedItem
             );
           } else {
@@ -297,7 +297,7 @@ export const useCombobox = <
       return changes;
     };
 
-  const transformValue = (value: string | null) => (value ? toLabel(labels, value) : '');
+  const transformValue = (value: OptionValue | null) => (value ? toLabel(labels, value) : '');
 
   /** Hooks */
 
@@ -314,7 +314,7 @@ export const useCombobox = <
     openMenu,
     setHighlightedIndex,
     selectItem
-  } = useDownshift<string | string[]>({
+  } = useDownshift<OptionValue | OptionValue[]>({
     toggleButtonId: idRef.current.trigger,
     menuId: idRef.current.listbox,
     getItemId: idRef.current.getOptionId,
@@ -357,7 +357,7 @@ export const useCombobox = <
   );
 
   const setDownshiftSelection = useCallback(
-    (value: string | string[] | null) => {
+    (value: OptionValue | OptionValue[] | null) => {
       selectItem(value);
       onChange({
         type: toType(useDownshift.stateChangeTypes.FunctionSelectItem),
@@ -875,7 +875,7 @@ export const useCombobox = <
         'aria-hidden': undefined,
         'aria-selected': ariaSelected,
         ...optionProps
-      } as IDownshiftOptionProps<string>);
+      } as IDownshiftOptionProps<OptionValue>);
     },
     [getDownshiftOptionProps, disabledValues, hiddenValues, values, _selectionValue]
   );
