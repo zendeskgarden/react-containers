@@ -24,7 +24,7 @@ const options = {
 };
 
 module.exports = {
-  stories: ['../packages/*/demo/**/*.stories.@(js|jsx|ts|tsx|mdx)'],
+  stories: ['../packages/*/demo/**/*.@(mdx|stories.@(js|jsx|ts|tsx))'],
   addons: [
     { name: '@storybook/addon-essentials', options },
     {

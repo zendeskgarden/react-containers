@@ -1,0 +1,26 @@
+import { Meta, Canvas, Story } from '@storybook/blocks';
+import { useArgs } from '@storybook/client-api';
+import { useEffect, useCallback } from 'react';
+import { NestedStory } from './stories/NestedStory';
+import { BASE_ITEMS, NESTED_ITEMS } from './stories/data';
+import * as PatternsStories from './patterns.stories';
+
+<Meta of={PatternsStories} />
+
+# Patterns
+
+## Nested Focus Uncontrolled
+
+Demonstrate nested menu with uncontrolled focus.
+
+<Canvas>
+  <Story of={PatternsStories.NestedFocusUncontrolled} />
+</Canvas>
+
+## Nested Focus Controlled
+
+Demonstrate nested menu with controlled focus.
+
+<Canvas>
+  <Story of={PatternsStories.NestedFocusControlled} />
+</Canvas>

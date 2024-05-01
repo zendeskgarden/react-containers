@@ -1,0 +1,30 @@
+import { Meta, Controls, Canvas, Story, Markdown } from '@storybook/blocks';
+import { useArgs } from '@storybook/client-api';
+import { SliderContainer } from '@zendeskgarden/container-slider';
+import { SliderStory } from './stories/SliderStory';
+import README from '../README.md';
+import * as SliderStories from './slider.stories';
+
+<Meta of={SliderStories} />
+
+# API
+
+<Controls />
+
+# Demo
+
+## Uncontrolled
+
+<Canvas>
+  <Story of={SliderStories.Uncontrolled} />
+</Canvas>
+
+## Controlled
+
+<Canvas>
+  <Story of={SliderStories.Controlled} />
+</Canvas>
+
+<Markdown>
+  {README}
+</Markdown>

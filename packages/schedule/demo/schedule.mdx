@@ -1,0 +1,21 @@
+import { Meta, Controls, Canvas, Story, Markdown } from '@storybook/blocks';
+import { ScheduleContainer } from '@zendeskgarden/container-schedule';
+import { ScheduleStory } from './stories/ScheduleStory';
+import README from '../README.md';
+import * as ScheduleStories from './schedule.stories';
+
+<Meta of={ScheduleStories} />
+
+# API
+
+<Controls />
+
+# Demo
+
+<Canvas>
+  <Story of={ScheduleStories.Schedule} />
+</Canvas>
+
+<Markdown>
+  {README}
+</Markdown>
