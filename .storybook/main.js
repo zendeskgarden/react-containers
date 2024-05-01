@@ -1,3 +1,4 @@
+import { dirname, join } from "path";
 /**
  * Copyright Zendesk, Inc.
  *
@@ -25,25 +26,24 @@ const options = {
 
 module.exports = {
   stories: ['../packages/*/demo/**/*.@(mdx|stories.@(js|jsx|ts|tsx))'],
-  addons: [
-    { name: '@storybook/addon-essentials', options },
-    {
-      name: '@storybook/addon-styling',
-      options: {
-        postCss: {
-          implementation: postcss,
-          postcssOptions: {
-            plugins: [tailwindcss(path.resolve(__dirname, 'tailwind.config.js')), autoprefixer()]
-          }
+
+  addons: [{ name: '@storybook/addon-essentials', options }, {
+    name: '@storybook/addon-styling',
+    options: {
+      postCss: {
+        implementation: postcss,
+        postcssOptions: {
+          plugins: [tailwindcss(path.resolve(__dirname, 'tailwind.config.js')), autoprefixer()]
         }
       }
-    },
-    '@storybook/addon-a11y'
-  ],
+    }
+  }, getAbsolutePath("@storybook/addon-a11y"), getAbsolutePath("@storybook/addon-mdx-gfm"), '@storybook/addon-webpack5-compiler-babel'],
+
   framework: {
-    name: '@storybook/react-webpack5',
+    name: getAbsolutePath("@storybook/react-webpack5"),
     options: {}
   },
+
   webpackFinal: config => {
     config.plugins.push(
       new DefinePlugin({
@@ -64,5 +64,13 @@ module.exports = {
     );
 
     return config;
+  },
+
+  docs: {
+    autodocs: true
   }
 };
+
+function getAbsolutePath(value) {
+  return dirname(require.resolve(join(value, "package.json")));
+}
