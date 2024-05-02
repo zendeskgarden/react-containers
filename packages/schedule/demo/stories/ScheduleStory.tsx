@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { Story } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import {
   IScheduleContainerProps,
   IUseScheduleProps,
@@ -48,7 +48,7 @@ interface IArgs extends IScheduleContainerProps {
   as: 'hook' | 'container';
 }
 
-export const ScheduleStory: Story<IArgs> = ({ as, ...props }) => {
+export const ScheduleStory: StoryFn<IArgs> = ({ as, ...props }) => {
   const Schedule = () => {
     switch (as) {
       case 'container':

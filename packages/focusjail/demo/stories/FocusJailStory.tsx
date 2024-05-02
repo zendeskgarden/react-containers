@@ -6,7 +6,7 @@
  */
 
 import React, { forwardRef } from 'react';
-import { Story } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import {
   FocusJailContainer,
   IFocusJailContainerProps,
@@ -67,7 +67,7 @@ interface IArgs extends IFocusJailContainerProps<HTMLDivElement> {
   as: 'hook' | 'container';
 }
 
-export const FocusJailStory: Story<IArgs> = ({ as, ...props }) => {
+export const FocusJailStory: StoryFn<IArgs> = ({ as, ...props }) => {
   switch (as) {
     case 'container':
       return <Container {...props} />;

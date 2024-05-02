@@ -6,11 +6,11 @@
  */
 
 import React from 'react';
-import { Story } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import classNames from 'classnames';
 import { useTooltip } from '@zendeskgarden/container-tooltip';
 
-export const FocusStory: Story = () => {
+export const FocusStory: StoryFn = () => {
   const { getTooltipProps, getTriggerProps, isVisible, openTooltip, closeTooltip } = useTooltip();
   const onFocus = () => openTooltip();
   const onBlur = () => closeTooltip(0);

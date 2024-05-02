@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { Story } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import classNames from 'classnames';
 import {
   ITooltipContainerProps,
@@ -59,7 +59,7 @@ interface IArgs extends ITooltipContainerProps {
   as: 'hook' | 'container';
 }
 
-export const TooltipStory: Story<IArgs> = ({ as, ...props }) => {
+export const TooltipStory: StoryFn<IArgs> = ({ as, ...props }) => {
   const Tooltip = () => {
     switch (as) {
       case 'container':

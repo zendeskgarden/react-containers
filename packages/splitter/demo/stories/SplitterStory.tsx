@@ -6,7 +6,7 @@
  */
 
 import React, { createRef, forwardRef } from 'react';
-import { Story } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import classNames from 'classnames';
 import {
   ISplitterContainerProps,
@@ -140,7 +140,7 @@ interface IArgs extends ISplitterContainerProps<HTMLDivElement> {
   as: 'hook' | 'container';
 }
 
-export const SplitterStory: Story<IArgs> = ({ as, ...props }) => {
+export const SplitterStory: StoryFn<IArgs> = ({ as, ...props }) => {
   const separatorRef = createRef<HTMLDivElement>();
 
   switch (as) {

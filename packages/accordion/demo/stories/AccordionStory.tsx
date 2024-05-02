@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { Story } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import {
   AccordionContainer,
   IAccordionContainerProps,
@@ -84,7 +84,7 @@ interface IArgs extends IAccordionContainerProps<ISectionValue> {
   as: 'hook' | 'container';
 }
 
-export const AccordionStory: Story<IArgs> = ({ as, ...props }: IArgs) => {
+export const AccordionStory: StoryFn<IArgs> = ({ as, ...props }: IArgs) => {
   const Accordion = () => {
     switch (as) {
       case 'container':

@@ -6,7 +6,7 @@
  */
 
 import React, { createRef, LiHTMLAttributes, useState } from 'react';
-import { Story } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import classNames from 'classnames';
 import { composeEventHandlers } from '@zendeskgarden/container-utilities';
 import {
@@ -261,7 +261,7 @@ interface IArgs extends IComboboxContainerProps {
   layout: 'Garden' | 'Downshift';
 }
 
-export const ComboboxStory: Story<IArgs> = ({ as, ...props }) => {
+export const ComboboxStory: StoryFn<IArgs> = ({ as, ...props }) => {
   const triggerRef = createRef<HTMLDivElement>();
   const inputRef = createRef<HTMLInputElement>();
   const listboxRef = createRef<HTMLUListElement>();

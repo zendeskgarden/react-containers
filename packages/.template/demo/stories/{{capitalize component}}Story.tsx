@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { Story } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import {
   I{{capitalize component}}ContainerProps,
   IUse{{capitalize component}}Props,
@@ -32,7 +32,7 @@ interface IArgs extends I{{capitalize component}}ContainerProps {
   text: string;
 }
 
-export const {{capitalize component}}Story: Story<IArgs> = ({ as, ...props }) => {
+export const {{capitalize component}}Story: StoryFn<IArgs> = ({ as, ...props }) => {
   switch (as) {
     case 'container':
       return <Container {...props} />;
