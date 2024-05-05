@@ -1,3 +1,10 @@
+/**
+ * Copyright Zendesk, Inc.
+ *
+ * Use of this source code is governed under the Apache License, Version 2.0
+ * found at http://www.apache.org/licenses/LICENSE-2.0.
+ */
+
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { useArgs } from '@storybook/preview-api';
@@ -30,7 +37,7 @@ export const Uncontrolled: Story = {
 };
 
 export const Controlled: Story = {
-  render: ({ ...args }) => {
+  render: function Render(args) {
     const updateArgs = useArgs()[1];
     const handleChange = valueNow => updateArgs({ valueNow });
     return <SplitterStory {...args} onChange={handleChange} />;

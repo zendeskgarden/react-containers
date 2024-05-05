@@ -1,3 +1,10 @@
+/**
+ * Copyright Zendesk, Inc.
+ *
+ * Use of this source code is governed under the Apache License, Version 2.0
+ * found at http://www.apache.org/licenses/LICENSE-2.0.
+ */
+
 import React, { useCallback } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { useArgs } from '@storybook/preview-api';
@@ -12,6 +19,7 @@ export default meta;
 
 export const NestedFocusUncontrolled: Story = {
   render: function Render(args) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [_, updateArgs, resetArgs] = useArgs();
     const onChange = useCallback(({ type, isExpanded }) => {
       const isNext = type.includes('next');
