@@ -11,33 +11,19 @@ const meta: Meta<typeof FocusVisibleStory> = {
 export default meta;
 
 export const FocusVisible: StoryObj<typeof FocusVisibleStory> = {
-  render: args => {
+  render: function Render(args) {
     const scope = useRef();
     return <FocusVisibleStory {...args} scope={scope} />;
   },
-
   name: 'FocusVisible',
-
-  args: {
-    as: 'hook'
-  },
-
+  args: { as: 'hook' },
   argTypes: {
     as: {
       options: ['container', 'hook'],
       control: 'radio',
-
-      table: {
-        category: 'Story'
-      }
+      table: { category: 'Story' }
     },
-
-    className: {
-      control: false
-    },
-
-    dataAttribute: {
-      control: false
-    }
+    className: { control: false },
+    dataAttribute: { control: false }
   }
 };

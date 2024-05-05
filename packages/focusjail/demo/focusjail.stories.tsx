@@ -11,31 +11,18 @@ const meta: Meta<typeof FocusJailStory> = {
 export default meta;
 
 export const FocusJail: StoryObj<typeof FocusJailStory> = {
-  render: args => {
+  render: function Render(args) {
     const containerRef = useRef();
     return <FocusJailStory {...args} containerRef={containerRef} />;
   },
-
   name: 'FocusJail',
-
-  args: {
-    as: 'hook',
-    focusOnMount: true,
-    restoreFocus: true
-  },
-
+  args: { as: 'hook', focusOnMount: true, restoreFocus: true },
   argTypes: {
     as: {
       options: ['container', 'hook'],
       control: 'radio',
-
-      table: {
-        category: 'Story'
-      }
+      table: { category: 'Story' }
     },
-
-    containerRef: {
-      control: false
-    }
+    containerRef: { control: false }
   }
 };

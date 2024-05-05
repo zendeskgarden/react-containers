@@ -12,44 +12,20 @@ const meta: Meta<typeof ScrollRegionStory> = {
 export default meta;
 
 export const ScrollRegion: StoryObj<typeof ScrollRegionStory> = {
-  render: args => {
+  render: function Render(args) {
     const containerRef = useRef();
     return <ScrollRegionStory {...args} containerRef={containerRef} />;
   },
-
   name: 'ScrollRegion',
-
-  args: {
-    as: 'hook',
-    height: 100,
-    width: 200,
-    dependency: DEPENDENCY
-  },
-
+  args: { as: 'hook', height: 100, width: 200, dependency: DEPENDENCY },
   argTypes: {
-    containerRef: {
-      control: false
-    },
-
+    containerRef: { control: false },
     as: {
       options: ['container', 'hook'],
       control: 'radio',
-
-      table: {
-        category: 'Story'
-      }
+      table: { category: 'Story' }
     },
-
-    height: {
-      table: {
-        category: 'Story'
-      }
-    },
-
-    width: {
-      table: {
-        category: 'Story'
-      }
-    }
+    height: { table: { category: 'Story' } },
+    width: { table: { category: 'Story' } }
   }
 };

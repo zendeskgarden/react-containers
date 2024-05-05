@@ -12,50 +12,29 @@ const meta: Meta<typeof ModalStory> = {
 export default meta;
 
 export const Modal: StoryObj<typeof ModalStory> = {
-  render: args => {
+  render: function Render(args) {
     const modalRef = useRef();
     const updateArgs = useArgs()[1];
-
-    const handleClose = () =>
-      updateArgs({
-        isOpen: false
-      });
-
-    const handleOpen = () =>
-      updateArgs({
-        isOpen: true
-      });
-
-    return <ModalStory {...args} modalRef={modalRef} onClose={handleClose} onOpen={handleOpen} />;
+    const handleClose = () => updateArgs({ isOpen: false });
+    const handleOpen = () => updateArgs({ isOpen: true });
+    return (
+      <ModalStory
+        {...args}
+        modalRef={modalRef}
+        onClose={handleClose}
+        onOpen={handleOpen}
+      />
+    );
   },
-
   name: 'Modal',
-
-  args: {
-    as: 'hook',
-    isOpen: true,
-    focusOnMount: true,
-    restoreFocus: true
-  },
-
+  args: { as: 'hook', isOpen: true, focusOnMount: true, restoreFocus: true },
   argTypes: {
     as: {
       options: ['container', 'hook'],
       control: 'radio',
-
-      table: {
-        category: 'Story'
-      }
+      table: { category: 'Story' }
     },
-
-    isOpen: {
-      table: {
-        category: 'Story'
-      }
-    },
-
-    modalRef: {
-      control: false
-    }
+    isOpen: { table: { category: 'Story' } },
+    modalRef: { control: false }
   }
 };

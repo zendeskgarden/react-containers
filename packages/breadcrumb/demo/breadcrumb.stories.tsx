@@ -13,24 +13,13 @@ export default meta;
 export const Breadcrumb: StoryObj<typeof BreadcrumbStory> = {
   render: args => <BreadcrumbStory {...args} />,
   name: 'Breadcrumb',
-
-  args: {
-    as: 'hook',
-    'aria-label': 'Breadcrumbs'
-  },
-
+  args: { as: 'hook', 'aria-label': 'Breadcrumbs' },
   argTypes: {
     as: {
       options: ['container', 'hook'],
       control: 'radio',
-
-      table: {
-        category: 'Story'
-      }
+      table: { category: 'Story' }
     },
-
-    'aria-label': {
-      control: 'text'
-    }
+    'aria-label': { control: 'text' }
   }
 };

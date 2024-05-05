@@ -13,20 +13,15 @@ export default meta;
 export const Tooltip: StoryObj<typeof TooltipStory> = {
   render: args => <TooltipStory {...args} />,
   name: 'Tooltip',
-
   args: {
     as: 'hook',
     delayMilliseconds: TooltipContainer.defaultProps.delayMilliseconds
   },
-
   argTypes: {
     as: {
       options: ['container', 'hook'],
       control: 'radio',
-
-      table: {
-        category: 'Story'
-      }
+      table: { category: 'Story' }
     }
   }
 };

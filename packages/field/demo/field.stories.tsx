@@ -13,21 +13,12 @@ export default meta;
 export const Field: StoryObj<typeof FieldStory> = {
   render: args => <FieldStory {...args} />,
   name: 'Field',
-
-  args: {
-    as: 'hook',
-    hasHint: true,
-    hasMessage: true
-  },
-
+  args: { as: 'hook', hasHint: true, hasMessage: true },
   argTypes: {
     as: {
       options: ['container', 'hook'],
       control: 'radio',
-
-      table: {
-        category: 'Story'
-      }
+      table: { category: 'Story' }
     }
   }
 };
