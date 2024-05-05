@@ -36,7 +36,8 @@
       "files": ["*.stories.tsx", "packages/*/demo/**/*"],
       "rules": {
         "react/button-has-type": "off",
-        "react/no-array-index-key": "off"
+        "react/no-array-index-key": "off",
+        "func-name-matching": "off"
       }
     }
   ]
