@@ -1,10 +1,12 @@
-import { useArgs } from '@storybook/client-api';
+import React from 'react';
+import type { Meta, StoryObj } from '@storybook/react';
+import { useArgs } from '@storybook/preview-api';
 import { GridContainer } from '@zendeskgarden/container-grid';
 import { GridStory } from './stories/GridStory';
 import { MATRIX } from './stories/data';
-import README from '../README.md';
+type Story = StoryObj<typeof GridStory>;
 
-export default {
+const meta: Meta<typeof GridStory> = {
   title: 'Packages/Grid',
   component: GridContainer,
 
@@ -36,7 +38,9 @@ export default {
   }
 };
 
-export const Uncontrolled = {
+export default meta;
+
+export const Uncontrolled: Story = {
   render: args => <GridStory {...args} />,
   name: 'Uncontrolled',
 
@@ -51,7 +55,7 @@ export const Uncontrolled = {
   }
 };
 
-export const Controlled = {
+export const Controlled: Story = {
   render: args => {
     const updateArgs = useArgs()[1];
 

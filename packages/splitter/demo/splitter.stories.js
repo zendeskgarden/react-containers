@@ -1,9 +1,11 @@
-import { useArgs } from '@storybook/client-api';
+import React from 'react';
+import type { Meta, StoryObj } from '@storybook/react';
+import { useArgs } from '@storybook/preview-api';
 import { SplitterContainer } from '@zendeskgarden/container-splitter';
 import { SplitterStory } from './stories/SplitterStory';
-import README from '../README.md';
+type Story = StoryObj<typeof SplitterStory>;
 
-export default {
+const meta: Meta<typeof SplitterStory> = {
   title: 'Packages/Splitter',
   component: SplitterContainer,
 
@@ -34,7 +36,9 @@ export default {
   }
 };
 
-export const Uncontrolled = {
+export default meta;
+
+export const Uncontrolled: Story = {
   render: args => <SplitterStory {...args} />,
   name: 'Uncontrolled',
 
@@ -45,7 +49,7 @@ export const Uncontrolled = {
   }
 };
 
-export const Controlled = {
+export const Controlled: Story = {
   render: ({ ...args }) => {
     const updateArgs = useArgs()[1];
 

@@ -1,15 +1,17 @@
-import { useRef } from 'react';
-import { useArgs } from '@storybook/client-api';
+import React, { useRef } from 'react';
+import type { Meta, StoryObj } from '@storybook/react';
+import { useArgs } from '@storybook/preview-api';
 import { ModalContainer } from '@zendeskgarden/container-modal';
 import { ModalStory } from './stories/ModalStory';
-import README from '../README.md';
 
-export default {
+const meta: Meta<typeof ModalStory> = {
   title: 'Packages/Modal',
   component: ModalContainer
 };
 
-export const Modal = {
+export default meta;
+
+export const Modal: StoryObj<typeof ModalStory> = {
   render: args => {
     const modalRef = useRef();
     const updateArgs = useArgs()[1];

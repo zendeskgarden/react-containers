@@ -1,11 +1,12 @@
-import { useCallback } from 'react';
-import { useArgs } from '@storybook/client-api';
+import React, { useCallback } from 'react';
+import type { Meta, StoryObj } from '@storybook/react';
+import { useArgs } from '@storybook/preview-api';
 import { MenuContainer } from '@zendeskgarden/container-menu';
 import { MenuStory } from './stories/MenuStory';
 import { ITEMS } from './stories/data';
-import README from '../README.md';
+type Story = StoryObj<typeof MenuStory>;
 
-export default {
+const meta: Meta<typeof MenuStory> = {
   title: 'Packages/Menu',
   component: MenuContainer,
 
@@ -34,7 +35,9 @@ export default {
   }
 };
 
-export const Uncontrolled = {
+export default meta;
+
+export const Uncontrolled: Story = {
   render: args => <MenuStory {...args} />,
   name: 'Uncontrolled',
 
@@ -53,7 +56,7 @@ export const Uncontrolled = {
   }
 };
 
-export const Controlled = {
+export const Controlled: Story = {
   render: args => {
     const updateArgs = useArgs()[1];
 

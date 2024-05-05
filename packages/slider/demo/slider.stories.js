@@ -1,9 +1,11 @@
-import { useArgs } from '@storybook/client-api';
+import React from 'react';
+import type { Meta, StoryObj } from '@storybook/react';
+import { useArgs } from '@storybook/preview-api';
 import { SliderContainer } from '@zendeskgarden/container-slider';
 import { SliderStory } from './stories/SliderStory';
-import README from '../README.md';
+type Story = StoryObj<typeof SliderStory>;
 
-export default {
+const meta: Meta<typeof SliderStory> = {
   title: 'Packages/Slider',
   component: SliderContainer,
 
@@ -38,7 +40,9 @@ export default {
   }
 };
 
-export const Uncontrolled = {
+export default meta;
+
+export const Uncontrolled: Story = {
   render: args => <SliderStory {...args} />,
   name: 'Uncontrolled',
 
@@ -53,7 +57,7 @@ export const Uncontrolled = {
   }
 };
 
-export const Controlled = {
+export const Controlled: Story = {
   render: args => {
     const updateArgs = useArgs()[1];
 

@@ -1,10 +1,12 @@
-import { useArgs } from '@storybook/client-api';
+import React from 'react';
+import type { Meta, StoryObj } from '@storybook/react';
+import { useArgs } from '@storybook/preview-api';
 import { AccordionContainer } from '@zendeskgarden/container-accordion';
 import { AccordionStory } from './stories/AccordionStory';
 import { SECTIONS } from './stories/data.ts';
-import README from '../README.md';
+type Story = StoryObj<typeof AccordionStory>;
 
-export default {
+const meta: Meta<typeof AccordionStory> = {
   title: 'Packages/Accordion',
   component: AccordionContainer,
 
@@ -25,7 +27,9 @@ export default {
   }
 };
 
-export const Uncontrolled = {
+export default meta;
+
+export const Uncontrolled: Story = {
   render: args => <AccordionStory {...args} />,
   name: 'Uncontrolled',
 
@@ -41,7 +45,7 @@ export const Uncontrolled = {
   }
 };
 
-export const Controlled = {
+export const Controlled: Story = {
   render: args => {
     const updateArgs = useArgs()[1];
 

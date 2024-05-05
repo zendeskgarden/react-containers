@@ -1,13 +1,16 @@
+import React from 'react';
+import type { Meta, StoryObj } from '@storybook/react';
 import { BreadcrumbContainer } from '@zendeskgarden/container-breadcrumb';
 import { BreadcrumbStory } from './stories/BreadcrumbStory';
-import README from '../README.md';
 
-export default {
+const meta: Meta<typeof BreadcrumbStory> = {
   title: 'Packages/Breadcrumb',
   component: BreadcrumbContainer
 };
 
-export const Breadcrumb = {
+export default meta;
+
+export const Breadcrumb: StoryObj<typeof BreadcrumbStory> = {
   render: args => <BreadcrumbStory {...args} />,
   name: 'Breadcrumb',
 

@@ -1,14 +1,16 @@
-import { useRef } from 'react';
+import React, { useRef } from 'react';
+import type { Meta, StoryObj } from '@storybook/react';
 import { FocusJailContainer } from '@zendeskgarden/container-focusjail';
 import { FocusJailStory } from './stories/FocusJailStory';
-import README from '../README.md';
 
-export default {
+const meta: Meta<typeof FocusJailStory> = {
   title: 'Packages/FocusJail',
   component: FocusJailContainer
 };
 
-export const FocusJail = {
+export default meta;
+
+export const FocusJail: StoryObj<typeof FocusJailStory> = {
   render: args => {
     const containerRef = useRef();
     return <FocusJailStory {...args} containerRef={containerRef} />;

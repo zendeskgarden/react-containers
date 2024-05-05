@@ -1,13 +1,16 @@
+import React from 'react';
+import type { Meta, StoryObj } from '@storybook/react';
 import { ScheduleContainer } from '@zendeskgarden/container-schedule';
 import { ScheduleStory } from './stories/ScheduleStory';
-import README from '../README.md';
 
-export default {
+const meta: Meta<typeof ScheduleStory> = {
   title: 'Packages/Schedule',
   component: ScheduleContainer
 };
 
-export const Schedule = {
+export default meta;
+
+export const Schedule: StoryObj<typeof ScheduleStory> = {
   render: args => <ScheduleStory {...args} />,
   name: 'Schedule',
 

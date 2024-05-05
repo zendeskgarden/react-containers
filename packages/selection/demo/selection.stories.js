@@ -1,10 +1,12 @@
-import { useArgs } from '@storybook/client-api';
+import React from 'react';
+import type { Meta, StoryObj } from '@storybook/react';
+import { useArgs } from '@storybook/preview-api';
 import { SelectionContainer } from '@zendeskgarden/container-selection';
 import { SelectionStory } from './stories/SelectionStory';
 import { VALUES } from './stories/data';
-import README from '../README.md';
+type Story = StoryObj<typeof SelectionStory>;
 
-export default {
+const meta: Meta<typeof SelectionStory> = {
   title: 'Packages/Selection',
   component: SelectionContainer,
 
@@ -26,7 +28,9 @@ export default {
   }
 };
 
-export const Uncontrolled = {
+export default meta;
+
+export const Uncontrolled: Story = {
   render: args => <SelectionStory {...args} />,
   name: 'Uncontrolled',
 
@@ -57,7 +61,7 @@ export const Uncontrolled = {
   }
 };
 
-export const Controlled = {
+export const Controlled: Story = {
   render: args => {
     const updateArgs = useArgs()[1];
 

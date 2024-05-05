@@ -1,13 +1,18 @@
-import { useArgs } from '@storybook/client-api';
-import { useEffect, useCallback } from 'react';
+import React, { useCallback } from 'react';
+import type { Meta, StoryObj } from '@storybook/react';
+import { useArgs } from '@storybook/preview-api';
 import { NestedStory } from './stories/NestedStory';
 import { BASE_ITEMS, NESTED_ITEMS } from './stories/data';
 
-export default {
+type Story = StoryObj<typeof NestedStory>;
+
+const meta: Meta<typeof NestedStory> = {
   title: 'Packages/Menu/[patterns]'
 };
 
-export const NestedFocusUncontrolled = {
+export default meta;
+
+export const NestedFocusUncontrolled: Story = {
   render: args => {
     const [_, updateArgs, resetArgs] = useArgs();
 
@@ -35,7 +40,7 @@ export const NestedFocusUncontrolled = {
   }
 };
 
-export const NestedFocusControlled = {
+export const NestedFocusControlled: Story = {
   render: args => {
     const updateArgs = useArgs()[1];
 

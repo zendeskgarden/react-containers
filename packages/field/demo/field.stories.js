@@ -1,13 +1,16 @@
+import React from 'react';
+import type { Meta, StoryObj } from '@storybook/react';
 import { FieldContainer } from '@zendeskgarden/container-field';
 import { FieldStory } from './stories/FieldStory';
-import README from '../README.md';
 
-export default {
+const meta: Meta<typeof FieldStory> = {
   title: 'Packages/Field',
   component: FieldContainer
 };
 
-export const Field = {
+export default meta;
+
+export const Field: StoryObj<typeof FieldStory> = {
   render: args => <FieldStory {...args} />,
   name: 'Field',
 

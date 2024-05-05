@@ -1,13 +1,16 @@
+import React from 'react';
+import type { Meta, StoryObj } from '@storybook/react';
 import { TooltipContainer } from '@zendeskgarden/container-tooltip';
 import { TooltipStory } from './stories/TooltipStory';
-import README from '../README.md';
 
-export default {
+const meta: Meta<typeof TooltipStory> = {
   title: 'Packages/Tooltip',
   component: TooltipContainer
 };
 
-export const Tooltip = {
+export default meta;
+
+export const Tooltip: StoryObj<typeof TooltipStory> = {
   render: args => <TooltipStory {...args} />,
   name: 'Tooltip',
 

@@ -1,10 +1,12 @@
-import { useArgs } from '@storybook/client-api';
+import React from 'react';
+import type { Meta, StoryObj } from '@storybook/react';
+import { useArgs } from '@storybook/preview-api';
 import { ComboboxContainer } from '@zendeskgarden/container-combobox';
 import { ComboboxStory } from './stories/ComboboxStory';
 import { OPTIONS } from './stories/data';
-import README from '../README.md';
+type Story = StoryObj<typeof ComboboxStory>;
 
-export default {
+const meta: Meta<typeof ComboboxStory> = {
   title: 'Packages/Combobox',
   component: ComboboxContainer,
 
@@ -48,7 +50,9 @@ export default {
   }
 };
 
-export const Uncontrolled = {
+export default meta;
+
+export const Uncontrolled: Story = {
   render: args => <ComboboxStory {...args} />,
   name: 'Uncontrolled',
 
@@ -71,7 +75,7 @@ export const Uncontrolled = {
   }
 };
 
-export const Controlled = {
+export const Controlled: Story = {
   render: args => {
     const updateArgs = useArgs()[1];
 

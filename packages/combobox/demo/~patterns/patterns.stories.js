@@ -1,10 +1,14 @@
+import React from 'react';
+import type { Meta, StoryObj } from '@storybook/react';
 import { IMEStory } from './stories/IMEStory';
 
-export default {
+const meta: Meta<typeof IMEStory> = {
   title: 'Packages/Combobox/[patterns]'
 };
 
-export const Ime = {
+export default meta;
+
+export const Ime: StoryObj<typeof IMEStory> = {
   render: args => <IMEStory {...args} />,
   name: 'IME'
 };

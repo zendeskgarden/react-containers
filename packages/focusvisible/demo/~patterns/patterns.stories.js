@@ -1,10 +1,14 @@
+import React from 'react';
+import type { Meta, StoryObj } from '@storybook/react';
 import { SelectionStory } from './stories/SelectionStory';
 
-export default {
+const meta: Meta<typeof SelectionStory> = {
   title: 'Packages/FocusVisible/[patterns]'
 };
 
-export const Selection = {
+export default meta;
+
+export const Selection: StoryObj<typeof SelectionStory> = {
   render: args => <SelectionStory {...args} />,
   name: 'Selection'
 };

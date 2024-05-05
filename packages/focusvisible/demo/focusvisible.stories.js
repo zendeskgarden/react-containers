@@ -1,14 +1,16 @@
-import { useRef } from 'react';
+import React, { useRef } from 'react';
+import type { Meta, StoryObj } from '@storybook/react';
 import { FocusVisibleContainer } from '@zendeskgarden/container-focusvisible';
 import { FocusVisibleStory } from './stories/FocusVisibleStory';
-import README from '../README.md';
 
-export default {
+const meta: Meta<typeof FocusVisibleStory> = {
   title: 'Packages/FocusVisible',
   component: FocusVisibleContainer
 };
 
-export const FocusVisible = {
+export default meta;
+
+export const FocusVisible: StoryObj<typeof FocusVisibleStory> = {
   render: args => {
     const scope = useRef();
     return <FocusVisibleStory {...args} scope={scope} />;
