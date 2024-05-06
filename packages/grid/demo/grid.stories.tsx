@@ -43,9 +43,9 @@ export const Uncontrolled: Story = {
 export const Controlled: Story = {
   render: function Render(args) {
     const updateArgs = useArgs()[1];
-    const handleChange = (rowIndex, colIndex) =>
-      updateArgs({ rowIndex, colIndex });
-    return <GridStory {...args} onChange={handleChange} />;
+    return (
+      <GridStory {...args} onChange={(rowIndex, colIndex) => updateArgs({ rowIndex, colIndex })} />
+    );
   },
   name: 'Controlled',
   argTypes: {

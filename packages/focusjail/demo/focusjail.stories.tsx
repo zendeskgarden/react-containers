@@ -12,14 +12,15 @@ import { FocusJailStory } from './stories/FocusJailStory';
 
 const meta: Meta<typeof FocusJailStory> = {
   title: 'Packages/FocusJail',
-  component: FocusJailContainer
+  component: FocusJailContainer as Meta<typeof FocusJailStory>['component']
 };
 
 export default meta;
 
 export const FocusJail: StoryObj<typeof FocusJailStory> = {
   render: function Render(args) {
-    const containerRef = useRef();
+    const containerRef = useRef<HTMLDivElement>(null);
+
     return <FocusJailStory {...args} containerRef={containerRef} />;
   },
   name: 'FocusJail',

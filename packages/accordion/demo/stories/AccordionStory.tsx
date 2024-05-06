@@ -15,7 +15,7 @@ import {
   useAccordion
 } from '@zendeskgarden/container-accordion';
 
-type ISectionValue = number;
+type ISectionValue = string;
 
 interface IComponentProps<T = ISectionValue> extends IUseAccordionReturnValue<T> {
   sections: IUseAccordionProps<T>['sections'];

@@ -13,23 +13,22 @@ import { ModalStory } from './stories/ModalStory';
 
 const meta: Meta<typeof ModalStory> = {
   title: 'Packages/Modal',
-  component: ModalContainer
+  component: ModalContainer as Meta<typeof ModalStory>['component']
 };
 
 export default meta;
 
 export const Modal: StoryObj<typeof ModalStory> = {
   render: function Render(args) {
-    const modalRef = useRef();
+    const modalRef = useRef<HTMLDivElement>(null);
     const updateArgs = useArgs()[1];
-    const handleClose = () => updateArgs({ isOpen: false });
-    const handleOpen = () => updateArgs({ isOpen: true });
+
     return (
       <ModalStory
         {...args}
         modalRef={modalRef}
-        onClose={handleClose}
-        onOpen={handleOpen}
+        onClose={() => updateArgs({ isOpen: false })}
+        onOpen={() => updateArgs({ isOpen: true })}
       />
     );
   },

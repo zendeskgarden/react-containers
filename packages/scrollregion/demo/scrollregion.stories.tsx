@@ -13,14 +13,15 @@ import { DEPENDENCY } from './stories/data';
 
 const meta: Meta<typeof ScrollRegionStory> = {
   title: 'Packages/ScrollRegion',
-  component: ScrollRegionContainer
+  component: ScrollRegionContainer as Meta<typeof ScrollRegionStory>['component']
 };
 
 export default meta;
 
 export const ScrollRegion: StoryObj<typeof ScrollRegionStory> = {
   render: function Render(args) {
-    const containerRef = useRef();
+    const containerRef = useRef<HTMLDivElement>(null);
+
     return <ScrollRegionStory {...args} containerRef={containerRef} />;
   },
   name: 'ScrollRegion',

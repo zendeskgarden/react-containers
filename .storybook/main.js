@@ -1,4 +1,4 @@
-import { dirname, join } from "path";
+import { dirname, join } from 'path';
 /**
  * Copyright Zendesk, Inc.
  *
@@ -17,6 +17,10 @@ const PACKAGE_NAMES = readdirSync(path.resolve(__dirname, '../packages')).filter
   name => name !== '.template'
 );
 
+function getAbsolutePath(value) {
+  return dirname(require.resolve(join(value, 'package.json')));
+}
+
 const options = {
   backgrounds: false,
   measure: false,
@@ -27,20 +31,26 @@ const options = {
 module.exports = {
   stories: ['../packages/*/demo/**/*.@(mdx|stories.@(js|jsx|ts|tsx))'],
 
-  addons: [{ name: '@storybook/addon-essentials', options }, {
-    name: '@storybook/addon-styling',
-    options: {
-      postCss: {
-        implementation: postcss,
-        postcssOptions: {
-          plugins: [tailwindcss(path.resolve(__dirname, 'tailwind.config.js')), autoprefixer()]
+  addons: [
+    { name: '@storybook/addon-essentials', options },
+    {
+      name: '@storybook/addon-styling',
+      options: {
+        postCss: {
+          implementation: postcss,
+          postcssOptions: {
+            plugins: [tailwindcss(path.resolve(__dirname, 'tailwind.config.js')), autoprefixer()]
+          }
         }
       }
-    }
-  }, getAbsolutePath("@storybook/addon-a11y"), getAbsolutePath("@storybook/addon-mdx-gfm"), '@storybook/addon-webpack5-compiler-babel'],
+    },
+    getAbsolutePath('@storybook/addon-a11y'),
+    getAbsolutePath('@storybook/addon-mdx-gfm'),
+    '@storybook/addon-webpack5-compiler-babel'
+  ],
 
   framework: {
-    name: getAbsolutePath("@storybook/react-webpack5"),
+    name: getAbsolutePath('@storybook/react-webpack5'),
     options: {}
   },
 
@@ -70,7 +80,3 @@ module.exports = {
     autodocs: true
   }
 };
-
-function getAbsolutePath(value) {
-  return dirname(require.resolve(join(value, "package.json")));
-}

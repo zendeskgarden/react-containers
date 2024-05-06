@@ -43,8 +43,8 @@ export const Uncontrolled: Story = {
 export const Controlled: Story = {
   render: function Render(args) {
     const updateArgs = useArgs()[1];
-    const handleSelect = selectedValue => updateArgs({ selectedValue });
-    return <TabsStory {...args} onSelect={handleSelect} />;
+
+    return <TabsStory {...args} onSelect={selectedValue => updateArgs({ selectedValue })} />;
   },
   name: 'Controlled',
   argTypes: { defaultSelectedValue: { control: false } }

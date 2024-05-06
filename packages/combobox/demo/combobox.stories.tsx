@@ -51,12 +51,15 @@ export const Uncontrolled: Story = {
 export const Controlled: Story = {
   render: function Render(args) {
     const updateArgs = useArgs()[1];
-    const handleChange = changes => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { type, ...args } = changes;
-      updateArgs(args);
-    };
-    return <ComboboxStory {...args} onChange={handleChange} />;
+    return (
+      <ComboboxStory
+        {...args}
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        onChange={({ type, ...rest }) => {
+          updateArgs(rest);
+        }}
+      />
+    );
   },
   name: 'Controlled',
   args: {
@@ -66,7 +69,6 @@ export const Controlled: Story = {
     selectionValue: null
   },
   argTypes: {
-    defaultExpanded: { control: false },
-    defaultSelectionValue: { control: false }
+    defaultExpanded: { control: false }
   }
 };

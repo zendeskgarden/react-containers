@@ -44,10 +44,13 @@ export const Uncontrolled: Story = {
 export const Controlled: Story = {
   render: function Render(args) {
     const updateArgs = useArgs()[1];
-    const handleSelect = selectedValue => updateArgs({ selectedValue });
-    const handleFocus = focusedValue => updateArgs({ focusedValue });
+
     return (
-      <SelectionStory {...args} onSelect={handleSelect} onFocus={handleFocus} />
+      <SelectionStory
+        {...args}
+        onSelect={selectedValue => updateArgs({ selectedValue })}
+        onFocus={focusedValue => updateArgs({ focusedValue })}
+      />
     );
   },
   name: 'Controlled',

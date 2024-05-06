@@ -15,7 +15,7 @@ type Story = StoryObj<typeof SliderStory>;
 
 const meta: Meta<typeof SliderStory> = {
   title: 'Packages/Slider',
-  component: SliderContainer,
+  component: SliderContainer as Meta<typeof SliderStory>['component'],
   args: { as: 'hook', max: 100, min: 0, step: 1 },
   argTypes: {
     as: {
@@ -40,9 +40,13 @@ export const Uncontrolled: Story = {
 export const Controlled: Story = {
   render: function Render(args) {
     const updateArgs = useArgs()[1];
-    const handleChange = ({ minValue, maxValue }) =>
-      updateArgs({ minValue, maxValue });
-    return <SliderStory {...args} onChange={handleChange} />;
+
+    return (
+      <SliderStory
+        {...args}
+        onChange={({ minValue, maxValue }) => updateArgs({ minValue, maxValue })}
+      />
+    );
   },
   name: 'Controlled',
   args: { minValue: 25, maxValue: 75 },

@@ -10,7 +10,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { useArgs } from '@storybook/preview-api';
 import { AccordionContainer } from '@zendeskgarden/container-accordion';
 import { AccordionStory } from './stories/AccordionStory';
-import { SECTIONS } from './stories/data.ts';
+import { SECTIONS } from './stories/data';
 
 type Story = StoryObj<typeof AccordionStory>;
 
@@ -39,13 +39,21 @@ export const Uncontrolled: Story = {
 export const Controlled: Story = {
   render: function Render(args) {
     const updateArgs = useArgs()[1];
-    const handleChange = value => {
-      const expandedSections = args.expandedSections.includes(value)
-        ? args.expandedSections.filter(section => section !== value)
-        : [...args.expandedSections, value];
-      updateArgs({ expandedSections });
-    };
-    return <AccordionStory {...args} onChange={handleChange} />;
+
+    return (
+      <AccordionStory
+        {...args}
+        onChange={value => {
+          let expandedSections = args.expandedSections || [];
+
+          expandedSections = expandedSections!.includes(value)
+            ? expandedSections!.filter(section => section !== value)
+            : [...expandedSections!, value];
+
+          updateArgs({ expandedSections });
+        }}
+      />
+    );
   },
   name: 'Controlled',
   args: { expandedSections: SECTIONS.slice(0, 1) },

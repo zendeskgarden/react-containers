@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React, { useCallback } from 'react';
+import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { useArgs } from '@storybook/preview-api';
 import { MenuContainer } from '@zendeskgarden/container-menu';
@@ -44,12 +44,16 @@ export const Uncontrolled: Story = {
 export const Controlled: Story = {
   render: function Render(args) {
     const updateArgs = useArgs()[1];
-    const handleChange = useCallback(changes => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { type, ...rest } = changes;
-      updateArgs(rest);
-    }, []);
-    return <MenuStory {...args} onChange={handleChange} />;
+
+    return (
+      <MenuStory
+        {...args}
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        onChange={({ type, ...rest }) => {
+          updateArgs(rest);
+        }}
+      />
+    );
   },
   name: 'Controlled',
   argTypes: {

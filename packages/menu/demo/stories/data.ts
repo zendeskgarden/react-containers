@@ -5,7 +5,9 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-export const ITEMS = [
+import { MenuItem } from '@zendeskgarden/container-menu';
+
+export const ITEMS: MenuItem[] = [
   { value: 'plant-01', label: 'Petunia' },
   { value: 'plant-02', label: 'Hydrangea' },
   { value: 'separator-01', separator: true },

@@ -15,15 +15,14 @@ type Story = StoryObj<typeof SplitterStory>;
 
 const meta: Meta<typeof SplitterStory> = {
   title: 'Packages/Splitter',
-  component: SplitterContainer,
+  component: SplitterContainer as Meta<typeof SplitterStory>['component'],
   args: { as: 'hook', max: 700, min: 200, orientation: 'vertical' },
   argTypes: {
     as: {
       options: ['container', 'hook'],
       control: 'radio',
       table: { category: 'Story' }
-    },
-    splitterRef: { control: false }
+    }
   },
   parameters: { layout: 'padded' }
 };
@@ -39,8 +38,8 @@ export const Uncontrolled: Story = {
 export const Controlled: Story = {
   render: function Render(args) {
     const updateArgs = useArgs()[1];
-    const handleChange = valueNow => updateArgs({ valueNow });
-    return <SplitterStory {...args} onChange={handleChange} />;
+
+    return <SplitterStory {...args} onChange={valueNow => updateArgs({ valueNow })} />;
   },
   name: 'Controlled',
   args: { valueNow: 300 },

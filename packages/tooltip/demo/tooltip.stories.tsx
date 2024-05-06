@@ -22,7 +22,7 @@ export const Tooltip: StoryObj<typeof TooltipStory> = {
   name: 'Tooltip',
   args: {
     as: 'hook',
-    delayMilliseconds: TooltipContainer.defaultProps.delayMilliseconds
+    delayMilliseconds: TooltipContainer.defaultProps!.delayMilliseconds
   },
   argTypes: {
     as: {

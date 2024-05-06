@@ -19,7 +19,8 @@ export default meta;
 
 export const FocusVisible: StoryObj<typeof FocusVisibleStory> = {
   render: function Render(args) {
-    const scope = useRef();
+    const scope = useRef<HTMLDivElement>(null);
+
     return <FocusVisibleStory {...args} scope={scope} />;
   },
   name: 'FocusVisible',
