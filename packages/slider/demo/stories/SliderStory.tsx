@@ -6,7 +6,7 @@
  */
 
 import React, { createRef, forwardRef } from 'react';
-import { Story } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import {
   ISliderContainerProps,
   IUseSliderProps,
@@ -181,7 +181,7 @@ interface IArgs extends ISliderContainerProps<HTMLDivElement, HTMLDivElement> {
   as: 'hook' | 'container';
 }
 
-export const SliderStory: Story<IArgs> = ({ as, ...args }) => {
+export const SliderStory: StoryFn<IArgs> = ({ as, ...args }) => {
   const trackRef = createRef<HTMLDivElement>();
   const minThumbRef = createRef<HTMLDivElement>();
   const maxThumbRef = createRef<HTMLDivElement>();

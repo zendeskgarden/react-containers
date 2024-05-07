@@ -1,0 +1,25 @@
+import { Meta, Controls, Canvas, Story, Markdown } from '@storybook/blocks';
+import README from '../README.md';
+import * as AccordionStories from './accordion.stories';
+
+<Meta of={AccordionStories} />
+
+# API
+
+<Controls />
+
+# Demo
+
+## Uncontrolled
+
+<Canvas>
+  <Story of={AccordionStories.Uncontrolled} />
+</Canvas>
+
+## Controlled
+
+<Canvas>
+  <Story of={AccordionStories.Controlled} />
+</Canvas>
+
+<Markdown>{README}</Markdown>

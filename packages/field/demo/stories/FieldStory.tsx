@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { Story } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import {
   FieldContainer,
   IFieldContainerProps,
@@ -53,7 +53,7 @@ interface IArgs extends IFieldContainerProps {
   as: 'hook' | 'container';
 }
 
-export const FieldStory: Story<IArgs> = ({ as, ...props }) => {
+export const FieldStory: StoryFn<IArgs> = ({ as, ...props }) => {
   const Field = () => {
     switch (as) {
       case 'container':

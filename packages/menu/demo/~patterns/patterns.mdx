@@ -1,0 +1,22 @@
+import { Meta, Canvas, Story } from '@storybook/blocks';
+import * as PatternsStories from './patterns.stories';
+
+<Meta of={PatternsStories} />
+
+# Patterns
+
+## Nested Focus Uncontrolled
+
+Demonstrate nested menu with uncontrolled focus.
+
+<Canvas>
+  <Story of={PatternsStories.NestedFocusUncontrolled} />
+</Canvas>
+
+## Nested Focus Controlled
+
+Demonstrate nested menu with controlled focus.
+
+<Canvas>
+  <Story of={PatternsStories.NestedFocusControlled} />
+</Canvas>

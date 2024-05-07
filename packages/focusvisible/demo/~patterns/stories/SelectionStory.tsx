@@ -6,12 +6,12 @@
  */
 
 import React, { useRef } from 'react';
-import { Story } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import classNames from 'classnames';
 import { useFocusVisible } from '@zendeskgarden/container-focusvisible';
 import { useSelection } from '@zendeskgarden/container-selection';
 
-export const SelectionStory: Story = () => {
+export const SelectionStory: StoryFn = () => {
   const values = ['Item 1', 'Item 2', 'Item 3'];
   const scope = useRef(null);
   const { getGroupProps, getElementProps, selectedValue } = useSelection({ values });

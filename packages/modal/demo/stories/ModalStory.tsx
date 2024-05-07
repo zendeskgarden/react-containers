@@ -6,7 +6,7 @@
  */
 
 import React, { forwardRef, HTMLAttributes } from 'react';
-import { Story } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import {
   IModalContainerProps,
   IUseModalProps,
@@ -104,7 +104,7 @@ interface IArgs extends IModalContainerProps<HTMLDivElement> {
   onOpen: HTMLAttributes<HTMLButtonElement>['onClick'];
 }
 
-export const ModalStory: Story<IArgs> = ({ as, ...props }) => {
+export const ModalStory: StoryFn<IArgs> = ({ as, ...props }) => {
   switch (as) {
     case 'container':
       return <Container {...props} />;

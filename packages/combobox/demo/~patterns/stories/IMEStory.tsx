@@ -6,12 +6,12 @@
  */
 
 import React, { createRef, useState } from 'react';
-import { Story } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import classNames from 'classnames';
 import { IUseComboboxProps, useCombobox } from '@zendeskgarden/container-combobox';
 import { OPTIONS } from './data';
 
-export const IMEStory: Story = () => {
+export const IMEStory: StoryFn = () => {
   const triggerRef = createRef<HTMLDivElement>();
   const inputRef = createRef<HTMLInputElement>();
   const listboxRef = createRef<HTMLUListElement>();

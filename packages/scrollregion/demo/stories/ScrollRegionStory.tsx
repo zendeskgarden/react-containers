@@ -6,7 +6,7 @@
  */
 
 import React, { forwardRef, HTMLAttributes } from 'react';
-import { Story } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import {
   IScrollRegionContainerProps,
   IUseScrollRegionProps,
@@ -71,7 +71,7 @@ interface IArgs extends IScrollRegionContainerProps<HTMLDivElement> {
   width: number;
 }
 
-export const ScrollRegionStory: Story<IArgs> = ({ as, ...props }) => {
+export const ScrollRegionStory: StoryFn<IArgs> = ({ as, ...props }) => {
   const ScrollRegion = () => {
     switch (as) {
       case 'container':

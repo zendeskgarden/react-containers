@@ -6,7 +6,7 @@
  */
 
 import React, { HTMLProps } from 'react';
-import { Story } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import {
   BreadcrumbContainer,
   IBreadcrumbContainerProps,
@@ -55,7 +55,7 @@ interface IArgs extends IBreadcrumbContainerProps {
   'aria-label': IProps['aria-label'];
 }
 
-export const BreadcrumbStory: Story<IArgs> = ({ as, 'aria-label': ariaLabel, ...props }) => {
+export const BreadcrumbStory: StoryFn<IArgs> = ({ as, 'aria-label': ariaLabel, ...props }) => {
   switch (as) {
     case 'container':
       return <Container aria-label={ariaLabel} {...props} />;

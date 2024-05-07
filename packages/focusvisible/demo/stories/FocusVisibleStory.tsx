@@ -6,7 +6,7 @@
  */
 
 import React, { forwardRef } from 'react';
-import { Story } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import { createGlobalStyle } from 'styled-components';
 import { PALETTE } from '@zendeskgarden/react-theming';
 import {
@@ -81,7 +81,7 @@ interface IArgs extends IUseFocusVisibleProps<HTMLDivElement> {
   as: 'hook' | 'container';
 }
 
-export const FocusVisibleStory: Story<IArgs> = ({ as, ...props }) => {
+export const FocusVisibleStory: StoryFn<IArgs> = ({ as, ...props }) => {
   const FocusVisible = () => {
     switch (as) {
       case 'container':

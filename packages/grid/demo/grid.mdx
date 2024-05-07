@@ -1,0 +1,25 @@
+import { Meta, Controls, Canvas, Story, Markdown } from '@storybook/blocks';
+import README from '../README.md';
+import * as GridStories from './grid.stories';
+
+<Meta of={GridStories} />
+
+# API
+
+<Controls />
+
+# Demo
+
+## Uncontrolled
+
+<Canvas>
+  <Story of={GridStories.Uncontrolled} />
+</Canvas>
+
+## Controlled
+
+<Canvas>
+  <Story of={GridStories.Controlled} />
+</Canvas>
+
+<Markdown>{README}</Markdown>

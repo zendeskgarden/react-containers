@@ -1,3 +1,4 @@
+import { dirname, join } from 'path';
 /**
  * Copyright Zendesk, Inc.
  *
@@ -16,6 +17,10 @@ const PACKAGE_NAMES = readdirSync(path.resolve(__dirname, '../packages')).filter
   name => name !== '.template'
 );
 
+function getAbsolutePath(value) {
+  return dirname(require.resolve(join(value, 'package.json')));
+}
+
 const options = {
   backgrounds: false,
   measure: false,
@@ -24,7 +29,8 @@ const options = {
 };
 
 module.exports = {
-  stories: ['../packages/*/demo/**/*.stories.@(js|jsx|ts|tsx|mdx)'],
+  stories: ['../packages/*/demo/**/*.@(mdx|stories.@(js|jsx|ts|tsx))'],
+
   addons: [
     { name: '@storybook/addon-essentials', options },
     {
@@ -38,12 +44,16 @@ module.exports = {
         }
       }
     },
-    '@storybook/addon-a11y'
+    getAbsolutePath('@storybook/addon-a11y'),
+    getAbsolutePath('@storybook/addon-mdx-gfm'),
+    '@storybook/addon-webpack5-compiler-babel'
   ],
+
   framework: {
-    name: '@storybook/react-webpack5',
+    name: getAbsolutePath('@storybook/react-webpack5'),
     options: {}
   },
+
   webpackFinal: config => {
     config.plugins.push(
       new DefinePlugin({
@@ -64,5 +74,9 @@ module.exports = {
     );
 
     return config;
+  },
+
+  docs: {
+    autodocs: true
   }
 };

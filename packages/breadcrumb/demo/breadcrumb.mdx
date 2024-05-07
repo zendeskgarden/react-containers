@@ -1,0 +1,17 @@
+import { Meta, Controls, Canvas, Story, Markdown } from '@storybook/blocks';
+import README from '../README.md';
+import * as BreadcrumbStories from './breadcrumb.stories';
+
+<Meta of={BreadcrumbStories} />
+
+# API
+
+<Controls />
+
+# Demo
+
+<Canvas>
+  <Story of={BreadcrumbStories.Breadcrumb} />
+</Canvas>
+
+<Markdown>{README}</Markdown>

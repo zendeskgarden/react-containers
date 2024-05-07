@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { Story } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import {
   AccordionContainer,
   IAccordionContainerProps,
@@ -15,7 +15,7 @@ import {
   useAccordion
 } from '@zendeskgarden/container-accordion';
 
-type ISectionValue = number;
+type ISectionValue = string;
 
 interface IComponentProps<T = ISectionValue> extends IUseAccordionReturnValue<T> {
   sections: IUseAccordionProps<T>['sections'];
@@ -84,7 +84,7 @@ interface IArgs extends IAccordionContainerProps<ISectionValue> {
   as: 'hook' | 'container';
 }
 
-export const AccordionStory: Story<IArgs> = ({ as, ...props }: IArgs) => {
+export const AccordionStory: StoryFn<IArgs> = ({ as, ...props }: IArgs) => {
   const Accordion = () => {
     switch (as) {
       case 'container':

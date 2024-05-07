@@ -1,0 +1,17 @@
+import { Meta, Controls, Canvas, Story, Markdown } from '@storybook/blocks';
+import README from '../README.md';
+import * as TooltipStories from './tooltip.stories';
+
+<Meta of={TooltipStories} />
+
+# API
+
+<Controls />
+
+# Demo
+
+<Canvas>
+  <Story of={TooltipStories.Tooltip} />
+</Canvas>
+
+<Markdown>{README}</Markdown>

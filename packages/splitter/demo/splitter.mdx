@@ -1,0 +1,25 @@
+import { Meta, Controls, Canvas, Story, Markdown } from '@storybook/blocks';
+import README from '../README.md';
+import * as SplitterStories from './splitter.stories';
+
+<Meta of={SplitterStories} />
+
+# API
+
+<Controls />
+
+# Demo
+
+## Uncontrolled
+
+<Canvas>
+  <Story of={SplitterStories.Uncontrolled} />
+</Canvas>
+
+## Controlled
+
+<Canvas>
+  <Story of={SplitterStories.Controlled} />
+</Canvas>
+
+<Markdown>{README}</Markdown>

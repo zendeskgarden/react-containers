@@ -6,7 +6,7 @@
  */
 
 import React, { FocusEventHandler, HTMLProps } from 'react';
-import { Story } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import {
   GridContainer,
   IGridContainerProps,
@@ -138,7 +138,7 @@ interface IArgs extends IGridContainerProps {
   'aria-label': NonNullable<HTMLProps<HTMLDivElement>['aria-label']>;
 }
 
-export const GridStory: Story<IArgs> = ({ as, 'aria-label': ariaLabel, ...props }) => {
+export const GridStory: StoryFn<IArgs> = ({ as, 'aria-label': ariaLabel, ...props }) => {
   switch (as) {
     case 'container':
       return <Container aria-label={ariaLabel} {...props} />;

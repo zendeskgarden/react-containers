@@ -1,0 +1,17 @@
+import { Meta, Controls, Canvas, Story, Markdown } from '@storybook/blocks';
+import README from '../README.md';
+import * as FocusjailStories from './focusjail.stories';
+
+<Meta of={FocusjailStories} />
+
+# API
+
+<Controls />
+
+# Demo
+
+<Canvas>
+  <Story of={FocusjailStories.FocusJail} />
+</Canvas>
+
+<Markdown>{README}</Markdown>

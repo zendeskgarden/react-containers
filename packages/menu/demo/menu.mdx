@@ -1,0 +1,23 @@
+import { Meta, Controls, Canvas, Story, Markdown } from '@storybook/blocks';
+import README from '../README.md';
+import * as MenuStories from './menu.stories';
+
+<Meta of={MenuStories} />
+
+# API
+
+<Controls />
+
+# Uncontrolled
+
+<Canvas>
+  <Story of={MenuStories.Uncontrolled} />
+</Canvas>
+
+# Controlled
+
+<Canvas>
+  <Story of={MenuStories.Controlled} />
+</Canvas>
+
+<Markdown>{README}</Markdown>
