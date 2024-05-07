@@ -1,8 +1,8 @@
 import { Meta, Controls, Canvas, Story, Markdown } from '@storybook/blocks';
 import README from '../README.md';
-import * as FocusvisibleStories from './focusvisible.stories';
+import * as FocusVisibleStories from './focusvisible.stories';
 
-<Meta of={FocusvisibleStories} />
+<Meta of={FocusVisibleStories} />
 
 # API
 
@@ -11,9 +11,7 @@ import * as FocusvisibleStories from './focusvisible.stories';
 # Demo
 
 <Canvas>
-  <Story of={FocusvisibleStories.FocusVisible} />
+  <Story of={FocusVisibleStories.FocusVisible} />
 </Canvas>
 
-<Markdown>
-  {README}
-</Markdown>
+<Markdown>{README}</Markdown>
