@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React, { useRef } from 'react';
+import React, { AnchorHTMLAttributes, LiHTMLAttributes, useRef } from 'react';
 import { StoryFn } from '@storybook/react';
 import classNames from 'classnames';
 import {
@@ -33,23 +33,49 @@ type MenuItemProps = {
   isSelected?: boolean;
 };
 
-const Item = ({ item, getItemProps, focusedValue, isSelected }: MenuItemProps) => (
-  <li
-    className={classNames({
-      'bg-blue-100': !item.disabled && focusedValue === item.value,
-      'text-grey-400': item.disabled,
-      'cursor-pointer': !item.disabled,
-      'cursor-default': item.disabled
-    })}
-    {...getItemProps({ item })}
-  >
-    <span className="inline-flex justify-center items-center w-4">
-      {item?.type === 'radio' && isSelected && '•'}
-      {item?.type === 'checkbox' && isSelected && '✓'}
-    </span>
-    {item.label || item.value}
-  </li>
-);
+const Item = ({ item, getItemProps, focusedValue, isSelected }: MenuItemProps) => {
+  const itemProps = getItemProps({ item });
+
+  const itemChildren = (
+    <>
+      <span className="inline-flex justify-center items-center w-4">
+        {item?.type === 'radio' && isSelected && '•'}
+        {item?.type === 'checkbox' && isSelected && '✓'}
+      </span>
+      {item.label || item.value}
+    </>
+  );
+
+  return (
+    <li
+      className={classNames('flex', {
+        'bg-blue-100': !item.disabled && focusedValue === item.value,
+        'text-grey-400': item.disabled,
+        'cursor-pointer': !item.disabled,
+        'cursor-default': item.disabled
+      })}
+      role={itemProps.href ? 'none' : undefined}
+      {...(!itemProps.href && (itemProps as LiHTMLAttributes<HTMLLIElement>))}
+    >
+      {itemProps.href ? (
+        <a
+          {...(itemProps as AnchorHTMLAttributes<HTMLAnchorElement>)}
+          className="w-full box-border"
+        >
+          {itemChildren}
+          {item.isExternal && (
+            <>
+              <span aria-hidden="true">⤴</span>
+              <span className="sr-only">(opens in new window)</span>
+            </>
+          )}
+        </a>
+      ) : (
+        itemChildren
+      )}
+    </li>
+  );
+};
 
 const Component = ({
   items,

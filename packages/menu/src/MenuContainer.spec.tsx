@@ -254,6 +254,16 @@ describe('MenuContainer', () => {
       expect(menu).not.toBeVisible();
     });
 
+    it('applies external anchor attributes', () => {
+      const { getByTestId } = render(
+        <TestMenu items={[{ value: 'item', href: '#0', isExternal: true }]} />
+      );
+      const menu = getByTestId('menu');
+
+      expect(menu.firstChild).toHaveAttribute('target', '_blank');
+      expect(menu.firstChild).toHaveAttribute('rel', 'noopener noreferrer');
+    });
+
     describe('focus', () => {
       describe('trigger', () => {
         it('focuses first item on arrow keydown', async () => {
@@ -1186,5 +1196,23 @@ describe('MenuContainer', () => {
         expect(changeTypes).toContain(StateChangeTypes.MenuItemKeyDownPrevious);
       });
     });
+  });
+
+  describe('error handling', () => {
+    it.each([
+      { key: 'isNext', isNext: true },
+      { key: 'isPrevious', isPrevious: true }
+    ])("throws when anchor item uses '$key'", itemProps => {
+      expect(() =>
+        render(<TestMenu items={[{ value: 'test', href: '#0', ...itemProps }]} />)
+      ).toThrow();
+    });
+
+    it.each<'radio' | 'checkbox'>(['radio', 'checkbox'])(
+      "throws when anchor item is '%s' type",
+      type => {
+        expect(() => render(<TestMenu items={[{ value: 'test', href: '#0', type }]} />)).toThrow();
+      }
+    );
   });
 });

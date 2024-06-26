@@ -61,7 +61,8 @@ const Menu = () => {
   const items = [
     { value: 'value-1', label: 'One' },
     { value: 'value-2', label: 'Two' },
-    { value: 'value-3', label: 'Three' }
+    { value: 'value-3', label: 'Three', href: '#0' },
+    { value: 'value-4', label: 'Four' }
   ];
 
   return (
@@ -70,11 +71,17 @@ const Menu = () => {
         <>
           <button {...getTriggerProps()}>Menu</button>
           <ul {...getMenuProps()} style={{ visibility: isExpanded ? 'visible' : 'hidden' }}>
-            {items.map(item => (
-              <li key={item.value} {...getItemProps({ item })}>
-                {item.label}
-              </li>
-            ))}
+            {items.map(item =>
+              item.href ? (
+                <li key={item.value} role="none">
+                  <a {...getItemProps({ item })}>{item.label}</a>
+                </li>
+              ) : (
+                <li key={item.value} {...getItemProps({ item })}>
+                  {item.label}
+                </li>
+              )
+            )}
           </ul>
         </>
       )}
