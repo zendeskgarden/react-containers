@@ -756,7 +756,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
           checkbox: 'checkbox'
         }[invariantKey];
 
-        throw new Error(`Error: Anchor items '${value}' can't use '${invariantType}'`);
+        throw new Error(`Error: Anchor item '${value}' can't use '${invariantType}'`);
       }
 
       if (href && isExternal) {
