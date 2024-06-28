@@ -60,12 +60,12 @@ const Item = ({ item, getItemProps, focusedValue, isSelected }: MenuItemProps) =
       {itemProps.href ? (
         <a
           {...(itemProps as AnchorHTMLAttributes<HTMLAnchorElement>)}
-          className="w-full box-border"
+          className="w-full rounded-sm outline-offset-0 transition-none border-width-none"
         >
           {itemChildren}
           {item.isExternal && (
             <>
-              <span aria-hidden="true">⤴</span>
+              <span aria-hidden="true"> ↗</span>
               <span className="sr-only">(opens in new window)</span>
             </>
           )}
@@ -93,6 +93,8 @@ const Component = ({
   return (
     <div className="relative">
       <button {...getTriggerProps()}>Produce</button>
+      <br />
+      <a href="https://garden.zendesk.com">Link</a>
 
       <ul
         className={classNames('border border-grey-400 border-solid w-32 absolute', {

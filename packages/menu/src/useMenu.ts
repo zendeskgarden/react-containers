@@ -27,7 +27,8 @@ import {
   isValidItem,
   StateChangeTypes,
   stateReducer,
-  toMenuItemKeyDownType
+  toMenuItemKeyDownType,
+  triggerLink
 } from './utils';
 import {
   MenuItem,
@@ -124,7 +125,8 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
     values,
     direction: 'vertical',
     selectedValue: focusedValue || uncontrolledFocusedValue,
-    focusedValue: focusedValue || uncontrolledFocusedValue
+    focusedValue: focusedValue || uncontrolledFocusedValue,
+    allowDefaultOnSelect: true
   });
 
   /**
@@ -425,6 +427,16 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
           ...(nextSelection && { selectedItems: nextSelection })
         };
 
+        if (item.href) {
+          if (key === KEYS.SPACE) {
+            event.preventDefault();
+
+            triggerLink(event.target as HTMLAnchorElement, environment || window);
+          }
+        } else {
+          event.preventDefault();
+        }
+
         if (!isTransitionItem) {
           focusTriggerRef.current = true;
         }
@@ -438,6 +450,8 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
         }
 
         if (changeType) {
+          event.preventDefault();
+
           changes = { value: item.value };
         }
       } else if (key === KEYS.LEFT) {
@@ -450,9 +464,13 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
         }
 
         if (changeType) {
+          event.preventDefault();
+
           changes = { value: item.value };
         }
       } else if (isVerticalArrowKeys || isJumpKey || isAlphanumericChar) {
+        event.preventDefault();
+
         changeType = isAlphanumericChar
           ? StateChangeTypes.MenuItemKeyDown
           : StateChangeTypes[toMenuItemKeyDownType(key)];
@@ -470,7 +488,6 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
       }
 
       if (changeType) {
-        event.preventDefault();
         event.stopPropagation();
 
         const transitionNext = changeType.includes('next');
@@ -497,6 +514,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
       isFocusedValueControlled,
       isSelectedItemsControlled,
       focusTriggerRef,
+      environment,
       getNextFocusedValue,
       getSelectedItems,
       onChange

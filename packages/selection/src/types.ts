@@ -34,6 +34,8 @@ export interface IUseSelectionProps<Value> {
    * @param focusedValue The focused value
    */
   onFocus?: (focusedValue?: Value) => void;
+  /** @ignore */
+  allowDefaultOnSelect?: boolean;
 }
 
 export interface IUseSelectionReturnValue<Value> {

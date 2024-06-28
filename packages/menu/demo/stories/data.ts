@@ -15,7 +15,7 @@ export const ITEMS: MenuItem[] = [
   {
     value: 'plant-04',
     label: 'Aloe Vera',
-    href: 'https://garden.zendesk.com',
+    href: 'https://en.wikipedia.org/wiki/Aloe_vera',
     isExternal: false
   },
   { value: 'plant-05', label: 'Succulent' },
