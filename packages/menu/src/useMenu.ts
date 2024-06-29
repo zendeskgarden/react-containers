@@ -244,6 +244,27 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
     [controlledSelectedItems]
   );
 
+  const anchorItemError = ({ isNext, isPrevious, type, value }: IMenuItemBase) => {
+    let invariantKey: string;
+
+    if (isNext) {
+      invariantKey = 'isNext';
+    } else if (isPrevious) {
+      invariantKey = 'isPrevious';
+    } else {
+      invariantKey = type!;
+    }
+
+    const invariantType = {
+      isNext: 'isNext',
+      isPrevious: 'isPrevious',
+      radio: 'radio',
+      checkbox: 'checkbox'
+    }[invariantKey];
+
+    throw new Error(`Error: expected useMenu anchor item '${value}' to not use '${invariantType}'`);
+  };
+
   // Event
 
   const handleTriggerClick = useCallback(
@@ -756,30 +777,17 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
         ...other
       };
 
+      if (href && isExternal) {
+        elementProps.target = '_blank';
+        elementProps.rel = 'noopener noreferrer';
+      }
+
       /**
        * Validation
        */
 
       if (href && (isNext || isPrevious || type)) {
-        let invariantKey: string;
-
-        if (isNext) invariantKey = 'isNext';
-        else if (isPrevious) invariantKey = 'isPrevious';
-        else invariantKey = type!;
-
-        const invariantType = {
-          isNext: 'isNext',
-          isPrevious: 'isPrevious',
-          radio: 'radio',
-          checkbox: 'checkbox'
-        }[invariantKey];
-
-        throw new Error(`Error: Anchor item '${value}' can't use '${invariantType}'`);
-      }
-
-      if (href && isExternal) {
-        elementProps.target = '_blank';
-        elementProps.rel = 'noopener noreferrer';
+        anchorItemError(item);
       }
 
       if (itemDisabled) {

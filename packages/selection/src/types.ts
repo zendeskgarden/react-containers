@@ -22,6 +22,8 @@ export interface IUseSelectionProps<Value> {
   selectedValue?: Value;
   /** Sets controlled value focus */
   focusedValue?: Value;
+  /** Allows `preventDefault` to be called on selection */
+  allowDefaultOnSelect?: boolean;
   /**
    * Handles controlled value selection
    *
@@ -34,8 +36,6 @@ export interface IUseSelectionProps<Value> {
    * @param focusedValue The focused value
    */
   onFocus?: (focusedValue?: Value) => void;
-  /** @ignore */
-  allowDefaultOnSelect?: boolean;
 }
 
 export interface IUseSelectionReturnValue<Value> {

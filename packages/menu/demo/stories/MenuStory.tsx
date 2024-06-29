@@ -92,9 +92,9 @@ const Component = ({
 
   return (
     <div className="relative">
-      <button {...getTriggerProps()}>Produce</button>
-      <br />
-      <a href="https://garden.zendesk.com">Link</a>
+      <button className="px-2 py-1" type="button" {...getTriggerProps()}>
+        Produce
+      </button>
 
       <ul
         className={classNames('border border-grey-400 border-solid w-32 absolute', {
