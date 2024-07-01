@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-menu@0.3.4...@zendeskgarden/container-menu@0.4.0) (2024-07-01)
+
+### Features
+
+- **menu:** adds support for link items ([#648](https://github.com/zendeskgarden/react-containers/issues/648)) ([cfa0aa1](https://github.com/zendeskgarden/react-containers/commit/cfa0aa1eb42033c499b1b5870de25d981a8f4104))
+
 ## [0.3.4](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-menu@0.3.3...@zendeskgarden/container-menu@0.3.4) (2024-07-01)
 
 **Note:** Version bump only for package @zendeskgarden/container-menu
