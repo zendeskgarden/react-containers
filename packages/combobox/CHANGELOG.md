@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.1](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-combobox@2.0.0...@zendeskgarden/container-combobox@2.0.1) (2024-07-01)
+
+**Note:** Version bump only for package @zendeskgarden/container-combobox
+
 # [2.0.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-combobox@1.1.4...@zendeskgarden/container-combobox@2.0.0) (2024-04-02)
 
 - feat(combobox)!: prefer strings as option values (#637) ([2de1b9b](https://github.com/zendeskgarden/react-containers/commit/2de1b9b22c210c290d3fe9135c6131d8547fa9ce)), closes [#637](https://github.com/zendeskgarden/react-containers/issues/637)

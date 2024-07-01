@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.12](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-slider@0.1.11...@zendeskgarden/container-slider@0.1.12) (2024-07-01)
+
+**Note:** Version bump only for package @zendeskgarden/container-slider
+
 ## [0.1.11](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-slider@0.1.10...@zendeskgarden/container-slider@0.1.11) (2024-01-26)
 
 **Note:** Version bump only for package @zendeskgarden/container-slider

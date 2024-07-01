@@ -1,6 +1,6 @@
 {
   "name": "@zendeskgarden/container-selection",
-  "version": "3.0.9",
+  "version": "3.0.10",
   "description": "Containers relating to selection in the Garden Design System",
   "license": "Apache-2.0",
   "author": "Zendesk Garden <garden@zendesk.com>",
