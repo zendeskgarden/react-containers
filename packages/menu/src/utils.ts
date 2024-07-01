@@ -9,6 +9,16 @@ import { Reducer } from 'react';
 import { KEYS } from '@zendeskgarden/container-utilities';
 import { MenuItem, IMenuItemBase, IMenuItemSeparator, ISelectedItem } from './types';
 
+export const triggerLink = (element: HTMLAnchorElement, view: Window) => {
+  const event = new MouseEvent('click', {
+    bubbles: true,
+    cancelable: true,
+    view
+  });
+
+  element.dispatchEvent(event);
+};
+
 export const StateChangeTypes: Record<string, string> = {
   FnSetStateRefs: 'fn:setStateRefs',
   FnMenuTransitionFinish: 'fn:menuTransitionFinish',

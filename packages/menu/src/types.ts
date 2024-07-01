@@ -13,6 +13,8 @@ export interface ISelectedItem {
   name?: string;
   type?: 'radio' | 'checkbox';
   disabled?: boolean;
+  href?: string;
+  isExternal?: boolean;
 }
 
 export interface IMenuItemBase extends ISelectedItem {

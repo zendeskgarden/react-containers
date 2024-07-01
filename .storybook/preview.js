@@ -31,7 +31,7 @@ export const parameters = {
 };
 
 const GlobalStyle = createGlobalStyle`
-  :focus {
+  :focus-visible {
     outline-color: ${p => getColor('primaryHue', 600, p.theme)};
   }
 `;

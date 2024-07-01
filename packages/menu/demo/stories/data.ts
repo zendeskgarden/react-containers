@@ -12,7 +12,13 @@ export const ITEMS: MenuItem[] = [
   { value: 'plant-02', label: 'Hydrangea' },
   { value: 'separator-01', separator: true },
   { value: 'plant-03', label: 'Violet' },
-  { value: 'plant-04', label: 'Succulent' },
+  {
+    value: 'plant-04',
+    label: 'Aloe Vera',
+    href: 'https://en.wikipedia.org/wiki/Aloe_vera',
+    isExternal: false
+  },
+  { value: 'plant-05', label: 'Succulent' },
   {
     label: 'Choose favorites',
     items: [

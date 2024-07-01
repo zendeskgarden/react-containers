@@ -27,6 +27,7 @@ export const useSelection = <Value>({
   rtl,
   selectedValue,
   focusedValue,
+  allowDefaultOnSelect = false,
   onSelect,
   onFocus
 }: IUseSelectionProps<Value>): IUseSelectionReturnValue<Value> => {
@@ -199,7 +200,7 @@ export const useSelection = <Value>({
           onSelect && onSelect(value);
           !isSelectedValueControlled && dispatch({ type: 'KEYBOARD_SELECT', payload: value });
 
-          event.preventDefault();
+          !allowDefaultOnSelect && event.preventDefault();
         }
       }
     };
