@@ -16,12 +16,19 @@ import jestPlugin from '@zendeskgarden/eslint-config/plugins/jest.js';
 export default [
   ...config,
   noticePlugin,
-  reactPlugin,
   prettierConfig,
-  { ignores: ['**/dist'] },
+  {
+    ignores: ['**/dist']
+  },
   {
     rules: {
-      'sort-imports': 'off',
+      'sort-imports': 'off'
+    }
+  },
+  {
+    ...reactPlugin,
+    rules: {
+      ...reactPlugin.rules,
       'react/jsx-no-useless-fragment': 'off'
     }
   },
