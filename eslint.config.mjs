@@ -5,9 +5,9 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
+import prettierConfig from 'eslint-config-prettier';
 import config from '@zendeskgarden/eslint-config';
 import noticePlugin from '@zendeskgarden/eslint-config/plugins/notice.js';
-import prettierConfig from 'eslint-config-prettier';
 import reactPlugin from '@zendeskgarden/eslint-config/plugins/react.js';
 import typescriptPlugin from '@zendeskgarden/eslint-config/plugins/typescript.js';
 import typescriptTypeCheckedPlugin from '@zendeskgarden/eslint-config/plugins/typescript-type-checked.js';
@@ -18,7 +18,7 @@ export default [
   noticePlugin,
   reactPlugin,
   prettierConfig,
-  { ignores: ['**/dist', '**/node_modules'] },
+  { ignores: ['**/dist'] },
   {
     rules: {
       'sort-imports': 'off',
