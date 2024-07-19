@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import path from 'node:path';
+const path = require('node:path');
 const { readdirSync } = require('node:fs');
 const { DefinePlugin } = require('webpack');
 const postcss = require('postcss');

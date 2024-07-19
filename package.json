@@ -12,7 +12,7 @@
     "format:package_json": "lerna exec -- prettier-package-json",
     "postinstall": "husky",
     "lint": "npm run lint:js && npm run lint:md",
-    "lint:js": "eslint . --max-warnings 0",
+    "lint:js": "eslint --max-warnings 0",
     "lint:md": "markdownlint README.md packages/*/src/**/*.md packages/*/src/*.md packages/*/README.md",
     "new": "utils/scripts/new.mjs",
     "prepare": "npm run build",
@@ -30,7 +30,6 @@
   "devDependencies": {
     "@babel/cli": "7.24.5",
     "@babel/core": "7.24.5",
-    "@babel/eslint-parser": "7.24.5",
     "@babel/plugin-transform-object-assign": "7.24.1",
     "@babel/plugin-transform-runtime": "7.24.3",
     "@babel/preset-env": "7.24.5",

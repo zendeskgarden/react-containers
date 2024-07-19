@@ -72,16 +72,12 @@ interface IArgs extends IScrollRegionContainerProps<HTMLDivElement> {
 }
 
 export const ScrollRegionStory: StoryFn<IArgs> = ({ as, ...props }) => {
-  const ScrollRegion = () => {
-    switch (as) {
-      case 'container':
-        return <Container {...props} />;
+  switch (as) {
+    case 'container':
+      return <Container {...props} />;
 
-      case 'hook':
-      default:
-        return <Hook {...props} />;
-    }
-  };
-
-  return <ScrollRegion />;
+    case 'hook':
+    default:
+      return <Hook {...props} />;
+  }
 };

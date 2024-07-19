@@ -82,16 +82,12 @@ interface IArgs extends IUseFocusVisibleProps<HTMLDivElement> {
 }
 
 export const FocusVisibleStory: StoryFn<IArgs> = ({ as, ...props }) => {
-  const FocusVisible = () => {
-    switch (as) {
-      case 'container':
-        return <Container />;
+  switch (as) {
+    case 'container':
+      return <Container />;
 
-      case 'hook':
-      default:
-        return <Hook {...props} />;
-    }
-  };
-
-  return <FocusVisible />;
+    case 'hook':
+    default:
+      return <Hook {...props} />;
+  }
 };

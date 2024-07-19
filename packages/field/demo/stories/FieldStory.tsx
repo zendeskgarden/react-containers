@@ -54,16 +54,12 @@ interface IArgs extends IFieldContainerProps {
 }
 
 export const FieldStory: StoryFn<IArgs> = ({ as, ...props }) => {
-  const Field = () => {
-    switch (as) {
-      case 'container':
-        return <Container {...props} />;
+  switch (as) {
+    case 'container':
+      return <Container {...props} />;
 
-      case 'hook':
-      default:
-        return <Hook {...props} />;
-    }
-  };
-
-  return <Field />;
+    case 'hook':
+    default:
+      return <Hook {...props} />;
+  }
 };
