@@ -81,7 +81,7 @@ describe('ComboboxContainer', () => {
             <label data-test-id={labelTestId} {...getLabelProps()}>
               Label
             </label>
-            {hasHint && (
+            {!!hasHint && (
               <div data-test-id={hintTestId} {...getHintProps()}>
                 Hint
               </div>
@@ -120,12 +120,12 @@ describe('ComboboxContainer', () => {
                     </button>
                   ))}
                 <input data-test-id={inputTestId} {...getInputProps()} />
-                {isEditable && (
+                {!!isEditable && (
                   <button data-test-id={triggerTestId} {...getTriggerProps()} type="button" />
                 )}
               </div>
             )}
-            {hasMessage && (
+            {!!hasMessage && (
               <div data-test-id={messageTestId} {...getMessageProps()}>
                 Message
               </div>

@@ -31,9 +31,9 @@ const Component = ({
   /* eslint-disable jsx-a11y/label-has-associated-control */
   <>
     <label {...getLabelProps()}>Label</label>
-    {hasHint && <div {...getHintProps()}>Hint</div>}
+    {!!hasHint && <div {...getHintProps()}>Hint</div>}
     <input {...getInputProps()} />
-    {hasMessage && <div {...getMessageProps()}>Message</div>}
+    {!!hasMessage && <div {...getMessageProps()}>Message</div>}
   </>
 );
 

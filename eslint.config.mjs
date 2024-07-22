@@ -19,8 +19,7 @@ const typescriptRules = {
   '@typescript-eslint/naming-convention': 'off',
   '@typescript-eslint/no-explicit-any': 'off',
   'n/no-unsupported-features/es-builtins': ['error', { version: '>=16.9.0' }],
-  'react/prop-types': 'off',
-  'react/jsx-no-leaked-render': 'off'
+  'react/prop-types': 'off'
 };
 
 export default [
