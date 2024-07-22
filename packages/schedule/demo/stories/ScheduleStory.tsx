@@ -49,16 +49,12 @@ interface IArgs extends IScheduleContainerProps {
 }
 
 export const ScheduleStory: StoryFn<IArgs> = ({ as, ...props }) => {
-  const Schedule = () => {
-    switch (as) {
-      case 'container':
-        return <Container {...props} />;
+  switch (as) {
+    case 'container':
+      return <Container {...props} />;
 
-      case 'hook':
-      default:
-        return <Hook {...props} />;
-    }
-  };
-
-  return <Schedule />;
+    case 'hook':
+    default:
+      return <Hook {...props} />;
+  }
 };

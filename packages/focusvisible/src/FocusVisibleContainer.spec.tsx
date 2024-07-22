@@ -35,15 +35,15 @@ describe('FocusVisibleContainer', () => {
 
     console.error = jest.fn();
 
-    expect(() => {
-      const ErrorExample = () => {
-        useFocusVisible();
+    const ErrorExample = () => {
+      useFocusVisible();
 
-        return <div>test</div>;
-      };
+      return <div>test</div>;
+    };
 
-      render(<ErrorExample />);
-    }).toThrow('Error: the useFocusVisible() hook requires a "scope" property');
+    expect(() => render(<ErrorExample />)).toThrow(
+      'Error: the useFocusVisible() hook requires a "scope" property'
+    );
 
     console.error = originalError;
   });

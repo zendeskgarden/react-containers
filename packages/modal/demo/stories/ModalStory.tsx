@@ -37,7 +37,7 @@ const Component = forwardRef<HTMLDivElement, IComponentProps>(
       <button className="px-2 py-1" type="button" onClick={onOpen}>
         Open
       </button>
-      {isOpen && (
+      {!!isOpen && (
         <div
           className="absolute bg-grey-700 flex top-0 right-0 bottom-0 left-0 items-center justify-center"
           {...getBackdropProps()}

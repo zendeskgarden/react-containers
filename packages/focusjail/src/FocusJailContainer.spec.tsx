@@ -234,7 +234,7 @@ describe('FocusJailContainer', () => {
 
       return (
         <>
-          {showFocusJail && (
+          {!!showFocusJail && (
             <FocusJailContainer containerRef={containerRef}>
               {({ getContainerProps }) => (
                 <div

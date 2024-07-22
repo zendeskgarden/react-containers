@@ -28,9 +28,11 @@ describe('ScheduleContainer', () => {
   beforeEach(() => {
     jest.spyOn(window, 'setTimeout');
     jest.spyOn(window, 'requestAnimationFrame');
-    jest.spyOn(window, 'clearTimeout');
     jest.spyOn(window, 'cancelAnimationFrame');
-    (clearTimeout as jest.Mock).mockClear();
+
+    const spy: jest.SpyInstance = jest.spyOn(window, 'clearTimeout');
+
+    spy.mockClear();
   });
 
   afterEach(() => {

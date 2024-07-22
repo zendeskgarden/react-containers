@@ -1,4 +1,3 @@
-import { dirname, join } from 'path';
 /**
  * Copyright Zendesk, Inc.
  *
@@ -6,8 +5,8 @@ import { dirname, join } from 'path';
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-const path = require('path');
-const { readdirSync } = require('fs');
+const path = require('node:path');
+const { readdirSync } = require('node:fs');
 const { DefinePlugin } = require('webpack');
 const postcss = require('postcss');
 const tailwindcss = require('tailwindcss');
@@ -18,7 +17,7 @@ const PACKAGE_NAMES = readdirSync(path.resolve(__dirname, '../packages')).filter
 );
 
 function getAbsolutePath(value) {
-  return dirname(require.resolve(join(value, 'package.json')));
+  return path.dirname(require.resolve(path.join(value, 'package.json')));
 }
 
 const options = {

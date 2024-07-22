@@ -108,16 +108,16 @@ describe('TooltipContainer', () => {
       });
 
       it('should clear open timeout if unmounted during interval', async () => {
-        jest.spyOn(window, 'clearTimeout');
+        const spy: jest.SpyInstance = jest.spyOn(window, 'clearTimeout');
         const { getByText, unmount } = render(<BasicExample />);
 
         await user.hover(getByText('trigger'));
 
         unmount();
         // 3 total clearTimeouts occur during this action
-        expect(clearTimeout).toHaveBeenCalledTimes(3);
+        expect(spy).toHaveBeenCalledTimes(3);
 
-        (clearTimeout as jest.Mock).mockRestore();
+        spy.mockRestore();
       });
     });
 

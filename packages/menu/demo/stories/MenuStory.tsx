@@ -39,8 +39,8 @@ const Item = ({ item, getItemProps, focusedValue, isSelected }: MenuItemProps) =
   const itemChildren = (
     <>
       <span className="inline-flex justify-center items-center w-4">
-        {item?.type === 'radio' && isSelected && '•'}
-        {item?.type === 'checkbox' && isSelected && '✓'}
+        {item?.type === 'radio' && !!isSelected && '•'}
+        {item?.type === 'checkbox' && !!isSelected && '✓'}
       </span>
       {item.label || item.value}
     </>
@@ -63,7 +63,7 @@ const Item = ({ item, getItemProps, focusedValue, isSelected }: MenuItemProps) =
           className="w-full rounded-sm outline-offset-0 transition-none border-width-none"
         >
           {itemChildren}
-          {item.isExternal && (
+          {!!item.isExternal && (
             <>
               <span aria-hidden="true"> ↗</span>
               <span className="sr-only">(opens in new window)</span>

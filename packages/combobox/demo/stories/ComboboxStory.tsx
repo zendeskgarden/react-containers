@@ -41,7 +41,7 @@ const Option = ({ option, isGrouped, activeValue, selection, getOptionProps }: I
     })}
     {...getOptionProps({ option })}
   >
-    {(Array.isArray(selection)
+    {!!(Array.isArray(selection)
       ? selection.find(value => value.value === option.value) !== undefined
       : selection && selection.value === option.value) && '✓ '}
     {getLabel(option)}
@@ -133,7 +133,7 @@ const Component = ({
   /* eslint-disable jsx-a11y/label-has-associated-control */
   <div className="relative">
     <label {...getLabelProps()}>Label</label>
-    {hasHint && <div {...getHintProps()}>Hint</div>}
+    {!!hasHint && <div {...getHintProps()}>Hint</div>}
     {layout === 'Garden' && (
       <div
         className={classNames('border', 'border-solid', 'p-1', {
@@ -145,14 +145,14 @@ const Component = ({
         })}
         {...getTriggerProps()}
       >
-        {isMultiselectable && <Tags selection={selection} getTagProps={getTagProps} />}
+        {!!isMultiselectable && <Tags selection={selection} getTagProps={getTagProps} />}
         <input
           className={classNames('border-none', 'bg-transparent', {
             'cursor-pointer': !(disabled || isEditable)
           })}
           {...getInputProps()}
         />
-        {(isAutocomplete || !isEditable) && (
+        {!!(isAutocomplete || !isEditable) && (
           <button
             className={classNames('ml-1', 'px-1', { 'cursor-default': disabled })}
             disabled={disabled}
@@ -166,14 +166,14 @@ const Component = ({
     )}
     {layout === 'Downshift' && (
       <div {...(!isEditable && getTriggerProps())}>
-        {isMultiselectable && <Tags selection={selection} getTagProps={getTagProps} />}
+        {!!isMultiselectable && <Tags selection={selection} getTagProps={getTagProps} />}
         <input
           className={classNames({
             'cursor-pointer': !(disabled || isEditable)
           })}
           {...getInputProps()}
         />
-        {isAutocomplete && isEditable && (
+        {!!isAutocomplete && !!isEditable && (
           <button
             className="ml-1 px-1"
             {...getTriggerProps({ 'aria-label': 'Options' })}
@@ -184,7 +184,7 @@ const Component = ({
         )}
       </div>
     )}
-    {hasMessage && <div {...getMessageProps()}>Message</div>}
+    {!!hasMessage && <div {...getMessageProps()}>Message</div>}
     <ul
       className={classNames('mt-1', 'border', 'border-solid', 'absolute', 'w-full', {
         invisible: !isExpanded
@@ -204,7 +204,7 @@ const Component = ({
               className="cursor-default"
               onMouseDown={event => event.preventDefault()}
             >
-              {option.label && <b className="block mt-1">{option.label}</b>}
+              {!!option.label && <b className="block mt-1">{option.label}</b>}
               <hr aria-hidden="true" className="my-1 border-grey-200" />
               <ul {...getOptGroupProps({ 'aria-label': option.label || 'group' })}>
                 {option.options.map((groupOption, groupIndex) => (

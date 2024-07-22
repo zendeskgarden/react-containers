@@ -60,16 +60,12 @@ interface IArgs extends ITooltipContainerProps {
 }
 
 export const TooltipStory: StoryFn<IArgs> = ({ as, ...props }) => {
-  const Tooltip = () => {
-    switch (as) {
-      case 'container':
-        return <Container {...props} />;
+  switch (as) {
+    case 'container':
+      return <Container {...props} />;
 
-      case 'hook':
-      default:
-        return <Hook {...props} />;
-    }
-  };
-
-  return <Tooltip />;
+    case 'hook':
+    default:
+      return <Hook {...props} />;
+  }
 };

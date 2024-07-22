@@ -63,7 +63,7 @@ export const IMEStory: StoryFn = () => {
               className={classNames({ 'bg-blue-100': option.value === activeValue })}
               {...getOptionProps({ option })}
             >
-              {selection && !Array.isArray(selection) && selection.value === option.value && '✓ '}
+              {!!selection && !Array.isArray(selection) && selection.value === option.value && '✓ '}
               {option.label}
             </li>
           ))}

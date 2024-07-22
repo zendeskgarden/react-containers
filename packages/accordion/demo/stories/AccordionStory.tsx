@@ -85,16 +85,12 @@ interface IArgs extends IAccordionContainerProps<ISectionValue> {
 }
 
 export const AccordionStory: StoryFn<IArgs> = ({ as, ...props }: IArgs) => {
-  const Accordion = () => {
-    switch (as) {
-      case 'container':
-        return <Container {...props} />;
+  switch (as) {
+    case 'container':
+      return <Container {...props} />;
 
-      case 'hook':
-      default:
-        return <Hook {...props} />;
-    }
-  };
-
-  return <Accordion />;
+    case 'hook':
+    default:
+      return <Hook {...props} />;
+  }
 };
