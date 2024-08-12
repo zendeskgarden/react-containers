@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.0.17](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-field@3.0.16...@zendeskgarden/container-field@3.0.17) (2024-08-12)
+
+**Note:** Version bump only for package @zendeskgarden/container-field
+
 ## [3.0.16](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-field@3.0.15...@zendeskgarden/container-field@3.0.16) (2024-07-01)
 
 **Note:** Version bump only for package @zendeskgarden/container-field
