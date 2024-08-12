@@ -23,7 +23,7 @@
     "@babel/runtime": "^7.8.4",
     "@zendeskgarden/container-field": "^3.0.16",
     "@zendeskgarden/container-utilities": "^2.0.0",
-    "downshift": "^8.0.0"
+    "downshift": "^9.0.0"
   },
   "peerDependencies": {
     "prop-types": "^15.6.1",
