@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.3](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-combobox@2.0.2...@zendeskgarden/container-combobox@2.0.3) (2024-08-23)
+
+### Bug Fixes
+
+- React peer dependency ranges ([#656](https://github.com/zendeskgarden/react-containers/issues/656)) ([be95225](https://github.com/zendeskgarden/react-containers/commit/be95225f3c988183944d8b0395c578dd4396ba62))
+
 ## [2.0.2](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-combobox@2.0.1...@zendeskgarden/container-combobox@2.0.2) (2024-08-12)
 
 ### Bug Fixes

@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.1](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-utilities@2.0.0...@zendeskgarden/container-utilities@2.0.1) (2024-08-23)
+
+### Bug Fixes
+
+- React peer dependency ranges ([#656](https://github.com/zendeskgarden/react-containers/issues/656)) ([be95225](https://github.com/zendeskgarden/react-containers/commit/be95225f3c988183944d8b0395c578dd4396ba62))
+
 # [2.0.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-utilities@1.0.14...@zendeskgarden/container-utilities@2.0.0) (2024-01-26)
 
 - chore!: remove deprecated container and utilities (#624) ([e529826](https://github.com/zendeskgarden/react-containers/commit/e5298261e2cff7566643f4fc5e3ade991329bed6)), closes [#624](https://github.com/zendeskgarden/react-containers/issues/624)

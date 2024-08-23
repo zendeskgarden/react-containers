@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.13](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-slider@0.1.12...@zendeskgarden/container-slider@0.1.13) (2024-08-23)
+
+### Bug Fixes
+
+- React peer dependency ranges ([#656](https://github.com/zendeskgarden/react-containers/issues/656)) ([be95225](https://github.com/zendeskgarden/react-containers/commit/be95225f3c988183944d8b0395c578dd4396ba62))
+
 ## [0.1.12](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-slider@0.1.11...@zendeskgarden/container-slider@0.1.12) (2024-07-01)
 
 **Note:** Version bump only for package @zendeskgarden/container-slider

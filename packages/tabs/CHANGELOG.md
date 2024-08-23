@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.13](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-tabs@2.0.12...@zendeskgarden/container-tabs@2.0.13) (2024-08-23)
+
+### Bug Fixes
+
+- React peer dependency ranges ([#656](https://github.com/zendeskgarden/react-containers/issues/656)) ([be95225](https://github.com/zendeskgarden/react-containers/commit/be95225f3c988183944d8b0395c578dd4396ba62))
+
 ## [2.0.12](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-tabs@2.0.11...@zendeskgarden/container-tabs@2.0.12) (2024-07-01)
 
 **Note:** Version bump only for package @zendeskgarden/container-tabs
