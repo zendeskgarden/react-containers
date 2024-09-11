@@ -278,18 +278,17 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
       event.stopPropagation();
 
       const changeType = StateChangeTypes.TriggerClick;
-      const nextIsExpanded = !controlledIsExpanded;
 
       dispatch({
         type: changeType,
         payload: {
           ...(!isFocusedValueControlled && { focusedValue: null }),
-          ...(!isExpandedControlled && { isExpanded: nextIsExpanded })
+          ...(!isExpandedControlled && { isExpanded: !controlledIsExpanded })
         }
       });
 
       // Skip focus return when isExpanded === true
-      returnFocusToTrigger(nextIsExpanded && isExpandedControlled);
+      returnFocusToTrigger(!controlledIsExpanded && isExpandedControlled);
 
       onChange({
         type: changeType,
