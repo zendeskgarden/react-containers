@@ -289,7 +289,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
       });
 
       // Skip focus return when isExpanded === true
-      returnFocusToTrigger(nextIsExpanded);
+      returnFocusToTrigger(nextIsExpanded && isExpandedControlled);
 
       onChange({
         type: changeType,
@@ -337,7 +337,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
           }
         });
 
-        returnFocusToTrigger();
+        returnFocusToTrigger(isExpandedControlled);
 
         onChange({
           type: changeType,
@@ -366,8 +366,8 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
 
         const type = StateChangeTypes[key === KEYS.ESCAPE ? 'MenuKeyDownEscape' : 'MenuKeyDownTab'];
 
-        // Skip focus return on TAB key. Focus should go to the next element in the tab order.
-        returnFocusToTrigger(KEYS.TAB === key);
+        // TODO: Investigate why focus goes to body instead of next interactive element on TAB keydown. Meanwhile, returning focus to trigger.
+        returnFocusToTrigger();
 
         closeMenu(type);
       }
@@ -420,7 +420,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
         }
       });
 
-      returnFocusToTrigger(isTransitionItem);
+      returnFocusToTrigger(isTransitionItem && isExpandedControlled);
 
       onChange({
         type: changeType,
@@ -482,7 +482,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
           triggerLink(event.target as HTMLAnchorElement, environment || window);
         }
 
-        returnFocusToTrigger(isTransitionItem);
+        returnFocusToTrigger(isTransitionItem && isExpandedControlled);
       } else if (key === KEYS.RIGHT) {
         if (rtl && isPrevious) {
           changeType = StateChangeTypes.MenuItemKeyDownPrevious;
@@ -594,6 +594,12 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
   useEffect(() => {
     setMenuVisible(controlledIsExpanded);
   }, [controlledIsExpanded]);
+
+  useEffect(() => {
+    if (isExpandedControlled && isExpanded === false) {
+      returnFocusToTrigger();
+    }
+  }, [isExpandedControlled, isExpanded, returnFocusToTrigger]);
 
   /**
    * Respond to clicks outside the  open menu
