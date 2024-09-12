@@ -285,13 +285,13 @@ describe('MenuContainer', () => {
             <TestMenu items={ITEMS} defaultFocusedValue="plant-04" />
           );
           const trigger = getByTestId('trigger');
-          const firstItem = getByText('Petunia');
+          const item = getByText('Succulent');
 
           await act(async () => {
             await user.click(trigger);
           });
 
-          expect(firstItem).not.toHaveFocus();
+          expect(item).not.toHaveFocus();
         });
 
         it('focuses defaultFocusedValue on ArrowDown keydown', async () => {
