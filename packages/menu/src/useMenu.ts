@@ -48,6 +48,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
   onChange = () => undefined,
   isExpanded,
   defaultExpanded = false,
+  restoreFocus = true,
   selectedItems,
   focusedValue,
   defaultFocusedValue
@@ -134,11 +135,11 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
 
   const returnFocusToTrigger = useCallback(
     (skip?: boolean) => {
-      if (!skip && triggerRef.current) {
+      if (!skip && restoreFocus && triggerRef.current) {
         triggerRef.current.focus();
       }
     },
-    [triggerRef]
+    [triggerRef, restoreFocus]
   );
 
   const closeMenu = useCallback(
@@ -288,7 +289,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
       });
 
       // Skip focus return when isExpanded === true
-      returnFocusToTrigger(!controlledIsExpanded && isExpandedControlled);
+      returnFocusToTrigger(!controlledIsExpanded);
 
       onChange({
         type: changeType,
@@ -419,7 +420,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
         }
       });
 
-      returnFocusToTrigger(isTransitionItem && isExpandedControlled);
+      returnFocusToTrigger(isTransitionItem);
 
       onChange({
         type: changeType,
@@ -481,7 +482,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
           triggerLink(event.target as HTMLAnchorElement, environment || window);
         }
 
-        returnFocusToTrigger(isTransitionItem && isExpandedControlled);
+        returnFocusToTrigger(isTransitionItem);
       } else if (key === KEYS.RIGHT) {
         if (rtl && isPrevious) {
           changeType = StateChangeTypes.MenuItemKeyDownPrevious;
@@ -593,12 +594,6 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
   useEffect(() => {
     setMenuVisible(controlledIsExpanded);
   }, [controlledIsExpanded]);
-
-  useEffect(() => {
-    if (isExpandedControlled && isExpanded === false) {
-      returnFocusToTrigger();
-    }
-  }, [isExpandedControlled, isExpanded, returnFocusToTrigger]);
 
   /**
    * Respond to clicks outside the  open menu
