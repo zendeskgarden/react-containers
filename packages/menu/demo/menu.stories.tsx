@@ -63,6 +63,54 @@ export const Controlled: Story = {
   },
   args: {
     isExpanded: false,
+    restoreFocus: true,
+    focusedValue: 'plant-01',
+    selectedItems: [{ value: 'Cherry', type: 'checkbox' }]
+  }
+};
+
+export const ControlledManagedFocus: Story = {
+  render: function Render(args) {
+    const updateArgs = useArgs()[1];
+    const triggerRef = React.useRef<HTMLButtonElement>(null);
+
+    return (
+      <MenuStory
+        {...args}
+        triggerRef={triggerRef}
+        onChange={_args => {
+          // eslint-disable-next-line no-console
+          console.log('onChange:', _args);
+
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const { type, isExpanded, ...rest } = _args;
+          const { selectedItems } = rest;
+          let nextArgs: any = rest;
+
+          const lastItem = selectedItems?.[selectedItems.length - 1];
+          const isNonCheckboxItem = !selectedItems || lastItem?.type !== 'checkbox';
+
+          if (isExpanded !== undefined && isNonCheckboxItem) {
+            nextArgs = { ...nextArgs, isExpanded };
+          }
+
+          if (!args.restoreFocus && isExpanded === false && triggerRef.current) {
+            triggerRef.current.focus();
+          }
+          updateArgs(nextArgs);
+        }}
+      />
+    );
+  },
+  name: 'Controlled + Managed Focus',
+  argTypes: {
+    defaultFocusedValue: { control: false },
+    defaultExpanded: { control: false },
+    focusedValue: { control: { type: 'text' } }
+  },
+  args: {
+    isExpanded: false,
+    restoreFocus: false,
     focusedValue: 'plant-01',
     selectedItems: [{ value: 'Cherry', type: 'checkbox' }]
   }
