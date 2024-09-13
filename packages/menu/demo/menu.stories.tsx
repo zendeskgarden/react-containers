@@ -85,16 +85,16 @@ export const ControlledManagedFocus: Story = {
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const { type, isExpanded, ...rest } = _args;
           const { selectedItems } = rest;
-          let nextArgs: any = rest;
+          const nextArgs: typeof rest & { isExpanded?: boolean } = rest;
 
           const lastItem = selectedItems?.[selectedItems.length - 1];
           const isNonCheckboxItem = !selectedItems || lastItem?.type !== 'checkbox';
 
           if (isExpanded !== undefined && isNonCheckboxItem) {
-            nextArgs = { ...nextArgs, isExpanded };
+            nextArgs.isExpanded = isExpanded;
           }
 
-          if (!args.restoreFocus && isExpanded === false && triggerRef.current) {
+          if (!args.restoreFocus && nextArgs.isExpanded === false && triggerRef.current) {
             triggerRef.current.focus();
           }
           updateArgs(nextArgs);
