@@ -337,7 +337,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
           }
         });
 
-        returnFocusToTrigger(isExpandedControlled);
+        returnFocusToTrigger();
 
         onChange({
           type: changeType,
