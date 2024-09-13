@@ -94,7 +94,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
 
   const [menuVisible, setMenuVisible] = useState<boolean>(false);
   const [state, dispatch] = useReducer(stateReducer, {
-    focusedValue: focusedValue || defaultFocusedValue,
+    focusedValue,
     isExpanded: isExpanded || defaultExpanded,
     selectedItems: initialSelectedItems,
     valuesRef: values,
