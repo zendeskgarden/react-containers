@@ -11,6 +11,8 @@
  * https://github.com/paypal/downshift/blob/master/src/utils.js
  */
 
+type Fn = (event: any, ...args: any[]) => void;
+
 /**
  * @component
  *
@@ -21,9 +23,7 @@
  * @param {Function} fns the event hanlder functions
  * @return {Function} the event handler to add to an element
  */
-
-// eslint-disable-next-line @typescript-eslint/ban-types
-export function composeEventHandlers(...fns: (Function | undefined)[]) {
+export function composeEventHandlers(...fns: (Fn | undefined)[]) {
   return (event: any, ...args: any[]) =>
     fns.some(fn => {
       fn && fn(event, ...args);
