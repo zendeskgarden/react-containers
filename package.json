@@ -38,7 +38,7 @@
     "@babel/runtime": "7.25.6",
     "@brodybits/rollup-plugin-size-snapshot": "0.15.0",
     "@rollup/plugin-babel": "6.0.4",
-    "@rollup/plugin-commonjs": "26.0.3",
+    "@rollup/plugin-commonjs": "28.0.0",
     "@rollup/plugin-node-resolve": "15.3.0",
     "@rollup/plugin-replace": "6.0.1",
     "@storybook/addon-a11y": "8.3.3",
