@@ -66,7 +66,7 @@ export interface IUseMenuProps<T = HTMLButtonElement, M = HTMLElement> {
   focusedValue?: string | null;
   /** Determines focused value on menu initialization */
   defaultFocusedValue?: string;
-  /** Returns focus to the trigger when the menu is collapsed */
+  /** Returns keyboard focus to the element that triggered the menu */
   restoreFocus?: boolean;
   /** Sets the selected values in a controlled menu */
   selectedItems?: ISelectedItem[];

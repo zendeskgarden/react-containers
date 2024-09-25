@@ -34,7 +34,5 @@ MenuContainer.propTypes = {
 };
 
 MenuContainer.defaultProps = {
-  defaultExpanded: false,
-  restoreFocus: true,
-  rtl: false
+  restoreFocus: true
 };
