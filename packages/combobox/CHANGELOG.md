@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.4](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-combobox@2.0.3...@zendeskgarden/container-combobox@2.0.4) (2024-09-25)
+
+**Note:** Version bump only for package @zendeskgarden/container-combobox
+
 ## [2.0.3](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-combobox@2.0.2...@zendeskgarden/container-combobox@2.0.3) (2024-08-23)
 
 ### Bug Fixes

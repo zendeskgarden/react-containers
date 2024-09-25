@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-menu@0.4.2...@zendeskgarden/container-menu@0.5.0) (2024-09-25)
+
+### Bug Fixes
+
+- **menu:** prevents `defaultFocusedValue` from focusing items on trigger click ([#660](https://github.com/zendeskgarden/react-containers/issues/660)) ([ec77a9d](https://github.com/zendeskgarden/react-containers/commit/ec77a9d64b8f714aeec3de18baad7d617f10c977))
+
+- fix(container-menu)!: improves logic for returning focus to trigger (#659) ([93b6278](https://github.com/zendeskgarden/react-containers/commit/93b6278733a3255cd6bce5d6b6176aae15c3ce3b)), closes [#659](https://github.com/zendeskgarden/react-containers/issues/659)
+
+### BREAKING CHANGES
+
+- A new `restoreFocus` prop has been added. By default `restoreFocus` is `true` and will return the focus to the trigger on menu item selection, ESC / TAB key press, and clicking outside the menu dropdown. User who need to keep the dropdown open on selection must set `restoreFocus={false}` and manually handle the focus return.
+
 ## [0.4.2](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-menu@0.4.1...@zendeskgarden/container-menu@0.4.2) (2024-08-23)
 
 ### Bug Fixes

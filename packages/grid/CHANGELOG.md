@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.0.18](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-grid@3.0.17...@zendeskgarden/container-grid@3.0.18) (2024-09-25)
+
+**Note:** Version bump only for package @zendeskgarden/container-grid
+
 ## [3.0.17](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-grid@3.0.16...@zendeskgarden/container-grid@3.0.17) (2024-08-23)
 
 ### Bug Fixes

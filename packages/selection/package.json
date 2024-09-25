@@ -1,6 +1,6 @@
 {
   "name": "@zendeskgarden/container-selection",
-  "version": "3.1.1",
+  "version": "3.1.2",
   "description": "Containers relating to selection in the Garden Design System",
   "license": "Apache-2.0",
   "author": "Zendesk Garden <garden@zendesk.com>",
@@ -21,7 +21,7 @@
   "types": "dist/typings/index.d.ts",
   "dependencies": {
     "@babel/runtime": "^7.8.4",
-    "@zendeskgarden/container-utilities": "^2.0.1"
+    "@zendeskgarden/container-utilities": "^2.0.2"
   },
   "peerDependencies": {
     "prop-types": "^15.6.1",
