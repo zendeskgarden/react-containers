@@ -91,60 +91,71 @@ const Component = ({
   const selectedValues = selection.map(item => item.value);
 
   return (
-    <div className="relative">
-      <button className="px-2 py-1" type="button" {...getTriggerProps()}>
-        Produce
-      </button>
+    <div>
+      <div>
+        <div className="relative">
+          <button className="px-2 py-1" type="button" {...getTriggerProps()}>
+            Produce
+          </button>
 
-      <ul
-        className={classNames('border border-grey-400 border-solid w-32 absolute', {
-          invisible: !isExpanded
-        })}
-        {...getMenuProps()}
-      >
-        {items.map((item: MenuItem) => {
-          if ('items' in item) {
-            return (
-              <li key={item.label} role="none">
-                <b aria-hidden="true" className="block mt-1 ms-1">
-                  {item.label}
-                </b>
-                <hr aria-hidden="true" className="my-1 border-grey-200" {...getSeparatorProps()} />
-                <ul {...getItemGroupProps({ 'aria-label': item.label })}>
-                  {item.items.map(groupItem => (
-                    <Item
-                      key={groupItem.value}
-                      item={{ ...groupItem }}
-                      getItemProps={getItemProps}
-                      focusedValue={focusedValue}
-                      isSelected={selectedValues.includes(groupItem.value)}
+          <ul
+            className={classNames('bg-white border border-grey-400 border-solid w-32 absolute', {
+              invisible: !isExpanded
+            })}
+            {...getMenuProps()}
+          >
+            {items.map((item: MenuItem) => {
+              if ('items' in item) {
+                return (
+                  <li key={item.label} role="none">
+                    <b aria-hidden="true" className="block mt-1 ms-1">
+                      {item.label}
+                    </b>
+                    <hr
+                      aria-hidden="true"
+                      className="my-1 border-grey-200"
+                      {...getSeparatorProps()}
                     />
-                  ))}
-                </ul>
-              </li>
-            );
-          }
+                    <ul {...getItemGroupProps({ 'aria-label': item.label })}>
+                      {item.items.map(groupItem => (
+                        <Item
+                          key={groupItem.value}
+                          item={{ ...groupItem }}
+                          getItemProps={getItemProps}
+                          focusedValue={focusedValue}
+                          isSelected={selectedValues.includes(groupItem.value)}
+                        />
+                      ))}
+                    </ul>
+                  </li>
+                );
+              }
 
-          if ('separator' in item) {
-            return (
-              <li
-                key={item.value}
-                className="my-1 border-0 border-b border-solid border-grey-200"
-                {...getSeparatorProps()}
-              />
-            );
-          }
+              if ('separator' in item) {
+                return (
+                  <li
+                    key={item.value}
+                    className="my-1 border-0 border-b border-solid border-grey-200"
+                    {...getSeparatorProps()}
+                  />
+                );
+              }
 
-          return (
-            <Item
-              key={item.value}
-              item={item}
-              focusedValue={focusedValue}
-              getItemProps={getItemProps}
-            />
-          );
-        })}
-      </ul>
+              return (
+                <Item
+                  key={item.value}
+                  item={item}
+                  focusedValue={focusedValue}
+                  getItemProps={getItemProps}
+                />
+              );
+            })}
+          </ul>
+        </div>
+        <div>
+          <button style={{ marginTop: 80 }}>click me</button>
+        </div>
+      </div>
     </div>
   );
 };
@@ -167,16 +178,16 @@ interface IArgs extends MenuContainerProps {
   as: 'hook' | 'container';
 }
 
-export const MenuStory: StoryFn<IArgs> = ({ as, ...props }) => {
-  const triggerRef = useRef<HTMLButtonElement>(null);
+export const MenuStory: StoryFn<IArgs> = ({ as, triggerRef, ...props }) => {
+  const _triggerRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLUListElement>(null);
 
   switch (as) {
     case 'container':
-      return <Container {...props} triggerRef={triggerRef} menuRef={menuRef} />;
+      return <Container {...props} triggerRef={triggerRef || _triggerRef} menuRef={menuRef} />;
 
     case 'hook':
     default:
-      return <Hook {...props} triggerRef={triggerRef} menuRef={menuRef} />;
+      return <Hook {...props} triggerRef={triggerRef || _triggerRef} menuRef={menuRef} />;
   }
 };
