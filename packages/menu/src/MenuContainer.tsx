@@ -29,5 +29,10 @@ MenuContainer.propTypes = {
   defaultExpanded: PropTypes.bool,
   selectedItems: PropTypes.arrayOf(PropTypes.any),
   focusedValue: PropTypes.oneOfType([PropTypes.string]),
-  defaultFocusedValue: PropTypes.oneOfType([PropTypes.string])
+  defaultFocusedValue: PropTypes.oneOfType([PropTypes.string]),
+  restoreFocus: PropTypes.bool
+};
+
+MenuContainer.defaultProps = {
+  restoreFocus: true
 };

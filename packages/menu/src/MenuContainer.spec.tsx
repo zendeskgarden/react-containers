@@ -371,6 +371,20 @@ describe('MenuContainer', () => {
 
           expect(trigger).toHaveFocus();
         });
+
+        it('does not return focus to trigger when Escape key pressed in expanded menu if `restoreFocus` is false', async () => {
+          const { getByTestId } = render(<TestMenu items={ITEMS} restoreFocus={false} />);
+          const trigger = getByTestId('trigger');
+
+          trigger.focus();
+
+          await waitFor(async () => {
+            await user.keyboard('{ArrowDown}');
+            await user.keyboard('{Escape}');
+          });
+
+          expect(trigger).not.toHaveFocus();
+        });
       });
 
       describe('menu items', () => {

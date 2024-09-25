@@ -12,7 +12,6 @@ import React, {
   useEffect,
   useMemo,
   useReducer,
-  useRef,
   useState
 } from 'react';
 import { useSelection } from '@zendeskgarden/container-selection';
@@ -49,6 +48,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
   onChange = () => undefined,
   isExpanded,
   defaultExpanded = false,
+  restoreFocus = true,
   selectedItems,
   focusedValue,
   defaultFocusedValue
@@ -94,8 +94,6 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
    */
 
   const [menuVisible, setMenuVisible] = useState<boolean>(false);
-  const focusTriggerRef = useRef<boolean>(false);
-
   const [state, dispatch] = useReducer(stateReducer, {
     focusedValue,
     isExpanded: isExpanded || defaultExpanded,
@@ -134,6 +132,15 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
    */
 
   // Internal
+
+  const returnFocusToTrigger = useCallback(
+    (skip?: boolean) => {
+      if (!skip && restoreFocus && triggerRef.current) {
+        triggerRef.current.focus();
+      }
+    },
+    [triggerRef, restoreFocus]
+  );
 
   const closeMenu = useCallback(
     (changeType: string) => {
@@ -281,13 +288,22 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
         }
       });
 
+      // Skip focus return when isExpanded === true
+      returnFocusToTrigger(!controlledIsExpanded);
+
       onChange({
         type: changeType,
         focusedValue: null,
         isExpanded: !controlledIsExpanded
       });
     },
-    [controlledIsExpanded, isFocusedValueControlled, isExpandedControlled, onChange]
+    [
+      isFocusedValueControlled,
+      isExpandedControlled,
+      controlledIsExpanded,
+      returnFocusToTrigger,
+      onChange
+    ]
   );
 
   const handleTriggerKeyDown = useCallback(
@@ -321,6 +337,8 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
           }
         });
 
+        returnFocusToTrigger();
+
         onChange({
           type: changeType,
           focusedValue: defaultFocusedValue || nextFocusedValue,
@@ -328,7 +346,14 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
         });
       }
     },
-    [isExpandedControlled, isFocusedValueControlled, defaultFocusedValue, onChange, values]
+    [
+      values,
+      isFocusedValueControlled,
+      defaultFocusedValue,
+      isExpandedControlled,
+      returnFocusToTrigger,
+      onChange
+    ]
   );
 
   const handleMenuKeyDown = useCallback(
@@ -341,14 +366,13 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
 
         const type = StateChangeTypes[key === KEYS.ESCAPE ? 'MenuKeyDownEscape' : 'MenuKeyDownTab'];
 
-        if (KEYS.ESCAPE === key) {
-          focusTriggerRef.current = true;
-        }
+        // TODO: Investigate why focus goes to body instead of next interactive element on TAB keydown. Meanwhile, returning focus to trigger.
+        returnFocusToTrigger();
 
         closeMenu(type);
       }
     },
-    [closeMenu, focusTriggerRef]
+    [closeMenu, returnFocusToTrigger]
   );
 
   const handleMenuBlur = useCallback(
@@ -356,10 +380,11 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
       const path = event.composedPath();
 
       if (!path.includes(menuRef.current!) && !path.includes(triggerRef.current!)) {
+        returnFocusToTrigger();
         closeMenu(StateChangeTypes.MenuBlur);
       }
     },
-    [closeMenu, menuRef, triggerRef]
+    [closeMenu, menuRef, returnFocusToTrigger, triggerRef]
   );
 
   const handleMenuMouseLeave = useCallback(() => {
@@ -395,6 +420,8 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
         }
       });
 
+      returnFocusToTrigger(isTransitionItem);
+
       onChange({
         type: changeType,
         value: item.value,
@@ -403,10 +430,11 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
       });
     },
     [
+      getSelectedItems,
       state.nestedPathIds,
       isExpandedControlled,
       isSelectedItemsControlled,
-      getSelectedItems,
+      returnFocusToTrigger,
       onChange
     ]
   );
@@ -448,19 +476,13 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
           ...(nextSelection && { selectedItems: nextSelection })
         };
 
+        event.preventDefault();
+
         if (item.href) {
-          if (key === KEYS.SPACE) {
-            event.preventDefault();
-
-            triggerLink(event.target as HTMLAnchorElement, environment || window);
-          }
-        } else {
-          event.preventDefault();
+          triggerLink(event.target as HTMLAnchorElement, environment || window);
         }
 
-        if (!isTransitionItem) {
-          focusTriggerRef.current = true;
-        }
+        returnFocusToTrigger(isTransitionItem);
       } else if (key === KEYS.RIGHT) {
         if (rtl && isPrevious) {
           changeType = StateChangeTypes.MenuItemKeyDownPrevious;
@@ -529,15 +551,15 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
       }
     },
     [
-      rtl,
-      state.nestedPathIds,
-      isExpandedControlled,
-      isFocusedValueControlled,
-      isSelectedItemsControlled,
-      focusTriggerRef,
-      environment,
-      getNextFocusedValue,
       getSelectedItems,
+      isExpandedControlled,
+      isSelectedItemsControlled,
+      returnFocusToTrigger,
+      environment,
+      rtl,
+      getNextFocusedValue,
+      isFocusedValueControlled,
+      state.nestedPathIds,
       onChange
     ]
   );
@@ -594,12 +616,8 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
   }, [controlledIsExpanded, handleMenuBlur, handleMenuKeyDown, environment]);
 
   /**
-   * Handles focus depending on menu state:
-   * - When opened, focus the menu via `focusedValue`
-   * - When closed, focus the trigger via `triggerRef`
-   *
-   * This effect is intended to prevent focusing the trigger or menu
-   * unless the menu is in the right expansion state.
+   * When the menu is opened, this effect sets focus on the current menu item using `focusedValue`
+   * or on the first menu item.
    */
   useEffect(() => {
     if (state.focusOnOpen && menuVisible && controlledFocusedValue && controlledIsExpanded) {
@@ -614,13 +632,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
 
       ref && ref.focus();
     }
-
-    if (!menuVisible && !controlledIsExpanded && focusTriggerRef.current) {
-      triggerRef?.current?.focus();
-      focusTriggerRef.current = false;
-    }
   }, [
-    focusTriggerRef,
     values,
     menuVisible,
     itemRefs,
