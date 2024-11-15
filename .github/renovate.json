@@ -1,24 +1,24 @@
 {
-  "extends": ["config:base"],
-  "rebaseStalePrs": true,
+  "extends": ["config:recommended"],
+  "rebaseWhen": "behind-base-branch",
   "schedule": ["on Monday every 9 weeks of the year starting on the 3rd week"],
   "postUpdateOptions": ["npmDedupe"],
   "packageRules": [
     {
-      "matchFiles": ["package.json"],
+      "matchFileNames": ["package.json"],
       "matchUpdateTypes": ["patch", "minor"],
       "groupName": "non-major shared dependencies",
       "groupSlug": "shared-minor-patch"
     },
     {
-      "matchPaths": ["packages/**"],
+      "matchFileNames": ["packages/**"],
       "matchUpdateTypes": ["patch", "minor"],
       "groupName": "non-major package dependencies",
       "groupSlug": "packages-minor-patch"
     },
     {
-      "matchPackagePatterns": ["^@zendeskgarden/container"],
-      "enabled": false
+      "enabled": false,
+      "matchPackageNames": ["/^@zendeskgarden/container/"]
     },
     {
       "matchDepTypes": ["peerDependencies"],
