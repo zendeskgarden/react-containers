@@ -1,7 +1,7 @@
 {
   "extends": ["config:recommended"],
   "rebaseWhen": "behind-base-branch",
-  "schedule": ["on Monday every 9 weeks of the year starting on the 3rd week"],
+  "schedule": ["on Monday every 9 weeks of the year starting on the 4th week"],
   "postUpdateOptions": ["npmDedupe"],
   "packageRules": [
     {
