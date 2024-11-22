@@ -1,11 +1,9 @@
-# Garden React Containers [![Build Status][build status badge]][build status link] [![Dependency Status][dependency status badge]][dependency status link] [![Coverage Status][coverage status badge]][coverage status link]<!-- markdownlint-disable -->
+# Garden React Containers [![Build Status][build status badge]][build status link] [![Coverage Status][coverage status badge]][coverage status link]<!-- markdownlint-disable -->
 
 <!-- markdownlint-enable -->
 
 [build status badge]: https://flat.badgen.net/circleci/github/zendeskgarden/react-containers/main?label=build
 [build status link]: https://circleci.com/gh/zendeskgarden/react-containers/tree/main
-[dependency status badge]: https://flat.badgen.net/david/dev/zendeskgarden/react-containers?label=dependencies
-[dependency status link]: https://david-dm.org/zendeskgarden/react-containers?type=dev
 [coverage status badge]: https://flat.badgen.net/coveralls/c/github/zendeskgarden/react-containers/main
 [coverage status link]: https://coveralls.io/github/zendeskgarden/react-containers
 
@@ -197,6 +195,6 @@ conduct](.github/CODE_OF_CONDUCT.md). Please participate accordingly.
 
 ## License
 
-Copyright 2021 Zendesk
+Copyright 2025 Zendesk
 
 Licensed under the [Apache License, Version 2.0](LICENSE.md)
