@@ -8,7 +8,7 @@
 import React, { forwardRef } from 'react';
 import { StoryFn } from '@storybook/react';
 import { createGlobalStyle } from 'styled-components';
-import { PALETTE } from '@zendeskgarden/react-theming';
+import { DEFAULT_THEME, getColor } from '@zendeskgarden/react-theming';
 import {
   FocusVisibleContainer,
   IFocusVisibleContainerProps,
@@ -23,7 +23,7 @@ const GlobalStyle = createGlobalStyle`
 
   .garden-focus-visible,
   [data-garden-focus-visible='true'] {
-    box-shadow: 0 0 0 2px ${PALETTE.green[400]};
+    box-shadow: 0 0 0 2px ${getColor({ theme: DEFAULT_THEME, hue: 'green', shade: 600 })};
   }
 
   blockquote p::before {
