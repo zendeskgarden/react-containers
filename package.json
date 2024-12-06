@@ -64,7 +64,7 @@
     "@zendeskgarden/eslint-config": "44.0.1",
     "@zendeskgarden/react-theming": "9.3.0",
     "@zendeskgarden/scripts": "2.4.3",
-    "@zendeskgarden/tailwindcss": "3.1.1",
+    "@zendeskgarden/tailwindcss": "4.0.2",
     "autoprefixer": "10.4.20",
     "babel-plugin-module-resolver": "5.0.2",
     "babel-plugin-styled-components": "2.1.4",
