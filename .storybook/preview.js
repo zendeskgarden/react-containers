@@ -32,7 +32,7 @@ export const parameters = {
 
 const GlobalStyle = createGlobalStyle`
   :focus-visible {
-    outline-color: ${p => getColor('primaryHue', 600, p.theme)};
+    outline-color: ${getColor({ theme: DEFAULT_THEME, variable: 'border.primaryEmphasis' })};
   }
 `;
 
