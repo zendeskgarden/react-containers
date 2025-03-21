@@ -375,17 +375,22 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
     [closeMenu, returnFocusToTrigger]
   );
 
-  const handleMenuBlur = useCallback(
-    (event: MouseEvent) => {
-      const path = event.composedPath();
+  const handleMenuBlur = useCallback(() => {
+    const win = environment || window;
 
-      if (!path.includes(menuRef.current!) && !path.includes(triggerRef.current!)) {
+    setTimeout(() => {
+      // Timeout is required to ensure blur is handled after focus
+      const activeElement = win.document.activeElement;
+
+      if (
+        !menuRef.current?.contains(activeElement) &&
+        !triggerRef.current?.contains(activeElement)
+      ) {
         returnFocusToTrigger();
         closeMenu(StateChangeTypes.MenuBlur);
       }
-    },
-    [closeMenu, menuRef, returnFocusToTrigger, triggerRef]
-  );
+    });
+  }, [environment, menuRef, triggerRef, returnFocusToTrigger, closeMenu]);
 
   const handleMenuMouseLeave = useCallback(() => {
     onChange({ type: StateChangeTypes.MenuMouseLeave });
@@ -602,15 +607,15 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
     const win = environment || window;
 
     if (controlledIsExpanded) {
-      win.document.addEventListener('click', handleMenuBlur, true);
+      win.document.addEventListener('blur', handleMenuBlur, true);
       win.document.addEventListener('keydown', handleMenuKeyDown, true);
     } else if (!controlledIsExpanded) {
-      win.document.removeEventListener('click', handleMenuBlur, true);
+      win.document.removeEventListener('blur', handleMenuBlur, true);
       win.document.removeEventListener('keydown', handleMenuKeyDown, true);
     }
 
     return () => {
-      win.document.removeEventListener('click', handleMenuBlur, true);
+      win.document.addEventListener('blur', handleMenuBlur, true);
       win.document.removeEventListener('keydown', handleMenuKeyDown, true);
     };
   }, [controlledIsExpanded, handleMenuBlur, handleMenuKeyDown, environment]);
