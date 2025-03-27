@@ -375,16 +375,38 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
     [closeMenu, returnFocusToTrigger]
   );
 
+  /**
+   * 1. When an element loses focus (on blur) and focus shifts to the `body` or
+   * a non-focusable element, `event.relatedTarget` should be `null`.
+   * However, jsdom incorrectly sets it to `Document`.
+   * This bug was fixed in jsdom@24.1.2. Currently, `jest-environment-jsdom` (v29.7.0)
+   * depends on jsdom@20.0.3, which still contains the issue.
+   * Until a newer version is released, this simple workaround
+   * is necessary to accurately test the "focus return" behavior.
+   * @see https://github.com/jsdom/jsdom/pull/3767
+   * @see https://github.com/jsdom/jsdom/releases/tag/24.1.2
+   * @see https://github.com/jestjs/jest/blob/v29.7.0/packages/jest-environment-jsdom/package.json
+   */
   const handleMenuBlur = useCallback(
-    (event: MouseEvent) => {
-      const path = event.composedPath();
+    (event: React.FocusEvent) => {
+      const win = environment || window;
 
-      if (!path.includes(menuRef.current!) && !path.includes(triggerRef.current!)) {
-        returnFocusToTrigger();
-        closeMenu(StateChangeTypes.MenuBlur);
-      }
+      setTimeout(() => {
+        // Timeout is required to ensure blur is handled after focus
+        const activeElement = win.document.activeElement;
+
+        if (
+          !menuRef.current?.contains(activeElement) &&
+          !triggerRef.current?.contains(activeElement)
+        ) {
+          // Only return focus to trigger if focus moved to a non-focusable element
+          if (!event.relatedTarget || event.relatedTarget?.nodeName === '#document' /* [1] */)
+            returnFocusToTrigger();
+          closeMenu(StateChangeTypes.MenuBlur);
+        }
+      });
     },
-    [closeMenu, menuRef, returnFocusToTrigger, triggerRef]
+    [environment, menuRef, triggerRef, returnFocusToTrigger, closeMenu]
   );
 
   const handleMenuMouseLeave = useCallback(() => {
@@ -602,15 +624,12 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
     const win = environment || window;
 
     if (controlledIsExpanded) {
-      win.document.addEventListener('click', handleMenuBlur, true);
       win.document.addEventListener('keydown', handleMenuKeyDown, true);
     } else if (!controlledIsExpanded) {
-      win.document.removeEventListener('click', handleMenuBlur, true);
       win.document.removeEventListener('keydown', handleMenuKeyDown, true);
     }
 
     return () => {
-      win.document.removeEventListener('click', handleMenuBlur, true);
       win.document.removeEventListener('keydown', handleMenuKeyDown, true);
     };
   }, [controlledIsExpanded, handleMenuBlur, handleMenuKeyDown, environment]);
@@ -690,7 +709,15 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
    */
 
   const getTriggerProps = useCallback<IUseMenuReturnValue['getTriggerProps']>(
-    ({ onClick, onKeyDown, type = 'button', role = 'button', disabled, ...other } = {}) => ({
+    ({
+      onClick,
+      onKeyDown,
+      onBlur,
+      type = 'button',
+      role = 'button',
+      disabled,
+      ...other
+    } = {}) => ({
       ...other,
       'data-garden-container-id': 'containers.menu.trigger',
       'data-garden-container-version': PACKAGE_VERSION,
@@ -703,13 +730,21 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
       type: type === null ? undefined : type,
       role: role === null ? undefined : role,
       onKeyDown: composeEventHandlers(onKeyDown, handleTriggerKeyDown),
-      onClick: composeEventHandlers(onClick, handleTriggerClick)
+      onClick: composeEventHandlers(onClick, handleTriggerClick),
+      onBlur: composeEventHandlers(onBlur, handleMenuBlur)
     }),
-    [triggerRef, controlledIsExpanded, handleTriggerClick, handleTriggerKeyDown, triggerId]
+    [
+      triggerRef,
+      triggerId,
+      controlledIsExpanded,
+      handleTriggerKeyDown,
+      handleTriggerClick,
+      handleMenuBlur
+    ]
   );
 
   const getMenuProps = useCallback<IUseMenuReturnValue['getMenuProps']>(
-    ({ role = 'menu', onMouseLeave, ...other } = {}) => ({
+    ({ role = 'menu', onBlur, onMouseLeave, ...other } = {}) => ({
       ...other,
       ...getGroupProps({
         onMouseLeave: composeEventHandlers(onMouseLeave, handleMenuMouseLeave)
@@ -719,9 +754,10 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
       'aria-labelledby': triggerId,
       tabIndex: -1,
       role: role === null ? undefined : role,
-      ref: menuRef as any
+      ref: menuRef as any,
+      onBlur: composeEventHandlers(onBlur, handleMenuBlur)
     }),
-    [triggerId, menuRef, getGroupProps, handleMenuMouseLeave]
+    [getGroupProps, handleMenuMouseLeave, triggerId, menuRef, handleMenuBlur]
   );
 
   const getSeparatorProps = useCallback<IUseMenuReturnValue['getSeparatorProps']>(
