@@ -241,7 +241,7 @@ describe('MenuContainer', () => {
       expect(menu).not.toBeVisible();
     });
 
-    it('closes menu on blur and restores focus to trigger if focus was moved to non-focusabe element', async () => {
+    it('closes the menu on blur due to a body click, returns focus to the trigger the first time, and focuses the body on following clicks.', async () => {
       const { getByTestId } = render(<TestMenu items={ITEMS} />);
       const trigger = getByTestId('trigger');
       const menu = getByTestId('menu');
@@ -256,6 +256,12 @@ describe('MenuContainer', () => {
       });
       expect(trigger).toHaveFocus();
       expect(menu).not.toBeVisible();
+
+      await waitFor(async () => {
+        await user.click(document.body);
+      });
+
+      expect(document.body).toHaveFocus();
     });
 
     it('closes menu on blur and moves focus focus to focusabe element', async () => {

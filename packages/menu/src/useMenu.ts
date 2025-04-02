@@ -12,6 +12,7 @@ import React, {
   useEffect,
   useMemo,
   useReducer,
+  useRef,
   useState
 } from 'react';
 import { useSelection } from '@zendeskgarden/container-selection';
@@ -88,7 +89,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
       }, {}),
     [values]
   );
-  const isTabNavigationRef = React.useRef(false);
+  const isTabNavigationRef = useRef(false);
 
   /**
    * State
@@ -383,16 +384,26 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
   );
 
   /**
-   * 1. When an element loses focus (on blur) and focus shifts to the `body` or
-   * a non-focusable element, `event.relatedTarget` should be `null`.
-   * However, jsdom incorrectly sets it to `Document` (nodeName === '#document').
-   * This bug was fixed in jsdom@24.1.2. Currently, `jest-environment-jsdom` (v29.7.0)
-   * depends on jsdom@20.0.3, which still contains the issue.
-   * Until a newer version is released, this simple workaround
-   * is necessary to accurately test the "focus return" behavior.
-   * @see https://github.com/jsdom/jsdom/pull/3767
-   * @see https://github.com/jsdom/jsdom/releases/tag/24.1.2
-   * @see https://github.com/jestjs/jest/blob/v29.7.0/packages/jest-environment-jsdom/package.json
+   * 1. Determine if the next element receiving focus is focusable
+   *    (event.relatedTarget is null when focus moves to non-focusable elements or body).
+   *
+   * 2. When an element loses focus (on blur), and focus moves to a non-focusable element
+   *    like <body>, `event.relatedTarget` should be `null`. However, due to a bug in jsdom
+   *    (prior to version 24.1.2), `relatedTarget` is incorrectly set to the `Document` node
+   *    (`nodeName === '#document'`).
+   *
+   *    Currently, `jest-environment-jsdom` (v29.7.0) uses jsdom@20.0.3, which still has this issue.
+   *    Until Jest updates its jsdom dependency, this workaround ensures accurate
+   *    testing of focus behavior.
+   *
+   *    @see https://github.com/jsdom/jsdom/pull/3767
+   *    @see https://github.com/jsdom/jsdom/releases/tag/24.1.2
+   *    @see https://github.com/jestjs/jest/blob/v29.7.0/packages/jest-environment-jsdom/package.json
+   *
+   * 3. Skip focus-return to trigger in these scenarios:
+   *    a. User is navigating via Tab key
+   *    b. Focus is moving to another focusable element
+   *    c. Menu is closed and focus would naturally go to body
    */
   const handleBlur = useCallback(
     (event: React.FocusEvent) => {
@@ -401,17 +412,20 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
       setTimeout(() => {
         // Timeout is required to ensure blur is handled after focus
         const activeElement = win.document.activeElement;
+        const isMenuOrTriggerFocused =
+          menuRef.current?.contains(activeElement) || triggerRef.current?.contains(activeElement);
 
-        if (
-          !menuRef.current?.contains(activeElement) &&
-          !triggerRef.current?.contains(activeElement)
-        ) {
-          const isNextElFocusable =
-            !!event.relatedTarget && event.relatedTarget?.nodeName !== '#document'; /* [1] */
+        if (!isMenuOrTriggerFocused) {
+          const nextElementIsFocusable =
+            !!event.relatedTarget /* [1] */ &&
+            event.relatedTarget?.nodeName !== '#document'; /* [2] */
 
-          const skipFocusReturn = isTabNavigationRef.current || isNextElFocusable;
+          const shouldSkipFocusReturn =
+            isTabNavigationRef.current ||
+            nextElementIsFocusable ||
+            (!controlledIsExpanded && !nextElementIsFocusable); /* [3] */
 
-          returnFocusToTrigger(skipFocusReturn);
+          returnFocusToTrigger(shouldSkipFocusReturn);
 
           isTabNavigationRef.current = false;
 
@@ -419,7 +433,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
         }
       });
     },
-    [environment, menuRef, triggerRef, returnFocusToTrigger, closeMenu]
+    [closeMenu, controlledIsExpanded, environment, menuRef, returnFocusToTrigger, triggerRef]
   );
 
   const handleMenuMouseLeave = useCallback(() => {
@@ -645,7 +659,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
     return () => {
       win.document.removeEventListener('keydown', handleMenuKeyDown, true);
     };
-  }, [controlledIsExpanded, handleBlur, handleMenuKeyDown, environment]);
+  }, [controlledIsExpanded, handleMenuKeyDown, environment]);
 
   /**
    * When the menu is opened, this effect sets focus on the current menu item using `focusedValue`
@@ -747,12 +761,12 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
       onKeyDown: composeEventHandlers(onKeyDown, handleTriggerKeyDown)
     }),
     [
-      triggerRef,
-      triggerId,
       controlledIsExpanded,
-      handleTriggerKeyDown,
+      handleBlur,
       handleTriggerClick,
-      handleBlur
+      handleTriggerKeyDown,
+      triggerId,
+      triggerRef
     ]
   );
 
@@ -770,7 +784,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
       ref: menuRef as any,
       onBlur: composeEventHandlers(onBlur, handleBlur)
     }),
-    [getGroupProps, handleMenuMouseLeave, triggerId, menuRef, handleBlur]
+    [getGroupProps, handleBlur, handleMenuMouseLeave, menuRef, triggerId]
   );
 
   const getSeparatorProps = useCallback<IUseMenuReturnValue['getSeparatorProps']>(
