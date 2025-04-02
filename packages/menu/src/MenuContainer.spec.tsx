@@ -918,16 +918,22 @@ describe('MenuContainer', () => {
         </>
       );
       const trigger = getByTestId('trigger');
+      const menu = getByTestId('menu');
       const nextFocusedElement = getByText('focus me');
 
       trigger.focus();
 
       await waitFor(async () => {
-        await user.keyboard('{Enter}'); // select trigger
-        await user.keyboard('{Enter}'); // select first item
+        await user.keyboard('{ArrowDown}');
+      });
+
+      expect(menu).toBeVisible();
+
+      await waitFor(async () => {
         await user.keyboard('{Tab}');
       });
 
+      expect(menu).not.toBeVisible();
       expect(nextFocusedElement).toHaveFocus();
     });
 

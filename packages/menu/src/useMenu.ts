@@ -88,6 +88,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
       }, {}),
     [values]
   );
+  const isTabNavigationRef = React.useRef(false);
 
   /**
    * State
@@ -315,7 +316,9 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
       let changeType;
       let nextFocusedValue;
 
-      if (isArrowKey) {
+      if (key === KEYS.TAB) {
+        isTabNavigationRef.current = true;
+      } else if (isArrowKey) {
         changeType = StateChangeTypes[`TriggerKeyDown${key}`];
         nextFocusedValue = KEYS.UP === key ? values[values.length - 1] : values[0];
       } else if (isSelectKey) {
@@ -360,15 +363,19 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
     (event: KeyboardEvent) => {
       const { key } = event;
 
-      if ([KEYS.ESCAPE, KEYS.TAB].includes(key)) {
+      if (key === KEYS.ESCAPE) {
         event.preventDefault();
         event.stopPropagation();
 
-        const type = StateChangeTypes[key === KEYS.ESCAPE ? 'MenuKeyDownEscape' : 'MenuKeyDownTab'];
-
-        // TODO: Investigate why focus goes to body instead of next interactive element on TAB keydown. Meanwhile, returning focus to trigger.
+        const type = StateChangeTypes.MenuKeyDownEscape;
         returnFocusToTrigger();
+        closeMenu(type);
+      } else if (key === KEYS.TAB) {
+        // Let the natural tab order continue.
+        // Close the menu without returning focus to trigger.
+        isTabNavigationRef.current = true;
 
+        const type = StateChangeTypes.MenuKeyDownTab;
         closeMenu(type);
       }
     },
@@ -378,7 +385,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
   /**
    * 1. When an element loses focus (on blur) and focus shifts to the `body` or
    * a non-focusable element, `event.relatedTarget` should be `null`.
-   * However, jsdom incorrectly sets it to `Document`.
+   * However, jsdom incorrectly sets it to `Document` (nodeName === '#document').
    * This bug was fixed in jsdom@24.1.2. Currently, `jest-environment-jsdom` (v29.7.0)
    * depends on jsdom@20.0.3, which still contains the issue.
    * Until a newer version is released, this simple workaround
@@ -387,7 +394,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
    * @see https://github.com/jsdom/jsdom/releases/tag/24.1.2
    * @see https://github.com/jestjs/jest/blob/v29.7.0/packages/jest-environment-jsdom/package.json
    */
-  const handleMenuBlur = useCallback(
+  const handleBlur = useCallback(
     (event: React.FocusEvent) => {
       const win = environment || window;
 
@@ -399,9 +406,15 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
           !menuRef.current?.contains(activeElement) &&
           !triggerRef.current?.contains(activeElement)
         ) {
-          // Only return focus to trigger if focus moved to a non-focusable element
-          if (!event.relatedTarget || event.relatedTarget?.nodeName === '#document' /* [1] */)
-            returnFocusToTrigger();
+          const isNextElFocusable =
+            !!event.relatedTarget && event.relatedTarget?.nodeName !== '#document'; /* [1] */
+
+          const skipFocusReturn = isTabNavigationRef.current || isNextElFocusable;
+
+          returnFocusToTrigger(skipFocusReturn);
+
+          isTabNavigationRef.current = false;
+
           closeMenu(StateChangeTypes.MenuBlur);
         }
       });
@@ -632,7 +645,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
     return () => {
       win.document.removeEventListener('keydown', handleMenuKeyDown, true);
     };
-  }, [controlledIsExpanded, handleMenuBlur, handleMenuKeyDown, environment]);
+  }, [controlledIsExpanded, handleBlur, handleMenuKeyDown, environment]);
 
   /**
    * When the menu is opened, this effect sets focus on the current menu item using `focusedValue`
@@ -710,9 +723,9 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
 
   const getTriggerProps = useCallback<IUseMenuReturnValue['getTriggerProps']>(
     ({
+      onBlur,
       onClick,
       onKeyDown,
-      onBlur,
       type = 'button',
       role = 'button',
       disabled,
@@ -729,9 +742,9 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
       tabIndex: disabled ? -1 : 0,
       type: type === null ? undefined : type,
       role: role === null ? undefined : role,
-      onKeyDown: composeEventHandlers(onKeyDown, handleTriggerKeyDown),
+      onBlur: composeEventHandlers(onBlur, handleBlur),
       onClick: composeEventHandlers(onClick, handleTriggerClick),
-      onBlur: composeEventHandlers(onBlur, handleMenuBlur)
+      onKeyDown: composeEventHandlers(onKeyDown, handleTriggerKeyDown)
     }),
     [
       triggerRef,
@@ -739,7 +752,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
       controlledIsExpanded,
       handleTriggerKeyDown,
       handleTriggerClick,
-      handleMenuBlur
+      handleBlur
     ]
   );
 
@@ -755,9 +768,9 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
       tabIndex: -1,
       role: role === null ? undefined : role,
       ref: menuRef as any,
-      onBlur: composeEventHandlers(onBlur, handleMenuBlur)
+      onBlur: composeEventHandlers(onBlur, handleBlur)
     }),
-    [getGroupProps, handleMenuMouseLeave, triggerId, menuRef, handleMenuBlur]
+    [getGroupProps, handleMenuMouseLeave, triggerId, menuRef, handleBlur]
   );
 
   const getSeparatorProps = useCallback<IUseMenuReturnValue['getSeparatorProps']>(
