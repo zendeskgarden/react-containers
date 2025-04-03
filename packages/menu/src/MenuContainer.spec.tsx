@@ -916,7 +916,7 @@ describe('MenuContainer', () => {
       expect(fruit1).toHaveAttribute('aria-checked', 'true');
     });
 
-    it('returns normal keyboard navigation after menu closes', async () => {
+    it('returns focus to trigger before resuming normal tab navigation after menu closes', async () => {
       const { getByText, getByTestId } = render(
         <>
           <TestMenu items={ITEMS} />
@@ -940,6 +940,12 @@ describe('MenuContainer', () => {
       });
 
       expect(menu).not.toBeVisible();
+      expect(trigger).toHaveFocus();
+
+      await waitFor(async () => {
+        await user.keyboard('{Tab}');
+      });
+
       expect(nextFocusedElement).toHaveFocus();
     });
 

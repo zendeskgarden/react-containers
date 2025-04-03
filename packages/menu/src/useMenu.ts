@@ -12,7 +12,6 @@ import React, {
   useEffect,
   useMemo,
   useReducer,
-  useRef,
   useState
 } from 'react';
 import { useSelection } from '@zendeskgarden/container-selection';
@@ -89,7 +88,6 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
       }, {}),
     [values]
   );
-  const isTabNavigationRef = useRef(false);
 
   /**
    * State
@@ -317,9 +315,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
       let changeType;
       let nextFocusedValue;
 
-      if (key === KEYS.TAB) {
-        isTabNavigationRef.current = true;
-      } else if (isArrowKey) {
+      if (isArrowKey) {
         changeType = StateChangeTypes[`TriggerKeyDown${key}`];
         nextFocusedValue = KEYS.UP === key ? values[values.length - 1] : values[0];
       } else if (isSelectKey) {
@@ -364,19 +360,15 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
     (event: KeyboardEvent) => {
       const { key } = event;
 
-      if (key === KEYS.ESCAPE) {
+      if ([KEYS.ESCAPE, KEYS.TAB].includes(key)) {
         event.preventDefault();
         event.stopPropagation();
 
-        const type = StateChangeTypes.MenuKeyDownEscape;
-        returnFocusToTrigger();
-        closeMenu(type);
-      } else if (key === KEYS.TAB) {
-        // Let the natural tab order continue.
-        // Close the menu without returning focus to trigger.
-        isTabNavigationRef.current = true;
+        const type = StateChangeTypes[key === KEYS.ESCAPE ? 'MenuKeyDownEscape' : 'MenuKeyDownTab'];
 
-        const type = StateChangeTypes.MenuKeyDownTab;
+        // TODO: Investigate why focus goes to body instead of next interactive element on TAB keydown. Meanwhile, returning focus to trigger.
+        returnFocusToTrigger();
+
         closeMenu(type);
       }
     },
@@ -401,9 +393,8 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
    *    @see https://github.com/jestjs/jest/blob/v29.7.0/packages/jest-environment-jsdom/package.json
    *
    * 3. Skip focus-return to trigger in these scenarios:
-   *    a. User is navigating via Tab key
-   *    b. Focus is moving to another focusable element
-   *    c. Menu is closed and focus would naturally go to body
+   *    a. Focus is moving to another focusable element
+   *    b. Menu is closed and focus would naturally go to body
    */
   const handleBlur = useCallback(
     (event: React.FocusEvent) => {
@@ -421,13 +412,9 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
             event.relatedTarget?.nodeName !== '#document'; /* [2] */
 
           const shouldSkipFocusReturn =
-            isTabNavigationRef.current ||
-            nextElementIsFocusable ||
-            (!controlledIsExpanded && !nextElementIsFocusable); /* [3] */
+            nextElementIsFocusable || (!controlledIsExpanded && !nextElementIsFocusable); /* [3] */
 
           returnFocusToTrigger(shouldSkipFocusReturn);
-
-          isTabNavigationRef.current = false;
 
           closeMenu(StateChangeTypes.MenuBlur);
         }
