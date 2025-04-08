@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.1](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-menu@0.5.0...@zendeskgarden/container-menu@0.5.1) (2025-04-08)
+
+### Bug Fixes
+
+- **container-menu:** improve menu dropdown expansion and focus behavior on blur ([#691](https://github.com/zendeskgarden/react-containers/issues/691)) ([90bdb14](https://github.com/zendeskgarden/react-containers/commit/90bdb147036f340f7f00750ed56984fc814ad379))
+
 # [0.5.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-menu@0.4.2...@zendeskgarden/container-menu@0.5.0) (2024-09-25)
 
 ### Bug Fixes
