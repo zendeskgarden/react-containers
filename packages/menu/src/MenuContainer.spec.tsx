@@ -264,7 +264,7 @@ describe('MenuContainer', () => {
       expect(document.body).toHaveFocus();
     });
 
-    it('closes menu on blur and moves focus focus to focusabe element', async () => {
+    it('closes menu on blur and moves focus to focusable element', async () => {
       const { getByTestId } = render(
         <>
           <TestMenu items={ITEMS} />
