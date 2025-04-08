@@ -375,16 +375,52 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
     [closeMenu, returnFocusToTrigger]
   );
 
-  const handleMenuBlur = useCallback(
-    (event: MouseEvent) => {
-      const path = event.composedPath();
+  /**
+   * 1. Determine if the next element receiving focus is focusable
+   *    (event.relatedTarget is null when focus moves to non-focusable elements or body).
+   *
+   * 2. When an element loses focus (on blur), and focus moves to a non-focusable element
+   *    like <body>, `event.relatedTarget` should be `null`. However, due to a bug in jsdom
+   *    (prior to version 24.1.2), `relatedTarget` is incorrectly set to the `Document` node
+   *    (`nodeName === '#document'`).
+   *
+   *    Currently, `jest-environment-jsdom` (v29.7.0) uses jsdom@20.0.3, which still has this issue.
+   *    Until Jest updates its jsdom dependency, this workaround ensures accurate
+   *    testing of focus behavior.
+   *
+   *    @see https://github.com/jsdom/jsdom/pull/3767
+   *    @see https://github.com/jsdom/jsdom/releases/tag/24.1.2
+   *    @see https://github.com/jestjs/jest/blob/v29.7.0/packages/jest-environment-jsdom/package.json
+   *
+   * 3. Skip focus-return to trigger in these scenarios:
+   *    a. Focus is moving to another focusable element
+   *    b. Menu is closed and focus would naturally go to body
+   */
+  const handleBlur = useCallback(
+    (event: React.FocusEvent) => {
+      const win = environment || window;
 
-      if (!path.includes(menuRef.current!) && !path.includes(triggerRef.current!)) {
-        returnFocusToTrigger();
-        closeMenu(StateChangeTypes.MenuBlur);
-      }
+      setTimeout(() => {
+        // Timeout is required to ensure blur is handled after focus
+        const activeElement = win.document.activeElement;
+        const isMenuOrTriggerFocused =
+          menuRef.current?.contains(activeElement) || triggerRef.current?.contains(activeElement);
+
+        if (!isMenuOrTriggerFocused) {
+          const nextElementIsFocusable =
+            !!event.relatedTarget /* [1] */ &&
+            event.relatedTarget?.nodeName !== '#document'; /* [2] */
+
+          const shouldSkipFocusReturn =
+            nextElementIsFocusable || (!controlledIsExpanded && !nextElementIsFocusable); /* [3] */
+
+          returnFocusToTrigger(shouldSkipFocusReturn);
+
+          closeMenu(StateChangeTypes.MenuBlur);
+        }
+      });
     },
-    [closeMenu, menuRef, returnFocusToTrigger, triggerRef]
+    [closeMenu, controlledIsExpanded, environment, menuRef, returnFocusToTrigger, triggerRef]
   );
 
   const handleMenuMouseLeave = useCallback(() => {
@@ -602,18 +638,15 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
     const win = environment || window;
 
     if (controlledIsExpanded) {
-      win.document.addEventListener('click', handleMenuBlur, true);
       win.document.addEventListener('keydown', handleMenuKeyDown, true);
     } else if (!controlledIsExpanded) {
-      win.document.removeEventListener('click', handleMenuBlur, true);
       win.document.removeEventListener('keydown', handleMenuKeyDown, true);
     }
 
     return () => {
-      win.document.removeEventListener('click', handleMenuBlur, true);
       win.document.removeEventListener('keydown', handleMenuKeyDown, true);
     };
-  }, [controlledIsExpanded, handleMenuBlur, handleMenuKeyDown, environment]);
+  }, [controlledIsExpanded, handleMenuKeyDown, environment]);
 
   /**
    * When the menu is opened, this effect sets focus on the current menu item using `focusedValue`
@@ -690,7 +723,15 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
    */
 
   const getTriggerProps = useCallback<IUseMenuReturnValue['getTriggerProps']>(
-    ({ onClick, onKeyDown, type = 'button', role = 'button', disabled, ...other } = {}) => ({
+    ({
+      onBlur,
+      onClick,
+      onKeyDown,
+      type = 'button',
+      role = 'button',
+      disabled,
+      ...other
+    } = {}) => ({
       ...other,
       'data-garden-container-id': 'containers.menu.trigger',
       'data-garden-container-version': PACKAGE_VERSION,
@@ -702,14 +743,22 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
       tabIndex: disabled ? -1 : 0,
       type: type === null ? undefined : type,
       role: role === null ? undefined : role,
-      onKeyDown: composeEventHandlers(onKeyDown, handleTriggerKeyDown),
-      onClick: composeEventHandlers(onClick, handleTriggerClick)
+      onBlur: composeEventHandlers(onBlur, handleBlur),
+      onClick: composeEventHandlers(onClick, handleTriggerClick),
+      onKeyDown: composeEventHandlers(onKeyDown, handleTriggerKeyDown)
     }),
-    [triggerRef, controlledIsExpanded, handleTriggerClick, handleTriggerKeyDown, triggerId]
+    [
+      controlledIsExpanded,
+      handleBlur,
+      handleTriggerClick,
+      handleTriggerKeyDown,
+      triggerId,
+      triggerRef
+    ]
   );
 
   const getMenuProps = useCallback<IUseMenuReturnValue['getMenuProps']>(
-    ({ role = 'menu', onMouseLeave, ...other } = {}) => ({
+    ({ role = 'menu', onBlur, onMouseLeave, ...other } = {}) => ({
       ...other,
       ...getGroupProps({
         onMouseLeave: composeEventHandlers(onMouseLeave, handleMenuMouseLeave)
@@ -719,9 +768,10 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
       'aria-labelledby': triggerId,
       tabIndex: -1,
       role: role === null ? undefined : role,
-      ref: menuRef as any
+      ref: menuRef as any,
+      onBlur: composeEventHandlers(onBlur, handleBlur)
     }),
-    [triggerId, menuRef, getGroupProps, handleMenuMouseLeave]
+    [getGroupProps, handleBlur, handleMenuMouseLeave, menuRef, triggerId]
   );
 
   const getSeparatorProps = useCallback<IUseMenuReturnValue['getSeparatorProps']>(

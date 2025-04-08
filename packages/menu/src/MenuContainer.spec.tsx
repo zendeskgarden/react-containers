@@ -241,16 +241,45 @@ describe('MenuContainer', () => {
       expect(menu).not.toBeVisible();
     });
 
-    it('closes menu on blur', async () => {
+    it('closes the menu on blur due to a body click, returns focus to the trigger the first time, and focuses the body on following clicks.', async () => {
       const { getByTestId } = render(<TestMenu items={ITEMS} />);
       const trigger = getByTestId('trigger');
       const menu = getByTestId('menu');
 
       await waitFor(async () => {
         await user.click(trigger);
+      });
+      expect(menu).toBeVisible();
+
+      await waitFor(async () => {
+        await user.click(document.body);
+      });
+      expect(trigger).toHaveFocus();
+      expect(menu).not.toBeVisible();
+
+      await waitFor(async () => {
         await user.click(document.body);
       });
 
+      expect(document.body).toHaveFocus();
+    });
+
+    it('closes menu on blur and moves focus to focusable element', async () => {
+      const { getByTestId } = render(
+        <>
+          <TestMenu items={ITEMS} />
+          <button data-test-id="focusable">Click me</button>
+        </>
+      );
+      const trigger = getByTestId('trigger');
+      const menu = getByTestId('menu');
+      const button = getByTestId('focusable');
+
+      await waitFor(async () => {
+        await user.click(trigger);
+        await user.click(button);
+      });
+      expect(button).toHaveFocus();
       expect(menu).not.toBeVisible();
     });
 
@@ -887,7 +916,7 @@ describe('MenuContainer', () => {
       expect(fruit1).toHaveAttribute('aria-checked', 'true');
     });
 
-    it('returns normal keyboard navigation after menu closes', async () => {
+    it('returns focus to trigger before resuming normal tab navigation after menu closes', async () => {
       const { getByText, getByTestId } = render(
         <>
           <TestMenu items={ITEMS} />
@@ -895,13 +924,25 @@ describe('MenuContainer', () => {
         </>
       );
       const trigger = getByTestId('trigger');
+      const menu = getByTestId('menu');
       const nextFocusedElement = getByText('focus me');
 
       trigger.focus();
 
       await waitFor(async () => {
-        await user.keyboard('{Enter}'); // select trigger
-        await user.keyboard('{Enter}'); // select first item
+        await user.keyboard('{ArrowDown}');
+      });
+
+      expect(menu).toBeVisible();
+
+      await waitFor(async () => {
+        await user.keyboard('{Tab}');
+      });
+
+      expect(menu).not.toBeVisible();
+      expect(trigger).toHaveFocus();
+
+      await waitFor(async () => {
         await user.keyboard('{Tab}');
       });
 
