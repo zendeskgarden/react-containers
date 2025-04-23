@@ -33,6 +33,15 @@ type MenuItemProps = {
   isSelected?: boolean;
 };
 
+/**
+ * [1] For a disabled link to be valid, it must have:
+ *  - `aria-disabled="true"`
+ *  - `role="link"`, or `role="menuitem"` if within a menu
+ *  - an `undefined` `href`
+ *
+ * @example <a role="link" aria-disabled="true">Learn something!</a>
+ * @see https://www.scottohara.me/blog/2021/05/28/disabled-links.html
+ */
 const Item = ({ item, getItemProps, focusedValue, isSelected }: MenuItemProps) => {
   const itemProps = getItemProps({ item });
 
@@ -60,7 +69,14 @@ const Item = ({ item, getItemProps, focusedValue, isSelected }: MenuItemProps) =
       {itemProps.href ? (
         <a
           {...(itemProps as AnchorHTMLAttributes<HTMLAnchorElement>)}
-          className="w-full rounded-sm outline-offset-0 transition-none border-width-none"
+          href={item.disabled ? undefined : itemProps.href}
+          className={classNames(
+            ' w-full rounded-sm outline-offset-0 transition-none border-width-none',
+            {
+              'text-grey-400': item.disabled,
+              'cursor-default': item.disabled
+            }
+          )}
         >
           {itemChildren}
           {!!item.isExternal && (

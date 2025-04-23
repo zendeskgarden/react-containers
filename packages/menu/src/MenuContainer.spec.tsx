@@ -283,14 +283,44 @@ describe('MenuContainer', () => {
       expect(menu).not.toBeVisible();
     });
 
-    it('applies external anchor attributes', () => {
-      const { getByTestId } = render(
-        <TestMenu items={[{ value: 'item', href: '#0', isExternal: true }]} />
-      );
-      const menu = getByTestId('menu');
+    describe('navigational menu items (links)', () => {
+      it('applies external anchor attributes, only if not disabled', () => {
+        const { getByTestId } = render(
+          <TestMenu
+            items={[
+              { value: 'link-1', href: '#1', isExternal: true },
+              { value: 'link-2', href: '#2', isExternal: true, disabled: true }
+            ]}
+          />
+        );
+        const menu = getByTestId('menu');
 
-      expect(menu.firstChild).toHaveAttribute('target', '_blank');
-      expect(menu.firstChild).toHaveAttribute('rel', 'noopener noreferrer');
+        expect(menu.firstChild).toHaveAttribute('target', '_blank');
+        expect(menu.firstChild).toHaveAttribute('rel', 'noopener noreferrer');
+
+        expect(menu.childNodes[1]).not.toHaveAttribute('target', '_blank');
+        expect(menu.childNodes[1]).not.toHaveAttribute('rel', 'noopener noreferrer');
+      });
+
+      it('applies the correct aria-current attribute to active link', async () => {
+        const { getByTestId, getByText } = render(
+          <TestMenu
+            items={[
+              { value: 'link-1', href: '#1' },
+              { value: 'link-2', href: '#2' }
+            ]}
+          />
+        );
+        const trigger = getByTestId('trigger');
+        const link = getByText('link-2');
+
+        await waitFor(async () => {
+          await user.click(trigger);
+          await user.click(link);
+        });
+
+        expect(link).toHaveAttribute('aria-current', 'page');
+      });
     });
 
     describe('focus', () => {
@@ -1263,6 +1293,28 @@ describe('MenuContainer', () => {
         const changeTypes = onChange.mock.calls.map(([change]) => change.type);
 
         expect(changeTypes).toContain(StateChangeTypes.MenuItemKeyDownPrevious);
+      });
+    });
+
+    describe('navigational menu items (links)', () => {
+      it('applies the correct aria-current attribute to selected link', async () => {
+        const { getByTestId, getByText } = render(
+          <TestMenu
+            items={[
+              { value: 'link-1', href: '#1' },
+              { value: 'link-2', href: '#2' }
+            ]}
+            selectedItems={[{ value: 'link-2' }]}
+          />
+        );
+        const trigger = getByTestId('trigger');
+        const link = getByText('link-2');
+
+        await waitFor(async () => {
+          await user.click(trigger);
+        });
+
+        expect(link).toHaveAttribute('aria-current', 'page');
       });
     });
   });

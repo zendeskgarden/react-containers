@@ -155,7 +155,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
   );
 
   const isItemSelected = useCallback(
-    (value: string, type?: string, name?: string): boolean | undefined => {
+    (value: string, type?: string, name?: string, href?: string): boolean | undefined => {
       let isSelected;
 
       if (type === 'checkbox') {
@@ -164,6 +164,10 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
         const match = controlledSelectedItems.filter(item => item.name === name)[0];
 
         isSelected = match?.value === value;
+      } else if (href) {
+        const current = controlledSelectedItems[0];
+
+        isSelected = current?.value === value;
       }
 
       return isSelected;
@@ -218,10 +222,10 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
   );
 
   const getSelectedItems = useCallback(
-    ({ value, type, name, label, selected }: IMenuItemBase) => {
+    ({ value, type, name, label, selected, href }: IMenuItemBase) => {
       let changes: ISelectedItem[] | null = [...controlledSelectedItems];
 
-      if (!type) return null;
+      if (!(type || href)) return null;
 
       const selectedItem = {
         value,
@@ -236,7 +240,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
         } else {
           changes.push(selectedItem);
         }
-      } else if (type === 'radio') {
+      } else if (type === 'radio' || href) {
         const index = changes.findIndex(item => item.name === name);
 
         if (index > -1) {
@@ -815,7 +819,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
         itemRole = 'menuitemcheckbox';
       }
 
-      const selected = isItemSelected(value, type, name);
+      const selected = isItemSelected(value, type, name, href);
 
       /**
        * The "select" of useSelection isn't
@@ -829,27 +833,36 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
         'data-garden-container-id': 'containers.menu.item',
         'data-garden-container-version': PACKAGE_VERSION,
         'aria-selected': undefined,
-        'aria-checked': selected,
         'aria-disabled': itemDisabled,
         role: itemRole === null ? undefined : itemRole,
-        href,
         onClick,
         onKeyDown,
         onMouseEnter,
         ...other
       };
 
-      if (href && isExternal) {
-        elementProps.target = '_blank';
-        elementProps.rel = 'noopener noreferrer';
-      }
+      if (href) {
+        /**
+         * Validation
+         */
+        if (isNext || isPrevious || type) {
+          anchorItemError(item);
+        }
 
-      /**
-       * Validation
-       */
+        elementProps.href = href;
 
-      if (href && (isNext || isPrevious || type)) {
-        anchorItemError(item);
+        if (!itemDisabled) {
+          if (isExternal) {
+            elementProps.target = '_blank';
+            elementProps.rel = 'noopener noreferrer';
+          }
+
+          if (selected) {
+            elementProps['aria-current'] = 'page';
+          }
+        }
+      } else {
+        elementProps['aria-checked'] = selected;
       }
 
       if (itemDisabled) {
