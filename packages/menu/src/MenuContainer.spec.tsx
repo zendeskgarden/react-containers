@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useRef, useState } from 'react';
-import { RenderResult, render, act, waitFor } from '@testing-library/react';
+import { act, createEvent, fireEvent, render, RenderResult, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MenuItem, IMenuItemBase, IUseMenuProps, IUseMenuReturnValue } from './types';
 import { MenuContainer } from './';
@@ -1314,6 +1314,31 @@ describe('MenuContainer', () => {
           await user.click(trigger);
         });
 
+        expect(link).toHaveAttribute('aria-current', 'page');
+      });
+
+      it('prevents default when clicking a selected link', async () => {
+        const { getByTestId, getByText } = render(
+          <TestMenu
+            items={[
+              { value: 'link-1', href: '#1' },
+              { value: 'link-2', href: '#2' }
+            ]}
+            selectedItems={[{ value: 'link-2' }]}
+          />
+        );
+        const trigger = getByTestId('trigger');
+        const link = getByText('link-2');
+
+        await waitFor(async () => {
+          await user.click(trigger);
+        });
+
+        const event = createEvent.click(link);
+        event.preventDefault = jest.fn();
+        fireEvent(link, event);
+
+        expect(event.preventDefault).toHaveBeenCalledTimes(1);
         expect(link).toHaveAttribute('aria-current', 'page');
       });
     });

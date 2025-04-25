@@ -432,15 +432,17 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
   }, [onChange]);
 
   const handleItemClick = useCallback(
-    (item: IMenuItemBase) => {
+    (event: React.MouseEvent, item: IMenuItemBase) => {
       let changeType = StateChangeTypes.MenuItemClick;
-      const { isNext, isPrevious } = item;
+      const { isNext, isPrevious, href, selected } = item;
       const isTransitionItem = isNext || isPrevious;
 
       if (isNext) {
         changeType = StateChangeTypes.MenuItemClickNext;
       } else if (isPrevious) {
         changeType = StateChangeTypes.MenuItemClickPrevious;
+      } else if (href && selected) {
+        event.preventDefault();
       }
 
       const nextSelection = getSelectedItems(item);
@@ -872,8 +874,8 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
       const itemProps = getElementProps({
         value: value as any,
         ...elementProps,
-        onClick: composeEventHandlers(onClick, () =>
-          handleItemClick({ ...item, label, selected, isNext, isPrevious })
+        onClick: composeEventHandlers(onClick, (e: React.MouseEvent) =>
+          handleItemClick(e, { ...item, label, selected, isNext, isPrevious })
         ),
         onKeyDown: composeEventHandlers(onKeyDown, (e: React.KeyboardEvent) =>
           handleItemKeyDown(e, { ...item, label, selected, isNext, isPrevious })
