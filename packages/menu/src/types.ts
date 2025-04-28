@@ -87,11 +87,6 @@ export interface IUseMenuProps<T = HTMLButtonElement, M = HTMLElement> {
     selectedItems?: ISelectedItem[];
   }) => void;
   /**
-   * Sets the environment where the menu is rendered
-   * @deprecated use `window` prop instead.
-   * */
-  environment?: Window;
-  /**
    * Sets the window where the menu is rendered
    * */
   window?: Window;
