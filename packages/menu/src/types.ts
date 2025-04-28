@@ -86,8 +86,19 @@ export interface IUseMenuProps<T = HTMLButtonElement, M = HTMLElement> {
     focusedValue?: string | null;
     selectedItems?: ISelectedItem[];
   }) => void;
-  /** Sets the environment where the menu is rendered */
+  /**
+   * Sets the environment where the menu is rendered
+   * @deprecated use `window` prop instead.
+   * */
   environment?: Window;
+  /**
+   * Sets the window where the menu is rendered
+   * */
+  window?: Window;
+  /**
+   * Sets the document where the menu is rendered
+   * */
+  document?: Document | ShadowRoot;
 }
 
 export interface IUseMenuReturnValue {

@@ -39,25 +39,32 @@ import {
 } from './types';
 
 export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLElement = HTMLElement>({
-  items: rawItems,
-  idPrefix,
-  environment,
-  menuRef,
-  triggerRef,
-  rtl = false,
-  onChange = () => undefined,
-  isExpanded,
   defaultExpanded = false,
-  restoreFocus = true,
-  selectedItems,
+  defaultFocusedValue,
+  document: documentProp,
+  environment,
   focusedValue,
-  defaultFocusedValue
+  idPrefix,
+  isExpanded,
+  items: rawItems,
+  menuRef,
+  restoreFocus = true,
+  rtl = false,
+  selectedItems,
+  triggerRef,
+  window: windowProp,
+  onChange = () => undefined
 }: IUseMenuProps<T, M>): IUseMenuReturnValue => {
   const prefix = `${useId(idPrefix)}-`;
   const triggerId = `${prefix}menu-trigger`;
   const isExpandedControlled = isExpanded !== undefined;
   const isSelectedItemsControlled = selectedItems !== undefined;
   const isFocusedValueControlled = focusedValue !== undefined;
+
+  const _window = windowProp || environment;
+  let _document: Document | ShadowRoot = _window ? _window.document : window.document;
+  _document = documentProp ? documentProp : _document;
+
   const menuItems = useMemo(
     () =>
       rawItems.reduce((items, item: MenuItem) => {
@@ -398,11 +405,9 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
    */
   const handleBlur = useCallback(
     (event: React.FocusEvent) => {
-      const win = environment || window;
-
       setTimeout(() => {
         // Timeout is required to ensure blur is handled after focus
-        const activeElement = win.document.activeElement;
+        const activeElement = _document.activeElement;
         const isMenuOrTriggerFocused =
           menuRef.current?.contains(activeElement) || triggerRef.current?.contains(activeElement);
 
@@ -420,7 +425,14 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
         }
       });
     },
-    [closeMenu, controlledIsExpanded, environment, menuRef, returnFocusToTrigger, triggerRef]
+    [
+      _document.activeElement,
+      closeMenu,
+      controlledIsExpanded,
+      menuRef,
+      returnFocusToTrigger,
+      triggerRef
+    ]
   );
 
   const handleMenuMouseLeave = useCallback(() => {
@@ -515,7 +527,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
         event.preventDefault();
 
         if (item.href) {
-          triggerLink(event.target as HTMLAnchorElement, environment || window);
+          triggerLink(event.target as HTMLAnchorElement, _window || window);
         }
 
         returnFocusToTrigger(isTransitionItem);
@@ -587,16 +599,16 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
       }
     },
     [
+      _window,
+      getNextFocusedValue,
       getSelectedItems,
       isExpandedControlled,
-      isSelectedItemsControlled,
-      returnFocusToTrigger,
-      environment,
-      rtl,
-      getNextFocusedValue,
       isFocusedValueControlled,
-      state.nestedPathIds,
-      onChange
+      isSelectedItemsControlled,
+      onChange,
+      returnFocusToTrigger,
+      rtl,
+      state.nestedPathIds
     ]
   );
 
@@ -635,18 +647,16 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
    * Respond to clicks outside the  open menu
    */
   useEffect(() => {
-    const win = environment || window;
-
     if (controlledIsExpanded) {
-      win.document.addEventListener('keydown', handleMenuKeyDown, true);
+      (_document as Document).addEventListener('keydown', handleMenuKeyDown, true);
     } else if (!controlledIsExpanded) {
-      win.document.removeEventListener('keydown', handleMenuKeyDown, true);
+      (_document as Document).removeEventListener('keydown', handleMenuKeyDown, true);
     }
 
     return () => {
-      win.document.removeEventListener('keydown', handleMenuKeyDown, true);
+      (_document as Document).removeEventListener('keydown', handleMenuKeyDown, true);
     };
-  }, [controlledIsExpanded, handleMenuKeyDown, environment]);
+  }, [controlledIsExpanded, _document, handleMenuKeyDown]);
 
   /**
    * When the menu is opened, this effect sets focus on the current menu item using `focusedValue`
