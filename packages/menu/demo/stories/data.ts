@@ -16,9 +16,16 @@ export const ITEMS: MenuItem[] = [
     value: 'plant-04',
     label: 'Aloe Vera',
     href: 'https://en.wikipedia.org/wiki/Aloe_vera',
-    isExternal: false
+    external: false
   },
-  { value: 'plant-05', label: 'Succulent' },
+  {
+    value: 'plant-05',
+    label: 'Palm tree',
+    href: 'https://en.wikipedia.org/wiki/Palm_tree',
+    external: true,
+    disabled: true
+  },
+  { value: 'plant-06', label: 'Succulent' },
   {
     label: 'Choose favorites',
     items: [

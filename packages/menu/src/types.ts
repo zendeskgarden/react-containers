@@ -14,7 +14,7 @@ export interface ISelectedItem {
   type?: 'radio' | 'checkbox';
   disabled?: boolean;
   href?: string;
-  isExternal?: boolean;
+  external?: boolean;
 }
 
 export interface IMenuItemBase extends ISelectedItem {
@@ -42,8 +42,10 @@ export interface IUseMenuProps<T = HTMLButtonElement, M = HTMLElement> {
    * @param {string} item.value Unique item value
    * @param {string} item.label Optional human-readable text value (defaults to `item.value`)
    * @param {string} item.name A shared name corresponding to an item radio group
+   * @param {string} item.href The URL to navigate to when the link item is clicked
+   * @param {boolean} item.external Indicates that link item is an external link
    * @param {boolean} item.disabled Indicates the item is not interactive
-   * @param {boolean} item.selected Sets initial selection for the option
+   * @param {boolean} item.selected Sets initial selection for the option. The initial selection persists for link items.
    * @param {boolean} item.isNext - Indicates the item transitions to a nested menu
    * @param {boolean} item.isPrevious - Indicates the item will transition back from a nested menu
    * @param {boolean} item.separator Indicates the item is a placeholder for a separator

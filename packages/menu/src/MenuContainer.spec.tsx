@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useRef, useState } from 'react';
-import { RenderResult, render, act, waitFor } from '@testing-library/react';
+import { act, createEvent, fireEvent, render, RenderResult, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MenuItem, IMenuItemBase, IUseMenuProps, IUseMenuReturnValue } from './types';
 import { MenuContainer } from './';
@@ -283,14 +283,93 @@ describe('MenuContainer', () => {
       expect(menu).not.toBeVisible();
     });
 
-    it('applies external anchor attributes', () => {
-      const { getByTestId } = render(
-        <TestMenu items={[{ value: 'item', href: '#0', isExternal: true }]} />
-      );
-      const menu = getByTestId('menu');
+    describe('navigational menu items (links)', () => {
+      it('applies href and external anchor attributes, only when not disabled', () => {
+        const { getByTestId } = render(
+          <TestMenu
+            items={[
+              { value: 'link-1', href: '#1', external: true },
+              { value: 'link-2', href: '#2', external: true, disabled: true }
+            ]}
+          />
+        );
+        const menu = getByTestId('menu');
 
-      expect(menu.firstChild).toHaveAttribute('target', '_blank');
-      expect(menu.firstChild).toHaveAttribute('rel', 'noopener noreferrer');
+        expect(menu.firstChild).toHaveAttribute('href', '#1');
+        expect(menu.firstChild).toHaveAttribute('target', '_blank');
+        expect(menu.firstChild).toHaveAttribute('rel', 'noopener noreferrer');
+
+        expect(menu.childNodes[1]).not.toHaveAttribute('href');
+        expect(menu.childNodes[1]).not.toHaveAttribute('target', '_blank');
+        expect(menu.childNodes[1]).not.toHaveAttribute('rel', 'noopener noreferrer');
+      });
+
+      it('tracks click events on links and alls the onChange function with the correct parameters', async () => {
+        const onChangeSpy = jest.fn();
+
+        const { getByTestId, getByText } = render(
+          <TestMenu
+            items={[
+              { value: 'link-1', href: '#1' },
+              { value: 'link-2', href: '#2' }
+            ]}
+            onChange={onChangeSpy}
+          />
+        );
+        const trigger = getByTestId('trigger');
+        const link = getByText('link-2');
+
+        await waitFor(async () => {
+          await user.click(trigger);
+          await user.click(link);
+        });
+
+        expect(onChangeSpy.mock.calls[2][0]).toStrictEqual({
+          type: 'menuItem:click',
+          value: 'link-2',
+          isExpanded: false,
+          selectedItems: []
+        });
+
+        expect(link).not.toHaveAttribute('aria-current', 'page');
+      });
+
+      it('supports setting the selected link via item.selected and ignore link selection changes', async () => {
+        const onChangeSpy = jest.fn();
+        const { getByTestId, getByText } = render(
+          <TestMenu
+            items={[
+              { value: 'link-1', href: '#1' },
+              { value: 'link-2', href: '#2', selected: true }
+            ]}
+            onChange={onChangeSpy}
+          />
+        );
+        const trigger = getByTestId('trigger');
+        const secondLink = getByText('link-2');
+
+        await waitFor(async () => {
+          await user.click(trigger);
+        });
+
+        expect(secondLink).toHaveAttribute('aria-current', 'page');
+
+        const firstLink = getByText('link-1');
+
+        await waitFor(async () => {
+          await user.click(trigger);
+          await user.click(firstLink);
+        });
+
+        expect(onChangeSpy.mock.calls[3][0]).toStrictEqual({
+          type: 'menuItem:click',
+          value: 'link-1',
+          isExpanded: false,
+          selectedItems: [{ href: '#2', selected: true, value: 'link-2' }]
+        });
+
+        expect(firstLink).not.toHaveAttribute('aria-current');
+      });
     });
 
     describe('focus', () => {
@@ -1263,6 +1342,66 @@ describe('MenuContainer', () => {
         const changeTypes = onChange.mock.calls.map(([change]) => change.type);
 
         expect(changeTypes).toContain(StateChangeTypes.MenuItemKeyDownPrevious);
+      });
+    });
+
+    describe('navigational menu items (links)', () => {
+      it('applies the correct aria-current attribute to user-selected link', async () => {
+        const { getByTestId, getByText } = render(
+          <TestMenu
+            items={[
+              { value: 'link-1', href: '#1' },
+              { value: 'link-2', href: '#2' }
+            ]}
+            selectedItems={[{ value: 'link-2' }]}
+          />
+        );
+        const trigger = getByTestId('trigger');
+        const link = getByText('link-2');
+
+        await waitFor(async () => {
+          await user.click(trigger);
+        });
+
+        expect(link).toHaveAttribute('aria-current', 'page');
+      });
+
+      it('prevents default only when clicking on user-selected link', async () => {
+        const { getByTestId, getByText } = render(
+          <TestMenu
+            items={[
+              { value: 'link-1', href: '#1' },
+              { value: 'link-2', href: '#2' }
+            ]}
+            selectedItems={[{ value: 'link-2' }]}
+          />
+        );
+        const trigger = getByTestId('trigger');
+        const firstLink = getByText('link-1');
+        const secondLink = getByText('link-2');
+
+        await waitFor(async () => {
+          await user.click(trigger);
+          await user.click(firstLink);
+        });
+
+        expect(firstLink).not.toHaveAttribute('aria-current');
+
+        const firstLinkClickEvent = createEvent.click(firstLink);
+        firstLinkClickEvent.preventDefault = jest.fn();
+        fireEvent(firstLink, firstLinkClickEvent);
+
+        // fire click event one more time to test behavior on previously clicked anchor
+        fireEvent(firstLink, firstLinkClickEvent);
+
+        expect(firstLinkClickEvent.preventDefault).toHaveBeenCalledTimes(0);
+
+        const secondLinkClickEvent = createEvent.click(secondLink);
+        secondLinkClickEvent.preventDefault = jest.fn();
+        fireEvent(secondLink, secondLinkClickEvent);
+
+        expect(secondLinkClickEvent.preventDefault).toHaveBeenCalledTimes(1);
+        expect(secondLink).toHaveAttribute('aria-current', 'page');
       });
     });
   });

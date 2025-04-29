@@ -73,9 +73,12 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
   );
   const initialSelectedItems = useMemo(
     () =>
-      menuItems.filter(
-        item => !!(item.type && ['radio', 'checkbox'].includes(item.type) && item.selected)
-      ),
+      menuItems.filter(item => {
+        return !!(
+          (item.href || item.type === 'radio' || item.type === 'checkbox') &&
+          item.selected
+        );
+      }),
     [menuItems]
   );
   const values = useMemo(() => menuItems.map(item => item.value), [menuItems]);
@@ -155,12 +158,12 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
   );
 
   const isItemSelected = useCallback(
-    (value: string, type?: string, name?: string): boolean | undefined => {
+    (value: string, type?: string, name?: string, href?: string): boolean | undefined => {
       let isSelected;
 
       if (type === 'checkbox') {
         isSelected = !!controlledSelectedItems.find(item => item.value === value);
-      } else if (type === 'radio') {
+      } else if (type === 'radio' || href) {
         const match = controlledSelectedItems.filter(item => item.name === name)[0];
 
         isSelected = match?.value === value;
@@ -218,10 +221,11 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
   );
 
   const getSelectedItems = useCallback(
-    ({ value, type, name, label, selected }: IMenuItemBase) => {
-      let changes: ISelectedItem[] | null = [...controlledSelectedItems];
-
+    ({ value, type, name, label, selected, href }: IMenuItemBase) => {
+      if (href) return controlledSelectedItems;
       if (!type) return null;
+
+      let changes: ISelectedItem[] | null = [...controlledSelectedItems];
 
       const selectedItem = {
         value,
@@ -428,15 +432,17 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
   }, [onChange]);
 
   const handleItemClick = useCallback(
-    (item: IMenuItemBase) => {
+    (event: React.MouseEvent, item: IMenuItemBase) => {
       let changeType = StateChangeTypes.MenuItemClick;
-      const { isNext, isPrevious } = item;
+      const { isNext, isPrevious, href, selected } = item;
       const isTransitionItem = isNext || isPrevious;
 
       if (isNext) {
         changeType = StateChangeTypes.MenuItemClickNext;
       } else if (isPrevious) {
         changeType = StateChangeTypes.MenuItemClickPrevious;
+      } else if (href && selected) {
+        event.preventDefault();
       }
 
       const nextSelection = getSelectedItems(item);
@@ -802,7 +808,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
         name,
         value,
         href,
-        isExternal,
+        external,
         isNext = false,
         isPrevious = false,
         label = value
@@ -815,7 +821,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
         itemRole = 'menuitemcheckbox';
       }
 
-      const selected = isItemSelected(value, type, name);
+      const selected = isItemSelected(value, type, name, href);
 
       /**
        * The "select" of useSelection isn't
@@ -829,27 +835,44 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
         'data-garden-container-id': 'containers.menu.item',
         'data-garden-container-version': PACKAGE_VERSION,
         'aria-selected': undefined,
-        'aria-checked': selected,
         'aria-disabled': itemDisabled,
         role: itemRole === null ? undefined : itemRole,
-        href,
         onClick,
         onKeyDown,
         onMouseEnter,
         ...other
       };
 
-      if (href && isExternal) {
-        elementProps.target = '_blank';
-        elementProps.rel = 'noopener noreferrer';
-      }
+      if (href) {
+        /**
+         * Validation
+         */
+        if (isNext || isPrevious || type) {
+          anchorItemError(item);
+        }
 
-      /**
-       * Validation
-       */
+        /**
+         * For a disabled link to be valid, it must have:
+         *  - `aria-disabled="true"`
+         *  - `role="link"`, or `role="menuitem"` if within a menu
+         *  - an `undefined` `href`
+         *
+         * @see https://www.scottohara.me/blog/2021/05/28/disabled-links.html
+         */
+        if (!itemDisabled) {
+          elementProps.href = href;
 
-      if (href && (isNext || isPrevious || type)) {
-        anchorItemError(item);
+          if (external) {
+            elementProps.target = '_blank';
+            elementProps.rel = 'noopener noreferrer';
+          }
+
+          if (selected) {
+            elementProps['aria-current'] = 'page';
+          }
+        }
+      } else {
+        elementProps['aria-checked'] = selected;
       }
 
       if (itemDisabled) {
@@ -859,8 +882,8 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
       const itemProps = getElementProps({
         value: value as any,
         ...elementProps,
-        onClick: composeEventHandlers(onClick, () =>
-          handleItemClick({ ...item, label, selected, isNext, isPrevious })
+        onClick: composeEventHandlers(onClick, (e: React.MouseEvent) =>
+          handleItemClick(e, { ...item, label, selected, isNext, isPrevious })
         ),
         onKeyDown: composeEventHandlers(onKeyDown, (e: React.KeyboardEvent) =>
           handleItemKeyDown(e, { ...item, label, selected, isNext, isPrevious })

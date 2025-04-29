@@ -54,16 +54,22 @@ const Item = ({ item, getItemProps, focusedValue, isSelected }: MenuItemProps) =
         'cursor-pointer': !item.disabled,
         'cursor-default': item.disabled
       })}
-      role={itemProps.href ? 'none' : undefined}
-      {...(!itemProps.href && (itemProps as LiHTMLAttributes<HTMLLIElement>))}
+      role={item.href ? 'none' : undefined}
+      {...(!item.href && (itemProps as LiHTMLAttributes<HTMLLIElement>))}
     >
-      {itemProps.href ? (
+      {item.href ? (
         <a
           {...(itemProps as AnchorHTMLAttributes<HTMLAnchorElement>)}
-          className="w-full rounded-sm outline-offset-0 transition-none border-width-none"
+          className={classNames(
+            ' w-full rounded-sm outline-offset-0 transition-none border-width-none',
+            {
+              'text-grey-400': item.disabled,
+              'cursor-default': item.disabled
+            }
+          )}
         >
           {itemChildren}
-          {!!item.isExternal && (
+          {!!item.external && (
             <>
               <span aria-hidden="true"> ↗</span>
               <span className="sr-only">(opens in new window)</span>
