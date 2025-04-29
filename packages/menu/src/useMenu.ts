@@ -73,9 +73,12 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
   );
   const initialSelectedItems = useMemo(
     () =>
-      menuItems.filter(
-        item => !!(item.type && ['radio', 'checkbox'].includes(item.type) && item.selected)
-      ),
+      menuItems.filter(item => {
+        return !!(
+          (item.href || item.type === 'radio' || item.type === 'checkbox') &&
+          item.selected
+        );
+      }),
     [menuItems]
   );
   const values = useMemo(() => menuItems.map(item => item.value), [menuItems]);
@@ -165,14 +168,19 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
 
         isSelected = match?.value === value;
       } else if (href) {
-        const current = controlledSelectedItems[0];
+        const selection =
+          Array.isArray(selectedItems) && selectedItems.length
+            ? selectedItems
+            : initialSelectedItems;
+
+        const current = selection.filter(item => item.name === name)[0];
 
         isSelected = current?.value === value;
       }
 
       return isSelected;
     },
-    [controlledSelectedItems]
+    [controlledSelectedItems, initialSelectedItems, selectedItems]
   );
 
   const getNextFocusedValue = useCallback(
@@ -472,6 +480,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
       });
     },
     [
+      selectedItems,
       getSelectedItems,
       state.nestedPathIds,
       isExpandedControlled,
