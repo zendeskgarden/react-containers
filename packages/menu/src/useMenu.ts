@@ -163,24 +163,15 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
 
       if (type === 'checkbox') {
         isSelected = !!controlledSelectedItems.find(item => item.value === value);
-      } else if (type === 'radio') {
+      } else if (type === 'radio' || href) {
         const match = controlledSelectedItems.filter(item => item.name === name)[0];
 
         isSelected = match?.value === value;
-      } else if (href) {
-        const selection =
-          Array.isArray(selectedItems) && selectedItems.length
-            ? selectedItems
-            : initialSelectedItems;
-
-        const current = selection.filter(item => item.name === name)[0];
-
-        isSelected = current?.value === value;
       }
 
       return isSelected;
     },
-    [controlledSelectedItems, initialSelectedItems, selectedItems]
+    [controlledSelectedItems]
   );
 
   const getNextFocusedValue = useCallback(
@@ -231,9 +222,10 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
 
   const getSelectedItems = useCallback(
     ({ value, type, name, label, selected, href }: IMenuItemBase) => {
-      let changes: ISelectedItem[] | null = [...controlledSelectedItems];
+      if (href) return controlledSelectedItems;
+      if (!type) return null;
 
-      if (!type || href) return null;
+      let changes: ISelectedItem[] | null = [...controlledSelectedItems];
 
       const selectedItem = {
         value,
@@ -480,7 +472,6 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
       });
     },
     [
-      selectedItems,
       getSelectedItems,
       state.nestedPathIds,
       isExpandedControlled,
