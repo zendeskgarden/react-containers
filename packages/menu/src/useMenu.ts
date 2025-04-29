@@ -225,7 +225,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
     ({ value, type, name, label, selected, href }: IMenuItemBase) => {
       let changes: ISelectedItem[] | null = [...controlledSelectedItems];
 
-      if (!(type || href)) return null;
+      if (!type || href) return null;
 
       const selectedItem = {
         value,
@@ -240,7 +240,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
         } else {
           changes.push(selectedItem);
         }
-      } else if (type === 'radio' || href) {
+      } else if (type === 'radio') {
         const index = changes.findIndex(item => item.name === name);
 
         if (index > -1) {
