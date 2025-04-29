@@ -817,7 +817,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
         name,
         value,
         href,
-        isExternal,
+        external,
         isNext = false,
         isPrevious = false,
         label = value
@@ -860,10 +860,18 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
           anchorItemError(item);
         }
 
-        elementProps.href = href;
-
+        /**
+         * For a disabled link to be valid, it must have:
+         *  - `aria-disabled="true"`
+         *  - `role="link"`, or `role="menuitem"` if within a menu
+         *  - an `undefined` `href`
+         *
+         * @see https://www.scottohara.me/blog/2021/05/28/disabled-links.html
+         */
         if (!itemDisabled) {
-          if (isExternal) {
+          elementProps.href = href;
+
+          if (external) {
             elementProps.target = '_blank';
             elementProps.rel = 'noopener noreferrer';
           }
