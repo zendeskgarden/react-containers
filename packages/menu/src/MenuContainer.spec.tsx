@@ -62,11 +62,12 @@ describe('MenuContainer', () => {
       <MenuContainer triggerRef={triggerRef} menuRef={menuRef} {...props}>
         {({
           isExpanded,
-          getSeparatorProps,
+          getAnchorProps,
           getItemGroupProps,
-          getTriggerProps,
+          getItemProps,
           getMenuProps,
-          getItemProps
+          getSeparatorProps,
+          getTriggerProps
         }: IUseMenuReturnValue) => (
           <>
             <button {...getTriggerProps({ disabled })} data-test-id="trigger">
@@ -95,13 +96,22 @@ describe('MenuContainer', () => {
                   return <li {...getSeparatorProps()} key={item.value} data-test-id="separator" />;
                 }
 
+                const anchorProps = getAnchorProps({ item });
+                const itemChildren = item.label || item.value;
+
                 return (
                   <li
                     {...getItemProps({ item })}
                     key={item.value}
-                    data-test-id={`item-${item.label}`}
+                    data-test-id={`item-${itemChildren}`}
                   >
-                    {item.label || item.value}
+                    {anchorProps ? (
+                      <a data-test-id={`item-link-${itemChildren}`} {...anchorProps}>
+                        {itemChildren}
+                      </a>
+                    ) : (
+                      itemChildren
+                    )}
                   </li>
                 );
               })}
@@ -285,7 +295,7 @@ describe('MenuContainer', () => {
 
     describe('navigational menu items (links)', () => {
       it('applies href and external anchor attributes, only when not disabled', () => {
-        const { getByTestId } = render(
+        const { getByText } = render(
           <TestMenu
             items={[
               { value: 'link-1', href: '#1', external: true },
@@ -293,15 +303,29 @@ describe('MenuContainer', () => {
             ]}
           />
         );
-        const menu = getByTestId('menu');
+        const firstLink = getByText('link-1');
+        const secondLink = getByText('link-2');
 
-        expect(menu.firstChild).toHaveAttribute('href', '#1');
-        expect(menu.firstChild).toHaveAttribute('target', '_blank');
-        expect(menu.firstChild).toHaveAttribute('rel', 'noopener noreferrer');
+        expect(firstLink).toHaveAttribute('href', '#1');
+        expect(firstLink).toHaveAttribute('target', '_blank');
+        expect(firstLink).toHaveAttribute('rel', 'noopener noreferrer');
 
-        expect(menu.childNodes[1]).not.toHaveAttribute('href');
-        expect(menu.childNodes[1]).not.toHaveAttribute('target', '_blank');
-        expect(menu.childNodes[1]).not.toHaveAttribute('rel', 'noopener noreferrer');
+        expect(secondLink).not.toHaveAttribute('href');
+        expect(secondLink).not.toHaveAttribute('target', '_blank');
+        expect(secondLink).not.toHaveAttribute('rel', 'noopener noreferrer');
+      });
+
+      it('applies role="none" to the list item if it contains an anchor', () => {
+        const { getByText, getByTestId } = render(
+          <TestMenu items={[{ value: 'link-1', href: '#1' }]} />
+        );
+        const item = getByTestId('item-link-1');
+        const link = getByText('link-1');
+
+        expect(item).toHaveAttribute('role', 'none');
+
+        expect(link).toHaveAttribute('href', '#1');
+        expect(link).not.toHaveAttribute('target');
       });
 
       it('tracks click events on links and alls the onChange function with the correct parameters', async () => {

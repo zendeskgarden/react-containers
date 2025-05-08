@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React, { AnchorHTMLAttributes, LiHTMLAttributes, useRef } from 'react';
+import React, { useRef } from 'react';
 import { StoryFn } from '@storybook/react';
 import classNames from 'classnames';
 import {
@@ -29,12 +29,14 @@ interface IUseMenuComponentProps extends MenuReturnValue {
 type MenuItemProps = {
   item: IMenuItemBase;
   getItemProps: IUseMenuComponentProps['getItemProps'];
+  getAnchorProps: IUseMenuComponentProps['getAnchorProps'];
   focusedValue: IUseMenuComponentProps['focusedValue'];
   isSelected?: boolean;
 };
 
-const Item = ({ item, getItemProps, focusedValue, isSelected }: MenuItemProps) => {
-  const itemProps = getItemProps({ item });
+const Item = ({ item, getAnchorProps, getItemProps, focusedValue, isSelected }: MenuItemProps) => {
+  const itemProps = getItemProps<HTMLLIElement>({ item });
+  const anchorProps = getAnchorProps({ item });
 
   const itemChildren = (
     <>
@@ -54,12 +56,11 @@ const Item = ({ item, getItemProps, focusedValue, isSelected }: MenuItemProps) =
         'cursor-pointer': !item.disabled,
         'cursor-default': item.disabled
       })}
-      role={item.href ? 'none' : undefined}
-      {...(!item.href && (itemProps as LiHTMLAttributes<HTMLLIElement>))}
+      {...itemProps}
     >
-      {item.href ? (
+      {anchorProps ? (
         <a
-          {...(itemProps as AnchorHTMLAttributes<HTMLAnchorElement>)}
+          {...anchorProps}
           className={classNames(
             ' w-full rounded-sm outline-offset-0 transition-none border-width-none',
             {
@@ -69,7 +70,7 @@ const Item = ({ item, getItemProps, focusedValue, isSelected }: MenuItemProps) =
           )}
         >
           {itemChildren}
-          {!!item.external && (
+          {anchorProps.target === '_blank' && (
             <>
               <span aria-hidden="true"> ↗</span>
               <span className="sr-only">(opens in new window)</span>
@@ -91,10 +92,19 @@ const Component = ({
   getTriggerProps,
   getMenuProps,
   getItemProps,
+  getAnchorProps,
   getItemGroupProps,
   getSeparatorProps
 }: MenuReturnValue & UseMenuProps) => {
   const selectedValues = selection.map(item => item.value);
+
+  React.useEffect(() => {
+    const originalWindowOpen = window.open;
+    window.open = () => null;
+    return () => {
+      window.open = originalWindowOpen;
+    };
+  }, []);
 
   return (
     <div className="relative">
@@ -122,6 +132,7 @@ const Component = ({
                       key={groupItem.value}
                       item={{ ...groupItem }}
                       getItemProps={getItemProps}
+                      getAnchorProps={getAnchorProps}
                       focusedValue={focusedValue}
                       isSelected={selectedValues.includes(groupItem.value)}
                     />
@@ -147,6 +158,7 @@ const Component = ({
               item={item}
               focusedValue={focusedValue}
               getItemProps={getItemProps}
+              getAnchorProps={getAnchorProps}
             />
           );
         })}

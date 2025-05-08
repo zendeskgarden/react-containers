@@ -18,6 +18,8 @@ Check out [storybook](https://zendeskgarden.github.io/react-containers) for live
 
 ### useMenu
 
+#### Menu items
+
 ```jsx
 import { useMenu } from '@zendeskgarden/container-menu';
 
@@ -50,6 +52,40 @@ const Menu = () => {
 };
 ```
 
+#### Menu links
+
+```jsx
+import { useMenu } from '@zendeskgarden/container-menu';
+
+const Menu = () => {
+  const triggerRef = useRef();
+  const menuRef = useRef();
+  const items = [
+    { value: 'home', label: 'Home', href="#", selected: true },
+    { value: 'about', label: 'About', href="www.example.com/about" },
+    { value: 'support', label: 'Support', href="www.support.example.com", external: true }
+  ];
+  const { isExpanded, getTriggerProps, getMenuProps, getItemProps, getAnchorProps } = useMenu({
+    triggerRef,
+    menuRef,
+    items
+  });
+
+  return (
+    <>
+      <button {...getTriggerProps()}>Menu</button>
+      <ul {...getMenuProps()} style={{ visibility: isExpanded ? 'visible' : 'hidden' }}>
+        {items.map(item => (
+          <li key={item.value} {...getItemProps({ item })}>
+            <a {...getAnchorProps({ item })}>{item.label}</a>
+          </li>
+        ))}
+      </ul>
+    </>
+  );
+};
+```
+
 ### MenuContainer
 
 ```jsx
@@ -61,27 +97,20 @@ const Menu = () => {
   const items = [
     { value: 'value-1', label: 'One' },
     { value: 'value-2', label: 'Two' },
-    { value: 'value-3', label: 'Three', href: '#0' },
-    { value: 'value-4', label: 'Four' }
+    { value: 'value-3', label: 'Three' }
   ];
 
   return (
     <MenuContainer triggerRef={triggerRef} menuRef={menuRef} items={items}>
-      {({ isExpanded, getTriggerProps, getMenuProps, getItemProps, getSeparatorProps }) => (
+      {({ isExpanded, getTriggerProps, getMenuProps, getItemProps }) => (
         <>
           <button {...getTriggerProps()}>Menu</button>
           <ul {...getMenuProps()} style={{ visibility: isExpanded ? 'visible' : 'hidden' }}>
-            {items.map(item =>
-              item.href ? (
-                <li key={item.value} role="none">
-                  <a {...getItemProps({ item })}>{item.label}</a>
-                </li>
-              ) : (
-                <li key={item.value} {...getItemProps({ item })}>
-                  {item.label}
-                </li>
-              )
-            )}
+            {items.map(item => (
+              <li key={item.value} {...getItemProps({ item })}>
+                {item.label}
+              </li>
+            ))}
           </ul>
         </>
       )}

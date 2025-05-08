@@ -7,7 +7,13 @@
 
 import { Reducer } from 'react';
 import { KEYS } from '@zendeskgarden/container-utilities';
-import { MenuItem, IMenuItemBase, IMenuItemSeparator, ISelectedItem } from './types';
+import {
+  MenuItem,
+  IMenuItemBase,
+  IMenuItemSeparator,
+  ISelectedItem,
+  IMenuItemGroup
+} from './types';
 
 export const triggerLink = (element: HTMLAnchorElement, view: Window) => {
   const event = new MouseEvent('click', {
@@ -46,9 +52,9 @@ export const StateChangeTypes: Record<string, string> = {
   MenuItemKeyDownEnd: `menuItem:keyDown:${KEYS.END}`
 };
 
-export const isItemGroup = (item: MenuItem) => Object.hasOwn(item, 'items');
+export const isItemGroup = (item: MenuItem): item is IMenuItemGroup => Object.hasOwn(item, 'items');
 
-export const isValidItem = (item: MenuItem) =>
+export const isValidItem = (item: MenuItem): item is IMenuItemBase =>
   !(item as IMenuItemBase).disabled &&
   !(item as IMenuItemSeparator).separator &&
   !isItemGroup(item);

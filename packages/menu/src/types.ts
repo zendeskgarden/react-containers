@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import { ButtonHTMLAttributes, HTMLProps, ReactNode, RefObject } from 'react';
+import { AnchorHTMLAttributes, ButtonHTMLAttributes, HTMLProps, ReactNode, RefObject } from 'react';
 
 export interface ISelectedItem {
   value: string;
@@ -116,9 +116,16 @@ export interface IUseMenuReturnValue {
   getItemProps: <T extends Element>(
     props: Omit<HTMLProps<T>, 'role'> & {
       item: IMenuItemBase;
-      role?: 'menuitem' | 'menuitemradio' | 'menuitemcheckbox' | null;
+      role?: 'menuitem' | 'menuitemradio' | 'menuitemcheckbox' | 'none' | null;
     }
   ) => HTMLProps<T>;
+  getAnchorProps: (
+    props: Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'role'> & {
+      item: IMenuItemBase;
+      role?: 'link' | null;
+    }
+  ) => AnchorHTMLAttributes<HTMLAnchorElement> | undefined;
+
   getSeparatorProps: <T extends Element>(
     props?: HTMLProps<T> & {
       role?: 'separator' | 'none' | null;
@@ -133,6 +140,7 @@ export interface IMenuContainerProps<T = HTMLElement, M = HTMLElement> extends I
    * @param {function} [options.getTriggerProps] Trigger props getter
    * @param {function} [options.getMenuProps] Menu props getter
    * @param {function} [options.getItemProps] Menu item props getter
+   * @param {function} [options.getAnchorProps] Menu link item props getter
    * @param {function} [options.getSeparatorProps] Separator item props getter
    * @param {boolean} [options.isExpanded] Current menu expansion
    * @param {ISelectedItem[]} [options.selection] Current selection
@@ -143,6 +151,7 @@ export interface IMenuContainerProps<T = HTMLElement, M = HTMLElement> extends I
     getTriggerProps: IUseMenuReturnValue['getTriggerProps'];
     getMenuProps: IUseMenuReturnValue['getMenuProps'];
     getItemProps: IUseMenuReturnValue['getItemProps'];
+    getAnchorProps: IUseMenuReturnValue['getAnchorProps'];
     getSeparatorProps: IUseMenuReturnValue['getSeparatorProps'];
     /* state */
     isExpanded: IUseMenuReturnValue['isExpanded'];

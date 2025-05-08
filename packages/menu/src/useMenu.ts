@@ -34,7 +34,6 @@ import {
   IMenuItemBase,
   IUseMenuProps,
   IUseMenuReturnValue,
-  IMenuItemGroup,
   ISelectedItem
 } from './types';
 
@@ -60,15 +59,17 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
   const isFocusedValueControlled = focusedValue !== undefined;
   const menuItems = useMemo(
     () =>
-      rawItems.reduce((items, item: MenuItem) => {
+      rawItems.reduce<IMenuItemBase[]>((items, item: MenuItem) => {
         if (isItemGroup(item)) {
-          items.push(...((item as IMenuItemGroup).items.filter(isValidItem) as IMenuItemBase[]));
+          const nestedItems = item.items.filter(isValidItem);
+
+          items.push(...nestedItems);
         } else if (isValidItem(item)) {
-          items.push(item as IMenuItemBase);
+          items.push(item);
         }
 
         return items;
-      }, [] as IMenuItemBase[]),
+      }, []),
     [rawItems]
   );
   const initialSelectedItems = useMemo(
@@ -808,39 +809,18 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
         name,
         value,
         href,
-        external,
         isNext = false,
         isPrevious = false,
         label = value
       } = item;
       let itemRole = role;
 
-      if (type === 'radio') {
-        itemRole = 'menuitemradio';
-      } else if (type === 'checkbox') {
-        itemRole = 'menuitemcheckbox';
-      }
-
-      const selected = isItemSelected(value, type, name, href);
-
-      /**
-       * The "select" of useSelection isn't
-       * leveraged in useMenu, so `aria-selected` attribute
-       * is intentionally `undefined` in all cases.
-       *
-       * Instead, `aria-checked` is used, but not managed
-       * by useSelection.
-       */
-      const elementProps = {
+      const baseAttributes = {
         'data-garden-container-id': 'containers.menu.item',
         'data-garden-container-version': PACKAGE_VERSION,
-        'aria-selected': undefined,
-        'aria-disabled': itemDisabled,
-        role: itemRole === null ? undefined : itemRole,
         onClick,
         onKeyDown,
-        onMouseEnter,
-        ...other
+        onMouseEnter
       };
 
       if (href) {
@@ -851,29 +831,37 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
           anchorItemError(item);
         }
 
-        /**
-         * For a disabled link to be valid, it must have:
-         *  - `aria-disabled="true"`
-         *  - `role="link"`, or `role="menuitem"` if within a menu
-         *  - an `undefined` `href`
-         *
-         * @see https://www.scottohara.me/blog/2021/05/28/disabled-links.html
-         */
-        if (!itemDisabled) {
-          elementProps.href = href;
-
-          if (external) {
-            elementProps.target = '_blank';
-            elementProps.rel = 'noopener noreferrer';
-          }
-
-          if (selected) {
-            elementProps['aria-current'] = 'page';
-          }
-        }
-      } else {
-        elementProps['aria-checked'] = selected;
+        return {
+          ...baseAttributes,
+          role: itemRole === null ? undefined : 'none',
+          ...other
+        };
       }
+
+      if (type === 'radio') {
+        itemRole = 'menuitemradio';
+      } else if (type === 'checkbox') {
+        itemRole = 'menuitemcheckbox';
+      }
+
+      const selected = isItemSelected(value, type, name);
+
+      /**
+       * The "select" of useSelection isn't
+       * leveraged in useMenu, so `aria-selected` attribute
+       * is intentionally `undefined` in all cases.
+       *
+       * Instead, `aria-checked` is used, but not managed
+       * by useSelection.
+       */
+      const elementProps = {
+        ...baseAttributes,
+        'aria-selected': undefined,
+        'aria-disabled': itemRole === 'none' ? undefined : itemDisabled,
+        'aria-checked': selected,
+        role: itemRole === null ? undefined : itemRole,
+        ...other
+      };
 
       if (itemDisabled) {
         return elementProps;
@@ -907,28 +895,111 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
     ]
   );
 
+  const getAnchorProps = useCallback<IUseMenuReturnValue['getAnchorProps']>(
+    ({ role = 'menuitem', onClick, onKeyDown, onMouseEnter, item, ...other }) => {
+      const { disabled: itemDisabled, value, href, external, label = value } = item;
+
+      if (!href) return undefined;
+
+      /**
+       * The "select" of useSelection isn't
+       * leveraged in useMenu, so `aria-selected` attribute
+       * is intentionally `undefined` in all cases.
+       *
+       * Instead, `aria-current` is used, but not managed
+       * by useSelection.
+       */
+      const elementProps = {
+        'data-garden-container-id': 'containers.menu.item.link',
+        'data-garden-container-version': PACKAGE_VERSION,
+        'aria-disabled': itemDisabled,
+        'aria-selected': undefined,
+        role: role === null ? undefined : role,
+        onClick,
+        onKeyDown,
+        onMouseEnter,
+        ...other
+      };
+
+      const selected = isItemSelected(value, undefined, undefined, href);
+
+      /**
+       * For a disabled link to be valid, it must have:
+       *  - `aria-disabled="true"`
+       *  - `role="link"`, or `role="menuitem"` if within a menu
+       *  - an `undefined` `href`
+       *
+       * @see https://www.scottohara.me/blog/2021/05/28/disabled-links.html
+       */
+      if (!itemDisabled) {
+        elementProps.href = href;
+
+        if (external) {
+          elementProps.target = '_blank';
+          elementProps.rel = 'noopener noreferrer';
+        }
+
+        if (selected) {
+          elementProps['aria-current'] = 'page';
+        }
+      }
+
+      if (itemDisabled) {
+        return elementProps;
+      }
+
+      const itemProps = getElementProps({
+        value: value as any,
+        ...elementProps,
+        onClick: composeEventHandlers(onClick, (e: React.MouseEvent) =>
+          handleItemClick(e, { ...item, label, selected })
+        ),
+        onKeyDown: composeEventHandlers(onKeyDown, (e: React.KeyboardEvent) =>
+          handleItemKeyDown(e, { ...item, label, selected })
+        ),
+        onMouseEnter: composeEventHandlers(onMouseEnter, () => handleItemMouseEnter(value))
+      });
+
+      if (itemProps.ref !== itemRefs[value]) {
+        itemRefs[value] = itemProps.ref as RefObject<any>;
+      }
+
+      return itemProps;
+    },
+    [
+      itemRefs,
+      isItemSelected,
+      getElementProps,
+      handleItemClick,
+      handleItemKeyDown,
+      handleItemMouseEnter
+    ]
+  );
+
   return useMemo(
     () => ({
       /* prop getters */
-      getTriggerProps,
-      getMenuProps,
+      getAnchorProps,
       getItemGroupProps,
       getItemProps,
+      getMenuProps,
       getSeparatorProps,
+      getTriggerProps,
       /* state */
       isExpanded: controlledIsExpanded!,
       selection: controlledSelectedItems,
       focusedValue: controlledFocusedValue
     }),
     [
+      controlledFocusedValue,
       controlledIsExpanded,
       controlledSelectedItems,
-      controlledFocusedValue,
-      getTriggerProps,
-      getMenuProps,
+      getAnchorProps,
       getItemGroupProps,
       getItemProps,
-      getSeparatorProps
+      getMenuProps,
+      getSeparatorProps,
+      getTriggerProps
     ]
   );
 };
