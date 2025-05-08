@@ -164,8 +164,12 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
 
       if (type === 'checkbox') {
         isSelected = !!controlledSelectedItems.find(item => item.value === value);
-      } else if (type === 'radio' || href) {
+      } else if (type === 'radio') {
         const match = controlledSelectedItems.filter(item => item.name === name)[0];
+
+        isSelected = match?.value === value;
+      } else if (href) {
+        const match = controlledSelectedItems.filter(item => item.value === value)[0];
 
         isSelected = match?.value === value;
       }
