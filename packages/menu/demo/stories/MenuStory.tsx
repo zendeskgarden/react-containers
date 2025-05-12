@@ -41,8 +41,8 @@ const Item = ({ item, getAnchorProps, getItemProps, focusedValue, isSelected }: 
   const itemChildren = (
     <>
       <span className="inline-flex justify-center items-center w-4">
-        {item?.type === 'radio' && !!isSelected && '•'}
-        {item?.type === 'checkbox' && !!isSelected && '✓'}
+        {!!isSelected && item.type === 'radio' && '•'}
+        {!!isSelected && (item.type === 'checkbox' || !!item.href) && '✓'}
       </span>
       {item.label || item.value}
     </>
@@ -159,6 +159,7 @@ const Component = ({
               focusedValue={focusedValue}
               getItemProps={getItemProps}
               getAnchorProps={getAnchorProps}
+              isSelected={selectedValues.includes(item.value)}
             />
           );
         })}
