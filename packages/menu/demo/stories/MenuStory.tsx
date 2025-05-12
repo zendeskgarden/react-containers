@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { StoryFn } from '@storybook/react';
 import classNames from 'classnames';
 import {
@@ -98,7 +98,7 @@ const Component = ({
 }: MenuReturnValue & UseMenuProps) => {
   const selectedValues = selection.map(item => item.value);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const originalWindowOpen = window.open;
     window.open = () => null;
     return () => {
