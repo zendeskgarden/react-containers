@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React, { AnchorHTMLAttributes, LiHTMLAttributes, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { StoryFn } from '@storybook/react';
 import classNames from 'classnames';
 import {
@@ -29,18 +29,20 @@ interface IUseMenuComponentProps extends MenuReturnValue {
 type MenuItemProps = {
   item: IMenuItemBase;
   getItemProps: IUseMenuComponentProps['getItemProps'];
+  getAnchorProps: IUseMenuComponentProps['getAnchorProps'];
   focusedValue: IUseMenuComponentProps['focusedValue'];
   isSelected?: boolean;
 };
 
-const Item = ({ item, getItemProps, focusedValue, isSelected }: MenuItemProps) => {
-  const itemProps = getItemProps({ item });
+const Item = ({ item, getAnchorProps, getItemProps, focusedValue, isSelected }: MenuItemProps) => {
+  const itemProps = getItemProps<HTMLLIElement>({ item });
+  const anchorProps = getAnchorProps({ item });
 
   const itemChildren = (
     <>
       <span className="inline-flex justify-center items-center w-4">
-        {item?.type === 'radio' && !!isSelected && '•'}
-        {item?.type === 'checkbox' && !!isSelected && '✓'}
+        {!!isSelected && item.type === 'radio' && '•'}
+        {!!isSelected && (item.type === 'checkbox' || !!item.href) && '✓'}
       </span>
       {item.label || item.value}
     </>
@@ -54,16 +56,21 @@ const Item = ({ item, getItemProps, focusedValue, isSelected }: MenuItemProps) =
         'cursor-pointer': !item.disabled,
         'cursor-default': item.disabled
       })}
-      role={itemProps.href ? 'none' : undefined}
-      {...(!itemProps.href && (itemProps as LiHTMLAttributes<HTMLLIElement>))}
+      {...itemProps}
     >
-      {itemProps.href ? (
+      {anchorProps ? (
         <a
-          {...(itemProps as AnchorHTMLAttributes<HTMLAnchorElement>)}
-          className="w-full rounded-sm outline-offset-0 transition-none border-width-none"
+          {...anchorProps}
+          className={classNames(
+            ' w-full rounded-sm outline-offset-0 transition-none border-width-none',
+            {
+              'text-grey-400': item.disabled,
+              'cursor-default': item.disabled
+            }
+          )}
         >
           {itemChildren}
-          {!!item.isExternal && (
+          {anchorProps.target === '_blank' && (
             <>
               <span aria-hidden="true"> ↗</span>
               <span className="sr-only">(opens in new window)</span>
@@ -85,10 +92,19 @@ const Component = ({
   getTriggerProps,
   getMenuProps,
   getItemProps,
+  getAnchorProps,
   getItemGroupProps,
   getSeparatorProps
 }: MenuReturnValue & UseMenuProps) => {
   const selectedValues = selection.map(item => item.value);
+
+  useEffect(() => {
+    const originalWindowOpen = window.open;
+    window.open = () => null;
+    return () => {
+      window.open = originalWindowOpen;
+    };
+  }, []);
 
   return (
     <div className="relative">
@@ -116,6 +132,7 @@ const Component = ({
                       key={groupItem.value}
                       item={{ ...groupItem }}
                       getItemProps={getItemProps}
+                      getAnchorProps={getAnchorProps}
                       focusedValue={focusedValue}
                       isSelected={selectedValues.includes(groupItem.value)}
                     />
@@ -141,6 +158,8 @@ const Component = ({
               item={item}
               focusedValue={focusedValue}
               getItemProps={getItemProps}
+              getAnchorProps={getAnchorProps}
+              isSelected={selectedValues.includes(item.value)}
             />
           );
         })}
