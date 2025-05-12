@@ -48,6 +48,8 @@ export const Controlled: Story = {
     return (
       <MenuStory
         {...args}
+        // Storybook sets args to null when they are removed from controls. This breaks useMenu since getControlledValue treats null as intentional input.
+        selectedItems={args.selectedItems === null ? undefined : args.selectedItems}
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         onChange={({ type, ...rest }) => {
           updateArgs(rest);
