@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-menu@0.5.1...@zendeskgarden/container-menu@1.0.0) (2025-05-13)
+
+**Note:** Version bump only for package @zendeskgarden/container-menu
+
 ## [1.0.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-menu@0.5.1...@zendeskgarden/container-menu@1.0.0) (2025-05-13)
 
 - **container-menu:** introduces `getAnchorProps` in `useMenu` to handle anchor-specific attributes more cleanly. This update separates anchor logic from `getItemProps` for better modularity. ([#695](https://github.com/zendeskgarden/react-containers/issues/695)) ([15d4e5c](https://github.com/zendeskgarden/react-containers/commit/15d4e5cd08be7ab09621db4109190a139b42dcab))
@@ -11,7 +15,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 - `getItemProps` no longer includes anchor-related props. Use `getAnchorProps` specifically for `<a>` tags now.
 - For `<li>` elements surrounding anchor items, keep using `getItemProps` as before.
-- `useMenu` doesn't manage selected link state automatically anymore.  You'll need to either:
+- `useMenu` doesn't manage selected link state automatically anymore. You'll need to either:
   - Set `selected: true` on items that should be selected by default, or
   - Use `props.selectedItems` to explicitly control selection (overrides default selection).
 
