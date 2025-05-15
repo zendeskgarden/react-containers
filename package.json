@@ -96,7 +96,7 @@
     "rollup-plugin-typescript2": "0.36.0",
     "storybook": "8.4.7",
     "styled-components": "6.1.13",
-    "tailwindcss": "3.4.16",
+    "tailwindcss": "4.1.7",
     "typescript": "5.7.2"
   }
 }
