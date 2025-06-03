@@ -79,14 +79,16 @@ export const useTooltip = <T extends HTMLElement = HTMLElement>({
     // Prevent tooltip from competing with a trigger popup (i.e. menu, dialog, etc.)
     const triggerElement = triggerRef?.current;
 
-    const mutationObserver = new MutationObserver(() => {
+    const updateTriggerPopupExpandedState = () => {
       if (triggerElement) {
         setIsTriggerPopupExpanded(
           triggerElement.getAttribute('aria-haspopup') === 'true' &&
             triggerElement.getAttribute('aria-expanded') === 'true'
         );
       }
-    });
+    };
+
+    const mutationObserver = new MutationObserver(updateTriggerPopupExpandedState);
 
     if (triggerElement) {
       mutationObserver.observe(triggerElement, {
@@ -94,6 +96,8 @@ export const useTooltip = <T extends HTMLElement = HTMLElement>({
         attributeFilter: ['aria-expanded']
       });
     }
+
+    updateTriggerPopupExpandedState(); // initial render
 
     return () => mutationObserver.disconnect();
   }, [triggerRef]);
