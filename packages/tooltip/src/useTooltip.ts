@@ -77,14 +77,12 @@ export const useTooltip = <T extends HTMLElement = HTMLElement>({
 
   useEffect(() => {
     // Prevent tooltip from competing with a trigger popup (i.e. menu, dialog, etc.)
-    const triggerElement = triggerRef?.current;
+    const triggerElement =
+      triggerRef?.current?.getAttribute('aria-haspopup') === 'true' ? triggerRef.current : null;
 
     const updateTriggerPopupExpandedState = () => {
       if (triggerElement) {
-        setIsTriggerPopupExpanded(
-          triggerElement.getAttribute('aria-haspopup') === 'true' &&
-            triggerElement.getAttribute('aria-expanded') === 'true'
-        );
+        setIsTriggerPopupExpanded(triggerElement.getAttribute('aria-expanded') === 'true');
       }
     };
 
