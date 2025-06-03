@@ -8,12 +8,18 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { FocusStory } from './stories/FocusStory';
+import { MenuStory } from './stories/MenuStory';
 
-const meta: Meta<typeof FocusStory> = { title: 'Packages/Tooltip/[patterns]' };
+const meta: Meta = { title: 'Packages/Tooltip/[patterns]' };
 
 export default meta;
 
 export const Focus: StoryObj<typeof FocusStory> = {
   render: args => <FocusStory {...args} />,
   name: 'Focus'
+};
+
+export const Menu: StoryObj<typeof MenuStory> = {
+  render: args => <MenuStory {...args} />,
+  name: 'Menu'
 };

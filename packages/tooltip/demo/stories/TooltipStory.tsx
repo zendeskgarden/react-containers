@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React from 'react';
+import React, { createRef } from 'react';
 import { StoryFn } from '@storybook/react';
 import classNames from 'classnames';
 import {
@@ -60,12 +60,14 @@ interface IArgs extends ITooltipContainerProps {
 }
 
 export const TooltipStory: StoryFn<IArgs> = ({ as, ...props }) => {
+  const triggerRef = createRef<HTMLButtonElement>();
+
   switch (as) {
     case 'container':
-      return <Container {...props} />;
+      return <Container {...props} triggerRef={triggerRef} />;
 
     case 'hook':
     default:
-      return <Hook {...props} />;
+      return <Hook {...props} triggerRef={triggerRef} />;
   }
 };
