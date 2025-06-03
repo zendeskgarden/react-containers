@@ -5,67 +5,62 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import { useState, useMemo, useEffect, useRef } from 'react';
+import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import { useUIDSeed } from 'react-uid';
 import { KEYS, composeEventHandlers } from '@zendeskgarden/container-utilities';
+import { IUseTooltipProps, IUseTooltipReturnValue } from './types';
 
-export interface IUseTooltipProps {
-  /** Milliseconds of delay before open/close of tooltip is initiated  */
-  delayMilliseconds?: number;
-  id?: string;
-  /** Control visibility state of the tooltip */
-  isVisible?: boolean;
-}
-
-export interface IUseTooltipReturnValue {
-  isVisible?: boolean;
-  getTooltipProps: <T>(options?: T) => T & React.HTMLProps<any>;
-  getTriggerProps: <T>(options?: T) => T & React.HTMLProps<any>;
-  openTooltip: (delayMs?: number) => void;
-  closeTooltip: (delayMs?: number) => void;
-}
-
-export const useTooltip = ({
+export const useTooltip = <T extends HTMLElement = HTMLElement>({
   delayMilliseconds = 500,
   id,
-  isVisible
-}: IUseTooltipProps = {}): IUseTooltipReturnValue => {
+  isVisible,
+  triggerRef
+}: IUseTooltipProps<T>): IUseTooltipReturnValue => {
   const [visibility, setVisibility] = useState(isVisible);
   const seed = useUIDSeed();
   const _id = useMemo(() => id || seed(`tooltip_${PACKAGE_VERSION}`), [id, seed]);
   const isMounted = useRef(false);
-
   const openTooltipTimeoutId = useRef<number>();
   const closeTooltipTimeoutId = useRef<number>();
 
-  const openTooltip = (delayMs = delayMilliseconds) => {
-    clearTimeout(closeTooltipTimeoutId.current);
+  const openTooltip = useCallback(
+    (delayMs = delayMilliseconds) => {
+      clearTimeout(closeTooltipTimeoutId.current);
 
-    const timerId = setTimeout(() => {
-      if (isMounted.current) {
-        setVisibility(true);
-      }
-    }, delayMs);
+      const timerId = setTimeout(() => {
+        if (isMounted.current) {
+          setVisibility(true);
+        }
+      }, delayMs);
 
-    openTooltipTimeoutId.current = Number(timerId);
-  };
+      openTooltipTimeoutId.current = Number(timerId);
+    },
+    [delayMilliseconds]
+  );
 
-  const closeTooltip = (delayMs = delayMilliseconds) => {
-    clearTimeout(openTooltipTimeoutId.current);
+  const closeTooltip = useCallback(
+    (delayMs = delayMilliseconds) => {
+      clearTimeout(openTooltipTimeoutId.current);
 
-    const timerId = setTimeout(() => {
-      if (isMounted.current) {
-        setVisibility(false);
-      }
-    }, delayMs);
+      const timerId = setTimeout(() => {
+        if (isMounted.current) {
+          setVisibility(false);
+        }
+      }, delayMs);
 
-    closeTooltipTimeoutId.current = Number(timerId);
-  };
+      closeTooltipTimeoutId.current = Number(timerId);
+    },
+    [delayMilliseconds]
+  );
 
-  // Sometimes the timeout will call setVisibility even after un-mount and cleanup.
-  // Reproducible when running tests and happens when fast switching in Storybook.
-  // May be related https://github.com/facebook/react/pull/15650
+  /*
+   * Effects
+   */
+
   useEffect(() => {
+    // Sometimes the timeout will call setVisibility even after un-mount and cleanup.
+    // Reproducible when running tests and happens when fast switching in Storybook.
+    // May be related https://github.com/facebook/react/pull/15650
     isMounted.current = true;
 
     return () => {
@@ -73,18 +68,20 @@ export const useTooltip = ({
     };
   }, []);
 
-  // Clean up stray timeouts if tooltip un-mounts
   useEffect(() => {
+    // Clean up stray timeouts if tooltip un-mounts
     return () => {
       clearTimeout(openTooltipTimeoutId.current);
       clearTimeout(closeTooltipTimeoutId.current);
     };
   }, [closeTooltipTimeoutId, openTooltipTimeoutId]);
 
-  const getTriggerProps = (
-    { tabIndex = 0, onMouseEnter, onMouseLeave, onFocus, onBlur, onKeyDown, ...other } = {} as any
-  ) => {
-    return {
+  /*
+   * Prop getters
+   */
+
+  const getTriggerProps = useCallback<IUseTooltipReturnValue['getTriggerProps']>(
+    ({ tabIndex = 0, onMouseEnter, onMouseLeave, onFocus, onBlur, onKeyDown, ...other } = {}) => ({
       tabIndex,
       onMouseEnter: composeEventHandlers(onMouseEnter, () => openTooltip()),
       onMouseLeave: composeEventHandlers(onMouseLeave, () => closeTooltip()),
@@ -99,28 +96,32 @@ export const useTooltip = ({
       'aria-describedby': _id,
       'data-garden-container-id': 'containers.tooltip',
       'data-garden-container-version': PACKAGE_VERSION,
+      ref: triggerRef as any,
       ...other
-    };
-  };
+    }),
+    [_id, closeTooltip, openTooltip, triggerRef, visibility]
+  );
 
-  const getTooltipProps = (
-    { role = 'tooltip', onMouseEnter, onMouseLeave, ...other } = {} as any
-  ) => {
-    return {
+  const getTooltipProps = useCallback<IUseTooltipReturnValue['getTooltipProps']>(
+    ({ role = 'tooltip', onMouseEnter, onMouseLeave, ...other } = {}) => ({
       role,
       onMouseEnter: composeEventHandlers(onMouseEnter, () => openTooltip()),
       onMouseLeave: composeEventHandlers(onMouseLeave, () => closeTooltip()),
       'aria-hidden': !visibility,
       id: _id,
       ...other
-    };
-  };
+    }),
+    [_id, closeTooltip, openTooltip, visibility]
+  );
 
-  return {
-    isVisible: visibility,
-    getTooltipProps,
-    getTriggerProps,
-    openTooltip,
-    closeTooltip
-  };
+  return useMemo<IUseTooltipReturnValue>(
+    () => ({
+      isVisible: visibility,
+      getTooltipProps,
+      getTriggerProps,
+      openTooltip,
+      closeTooltip
+    }),
+    [closeTooltip, getTooltipProps, getTriggerProps, openTooltip, visibility]
+  );
 };

@@ -29,6 +29,9 @@
     "react": "^16.8.0 || ^17.0.0 || ^18.0.0",
     "react-dom": "^16.8.0 || ^17.0.0 || ^18.0.0"
   },
+  "devDependencies": {
+    "@zendeskgarden/container-menu": "^1.0.0"
+  },
   "keywords": [
     "a11y",
     "accessible",
