@@ -6,8 +6,7 @@
  */
 
 import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
-import { useUIDSeed } from 'react-uid';
-import { KEYS, composeEventHandlers } from '@zendeskgarden/container-utilities';
+import { KEYS, composeEventHandlers, useId } from '@zendeskgarden/container-utilities';
 import { IUseTooltipProps, IUseTooltipReturnValue } from './types';
 
 export const useTooltip = <T extends HTMLElement = HTMLElement>({
@@ -16,9 +15,9 @@ export const useTooltip = <T extends HTMLElement = HTMLElement>({
   isVisible,
   triggerRef
 }: IUseTooltipProps<T>): IUseTooltipReturnValue => {
+  const _id = useId(id);
   const [visibility, setVisibility] = useState(isVisible);
-  const seed = useUIDSeed();
-  const _id = useMemo(() => id || seed(`tooltip_${PACKAGE_VERSION}`), [id, seed]);
+  const [isTriggerPopupExpanded, setIsTriggerPopupExpanded] = useState(false);
   const isMounted = useRef(false);
   const openTooltipTimeoutId = useRef<number>();
   const closeTooltipTimeoutId = useRef<number>();
@@ -76,6 +75,29 @@ export const useTooltip = <T extends HTMLElement = HTMLElement>({
     };
   }, [closeTooltipTimeoutId, openTooltipTimeoutId]);
 
+  useEffect(() => {
+    // Prevent tooltip from competing with a trigger popup (i.e. menu, dialog, etc.)
+    const triggerElement = triggerRef?.current;
+
+    const mutationObserver = new MutationObserver(() => {
+      if (triggerElement) {
+        setIsTriggerPopupExpanded(
+          triggerElement.getAttribute('aria-haspopup') === 'true' &&
+            triggerElement.getAttribute('aria-expanded') === 'true'
+        );
+      }
+    });
+
+    if (triggerElement) {
+      mutationObserver.observe(triggerElement, {
+        attributes: true,
+        attributeFilter: ['aria-expanded']
+      });
+    }
+
+    return () => mutationObserver.disconnect();
+  }, [triggerRef]);
+
   /*
    * Prop getters
    */
@@ -107,21 +129,28 @@ export const useTooltip = <T extends HTMLElement = HTMLElement>({
       role,
       onMouseEnter: composeEventHandlers(onMouseEnter, () => openTooltip()),
       onMouseLeave: composeEventHandlers(onMouseLeave, () => closeTooltip()),
-      'aria-hidden': !visibility,
+      'aria-hidden': !visibility || isTriggerPopupExpanded,
       id: _id,
       ...other
     }),
-    [_id, closeTooltip, openTooltip, visibility]
+    [_id, closeTooltip, openTooltip, visibility, isTriggerPopupExpanded]
   );
 
   return useMemo<IUseTooltipReturnValue>(
     () => ({
-      isVisible: visibility,
+      isVisible: visibility && !isTriggerPopupExpanded,
       getTooltipProps,
       getTriggerProps,
       openTooltip,
       closeTooltip
     }),
-    [closeTooltip, getTooltipProps, getTriggerProps, openTooltip, visibility]
+    [
+      closeTooltip,
+      getTooltipProps,
+      getTriggerProps,
+      openTooltip,
+      visibility,
+      isTriggerPopupExpanded
+    ]
   );
 };

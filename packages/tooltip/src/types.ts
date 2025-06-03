@@ -12,7 +12,7 @@ export interface IUseTooltipProps<T = HTMLElement> {
   delayMilliseconds?: number;
   /** Specifies the tooltip ID */
   id?: string;
-  /** Controls visibility state of the tooltip */
+  /** Displays the tooltip on initial render */
   isVisible?: boolean;
   /** Provides ref access to the underlying trigger element */
   triggerRef: RefObject<T>;
