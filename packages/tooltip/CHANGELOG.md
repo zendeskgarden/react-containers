@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-tooltip@1.0.20...@zendeskgarden/container-tooltip@2.0.0) (2025-06-05)
+
+- feat(tooltip)!: prevent a tooltip from interfering with a trigger's expanded popup (#697) ([fe28c98](https://github.com/zendeskgarden/react-containers/commit/fe28c98479fd98042aed7279c8d4e5ab2fb17f1e)), closes [#697](https://github.com/zendeskgarden/react-containers/issues/697)
+
+### BREAKING CHANGES
+
+- a `triggerRef` parameter is now required by `useTooltip({ triggerRef })` and used to observe updates to the trigger's `aria-expanded` state
+
 ## [1.0.20](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-tooltip@1.0.19...@zendeskgarden/container-tooltip@1.0.20) (2024-09-25)
 
 **Note:** Version bump only for package @zendeskgarden/container-tooltip
