@@ -21,13 +21,15 @@
   "types": "dist/typings/index.d.ts",
   "dependencies": {
     "@babel/runtime": "^7.8.4",
-    "@zendeskgarden/container-utilities": "^2.0.2",
-    "react-uid": "^2.2.0"
+    "@zendeskgarden/container-utilities": "^2.0.2"
   },
   "peerDependencies": {
     "prop-types": "^15.6.1",
     "react": "^16.8.0 || ^17.0.0 || ^18.0.0",
     "react-dom": "^16.8.0 || ^17.0.0 || ^18.0.0"
+  },
+  "devDependencies": {
+    "@zendeskgarden/container-menu": "^1.0.0"
   },
   "keywords": [
     "a11y",

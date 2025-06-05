@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React from 'react';
+import React, { createRef, HTMLAttributes } from 'react';
 import userEvent from '@testing-library/user-event';
 import { render, fireEvent, waitFor } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
@@ -14,18 +14,25 @@ import { TooltipContainer, ITooltipContainerProps } from './';
 
 jest.useFakeTimers();
 
+interface ITestTooltipProps extends Omit<ITooltipContainerProps, 'triggerRef'> {
+  triggerProps?: HTMLAttributes<HTMLDivElement>;
+  tooltipProps?: HTMLAttributes<HTMLDivElement>;
+}
+
 describe('TooltipContainer', () => {
   const user = userEvent.setup({ delay: null });
 
   const TOOLTIP_ID = 'test';
 
-  const BasicExample = (props: ITooltipContainerProps) => {
+  const BasicExample = ({ triggerProps, tooltipProps, ...props }: ITestTooltipProps) => {
+    const triggerRef = createRef<HTMLDivElement>();
+
     return (
-      <TooltipContainer id={TOOLTIP_ID} {...props}>
+      <TooltipContainer id={TOOLTIP_ID} {...props} triggerRef={triggerRef}>
         {({ getTooltipProps, getTriggerProps }) => (
           <>
-            <div {...getTriggerProps()}>trigger</div>
-            <div {...getTooltipProps()}>tooltip</div>
+            <div {...getTriggerProps(triggerProps)}>trigger</div>
+            <div {...getTooltipProps(tooltipProps)}>tooltip</div>
           </>
         )}
       </TooltipContainer>
@@ -232,6 +239,24 @@ describe('TooltipContainer', () => {
       act(() => {
         jest.runOnlyPendingTimers();
       });
+
+      expect(getByText('tooltip')).toHaveAttribute('aria-hidden', 'true');
+    });
+
+    it('should close tooltip if the trigger has an expanded popup', async () => {
+      const { getByRole, getByText, rerender } = render(<BasicExample />);
+      const trigger = getByText('trigger');
+
+      await user.hover(trigger);
+
+      act(() => {
+        jest.runOnlyPendingTimers();
+      });
+
+      expect(getByRole('tooltip')).toHaveAttribute('aria-hidden', 'false');
+
+      // Simulate triggering a popup
+      rerender(<BasicExample triggerProps={{ 'aria-haspopup': true, 'aria-expanded': true }} />);
 
       expect(getByText('tooltip')).toHaveAttribute('aria-hidden', 'true');
     });

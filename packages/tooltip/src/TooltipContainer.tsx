@@ -5,24 +5,15 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React from 'react';
+import React, { FC } from 'react';
 import PropTypes from 'prop-types';
+import { useTooltip } from './useTooltip';
+import { ITooltipContainerProps } from './types';
 
-import { useTooltip, IUseTooltipProps, IUseTooltipReturnValue } from './useTooltip';
+export const TooltipContainer: FC<ITooltipContainerProps> = props => {
+  const { children, render = children, ...options } = props;
 
-export interface ITooltipContainerProps extends IUseTooltipProps {
-  /** A render prop function which receives tooltip state and prop getters */
-  render?: (options: IUseTooltipReturnValue) => React.ReactNode;
-  /** A children render prop function which receives tooltip state and prop getters */
-  children?: (options: IUseTooltipReturnValue) => React.ReactNode;
-}
-
-export const TooltipContainer: React.FunctionComponent<ITooltipContainerProps> = ({
-  children,
-  render = children,
-  ...options
-}) => {
-  return <>{render!(useTooltip(options)) as React.ReactElement}</>;
+  return <>{render!(useTooltip(options))}</>;
 };
 
 TooltipContainer.defaultProps = {
@@ -33,5 +24,7 @@ TooltipContainer.propTypes = {
   children: PropTypes.func,
   render: PropTypes.func,
   delayMilliseconds: PropTypes.number,
-  isVisible: PropTypes.bool
+  id: PropTypes.string,
+  isVisible: PropTypes.bool,
+  triggerRef: PropTypes.any.isRequired
 };

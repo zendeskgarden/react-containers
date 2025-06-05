@@ -5,13 +5,16 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React from 'react';
+import React, { useRef } from 'react';
 import { StoryFn } from '@storybook/react';
 import classNames from 'classnames';
 import { useTooltip } from '@zendeskgarden/container-tooltip';
 
 export const FocusStory: StoryFn = () => {
-  const { getTooltipProps, getTriggerProps, isVisible, openTooltip, closeTooltip } = useTooltip();
+  const triggerRef = useRef<HTMLDivElement>(null);
+  const { getTooltipProps, getTriggerProps, isVisible, openTooltip, closeTooltip } = useTooltip({
+    triggerRef
+  });
   const onFocus = () => openTooltip();
   const onBlur = () => closeTooltip(0);
 
