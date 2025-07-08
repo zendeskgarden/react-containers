@@ -66,6 +66,14 @@ export const useCombobox = <
     altKey?: boolean;
   }
 
+  interface ICacheState {
+    values: OptionValue[];
+    labels: Record<string, string>;
+    selectedValues: OptionValue[];
+    disabledValues: OptionValue[];
+    hiddenValues: OptionValue[];
+  }
+
   const [triggerContainsInput, setTriggerContainsInput] = useState<boolean>();
   const [downshiftInputValue, setDownshiftInputValue] = useState(inputValue);
   const [matchValue, setMatchValue] = useState('');
@@ -83,42 +91,44 @@ export const useCombobox = <
     getOptionId: (index: number, isDisabled?: boolean, isHidden?: boolean) =>
       `${prefix}--option${isDisabled ? '-disabled' : ''}${isHidden ? '-hidden' : ''}-${index}`
   });
-  const labels: Record<string, string> = useMemo(() => ({}), []);
-  const selectedValues: OptionValue[] = useMemo(() => [], []);
-  const disabledValues: OptionValue[] = useMemo(() => [], []);
-  const hiddenValues: OptionValue[] = useMemo(() => [], []);
-  const values = useMemo(() => {
-    const retVal: OptionValue[] = [];
+  const cache = useMemo(() => {
+    const retVal: ICacheState = {
+      values: [],
+      labels: {},
+      selectedValues: [],
+      disabledValues: [],
+      hiddenValues: []
+    };
     const setValues = (option: IOption) => {
       if (option.disabled || option.hidden) {
-        if (option.disabled && !disabledValues.includes(option.value)) {
-          disabledValues.push(option.value);
+        if (option.disabled && !retVal.disabledValues.includes(option.value)) {
+          retVal.disabledValues.push(option.value);
         }
 
-        if (option.hidden && !hiddenValues.includes(option.value)) {
-          hiddenValues.push(option.value);
+        if (option.hidden && !retVal.hiddenValues.includes(option.value)) {
+          retVal.hiddenValues.push(option.value);
         }
       } else {
-        retVal.push(option.value);
+        retVal.values.push(option.value);
 
-        const disabledIndex = disabledValues.indexOf(option.value);
+        const disabledIndex = retVal.disabledValues.indexOf(option.value);
 
         if (disabledIndex !== -1) {
-          disabledValues.splice(disabledIndex, 1);
+          retVal.disabledValues.splice(disabledIndex, 1);
         }
 
-        const hiddenIndex = hiddenValues.indexOf(option.value);
+        const hiddenIndex = retVal.hiddenValues.indexOf(option.value);
 
         if (hiddenIndex !== -1) {
-          hiddenValues.splice(hiddenIndex, 1);
+          retVal.hiddenValues.splice(hiddenIndex, 1);
         }
       }
 
-      if (option.selected && !selectedValues.includes(option.value)) {
-        selectedValues.push(option.value);
+      if (option.selected && !retVal.selectedValues.includes(option.value)) {
+        retVal.selectedValues.push(option.value);
       }
 
-      labels[option.value] = option.label || option.value;
+      retVal.labels[option.value] = option.label || option.value;
     };
 
     options.forEach(option => {
@@ -130,11 +140,11 @@ export const useCombobox = <
     });
 
     return retVal;
-  }, [options, disabledValues, hiddenValues, selectedValues, labels]);
-  const initialSelectionValue = isMultiselectable ? selectedValues : selectedValues[0];
+  }, [options]);
+  const initialSelectionValue = isMultiselectable ? cache.selectedValues : cache.selectedValues[0];
   const initialInputValue = isMultiselectable
     ? ''
-    : toLabel(labels, initialSelectionValue as string);
+    : toLabel(cache.labels, initialSelectionValue as string);
   const _defaultActiveIndex = useMemo(() => {
     if (defaultActiveIndex === undefined) {
       return isAutocomplete && isEditable ? 0 : undefined;
@@ -155,7 +165,7 @@ export const useCombobox = <
    */
 
   if (selectionValue === undefined || selectionValue === null) {
-    if (!isMultiselectable && selectedValues.length > 1) {
+    if (!isMultiselectable && cache.selectedValues.length > 1) {
       throw new Error('Error: expected useCombobox `options` to have no more than one selected.');
     }
   }
@@ -240,7 +250,7 @@ export const useCombobox = <
             // Fix Downshift standard last option activation on listbox
             // expansion. Addresses problems with initial multiselectable and
             // overeager `defaultActiveIndex` comboboxes.
-            changes.highlightedIndex = values.length - 1;
+            changes.highlightedIndex = cache.values.length - 1;
           }
 
           break;
@@ -297,7 +307,7 @@ export const useCombobox = <
       return changes;
     };
 
-  const transformValue = (value: OptionValue | null) => (value ? toLabel(labels, value) : '');
+  const transformValue = (value: OptionValue | null) => (value ? toLabel(cache.labels, value) : '');
 
   /** Hooks */
 
@@ -318,7 +328,7 @@ export const useCombobox = <
     toggleButtonId: idRef.current.trigger,
     menuId: idRef.current.listbox,
     getItemId: idRef.current.getOptionId,
-    items: values,
+    items: cache.values,
     inputValue: downshiftInputValue,
     initialInputValue,
     itemToString: transformValue as any /* HACK around Downshift's generic type overuse */,
@@ -394,7 +404,7 @@ export const useCombobox = <
               _selectionValue.length - 1 // multiselectable most recent
             ]
           : _selectionValue;
-        const index = values.findIndex(current => current === value);
+        const index = cache.values.findIndex(current => current === value);
 
         if (index !== -1) {
           setActiveIndex(index);
@@ -410,7 +420,7 @@ export const useCombobox = <
       _isExpanded,
       _selectionValue,
       _inputValue,
-      values,
+      cache.values,
       _defaultActiveIndex,
       setActiveIndex
     ]
@@ -522,7 +532,7 @@ export const useCombobox = <
             event.preventDefault();
 
             if (_activeIndex !== -1) {
-              setDownshiftSelection(values[_activeIndex]);
+              setDownshiftSelection(cache.values[_activeIndex]);
             }
 
             if (!isMultiselectable) {
@@ -551,15 +561,17 @@ export const useCombobox = <
                 : _selectionValue;
 
               if (offsetValue !== null) {
-                offset = values.findIndex(current => current === offsetValue);
+                offset = cache.values.findIndex(current => current === offsetValue);
               }
             }
 
-            for (let index = 0; index < values.length; index++) {
-              const valueIndex = (index + offset) % values.length;
-              const value = values[valueIndex];
+            for (let index = 0; index < cache.values.length; index++) {
+              const valueIndex = (index + offset) % cache.values.length;
+              const value = cache.values[valueIndex];
 
-              if (toLabel(labels, value).toLowerCase().startsWith(_matchValue.toLowerCase())) {
+              if (
+                toLabel(cache.labels, value).toLowerCase().startsWith(_matchValue.toLowerCase())
+              ) {
                 setActiveIndex(valueIndex);
                 break;
               }
@@ -596,8 +608,8 @@ export const useCombobox = <
       setActiveIndex,
       setDownshiftSelection,
       matchValue,
-      values,
-      labels,
+      cache.values,
+      cache.labels,
       triggerContainsInput,
       isAutocomplete,
       isEditable,
@@ -840,7 +852,7 @@ export const useCombobox = <
           'aria-selected': ariaSelected,
           id: option
             ? idRef.current.getOptionId(
-                hiddenValues.indexOf(option.value),
+                cache.hiddenValues.indexOf(option.value),
                 option.disabled,
                 option.hidden
               )
@@ -858,7 +870,7 @@ export const useCombobox = <
           'aria-selected': ariaSelected,
           id: option
             ? idRef.current.getOptionId(
-                disabledValues.indexOf(option.value),
+                cache.disabledValues.indexOf(option.value),
                 option.disabled,
                 option.hidden
               )
@@ -870,14 +882,20 @@ export const useCombobox = <
 
       return getDownshiftOptionProps<any>({
         item: option.value,
-        index: values.indexOf(option.value),
+        index: cache.values.indexOf(option.value),
         'aria-disabled': undefined,
         'aria-hidden': undefined,
         'aria-selected': ariaSelected,
         ...optionProps
       } as IDownshiftOptionProps<OptionValue>);
     },
-    [getDownshiftOptionProps, disabledValues, hiddenValues, values, _selectionValue]
+    [
+      getDownshiftOptionProps,
+      cache.disabledValues,
+      cache.hiddenValues,
+      cache.values,
+      _selectionValue
+    ]
   );
 
   const getMessageProps = useCallback<IUseComboboxReturnValue['getMessageProps']>(
@@ -914,21 +932,21 @@ export const useCombobox = <
     if (Array.isArray(_selectionValue)) {
       return _selectionValue.map(value => ({
         value,
-        label: labels[value],
-        disabled: disabledValues.includes(value),
-        hidden: hiddenValues.includes(value)
+        label: cache.labels[value],
+        disabled: cache.disabledValues.includes(value),
+        hidden: cache.hiddenValues.includes(value)
       }));
     } else if (_selectionValue) {
       return {
         value: _selectionValue,
-        label: toLabel(labels, _selectionValue),
-        disabled: disabledValues.includes(_selectionValue),
-        hidden: hiddenValues.includes(_selectionValue)
+        label: toLabel(cache.labels, _selectionValue),
+        disabled: cache.disabledValues.includes(_selectionValue),
+        hidden: cache.hiddenValues.includes(_selectionValue)
       };
     }
 
     return null;
-  }, [_selectionValue, disabledValues, hiddenValues, labels]);
+  }, [_selectionValue, cache.disabledValues, cache.hiddenValues, cache.labels]);
 
   return useMemo<IUseComboboxReturnValue>(
     () => ({
@@ -945,13 +963,13 @@ export const useCombobox = <
       /* state */
       selection,
       isExpanded: _isExpanded,
-      activeValue: values[_activeIndex],
+      activeValue: cache.values[_activeIndex],
       inputValue: _inputValue,
       /* actions */
       removeSelection
     }),
     [
-      values,
+      cache.values,
       selection,
       _isExpanded,
       _activeIndex,
