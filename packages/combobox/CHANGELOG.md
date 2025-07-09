@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.5](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-combobox@2.0.4...@zendeskgarden/container-combobox@2.0.5) (2025-07-09)
+
+### Bug Fixes
+
+- **combobox:** cache management for option values and labels ([#698](https://github.com/zendeskgarden/react-containers/issues/698)) ([d595d7e](https://github.com/zendeskgarden/react-containers/commit/d595d7e7b3c956075687ca6dac9264eb3f1915f1))
+
 ## [2.0.4](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-combobox@2.0.3...@zendeskgarden/container-combobox@2.0.4) (2024-09-25)
 
 **Note:** Version bump only for package @zendeskgarden/container-combobox
