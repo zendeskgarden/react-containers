@@ -409,8 +409,8 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
     (event: React.FocusEvent) => {
       const win = environment || window;
 
-      setTimeout(() => {
-        // Timeout is required to ensure blur is handled after focus
+      // Timeout is required to ensure blur is handled after focus
+      const timeoutId = setTimeout(() => {
         const activeElement = win.document.activeElement;
         const isMenuOrTriggerFocused =
           menuRef.current?.contains(activeElement) || triggerRef.current?.contains(activeElement);
@@ -427,6 +427,10 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
 
           closeMenu(StateChangeTypes.MenuBlur);
         }
+
+        return () => {
+          clearTimeout(timeoutId);
+        };
       });
     },
     [closeMenu, controlledIsExpanded, environment, menuRef, returnFocusToTrigger, triggerRef]
@@ -598,16 +602,16 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
       }
     },
     [
+      environment,
+      getNextFocusedValue,
       getSelectedItems,
       isExpandedControlled,
-      isSelectedItemsControlled,
-      returnFocusToTrigger,
-      environment,
-      rtl,
-      getNextFocusedValue,
       isFocusedValueControlled,
-      state.nestedPathIds,
-      onChange
+      isSelectedItemsControlled,
+      onChange,
+      returnFocusToTrigger,
+      rtl,
+      state.nestedPathIds
     ]
   );
 
@@ -674,7 +678,11 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
         ref = itemRefs[values[0]].current;
       }
 
-      ref && ref.focus();
+      if (ref) {
+        ref.focus();
+
+        dispatch({ type: StateChangeTypes.FnInternalUpdate, payload: { focusOnOpen: false } });
+      }
     }
   }, [
     values,
@@ -682,8 +690,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
     itemRefs,
     controlledFocusedValue,
     state.focusOnOpen,
-    controlledIsExpanded,
-    triggerRef
+    controlledIsExpanded
   ]);
 
   /**
@@ -694,7 +701,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
 
     if (valuesChanged && !state.isTransitionNext && !state.isTransitionPrevious) {
       dispatch({
-        type: StateChangeTypes.FnSetStateRefs,
+        type: StateChangeTypes.FnInternalUpdate,
         payload: { valuesRef: values }
       });
     }
