@@ -26,7 +26,7 @@ export const triggerLink = (element: HTMLAnchorElement, view: Window) => {
 };
 
 export const StateChangeTypes: Record<string, string> = {
-  FnSetStateRefs: 'fn:setStateRefs',
+  FnInternalUpdate: 'fn:internalUpdate',
   FnMenuTransitionFinish: 'fn:menuTransitionFinish',
   TriggerClick: 'trigger:click',
   TriggerKeyDownEnter: `trigger:keyDown:${KEYS.ENTER}`,
@@ -98,12 +98,6 @@ type ReducerAction = {
 export const stateReducer: Reducer<ReducerState, ReducerAction> = (state, action) => {
   let changes: ReducerState | null = null;
 
-  // Reset `focusOnOpen` if it was previously set to true; this prevents
-  // forced focus on the initial item in future state updates.
-  if (state.focusOnOpen) {
-    changes = { ...state, focusOnOpen: false };
-  }
-
   switch (action.type) {
     case StateChangeTypes.MenuBlur:
     case StateChangeTypes.MenuKeyDownEscape:
@@ -118,7 +112,7 @@ export const stateReducer: Reducer<ReducerState, ReducerAction> = (state, action
 
       if (stateChanges) {
         changes = {
-          ...(changes || state),
+          ...state,
           ...stateChanges
         };
       }
@@ -150,7 +144,7 @@ export const stateReducer: Reducer<ReducerState, ReducerAction> = (state, action
 
       if (stateChanges) {
         changes = {
-          ...(changes || state),
+          ...state,
           ...stateChanges
         };
       }
@@ -183,7 +177,7 @@ export const stateReducer: Reducer<ReducerState, ReducerAction> = (state, action
 
       if (stateChanges) {
         changes = {
-          ...(changes || state),
+          ...state,
           ...stateChanges
         };
       }
@@ -197,7 +191,7 @@ export const stateReducer: Reducer<ReducerState, ReducerAction> = (state, action
 
       if (stateChanges) {
         changes = {
-          ...(changes || state),
+          ...state,
           ...stateChanges,
           transitionType: null,
           isTransitionNext: false,
@@ -208,10 +202,10 @@ export const stateReducer: Reducer<ReducerState, ReducerAction> = (state, action
       break;
     }
 
-    case StateChangeTypes.FnSetStateRefs: {
+    case StateChangeTypes.FnInternalUpdate: {
       const { ...props } = action.payload;
 
-      changes = { ...(changes || state), ...props };
+      changes = { ...state, ...props };
 
       break;
     }

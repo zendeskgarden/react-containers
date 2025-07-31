@@ -149,7 +149,7 @@ describe('MenuContainer', () => {
     return (
       <MenuContainer
         {...props}
-        items={items}
+        items={[...items]} // create a new reference on each render to simulate cases similar to Garden Menu
         onChange={handleChange}
         triggerRef={triggerRef}
         menuRef={menuRef}
@@ -910,6 +910,29 @@ describe('MenuContainer', () => {
         });
 
         expect(getByText('Previous')).toHaveFocus();
+      });
+
+      it('closes menu and returns focus to trigger when clicking on document.body after navigating to nested menu', async () => {
+        const { getByText, getByTestId } = render(<TestMenuNested />);
+        const trigger = getByTestId('trigger');
+        const menu = getByTestId('menu');
+
+        trigger.focus();
+
+        await waitFor(async () => {
+          await user.keyboard('{ArrowDown}');
+          await user.keyboard('{Enter}');
+        });
+
+        expect(getByText('Previous')).toHaveFocus();
+        expect(menu).toBeVisible();
+
+        await waitFor(async () => {
+          await user.click(document.body);
+        });
+
+        expect(trigger).toHaveFocus();
+        expect(menu).not.toBeVisible();
       });
     });
   });
