@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.1](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-menu@1.0.0...@zendeskgarden/container-menu@1.0.1) (2025-07-31)
+
+### Bug Fixes
+
+- **container-menu:** ensure outside clicks always close dropdown menu ([#699](https://github.com/zendeskgarden/react-containers/issues/699)) ([2253f70](https://github.com/zendeskgarden/react-containers/commit/2253f70dff9115ef41e8d58d256c4aabefadb2c0))
+
 ## [1.0.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-menu@0.5.1...@zendeskgarden/container-menu@1.0.0) (2025-05-13)
 
 - **container-menu:** introduces `getAnchorProps` in `useMenu` to handle anchor-specific attributes more cleanly. This update separates anchor logic from `getItemProps` for better modularity. ([#695](https://github.com/zendeskgarden/react-containers/issues/695)) ([15d4e5c](https://github.com/zendeskgarden/react-containers/commit/15d4e5cd08be7ab09621db4109190a139b42dcab))
