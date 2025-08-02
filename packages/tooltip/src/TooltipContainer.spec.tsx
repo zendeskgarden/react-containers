@@ -5,10 +5,9 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React, { createRef, HTMLAttributes } from 'react';
+import React, { act, createRef, HTMLAttributes } from 'react';
 import userEvent from '@testing-library/user-event';
 import { render, fireEvent, waitFor } from '@testing-library/react';
-import { act } from 'react-dom/test-utils';
 import { KEYS } from '@zendeskgarden/container-utilities';
 import { TooltipContainer, ITooltipContainerProps } from './';
 
@@ -194,6 +193,76 @@ describe('TooltipContainer', () => {
         expect(getByRole('tooltip')).toHaveAttribute('aria-hidden', 'false');
       });
     });
+
+    describe('tooltip suppression with expanded popup', () => {
+      it('should not show tooltip on focus when trigger has expanded popup', async () => {
+        const { getByText } = render(
+          <BasicExample triggerProps={{ 'aria-haspopup': true, 'aria-expanded': true }} />
+        );
+
+        await user.tab();
+        act(() => {
+          jest.runOnlyPendingTimers();
+        });
+
+        expect(getByText('tooltip')).toHaveAttribute('aria-hidden', 'true');
+      });
+
+      it('should not show tooltip on mouse enter when trigger has expanded popup', async () => {
+        const { getByText } = render(
+          <BasicExample triggerProps={{ 'aria-haspopup': true, 'aria-expanded': true }} />
+        );
+
+        await user.hover(getByText('trigger'));
+        act(() => {
+          jest.runOnlyPendingTimers();
+        });
+
+        expect(getByText('tooltip')).toHaveAttribute('aria-hidden', 'true');
+      });
+
+      it('should allow tooltip to show when popup collapses', async () => {
+        const { getByText, getByRole, rerender } = render(
+          <BasicExample triggerProps={{ 'aria-haspopup': true, 'aria-expanded': true }} />
+        );
+        const trigger = getByText('trigger');
+
+        // Initially try to show tooltip with expanded popup - should be suppressed
+        await user.hover(trigger);
+        act(() => {
+          jest.runOnlyPendingTimers();
+        });
+
+        expect(getByText('tooltip')).toHaveAttribute('aria-hidden', 'true');
+
+        // Collapse popup
+        rerender(<BasicExample triggerProps={{ 'aria-haspopup': true, 'aria-expanded': false }} />);
+
+        // Now try to show tooltip again
+        await user.unhover(trigger);
+        await user.hover(trigger);
+        act(() => {
+          jest.runOnlyPendingTimers();
+        });
+
+        expect(getByRole('tooltip')).toHaveAttribute('aria-hidden', 'false');
+      });
+
+      it('should handle trigger without aria-haspopup normally', async () => {
+        const { getByText, getByRole } = render(
+          <BasicExample triggerProps={{ 'aria-expanded': true }} />
+        );
+        const trigger = getByText('trigger');
+
+        await user.hover(trigger);
+        act(() => {
+          jest.runOnlyPendingTimers();
+        });
+
+        // Should show tooltip normally since aria-haspopup is not true
+        expect(getByRole('tooltip')).toHaveAttribute('aria-hidden', 'false');
+      });
+    });
   });
 
   describe('getTooltipProps', () => {
@@ -239,24 +308,6 @@ describe('TooltipContainer', () => {
       act(() => {
         jest.runOnlyPendingTimers();
       });
-
-      expect(getByText('tooltip')).toHaveAttribute('aria-hidden', 'true');
-    });
-
-    it('should close tooltip if the trigger has an expanded popup', async () => {
-      const { getByRole, getByText, rerender } = render(<BasicExample />);
-      const trigger = getByText('trigger');
-
-      await user.hover(trigger);
-
-      act(() => {
-        jest.runOnlyPendingTimers();
-      });
-
-      expect(getByRole('tooltip')).toHaveAttribute('aria-hidden', 'false');
-
-      // Simulate triggering a popup
-      rerender(<BasicExample triggerProps={{ 'aria-haspopup': true, 'aria-expanded': true }} />);
 
       expect(getByText('tooltip')).toHaveAttribute('aria-hidden', 'true');
     });
