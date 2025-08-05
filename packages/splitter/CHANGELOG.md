@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.21](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-splitter@2.0.20...@zendeskgarden/container-splitter@2.0.21) (2025-08-05)
+
+**Note:** Version bump only for package @zendeskgarden/container-splitter
+
 ## [2.0.20](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-splitter@2.0.19...@zendeskgarden/container-splitter@2.0.20) (2024-09-25)
 
 **Note:** Version bump only for package @zendeskgarden/container-splitter

@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.1.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-tooltip@2.0.1...@zendeskgarden/container-tooltip@2.1.0) (2025-08-05)
+
+### Features
+
+- **container-tooltip:** suppress tooltip when trigger has aria-expanded=“true” ([#700](https://github.com/zendeskgarden/react-containers/issues/700)) ([ef03b49](https://github.com/zendeskgarden/react-containers/commit/ef03b491a23c8590006abd4773d2acd31799a45f))
+
 ## [2.0.1](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-tooltip@2.0.0...@zendeskgarden/container-tooltip@2.0.1) (2025-07-31)
 
 **Note:** Version bump only for package @zendeskgarden/container-tooltip

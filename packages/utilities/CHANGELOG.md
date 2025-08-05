@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.3](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-utilities@2.0.2...@zendeskgarden/container-utilities@2.0.3) (2025-08-05)
+
+### Bug Fixes
+
+- **container-utilities:** coerce useId return value to string ([#701](https://github.com/zendeskgarden/react-containers/issues/701)) ([98a15f5](https://github.com/zendeskgarden/react-containers/commit/98a15f54d8aac6df842dc0e56e32f2bf0cd40fe4))
+
 ## [2.0.2](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-utilities@2.0.1...@zendeskgarden/container-utilities@2.0.2) (2024-09-25)
 
 **Note:** Version bump only for package @zendeskgarden/container-utilities
