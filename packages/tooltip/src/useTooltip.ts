@@ -17,17 +17,32 @@ export const useTooltip = <T extends HTMLElement = HTMLElement>({
 }: IUseTooltipProps<T>): IUseTooltipReturnValue => {
   const _id = useId(id);
   const [visibility, setVisibility] = useState(isVisible);
-  const [isTriggerPopupExpanded, setIsTriggerPopupExpanded] = useState(false);
   const isMounted = useRef(false);
   const openTooltipTimeoutId = useRef<number>();
   const closeTooltipTimeoutId = useRef<number>();
+  const isTriggerPopupExpanded = useRef(false);
 
+  /**
+   * 1. Prevent scheduling a tooltip open if a popup is already expanded.
+   *    This avoids creating unnecessary timeouts when we know the tooltip shouldn't show.
+   * 2. Popup state may have changed during the delay period, so we need to check again
+   *    because the popup could have expanded after the timeout was set.
+   *
+   * Notes: This implementation suppresses tooltips immediately after collapsing,
+   * when focus returns to the trigger. It relies on the fact that the trigger’s onFocus event
+   * (which calls openTooltip) fires before the MutationObserver detects changes to aria-expanded.
+   */
   const openTooltip = useCallback(
     (delayMs = delayMilliseconds) => {
+      if (isTriggerPopupExpanded.current) return; // [1]
+
       clearTimeout(closeTooltipTimeoutId.current);
 
       const timerId = setTimeout(() => {
-        if (isMounted.current) {
+        if (
+          isMounted.current &&
+          !isTriggerPopupExpanded.current // [2]
+        ) {
           setVisibility(true);
         }
       }, delayMs);
@@ -80,13 +95,17 @@ export const useTooltip = <T extends HTMLElement = HTMLElement>({
     const triggerElement =
       triggerRef?.current?.getAttribute('aria-haspopup') === 'true' ? triggerRef.current : null;
 
-    const updateTriggerPopupExpandedState = () => {
-      if (triggerElement) {
-        setIsTriggerPopupExpanded(triggerElement.getAttribute('aria-expanded') === 'true');
+    const handleTriggerPopupChange = () => {
+      const isExpanded = triggerElement?.getAttribute('aria-expanded') === 'true';
+
+      if (triggerElement && isExpanded) {
+        setVisibility(false); // suppress existing tooltip
       }
+
+      isTriggerPopupExpanded.current = isExpanded;
     };
 
-    const mutationObserver = new MutationObserver(updateTriggerPopupExpandedState);
+    const mutationObserver = new MutationObserver(handleTriggerPopupChange);
 
     if (triggerElement) {
       mutationObserver.observe(triggerElement, {
@@ -95,7 +114,7 @@ export const useTooltip = <T extends HTMLElement = HTMLElement>({
       });
     }
 
-    updateTriggerPopupExpandedState(); // initial render
+    handleTriggerPopupChange(); // initial render
 
     return () => mutationObserver.disconnect();
   }, [triggerRef]);
@@ -131,28 +150,21 @@ export const useTooltip = <T extends HTMLElement = HTMLElement>({
       role,
       onMouseEnter: composeEventHandlers(onMouseEnter, () => openTooltip()),
       onMouseLeave: composeEventHandlers(onMouseLeave, () => closeTooltip()),
-      'aria-hidden': !visibility || isTriggerPopupExpanded,
+      'aria-hidden': !visibility,
       id: _id,
       ...other
     }),
-    [_id, closeTooltip, openTooltip, visibility, isTriggerPopupExpanded]
+    [_id, closeTooltip, openTooltip, visibility]
   );
 
   return useMemo<IUseTooltipReturnValue>(
     () => ({
-      isVisible: visibility && !isTriggerPopupExpanded,
+      isVisible: visibility,
       getTooltipProps,
       getTriggerProps,
       openTooltip,
       closeTooltip
     }),
-    [
-      closeTooltip,
-      getTooltipProps,
-      getTriggerProps,
-      openTooltip,
-      visibility,
-      isTriggerPopupExpanded
-    ]
+    [closeTooltip, getTooltipProps, getTriggerProps, openTooltip, visibility]
   );
 };
