@@ -1,6 +1,6 @@
 {
   "name": "@zendeskgarden/container-tooltip",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Containers relating to tooltip in the Garden Design System",
   "license": "Apache-2.0",
   "author": "Zendesk Garden <garden@zendesk.com>",
@@ -29,7 +29,7 @@
     "react-dom": "^16.8.0 || ^17.0.0 || ^18.0.0"
   },
   "devDependencies": {
-    "@zendeskgarden/container-menu": "^1.0.2"
+    "@zendeskgarden/container-menu": "^1.0.3"
   },
   "keywords": [
     "a11y",

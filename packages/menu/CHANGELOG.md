@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.3](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-menu@1.0.2...@zendeskgarden/container-menu@1.0.3) (2025-10-20)
+
+### Bug Fixes
+
+- **menu:** prevent click propagation to container components ([#703](https://github.com/zendeskgarden/react-containers/issues/703)) ([cb83d4f](https://github.com/zendeskgarden/react-containers/commit/cb83d4f1674a10f946586edda1fbcc3fef32a0b9))
+
 ## [1.0.2](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-menu@1.0.1...@zendeskgarden/container-menu@1.0.2) (2025-08-05)
 
 **Note:** Version bump only for package @zendeskgarden/container-menu
