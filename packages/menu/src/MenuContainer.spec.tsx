@@ -251,6 +251,23 @@ describe('MenuContainer', () => {
       expect(menu).not.toBeVisible();
     });
 
+    it('prevents menu click propagation', async () => {
+      const handleClick = jest.fn();
+      const { getByTestId } = render(
+        // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
+        <div onClick={handleClick}>
+          <TestMenu items={ITEMS} />
+        </div>
+      );
+      const menu = getByTestId('menu');
+
+      await act(async () => {
+        await user.click(menu);
+      });
+
+      expect(handleClick).not.toHaveBeenCalled();
+    });
+
     it('closes the menu on blur due to a body click, returns focus to the trigger the first time, and focuses the body on following clicks.', async () => {
       const { getByTestId } = render(<TestMenu items={ITEMS} />);
       const trigger = getByTestId('trigger');

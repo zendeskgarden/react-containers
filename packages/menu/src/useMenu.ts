@@ -365,6 +365,11 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
     ]
   );
 
+  const handleMenuClick = useCallback((event: React.MouseEvent) => {
+    // Prevent propagation to container; for example, accordion header expand/collapse
+    event.stopPropagation();
+  }, []);
+
   const handleMenuKeyDown = useCallback(
     (event: KeyboardEvent) => {
       const { key } = event;
@@ -776,7 +781,7 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
   );
 
   const getMenuProps = useCallback<IUseMenuReturnValue['getMenuProps']>(
-    ({ role = 'menu', onBlur, onMouseLeave, ...other } = {}) => ({
+    ({ role = 'menu', onBlur, onClick, onMouseLeave, ...other } = {}) => ({
       ...other,
       ...getGroupProps({
         onMouseLeave: composeEventHandlers(onMouseLeave, handleMenuMouseLeave)
@@ -787,9 +792,10 @@ export const useMenu = <T extends HTMLElement = HTMLElement, M extends HTMLEleme
       tabIndex: -1,
       role: role === null ? undefined : role,
       ref: menuRef as any,
-      onBlur: composeEventHandlers(onBlur, handleBlur)
+      onBlur: composeEventHandlers(onBlur, handleBlur),
+      onClick: composeEventHandlers(onClick, handleMenuClick)
     }),
-    [getGroupProps, handleBlur, handleMenuMouseLeave, menuRef, triggerId]
+    [getGroupProps, handleBlur, handleMenuClick, handleMenuMouseLeave, menuRef, triggerId]
   );
 
   const getSeparatorProps = useCallback<IUseMenuReturnValue['getSeparatorProps']>(
