@@ -7,7 +7,7 @@
 
 import React, { createRef } from 'react';
 import userEvent from '@testing-library/user-event';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, waitFor } from '@testing-library/react';
 import { KEYS } from '@zendeskgarden/container-utilities';
 import { ModalContainer, IUseModalReturnValue } from './';
 
@@ -104,6 +104,16 @@ describe('FocusJailContainer', () => {
         fireEvent.keyDown(getByRole('dialog'), { key: KEYS.ENTER });
         expect(onCloseSpy).not.toHaveBeenCalled();
       });
+    });
+
+    it('closes modal on blur', async () => {
+      render(<BasicExample onClose={onCloseSpy} />);
+
+      await waitFor(async () => {
+        await user.click(document.body);
+      });
+
+      expect(onCloseSpy).toHaveBeenCalled();
     });
   });
 

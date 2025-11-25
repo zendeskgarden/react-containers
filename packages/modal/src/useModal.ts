@@ -54,6 +54,7 @@ export const useModal = <T extends Element = Element>({
 
   const getModalProps: IUseModalReturnValue['getModalProps'] = ({
     role = 'dialog',
+    onBlur,
     onKeyDown,
     onMouseDown,
     ...other
@@ -63,6 +64,18 @@ export const useModal = <T extends Element = Element>({
     'aria-modal': true,
     'aria-labelledby': titleId,
     'aria-describedby': contentId,
+    onBlur: composeEventHandlers(onBlur, event => {
+      const doc = environment || document;
+
+      // Timeout is required to ensure blur is handled after focus
+      setTimeout(() => {
+        const activeElement = doc.activeElement;
+
+        if (!modalRef.current?.contains(activeElement)) {
+          closeModal(event);
+        }
+      });
+    }),
     onMouseDown: composeEventHandlers(onMouseDown, () => {
       isModalMousedDownRef.current = true;
     }),
