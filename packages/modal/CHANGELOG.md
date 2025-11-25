@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.21](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-modal@1.0.20...@zendeskgarden/container-modal@1.0.21) (2025-11-25)
+
+### Bug Fixes
+
+- **modal:** close on blur ([#704](https://github.com/zendeskgarden/react-containers/issues/704)) ([4a8506b](https://github.com/zendeskgarden/react-containers/commit/4a8506b8ed301dda0ed66cfb7d4217da36038a98))
+
 ## [1.0.20](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-modal@1.0.19...@zendeskgarden/container-modal@1.0.20) (2025-08-05)
 
 **Note:** Version bump only for package @zendeskgarden/container-modal
