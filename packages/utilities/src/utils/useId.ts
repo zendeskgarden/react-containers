@@ -19,7 +19,7 @@ let idCounter = 0;
 export const useId = (id?: any) => {
   let retVal = useReachId(id);
 
-  if (retVal === undefined) {
+  if (retVal === undefined || retVal === null) {
     retVal = `id:${idCounter++}`;
   } else {
     retVal = `${retVal}`;
