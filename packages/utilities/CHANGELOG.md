@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.4](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-utilities@2.0.3...@zendeskgarden/container-utilities@2.0.4) (2025-12-02)
+
+### Bug Fixes
+
+- **utilities:** prevent `"undefined"` string return value for `useId` with React 17 ([#706](https://github.com/zendeskgarden/react-containers/issues/706)) ([5ca88c3](https://github.com/zendeskgarden/react-containers/commit/5ca88c3dacefd0dfef523b66857ce8169e2cfb82))
+
 ## [2.0.3](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-utilities@2.0.2...@zendeskgarden/container-utilities@2.0.3) (2025-08-05)
 
 ### Bug Fixes
