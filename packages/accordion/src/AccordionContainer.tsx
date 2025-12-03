@@ -17,11 +17,6 @@ export const AccordionContainer: React.FunctionComponent<IAccordionContainerProp
   return <>{render!(useAccordion(options)) as React.ReactElement}</>;
 };
 
-AccordionContainer.defaultProps = {
-  expandable: true,
-  collapsible: true
-};
-
 AccordionContainer.propTypes = {
   children: PropTypes.func,
   render: PropTypes.func,

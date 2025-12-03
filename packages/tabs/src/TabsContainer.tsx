@@ -16,10 +16,6 @@ export const TabsContainer: React.FC<ITabsContainerProps<any>> = ({
   ...options
 }) => <>{render!(useTabs(options))}</>;
 
-TabsContainer.defaultProps = {
-  orientation: 'horizontal'
-};
-
 TabsContainer.propTypes = {
   children: PropTypes.func,
   render: PropTypes.func,
