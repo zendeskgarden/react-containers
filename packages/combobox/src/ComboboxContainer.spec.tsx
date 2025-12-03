@@ -12,11 +12,10 @@ import userEvent from '@testing-library/user-event';
 import { ComboboxContainer, useCombobox } from './';
 import { IUseComboboxProps, IUseComboboxReturnValue } from './types';
 
-interface ITestComboboxProps
-  extends Omit<
-    IUseComboboxProps<HTMLElement, HTMLUListElement>,
-    'triggerRef' | 'inputRef' | 'listboxRef'
-  > {
+interface ITestComboboxProps extends Omit<
+  IUseComboboxProps<HTMLElement, HTMLUListElement>,
+  'triggerRef' | 'inputRef' | 'listboxRef'
+> {
   layout: 'Garden' | 'Downshift';
   labelTestId?: string;
   hintTestId?: string;

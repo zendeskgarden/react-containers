@@ -8,6 +8,8 @@
 import { getControlledValue } from './getControlledValue';
 
 describe('getControlledValue', () => {
+  /* eslint-disable no-unassigned-vars */
+
   it('returns first truthy value', () => {
     let foo;
     const val = 'foo';

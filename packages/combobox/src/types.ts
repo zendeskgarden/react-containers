@@ -129,8 +129,10 @@ export interface IUseComboboxReturnValue {
   removeSelection: (value?: ISelectedOption | OptionValue) => void;
 }
 
-export interface IComboboxContainerProps<T = HTMLElement, L = HTMLElement>
-  extends IUseComboboxProps<T, L> {
+export interface IComboboxContainerProps<
+  T = HTMLElement,
+  L = HTMLElement
+> extends IUseComboboxProps<T, L> {
   /**
    * Provides combobox render prop functions, state, and actions
    *

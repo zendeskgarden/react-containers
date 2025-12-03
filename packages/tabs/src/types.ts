@@ -13,8 +13,10 @@ export interface ITab<Value> {
   disabled?: boolean;
 }
 
-export interface IUseTabsProps<Value>
-  extends Omit<IUseSelectionProps<Value>, 'direction' | 'values'> {
+export interface IUseTabsProps<Value> extends Omit<
+  IUseSelectionProps<Value>,
+  'direction' | 'values'
+> {
   /**
    * Provides an ordered list of unique tab values
    *
@@ -28,8 +30,10 @@ export interface IUseTabsProps<Value>
   idPrefix?: string;
 }
 
-export interface IUseTabsReturnValue<Value>
-  extends Pick<IUseSelectionReturnValue<Value>, 'focusedValue' | 'selectedValue'> {
+export interface IUseTabsReturnValue<Value> extends Pick<
+  IUseSelectionReturnValue<Value>,
+  'focusedValue' | 'selectedValue'
+> {
   getTabListProps: <T extends Element>(
     props?: Omit<HTMLProps<T>, 'role'> & {
       role?: 'tablist' | null;

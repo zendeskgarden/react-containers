@@ -31,6 +31,7 @@ describe('useGrid', () => {
             {matrix.map((row, rowIndex: number) => (
               <tr key={row[0] as string}>
                 {row.map((rowItem, colIndex: number) => (
+                  // eslint-disable-next-line jsx-a11y/prefer-tag-over-role, jsx-a11y/no-interactive-element-to-noninteractive-role
                   <td role="presentation" key={rowItem as string}>
                     <button
                       {...getGridCellProps({
