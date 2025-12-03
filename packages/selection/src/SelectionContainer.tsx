@@ -16,10 +16,6 @@ export const SelectionContainer: React.FC<ISelectionContainerProps<any>> = ({
   ...options
 }) => <>{render!(useSelection(options))}</>;
 
-SelectionContainer.defaultProps = {
-  direction: 'horizontal'
-};
-
 SelectionContainer.propTypes = {
   children: PropTypes.func,
   render: PropTypes.func,

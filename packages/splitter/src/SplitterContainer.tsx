@@ -7,7 +7,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useSplitter, KEYBOARD_STEP } from './useSplitter';
+import { useSplitter } from './useSplitter';
 import { ISplitterContainerProps } from './types';
 
 export const SplitterContainer: React.FC<ISplitterContainerProps> = ({
@@ -32,9 +32,4 @@ SplitterContainer.propTypes = {
   separatorRef: PropTypes.any.isRequired,
   isLeading: PropTypes.bool,
   rtl: PropTypes.bool
-};
-
-SplitterContainer.defaultProps = {
-  keyboardStep: KEYBOARD_STEP,
-  orientation: 'vertical'
 };
