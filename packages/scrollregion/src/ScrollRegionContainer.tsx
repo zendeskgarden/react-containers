@@ -9,8 +9,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useScrollRegion, IUseScrollRegionProps } from './useScrollRegion';
 
-export interface IScrollRegionContainerProps<RefType = HTMLElement>
-  extends IUseScrollRegionProps<RefType> {
+export interface IScrollRegionContainerProps<
+  RefType = HTMLElement
+> extends IUseScrollRegionProps<RefType> {
   /** A render prop function which receives the tab index */
   render?: (tabIndex: number | undefined) => React.ReactNode;
   /** A children render prop function which receives the tab index */
