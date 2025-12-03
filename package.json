@@ -61,7 +61,7 @@
     "@types/react": "18.3.27",
     "@types/react-dom": "18.3.7",
     "@types/styled-components": "5.1.36",
-    "@zendeskgarden/eslint-config": "44.0.1",
+    "@zendeskgarden/eslint-config": "47.0.0",
     "@zendeskgarden/react-theming": "9.12.2",
     "@zendeskgarden/scripts": "2.5.0",
     "@zendeskgarden/tailwindcss": "4.0.2",
