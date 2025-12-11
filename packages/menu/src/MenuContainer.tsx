@@ -32,7 +32,3 @@ MenuContainer.propTypes = {
   defaultFocusedValue: PropTypes.oneOfType([PropTypes.string]),
   restoreFocus: PropTypes.bool
 };
-
-MenuContainer.defaultProps = {
-  restoreFocus: true
-};
