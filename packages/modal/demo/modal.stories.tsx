@@ -7,6 +7,7 @@
 
 import React, { useRef } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
+import { action } from '@storybook/addon-actions';
 import { useArgs } from '@storybook/preview-api';
 import { ModalContainer } from '@zendeskgarden/container-modal';
 import { ModalStory } from './stories/ModalStory';
@@ -27,8 +28,14 @@ export const Modal: StoryObj<typeof ModalStory> = {
       <ModalStory
         {...args}
         modalRef={modalRef}
-        onClose={() => updateArgs({ isOpen: false })}
-        onOpen={() => updateArgs({ isOpen: true })}
+        onClose={() => {
+          action('onClose')();
+          updateArgs({ isOpen: false });
+        }}
+        onOpen={() => {
+          action('onOpen')();
+          updateArgs({ isOpen: true });
+        }}
       />
     );
   },
