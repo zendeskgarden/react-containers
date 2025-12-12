@@ -26,8 +26,3 @@ ModalContainer.propTypes = {
   restoreFocus: PropTypes.bool,
   environment: PropTypes.any
 };
-
-ModalContainer.defaultProps = {
-  focusOnMount: true,
-  restoreFocus: true
-};

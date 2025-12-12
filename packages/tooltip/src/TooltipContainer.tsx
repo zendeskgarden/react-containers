@@ -16,10 +16,6 @@ export const TooltipContainer: FC<ITooltipContainerProps> = props => {
   return <>{render!(useTooltip(options))}</>;
 };
 
-TooltipContainer.defaultProps = {
-  delayMilliseconds: 500
-};
-
 TooltipContainer.propTypes = {
   children: PropTypes.func,
   render: PropTypes.func,

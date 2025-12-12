@@ -18,8 +18,8 @@ export const useTooltip = <T extends HTMLElement = HTMLElement>({
   const _id = useId(id);
   const [visibility, setVisibility] = useState(isVisible);
   const isMounted = useRef(false);
-  const openTooltipTimeoutId = useRef<number>();
-  const closeTooltipTimeoutId = useRef<number>();
+  const openTooltipTimeoutId = useRef<number>(undefined);
+  const closeTooltipTimeoutId = useRef<number>(undefined);
   const isTriggerPopupExpanded = useRef(false);
 
   /**
