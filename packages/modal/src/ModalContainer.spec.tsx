@@ -44,6 +44,9 @@ describe('FocusJailContainer', () => {
             <button onClick={closeModal} data-test-id="additional-close">
               Additional close option
             </button>
+            <button data-test-id="button" type="button">
+              Non-closing button
+            </button>
           </div>
         </div>
       )}
@@ -106,14 +109,24 @@ describe('FocusJailContainer', () => {
       });
     });
 
-    it('closes modal on blur', async () => {
-      render(<BasicExample onClose={onCloseSpy} />);
+    describe('onBlur', () => {
+      it('closes modal on blur', async () => {
+        render(<BasicExample onClose={onCloseSpy} />);
 
-      await waitFor(async () => {
-        await user.click(document.body);
+        await waitFor(async () => {
+          await user.click(document.body);
+        });
+
+        expect(onCloseSpy).toHaveBeenCalled();
       });
 
-      expect(onCloseSpy).toHaveBeenCalled();
+      it('does not close modal when focusing inside modal', async () => {
+        const { getByTestId } = render(<BasicExample onClose={onCloseSpy} />);
+
+        await user.click(getByTestId('button'));
+
+        expect(onCloseSpy).not.toHaveBeenCalled();
+      });
     });
   });
 

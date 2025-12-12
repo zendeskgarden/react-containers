@@ -66,15 +66,18 @@ export const useModal = <T extends Element = Element>({
     'aria-describedby': contentId,
     onBlur: composeEventHandlers(onBlur, event => {
       const doc = environment || document;
+      const relatedTarget = event.relatedTarget as Element | null;
 
-      // Timeout is required to ensure blur is handled after focus
-      setTimeout(() => {
-        const activeElement = doc.activeElement;
+      if (relatedTarget === null || !modalRef.current?.contains(relatedTarget)) {
+        // Timeout is required to ensure blur is handled after focus
+        setTimeout(() => {
+          const activeElement = doc.activeElement;
 
-        if (!modalRef.current?.contains(activeElement)) {
-          closeModal(event);
-        }
-      });
+          if (!modalRef.current?.contains(activeElement)) {
+            closeModal(event);
+          }
+        });
+      }
     }),
     onMouseDown: composeEventHandlers(onMouseDown, () => {
       isModalMousedDownRef.current = true;
