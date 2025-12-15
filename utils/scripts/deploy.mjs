@@ -40,8 +40,7 @@ envalid.cleanEnv(process.env, {
       const bandwidth = await netlifyBandwidth();
       const usage = await cmdDu(dir);
 
-      /* eslint-disable-next-line */
-      if (true || bandwidth.available > usage) {
+      if (bandwidth.available > usage) {
         const repository = await githubRepository();
         const commit = await githubCommit();
         const message = `https://github.com/${repository.owner}/${repository.repo}/commit/${commit}`;
