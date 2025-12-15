@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.3](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-tooltip@2.1.2...@zendeskgarden/container-tooltip@2.1.3) (2025-12-15)
+
+**Note:** Version bump only for package @zendeskgarden/container-tooltip
+
 ## [2.1.2](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-tooltip@2.1.1...@zendeskgarden/container-tooltip@2.1.2) (2025-12-02)
 
 **Note:** Version bump only for package @zendeskgarden/container-tooltip
