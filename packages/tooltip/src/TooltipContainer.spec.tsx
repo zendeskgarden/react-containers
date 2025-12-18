@@ -41,6 +41,7 @@ describe('TooltipContainer', () => {
   beforeAll(() => {
     const elementMatches = HTMLElement.prototype.matches;
 
+    // Override `.matches` currently missing from JSDOM
     HTMLElement.prototype.matches = function matches(selector: string) {
       let retVal;
 
