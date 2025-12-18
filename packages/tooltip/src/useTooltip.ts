@@ -128,7 +128,12 @@ export const useTooltip = <T extends HTMLElement = HTMLElement>({
       tabIndex,
       onMouseEnter: composeEventHandlers(onMouseEnter, () => openTooltip()),
       onMouseLeave: composeEventHandlers(onMouseLeave, () => closeTooltip()),
-      onFocus: composeEventHandlers(onFocus, () => openTooltip()),
+      onFocus: composeEventHandlers(onFocus, event => {
+        // Prevent tooltip on implicit focus (i.e. `restoreFocus` in modals)
+        if (event.currentTarget.matches(':focus-visible')) {
+          openTooltip();
+        }
+      }),
       // Close menu immediately when blurred
       onBlur: composeEventHandlers(onBlur, () => closeTooltip(0)),
       onKeyDown: composeEventHandlers(onKeyDown, (event: KeyboardEvent) => {

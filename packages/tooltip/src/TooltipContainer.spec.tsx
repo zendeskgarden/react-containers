@@ -38,6 +38,23 @@ describe('TooltipContainer', () => {
     );
   };
 
+  beforeAll(() => {
+    const elementMatches = HTMLElement.prototype.matches;
+
+    // Override `.matches` currently missing from JSDOM
+    HTMLElement.prototype.matches = function matches(selector: string) {
+      let retVal;
+
+      if (selector === ':focus-visible') {
+        retVal = this === document.activeElement;
+      } else {
+        retVal = elementMatches.call(this, selector);
+      }
+
+      return retVal;
+    };
+  });
+
   it('defaults visibility state with isVisible prop', () => {
     const { getByText } = render(<BasicExample isVisible />);
 
