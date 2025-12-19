@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import { useRef, KeyboardEvent, MouseEvent, MouseEventHandler } from 'react';
+import { useRef, KeyboardEvent, MouseEvent } from 'react';
 import { composeEventHandlers, KEYS, useId } from '@zendeskgarden/container-utilities';
 import { useFocusJail } from '@zendeskgarden/container-focusjail';
 import { IUseModalProps, IUseModalReturnValue } from './types';
@@ -24,33 +24,14 @@ export const useModal = <T extends Element = Element>({
   const isModalMousedDownRef = useRef(false);
 
   const closeModal: IUseModalReturnValue['closeModal'] = event => {
-    onClose && onClose(event);
+    onClose?.(event);
   };
 
-  const getBackdropProps: IUseModalReturnValue['getBackdropProps'] = ({
-    onMouseUp,
+  const getBackdropProps: IUseModalReturnValue['getBackdropProps'] = ({ ...other } = {}) => ({
+    'data-garden-container-id': 'containers.modal',
+    'data-garden-container-version': PACKAGE_VERSION,
     ...other
-  } = {}) => {
-    const containerId = 'containers.modal';
-
-    const handleMouseUp: MouseEventHandler = event => {
-      const target = event.target as Element;
-      const isModalContainer = containerId === target.getAttribute('data-garden-container-id');
-
-      if (!isModalMousedDownRef.current && isModalContainer) {
-        closeModal(event);
-      }
-
-      isModalMousedDownRef.current = false;
-    };
-
-    return {
-      onMouseUp: composeEventHandlers(onMouseUp, handleMouseUp),
-      'data-garden-container-id': containerId,
-      'data-garden-container-version': PACKAGE_VERSION,
-      ...other
-    };
-  };
+  });
 
   const getModalProps: IUseModalReturnValue['getModalProps'] = ({
     role = 'dialog',

@@ -62,7 +62,7 @@ describe('FocusJailContainer', () => {
       const { getByTestId } = render(<BasicExample onClose={onCloseSpy} />);
 
       await user.click(getByTestId('backdrop'));
-      expect(onCloseSpy).toHaveBeenCalled();
+      expect(onCloseSpy).toHaveBeenCalledTimes(1);
     });
 
     it('does not call onClose when inital click occurs within modal', () => {
@@ -98,7 +98,7 @@ describe('FocusJailContainer', () => {
         const { getByRole } = render(<BasicExample onClose={onCloseSpy} />);
 
         fireEvent.keyDown(getByRole('dialog'), { key: KEYS.ESCAPE });
-        expect(onCloseSpy).toHaveBeenCalled();
+        expect(onCloseSpy).toHaveBeenCalledTimes(1);
       });
 
       it('does not close modal when other keys are pressed', () => {
@@ -117,7 +117,7 @@ describe('FocusJailContainer', () => {
           await user.click(document.body);
         });
 
-        expect(onCloseSpy).toHaveBeenCalled();
+        expect(onCloseSpy).toHaveBeenCalledTimes(1);
       });
 
       it('does not close modal when focusing inside modal', async () => {
@@ -157,7 +157,7 @@ describe('FocusJailContainer', () => {
       const { getByLabelText } = render(<BasicExample onClose={onCloseSpy} />);
 
       await user.click(getByLabelText('Close modal'));
-      expect(onCloseSpy).toHaveBeenCalled();
+      expect(onCloseSpy).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -166,7 +166,7 @@ describe('FocusJailContainer', () => {
       const { getByText } = render(<BasicExample onClose={onCloseSpy} />);
 
       await user.click(getByText('Additional close option'));
-      expect(onCloseSpy).toHaveBeenCalled();
+      expect(onCloseSpy).toHaveBeenCalledTimes(1);
     });
   });
 });
