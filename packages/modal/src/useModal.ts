@@ -5,7 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import { useRef, KeyboardEvent, MouseEvent } from 'react';
+import { useRef, KeyboardEvent, MouseEvent, MouseEventHandler } from 'react';
 import { composeEventHandlers, KEYS, useId } from '@zendeskgarden/container-utilities';
 import { useFocusJail } from '@zendeskgarden/container-focusjail';
 import { IUseModalProps, IUseModalReturnValue } from './types';
@@ -21,17 +21,48 @@ export const useModal = <T extends Element = Element>({
   const prefix = useId(idPrefix);
   const titleId = `${prefix}__title`;
   const contentId = `${prefix}__content`;
-  const isModalMousedDownRef = useRef(false);
+  const isBackdropMouseDownRef = useRef(false);
+  const isModalMouseDownRef = useRef(false);
 
   const closeModal: IUseModalReturnValue['closeModal'] = event => {
     onClose?.(event);
   };
 
-  const getBackdropProps: IUseModalReturnValue['getBackdropProps'] = ({ ...other } = {}) => ({
-    'data-garden-container-id': 'containers.modal',
-    'data-garden-container-version': PACKAGE_VERSION,
+  const getBackdropProps: IUseModalReturnValue['getBackdropProps'] = ({
+    onMouseDown,
+    onMouseUp,
     ...other
-  });
+  } = {}) => {
+    const containerId = 'containers.modal';
+
+    const handleMouseDown: MouseEventHandler = () => {
+      isBackdropMouseDownRef.current = true;
+    };
+
+    const handleMouseUp: MouseEventHandler = event => {
+      const target = event.target as Element;
+      const isModalContainer = containerId === target.getAttribute('data-garden-container-id');
+
+      if (!isModalMouseDownRef.current && isModalContainer) {
+        closeModal(event);
+      }
+
+      isModalMouseDownRef.current = false;
+
+      // Timeout is required to allow modal onBlur to settle first
+      setTimeout(() => {
+        isBackdropMouseDownRef.current = false;
+      });
+    };
+
+    return {
+      onMouseDown: composeEventHandlers(onMouseDown, handleMouseDown),
+      onMouseUp: composeEventHandlers(onMouseUp, handleMouseUp),
+      'data-garden-container-id': containerId,
+      'data-garden-container-version': PACKAGE_VERSION,
+      ...other
+    };
+  };
 
   const getModalProps: IUseModalReturnValue['getModalProps'] = ({
     role = 'dialog',
@@ -54,14 +85,14 @@ export const useModal = <T extends Element = Element>({
         setTimeout(() => {
           const activeElement = doc.activeElement;
 
-          if (!modalRef.current?.contains(activeElement)) {
+          if (!(isBackdropMouseDownRef.current || modalRef.current?.contains(activeElement))) {
             closeModal(event);
           }
         });
       }
     }),
     onMouseDown: composeEventHandlers(onMouseDown, () => {
-      isModalMousedDownRef.current = true;
+      isModalMouseDownRef.current = true;
     }),
     onKeyDown: composeEventHandlers(onKeyDown, (event: KeyboardEvent) => {
       if (event.key === KEYS.ESCAPE) {
