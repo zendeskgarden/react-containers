@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.24](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-modal@1.0.23...@zendeskgarden/container-modal@1.0.24) (2025-12-22)
+
+### Bug Fixes
+
+- **modal:** prevent double `onClose` event on backdrop click ([#717](https://github.com/zendeskgarden/react-containers/issues/717)) ([3cabde1](https://github.com/zendeskgarden/react-containers/commit/3cabde19cefb98496b001ce5abbb86ce7ca96c44))
+
 ## [1.0.23](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-modal@1.0.22...@zendeskgarden/container-modal@1.0.23) (2025-12-15)
 
 ### Bug Fixes
