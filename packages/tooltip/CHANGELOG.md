@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.2.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-tooltip@2.1.4...@zendeskgarden/container-tooltip@2.2.0) (2025-12-23)
+
+### Features
+
+- **tooltip:** add `isLabel` prop ([#718](https://github.com/zendeskgarden/react-containers/issues/718)) ([2446aaf](https://github.com/zendeskgarden/react-containers/commit/2446aaf0e3c65411d0b52dfb878f59e3eeb6ff1b))
+
 ## [2.1.4](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-tooltip@2.1.3...@zendeskgarden/container-tooltip@2.1.4) (2025-12-18)
 
 ### Bug Fixes
