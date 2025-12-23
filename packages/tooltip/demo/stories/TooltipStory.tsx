@@ -17,9 +17,12 @@ import {
 } from '@zendeskgarden/container-tooltip';
 
 const Component = ({ getTooltipProps, getTriggerProps, isVisible }: IUseTooltipReturnValue) => (
-  <>
+  <div className="relative">
     <span
       className={classNames(
+        'absolute',
+        '-top-6',
+        'start-2',
         'bg-grey-800',
         'inline-block',
         'mb-1',
@@ -34,13 +37,14 @@ const Component = ({ getTooltipProps, getTriggerProps, isVisible }: IUseTooltipR
     >
       Tooltip
     </span>
-    <div
+    <button
       className="bg-grey-200 border border-solid cursor-pointer px-3 py-2 rounded"
       {...getTriggerProps()}
+      type="button"
     >
       Trigger
-    </div>
-  </>
+    </button>
+  </div>
 );
 
 const Container = (props: IUseTooltipProps) => (
