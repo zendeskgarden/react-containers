@@ -70,6 +70,14 @@ describe('TooltipContainer', () => {
       expect(trigger).toHaveAttribute('aria-describedby', TOOLTIP_ID);
     });
 
+    it('applies aria-labelledby when isLabel is true', () => {
+      const { getByText } = render(<BasicExample isLabel />);
+      const trigger = getByText('trigger');
+
+      expect(trigger).toHaveAttribute('aria-labelledby', TOOLTIP_ID);
+      expect(trigger).not.toHaveAttribute('aria-describedby');
+    });
+
     describe('onFocus()', () => {
       it('should not display tooltip immediately when focused', async () => {
         const { getByText } = render(<BasicExample />);
