@@ -12,6 +12,7 @@ import { IUseTooltipProps, IUseTooltipReturnValue } from './types';
 export const useTooltip = <T extends HTMLElement = HTMLElement>({
   delayMilliseconds = 500,
   id,
+  isLabel,
   isVisible,
   triggerRef
 }: IUseTooltipProps<T>): IUseTooltipReturnValue => {
@@ -141,13 +142,13 @@ export const useTooltip = <T extends HTMLElement = HTMLElement>({
           closeTooltip(0);
         }
       }),
-      'aria-describedby': _id,
+      [isLabel ? 'aria-labelledby' : 'aria-describedby']: _id,
       'data-garden-container-id': 'containers.tooltip',
       'data-garden-container-version': PACKAGE_VERSION,
       ref: triggerRef as any,
       ...other
     }),
-    [_id, closeTooltip, openTooltip, triggerRef, visibility]
+    [_id, isLabel, closeTooltip, openTooltip, triggerRef, visibility]
   );
 
   const getTooltipProps = useCallback<IUseTooltipReturnValue['getTooltipProps']>(

@@ -25,6 +25,7 @@ TooltipContainer.propTypes = {
   render: PropTypes.func,
   delayMilliseconds: PropTypes.number,
   id: PropTypes.string,
+  isLabel: PropTypes.bool,
   isVisible: PropTypes.bool,
   triggerRef: PropTypes.any.isRequired
 };

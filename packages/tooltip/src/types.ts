@@ -12,6 +12,11 @@ export interface IUseTooltipProps<T = HTMLElement> {
   delayMilliseconds?: number;
   /** Specifies the tooltip ID */
   id?: string;
+  /**
+   * Indicates that the tooltip is used as the trigger's primary label rather
+   * than as a supplemental description
+   */
+  isLabel?: boolean;
   /** Displays the tooltip on initial render */
   isVisible?: boolean;
   /** Provides ref access to the underlying trigger element */
