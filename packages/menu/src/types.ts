@@ -88,8 +88,14 @@ export interface IUseMenuProps<T = HTMLButtonElement, M = HTMLElement> {
     focusedValue?: string | null;
     selectedItems?: ISelectedItem[];
   }) => void;
-  /** Sets the environment where the menu is rendered */
-  environment?: Window;
+  /**
+   * Sets the window where the menu is rendered
+   * */
+  window?: Window;
+  /**
+   * Sets the document where the menu is rendered
+   * */
+  document?: Document | ShadowRoot;
 }
 
 export interface IUseMenuReturnValue {

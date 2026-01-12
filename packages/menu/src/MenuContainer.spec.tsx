@@ -1470,6 +1470,49 @@ describe('MenuContainer', () => {
     });
   });
 
+  describe('Shadow DOM support', () => {
+    it('accepts and uses custom document prop', async () => {
+      const mockDocument = document.cloneNode(false) as Document;
+      const addEventListenerSpy = jest.spyOn(mockDocument, 'addEventListener');
+
+      const { getByTestId } = render(<TestMenu items={ITEMS} document={mockDocument} />);
+      const trigger = getByTestId('trigger');
+
+      await act(async () => {
+        await user.click(trigger);
+      });
+
+      expect(addEventListenerSpy).toHaveBeenCalledWith('keydown', expect.any(Function), true);
+    });
+
+    it('prioritizes document prop over window prop', async () => {
+      const mockWindowDocument = document.cloneNode(false) as Document;
+      const mockDocument = document.cloneNode(false) as Document;
+      const mockWindow = { document: mockWindowDocument } as Window;
+
+      const windowAddEventListenerSpy = jest.spyOn(mockWindowDocument, 'addEventListener');
+      const documentAddEventListenerSpy = jest.spyOn(mockDocument, 'addEventListener');
+
+      const { getByTestId } = render(
+        <TestMenu items={ITEMS} window={mockWindow} document={mockDocument} />
+      );
+
+      const trigger = getByTestId('trigger');
+
+      await act(async () => {
+        await user.click(trigger);
+      });
+
+      // document prop should be used, not window.document
+      expect(documentAddEventListenerSpy).toHaveBeenCalledWith(
+        'keydown',
+        expect.any(Function),
+        true
+      );
+      expect(windowAddEventListenerSpy).not.toHaveBeenCalled();
+    });
+  });
+
   describe('error handling', () => {
     it.each([
       { key: 'isNext', isNext: true },
