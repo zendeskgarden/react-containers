@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-menu@1.0.5...@zendeskgarden/container-menu@2.0.0) (2026-01-12)
+
+- feat(menu)!: allow users to specify both window and document env (#720) ([33590cf](https://github.com/zendeskgarden/react-containers/commit/33590cfa52f06c73290ff59f414e5c7fc79d0131)), closes [#720](https://github.com/zendeskgarden/react-containers/issues/720)
+
+### BREAKING CHANGES
+
+- The `environment` prop has been removed and replaced with the optional `window` and `document` props to improve clarity and flexibility.
+
 ## [1.0.5](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-menu@1.0.4...@zendeskgarden/container-menu@1.0.5) (2025-12-15)
 
 **Note:** Version bump only for package @zendeskgarden/container-menu
