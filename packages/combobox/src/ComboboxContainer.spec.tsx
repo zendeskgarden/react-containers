@@ -5,8 +5,7 @@
  * found at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-import React, { createRef, PropsWithChildren } from 'react';
-import { act } from 'react-dom/test-utils';
+import React, { act, createRef, PropsWithChildren } from 'react';
 import { fireEvent, render, RenderResult } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComboboxContainer, useCombobox } from './';

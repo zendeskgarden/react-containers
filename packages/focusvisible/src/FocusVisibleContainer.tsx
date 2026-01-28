@@ -29,11 +29,6 @@ export const FocusVisibleContainer: React.FunctionComponent<IFocusVisibleContain
   return <>{render!({ ref: scopeRef }) as React.ReactElement}</>;
 };
 
-FocusVisibleContainer.defaultProps = {
-  className: 'garden-focus-visible',
-  dataAttribute: 'data-garden-focus-visible'
-};
-
 FocusVisibleContainer.propTypes = {
   children: PropTypes.func,
   render: PropTypes.func,

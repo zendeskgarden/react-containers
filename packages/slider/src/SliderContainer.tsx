@@ -7,7 +7,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { SLIDER_MAX, SLIDER_MIN, SLIDER_STEP, useSlider } from './useSlider';
+import { useSlider } from './useSlider';
 import { ISliderContainerProps } from './types';
 
 export const SliderContainer: React.FC<ISliderContainerProps> = ({
@@ -34,12 +34,4 @@ SliderContainer.propTypes = {
   jump: PropTypes.number,
   disabled: PropTypes.bool,
   rtl: PropTypes.bool
-};
-
-/* Slider defaults informed by <input type="range">.
-   See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/range#specifying_the_minimum_and_maximum */
-SliderContainer.defaultProps = {
-  min: SLIDER_MIN,
-  max: SLIDER_MAX,
-  step: SLIDER_STEP
 };

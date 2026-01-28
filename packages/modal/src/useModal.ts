@@ -14,8 +14,8 @@ export const useModal = <T extends Element = Element>({
   onClose,
   modalRef,
   idPrefix,
-  focusOnMount,
-  restoreFocus,
+  focusOnMount = true,
+  restoreFocus = true,
   environment
 }: IUseModalProps<T>): IUseModalReturnValue => {
   const prefix = useId(idPrefix);

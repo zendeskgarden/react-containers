@@ -25,12 +25,6 @@ export const ScheduleContainer: React.FunctionComponent<IScheduleContainerProps>
   return <>{render!(useSchedule(props)) as React.ReactElement}</>;
 };
 
-ScheduleContainer.defaultProps = {
-  duration: 1250,
-  delayMS: 750,
-  loop: true
-};
-
 ScheduleContainer.propTypes = {
   children: PropTypes.func,
   render: PropTypes.func,

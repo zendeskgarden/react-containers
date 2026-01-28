@@ -53,7 +53,7 @@ export function useFocusVisible(
 
   const hadKeyboardEvent = useRef(false);
   const hadFocusVisibleRecently = useRef(false);
-  const hadFocusVisibleRecentlyTimeout = useRef<number | undefined>();
+  const hadFocusVisibleRecentlyTimeout = useRef<number>(undefined);
 
   useEffect(() => {
     let environment = relativeDocument;

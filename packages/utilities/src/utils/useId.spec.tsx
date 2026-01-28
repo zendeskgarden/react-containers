@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { renderHook } from '@testing-library/react-hooks/server';
+import { renderHook } from '@testing-library/react';
 import { useId } from './useId';
 
 describe('useId()', () => {
@@ -19,21 +19,9 @@ describe('useId()', () => {
 
   it('generates SSR ID', () => {
     const { result } = renderHook(() => useId());
-    const expected = Object.hasOwn(React, 'useId') ? ':R0:' : 'id:';
+    const expected = Object.hasOwn(React, 'useId') ? '_r_0_' : 'id:';
 
     expect(result.current).toContain(expected);
-  });
-
-  it('generates CSR ID', () => {
-    const { result, hydrate } = renderHook(() => useId());
-
-    hydrate();
-
-    if (Object.hasOwn(React, 'useId')) {
-      expect(result.current).toBe(':R0:');
-    } else {
-      expect(result.current).toBeGreaterThanOrEqual(0);
-    }
   });
 
   it('accepts an ID', () => {

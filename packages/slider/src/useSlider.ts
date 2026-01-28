@@ -18,6 +18,8 @@ export function useSlider<T extends Element = Element, M extends HTMLElement = H
   trackRef,
   minThumbRef,
   maxThumbRef,
+  /* Slider defaults informed by <input type="range">.
+     See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/range#specifying_the_minimum_and_maximum */
   min = SLIDER_MIN,
   max = SLIDER_MAX,
   defaultMinValue,
