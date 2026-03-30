@@ -19,14 +19,30 @@ export interface IUseTooltipProps<T = HTMLElement> {
   isLabel?: boolean;
   /** Displays the tooltip on initial render */
   isVisible?: boolean;
+  /**
+   * Enables toggletip behavior (click-to-toggle) instead of tooltip behavior (hover/focus).
+   * When true, tooltip opens/closes on click, closes on outside clicks and Escape key,
+   * and uses role="status" for live region announcements.
+   */
+  isToggletip?: boolean;
   /** Provides ref access to the underlying trigger element */
   triggerRef: RefObject<T>;
+  /** Sets the window where the tooltip is rendered (for SSR compatibility) */
+  window?: Window;
+  /** Sets the document where the tooltip is rendered (for SSR compatibility) */
+  document?: Document | ShadowRoot;
 }
 
 export interface IUseTooltipReturnValue {
   getTooltipProps: <T extends Element>(props?: HTMLProps<T>) => HTMLProps<T>;
   getTriggerProps: <T extends Element>(props?: HTMLProps<T>) => HTMLProps<T>;
   isVisible?: boolean;
+  /**
+   * Controls whether toggletip content should be populated in the live region for screen reader announcements.
+   * When re-clicking an open toggletip, this toggles false→true to trigger re-announcement.
+   * Only defined when isToggletip is true.
+   */
+  isAnnouncementReady?: boolean;
   openTooltip: (delayMs?: number) => void;
   closeTooltip: (delayMs?: number) => void;
 }

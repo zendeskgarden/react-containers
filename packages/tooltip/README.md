@@ -47,6 +47,56 @@ const Tooltip = () => {
 };
 ```
 
+#### Toggletip Usage
+
+Toggletips provide click-to-toggle behavior following accessibility best practices:
+
+```jsx
+import { useTooltip } from '@zendeskgarden/container-tooltip';
+
+const Toggletip = () => {
+  const triggerRef = useRef(null);
+  const { isVisible, isAnnouncementReady, getTooltipProps, getTriggerProps } = useTooltip({
+    isToggletip: true,
+    triggerRef
+  });
+
+  const styles = {
+    display: isVisible ? 'block' : 'none',
+    background: '#1f73b7',
+    padding: '10px',
+    margin: '6px 0',
+    color: '#fff'
+  };
+
+  return (
+    <>
+      <div {...getTooltipProps({ style: styles })}>
+        {isAnnouncementReady && 'Toggletip content'}
+      </div>
+      <button {...getTriggerProps()}>Trigger</button>
+    </>
+  );
+};
+```
+
+**Key differences from tooltips:**
+
+- Opens/closes on click, not hover
+- Closes on outside clicks and Escape key
+- Trigger must be a button element with an accessible name (visible text or `aria-label`) so
+  keyboard and screen reader users can interact with it as expected
+- Uses `role="status"` for live region announcements
+- Use `isAnnouncementReady` to control when content is populated for screen reader
+  re-announcements
+
+**Content recommendations:**
+
+Toggletip content should ideally be text-only. When the toggletip opens, screen readers announce
+the text content via the `role="status"` live region. If the content includes interactive elements
+(buttons, links) or complex markup, screen readers will only announce the text portion. For complex
+interactive content, consider using a popover or dialog pattern instead.
+
 ### TooltipContainer
 
 ```jsx

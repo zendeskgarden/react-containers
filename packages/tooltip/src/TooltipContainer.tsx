@@ -17,7 +17,8 @@ export const TooltipContainer: FC<ITooltipContainerProps> = props => {
 };
 
 TooltipContainer.defaultProps = {
-  delayMilliseconds: 500
+  delayMilliseconds: 500,
+  isToggletip: false
 };
 
 TooltipContainer.propTypes = {
@@ -26,6 +27,9 @@ TooltipContainer.propTypes = {
   delayMilliseconds: PropTypes.number,
   id: PropTypes.string,
   isLabel: PropTypes.bool,
+  isToggletip: PropTypes.bool,
   isVisible: PropTypes.bool,
-  triggerRef: PropTypes.any.isRequired
+  triggerRef: PropTypes.any.isRequired,
+  window: PropTypes.any,
+  document: PropTypes.any
 };
