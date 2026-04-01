@@ -351,7 +351,9 @@ describe('TooltipContainer', () => {
         <TooltipContainer id={TOOLTIP_ID} {...props} isToggletip triggerRef={triggerRef}>
           {({ getTooltipProps, getTriggerProps, isAnnouncementReady }) => (
             <>
-              <button {...getTriggerProps(triggerProps)}>Info</button>
+              <button {...getTriggerProps(triggerProps)} type="button">
+                Info
+              </button>
               <div {...getTooltipProps(tooltipProps)}>
                 {isAnnouncementReady ? 'tooltip content' : null}
               </div>
@@ -485,7 +487,7 @@ describe('TooltipContainer', () => {
         const { getByRole } = render(
           <div>
             <ToggletipExample />
-            <button>Outside button</button>
+            <button type="button">Outside button</button>
           </div>
         );
         const trigger = getByRole('button', { name: 'Info' });
@@ -561,9 +563,11 @@ describe('TooltipContainer', () => {
             <TooltipContainer id={TOOLTIP_ID} isToggletip triggerRef={triggerRef}>
               {({ getTooltipProps, getTriggerProps, isAnnouncementReady }) => (
                 <>
-                  <button {...getTriggerProps()}>Info</button>
+                  <button {...getTriggerProps()} type="button">
+                    Info
+                  </button>
                   <div {...getTooltipProps()}>
-                    {isAnnouncementReady ? <button>Inside button</button> : null}
+                    {isAnnouncementReady ? <button type="button">Inside button</button> : null}
                   </div>
                 </>
               )}
@@ -593,7 +597,7 @@ describe('TooltipContainer', () => {
         const { getByRole } = render(
           <div>
             <ToggletipExample />
-            <button>Other button</button>
+            <button type="button">Other button</button>
           </div>
         );
         const trigger = getByRole('button', { name: 'Info' });
