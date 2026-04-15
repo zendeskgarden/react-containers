@@ -262,13 +262,14 @@ export const useTooltip = <T extends HTMLElement = HTMLElement>({
         };
       }
 
-      // Standard tooltip: preserve all existing behavior
       return {
         ...baseProps,
+        // Close menu immediately when blurred
         onBlur: composeEventHandlers(onBlur, () => closeTooltip(0)),
         onMouseEnter: composeEventHandlers(onMouseEnter, () => openTooltip()),
         onMouseLeave: composeEventHandlers(onMouseLeave, () => closeTooltip()),
         onFocus: composeEventHandlers(onFocus, event => {
+          // Prevent tooltip on implicit focus (i.e. `restoreFocus` in modals)
           if (event.currentTarget.matches(':focus-visible')) {
             openTooltip();
           }
@@ -305,7 +306,6 @@ export const useTooltip = <T extends HTMLElement = HTMLElement>({
         };
       }
 
-      // Standard tooltip: mouse handlers for hover behavior
       return {
         ...baseProps,
         onMouseEnter: composeEventHandlers(onMouseEnter, () => openTooltip()),
