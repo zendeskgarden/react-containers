@@ -462,8 +462,13 @@ describe('TooltipContainer', () => {
       });
     });
 
-    describe('Closes on blur', () => {
-      it('closes immediately when trigger loses focus', async () => {
+    describe('Blur behavior', () => {
+      // Toggletips use a two-handler system:
+      // 1. Blur handler decides whether to close immediately or defer to outside click handler
+      // 2. Outside click handler (tested below) determines if click was inside/outside tooltip
+      // This allows clicking non-focusable tooltip content to keep tooltip open
+
+      it('defers to outside click handler when blur has null relatedTarget', () => {
         const { getByRole } = render(<ToggletipExample />);
         const trigger = getByRole('button');
 
@@ -474,11 +479,94 @@ describe('TooltipContainer', () => {
 
         expect(getByRole('status')).toBeInTheDocument();
 
+        // Simulate blur with null relatedTarget (happens when clicking non-focusable elements)
+        // Blur handler should NOT close - it defers the decision to outside click handler
+        fireEvent.blur(trigger, { relatedTarget: null });
+
+        expect(getByRole('status')).toBeInTheDocument();
+      });
+
+      it('does not close when focus moves into tooltip content', () => {
+        const ToggletipWithFocusableContent = () => {
+          const triggerRef = createRef<HTMLButtonElement>();
+
+          return (
+            <TooltipContainer id={TOOLTIP_ID} isToggletip triggerRef={triggerRef}>
+              {({ getTooltipProps, getTriggerProps, isAnnouncementReady }) => (
+                <>
+                  <button {...getTriggerProps()} type="button">
+                    Info
+                  </button>
+                  <div {...getTooltipProps()}>
+                    {isAnnouncementReady ? <button type="button">Inside button</button> : null}
+                  </div>
+                </>
+              )}
+            </TooltipContainer>
+          );
+        };
+
+        const { getByRole } = render(<ToggletipWithFocusableContent />);
+        const trigger = getByRole('button', { name: 'Info' });
+
+        fireEvent.click(trigger);
+        act(() => {
+          jest.runOnlyPendingTimers();
+        });
+
+        expect(getByRole('status')).toBeInTheDocument();
+
+        const insideButton = getByRole('button', { name: 'Inside button' });
+
+        // Simulate focus moving from trigger into tooltip content
+        // Blur handler should NOT close because focus stayed within the tooltip
+        fireEvent.blur(trigger, { relatedTarget: insideButton });
+
+        expect(getByRole('status')).toBeInTheDocument();
+      });
+
+      it('closes immediately when focus moves to element outside tooltip', async () => {
+        const { getByRole } = render(<ToggletipExample />);
+        const trigger = getByRole('button');
+
+        fireEvent.click(trigger);
+        act(() => {
+          jest.runOnlyPendingTimers();
+        });
+
+        expect(getByRole('status')).toBeInTheDocument();
+
+        // Tab to move focus to next element (keyboard navigation)
+        // Blur handler should close immediately since focus moved to another element
         await user.tab();
 
         await waitFor(() => {
           expect(getByRole('status', { hidden: true })).toBeInTheDocument();
         });
+      });
+
+      it('closes immediately when blur relatedTarget is outside tooltip', () => {
+        const { getByRole } = render(
+          <div>
+            <ToggletipExample />
+            <button type="button">Outside button</button>
+          </div>
+        );
+        const trigger = getByRole('button', { name: 'Info' });
+        const outsideButton = getByRole('button', { name: 'Outside button' });
+
+        fireEvent.click(trigger);
+        act(() => {
+          jest.runOnlyPendingTimers();
+        });
+
+        expect(getByRole('status')).toBeInTheDocument();
+
+        // Simulate blur where relatedTarget is an element outside the tooltip
+        // Blur handler should close immediately
+        fireEvent.blur(trigger, { relatedTarget: outsideButton });
+
+        expect(getByRole('status', { hidden: true })).toBeInTheDocument();
       });
     });
 

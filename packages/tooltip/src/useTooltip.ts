@@ -186,9 +186,15 @@ export const useTooltip = <T extends HTMLElement = HTMLElement>({
       }
     };
 
-    _document.addEventListener('click', handleOutsideClick);
+    // Defer adding the listener until after the current event loop completes
+    // This ensures the opening click (or any click that triggers visibility change)
+    // finishes propagating before we start listening for outside clicks
+    const timeoutId = setTimeout(() => {
+      _document.addEventListener('click', handleOutsideClick);
+    }, 0);
 
     return () => {
+      clearTimeout(timeoutId);
       _document.removeEventListener('click', handleOutsideClick);
     };
   }, [isToggletip, visibility, triggerRef, closeTooltip, windowProp, documentProp]);
@@ -231,7 +237,6 @@ export const useTooltip = <T extends HTMLElement = HTMLElement>({
         'data-garden-container-id': 'containers.tooltip',
         'data-garden-container-version': PACKAGE_VERSION,
         ref: triggerRef as any,
-        onBlur: composeEventHandlers(onBlur, () => closeTooltip(0)),
         onKeyDown: composeEventHandlers(onKeyDown, (event: React.KeyboardEvent) => {
           if (event.key === KEYS.ESCAPE) {
             handleEscapeKey();
@@ -244,13 +249,23 @@ export const useTooltip = <T extends HTMLElement = HTMLElement>({
         // Toggletip: click to toggle, no hover/focus, no ARIA description
         return {
           ...baseProps,
-          onClick: composeEventHandlers(onClick, handleToggletipTriggerClick)
+          onClick: composeEventHandlers(onClick, handleToggletipTriggerClick),
+          onBlur: composeEventHandlers(onBlur, event => {
+            // For toggletips: only close on blur if focus moved to an element
+            // outside the tooltip. If relatedTarget is null (clicked non-focusable element)
+            // or inside tooltip, let the outside click handler decide.
+            const focusMovedToTooltip = tooltipRef.current?.contains(event.relatedTarget as Node);
+            if (event.relatedTarget && !focusMovedToTooltip) {
+              closeTooltip(0);
+            }
+          })
         };
       }
 
       // Standard tooltip: preserve all existing behavior
       return {
         ...baseProps,
+        onBlur: composeEventHandlers(onBlur, () => closeTooltip(0)),
         onMouseEnter: composeEventHandlers(onMouseEnter, () => openTooltip()),
         onMouseLeave: composeEventHandlers(onMouseLeave, () => closeTooltip()),
         onFocus: composeEventHandlers(onFocus, event => {
