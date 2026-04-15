@@ -377,6 +377,31 @@ describe('TooltipContainer', () => {
         expect(trigger).not.toHaveAttribute('aria-describedby');
         expect(trigger).not.toHaveAttribute('aria-labelledby');
       });
+
+      it('adds aria-expanded="false" when toggletip is closed', () => {
+        const { getByRole } = render(<ToggletipExample />);
+
+        expect(getByRole('button', { expanded: false })).toBeInTheDocument();
+      });
+
+      it('adds aria-expanded="true" when toggletip is open', () => {
+        const { getByRole } = render(<ToggletipExample />);
+        const trigger = getByRole('button');
+
+        fireEvent.click(trigger);
+        act(() => {
+          jest.runOnlyPendingTimers();
+        });
+
+        expect(getByRole('button', { expanded: true })).toBeInTheDocument();
+      });
+
+      it('adds aria-controls pointing to tooltip ID', () => {
+        const { getByRole } = render(<ToggletipExample />);
+        const trigger = getByRole('button');
+
+        expect(trigger).toHaveAttribute('aria-controls', TOOLTIP_ID);
+      });
     });
 
     describe('Does not respond to hover/focus', () => {

@@ -295,6 +295,8 @@ export const useTooltip = <T extends HTMLElement = HTMLElement>({
         // Toggletip: click to toggle, no hover/focus, no ARIA description
         return {
           ...baseProps,
+          'aria-expanded': visibility ? 'true' : 'false',
+          'aria-controls': _id,
           onClick: composeEventHandlers(onClick, handleToggletipTriggerClick),
           onBlur: composeEventHandlers(onBlur, handleToggletipBlur)
         };
@@ -319,6 +321,7 @@ export const useTooltip = <T extends HTMLElement = HTMLElement>({
       _id,
       isLabel,
       isToggletip,
+      visibility,
       handleToggletipTriggerClick,
       handleToggletipBlur,
       handleEscapeKey,
