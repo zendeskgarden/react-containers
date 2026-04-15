@@ -62,7 +62,6 @@ const Toggletip = () => {
   });
 
   const styles = {
-    display: isVisible ? 'block' : 'none',
     background: '#1f73b7',
     padding: '10px',
     margin: '6px 0',
