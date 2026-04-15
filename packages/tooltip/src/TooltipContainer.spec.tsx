@@ -832,5 +832,93 @@ describe('TooltipContainer', () => {
         expect(getByRole('status', { hidden: true })).toBeInTheDocument();
       });
     });
+
+    describe('Screen reader re-announcement', () => {
+      it('re-announces content after closing via Escape key', () => {
+        const { getByRole } = render(<ToggletipExample />);
+        const trigger = getByRole('button');
+
+        // First open
+        fireEvent.click(trigger);
+        act(() => {
+          jest.runOnlyPendingTimers();
+        });
+
+        expect(getByRole('status')).toHaveTextContent('tooltip content');
+
+        // Close via Escape key
+        fireEvent.keyDown(trigger, { key: KEYS.ESCAPE });
+        act(() => {
+          jest.runOnlyPendingTimers();
+        });
+
+        // Reopen - verify content is present again (proving it was cleared and restored)
+        fireEvent.click(trigger);
+        act(() => {
+          jest.runOnlyPendingTimers();
+        });
+
+        expect(getByRole('status')).toHaveTextContent('tooltip content');
+      });
+
+      it('re-announces content after closing via outside click', () => {
+        const { getByRole } = render(
+          <div>
+            <ToggletipExample />
+            <button type="button">Outside button</button>
+          </div>
+        );
+        const trigger = getByRole('button', { name: 'Info' });
+
+        // First open
+        fireEvent.click(trigger);
+        act(() => {
+          jest.runOnlyPendingTimers();
+        });
+
+        expect(getByRole('status')).toHaveTextContent('tooltip content');
+
+        // Close via outside click
+        fireEvent.click(getByRole('button', { name: 'Outside button' }));
+        act(() => {
+          jest.runOnlyPendingTimers();
+        });
+
+        // Reopen - verify content is present again (proving it was cleared and restored)
+        fireEvent.click(trigger);
+        act(() => {
+          jest.runOnlyPendingTimers();
+        });
+
+        expect(getByRole('status')).toHaveTextContent('tooltip content');
+      });
+
+      it('re-announces content after closing via blur', async () => {
+        const { getByRole } = render(<ToggletipExample />);
+        const trigger = getByRole('button');
+
+        // First open
+        fireEvent.click(trigger);
+        act(() => {
+          jest.runOnlyPendingTimers();
+        });
+
+        expect(getByRole('status')).toHaveTextContent('tooltip content');
+
+        // Close via blur (tab away)
+        await user.tab();
+        act(() => {
+          jest.runOnlyPendingTimers();
+        });
+
+        // Reopen - verify content is present again (proving it was cleared and restored)
+        fireEvent.click(trigger);
+        act(() => {
+          jest.runOnlyPendingTimers();
+        });
+
+        expect(getByRole('status')).toHaveTextContent('tooltip content');
+      });
+    });
   });
 });

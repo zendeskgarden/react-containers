@@ -22,13 +22,13 @@ export const ToggletipStory: StoryFn = () => {
       <span
         className={classNames(
           'absolute',
-          '-top-12',
+          '-top-24',
           'start-2',
           'bg-grey-800',
           'inline-block',
           'mb-1',
-          'px-2',
-          'py-0.5',
+          'px-4',
+          'py-2',
           'rounded-sm',
           'text-sm',
           'text-white',
@@ -36,14 +36,14 @@ export const ToggletipStory: StoryFn = () => {
         )}
         {...getTooltipProps()}
       >
-        {isAnnouncementReady ? 'Toggletip content' : null}
+        {isAnnouncementReady ? 'Use this space to provide more context for your users.' : null}
       </span>
       <button
         className="bg-grey-200 border border-solid cursor-pointer px-3 py-2 rounded"
         {...getTriggerProps()}
         type="button"
       >
-        Trigger
+        More information
       </button>
     </div>
   );

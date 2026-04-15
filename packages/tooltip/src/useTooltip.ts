@@ -83,8 +83,13 @@ export const useTooltip = <T extends HTMLElement = HTMLElement>({
       }, delayMs);
 
       closeTooltipTimeoutId.current = Number(timerId);
+
+      // Reset announcement state immediately for toggletips
+      if (isToggletip) {
+        setIsAnnouncementReady(false);
+      }
     },
-    [delayMilliseconds]
+    [delayMilliseconds, isToggletip]
   );
 
   const handleEscapeKey = useCallback(() => {
@@ -333,13 +338,11 @@ export const useTooltip = <T extends HTMLElement = HTMLElement>({
     } = {}) => {
       const baseProps = {
         role,
-        'aria-hidden': !visibility,
         id: _id,
         ...other
       };
 
       if (isToggletip) {
-        // Toggletip: needs ref for outside click detection and blur handling, no mouse handlers
         return {
           ...baseProps,
           ref: tooltipRef as any,
@@ -349,6 +352,7 @@ export const useTooltip = <T extends HTMLElement = HTMLElement>({
 
       return {
         ...baseProps,
+        'aria-hidden': !visibility,
         onMouseEnter: composeEventHandlers(onMouseEnter, () => openTooltip()),
         onMouseLeave: composeEventHandlers(onMouseLeave, () => closeTooltip())
       };
