@@ -119,6 +119,27 @@ export const useTooltip = <T extends HTMLElement = HTMLElement>({
     }
   }, [visibility, openTooltip]);
 
+  const handleToggletipBlur = useCallback(() => {
+    // Use setTimeout to check where focus actually ended up, similar to useMenu approach.
+    // This works regardless of event.relatedTarget being null or not.
+    setTimeout(() => {
+      if (!isMounted.current) return;
+
+      const _document = getDocument(windowProp, documentProp);
+      const activeElement = _document.activeElement;
+
+      // Check if focus is still within trigger or tooltip
+      const isTriggerOrTooltipFocused =
+        tooltipRef.current?.contains(activeElement as Node) ||
+        triggerRef.current?.contains(activeElement as Node);
+
+      // If focus left the trigger and tooltip entirely, close
+      if (!isTriggerOrTooltipFocused) {
+        closeTooltip(0);
+      }
+    }, 0);
+  }, [closeTooltip, windowProp, documentProp, triggerRef, tooltipRef]);
+
   /*
    * Effects
    */
@@ -179,9 +200,11 @@ export const useTooltip = <T extends HTMLElement = HTMLElement>({
     const handleOutsideClick = (event: MouseEvent) => {
       const target = event.target as Node;
       const clickedTrigger = triggerRef.current?.contains(target);
-      const clickedTooltip = tooltipRef.current?.contains(target);
 
-      if (!clickedTrigger && !clickedTooltip) {
+      // Close if clicking anywhere except the trigger itself
+      // Per Inclusive Components: clicking the tooltip content should close it
+      // (but keyboard focus into tooltip content should keep it open - handled by blur)
+      if (!clickedTrigger) {
         closeTooltip(0);
       }
     };
@@ -217,6 +240,24 @@ export const useTooltip = <T extends HTMLElement = HTMLElement>({
     };
   }, [isToggletip, visibility, handleEscapeKey, windowProp, documentProp]);
 
+  // Warn developers if interactive elements are added to toggletips
+  useEffect(() => {
+    if (isToggletip && tooltipRef.current && visibility) {
+      const interactiveElements = tooltipRef.current.querySelectorAll(
+        'a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+
+      if (interactiveElements.length > 0) {
+        // eslint-disable-next-line no-console
+        console.warn(
+          'Garden Warning: Toggletips should not contain interactive elements. ' +
+            'Use Modal for complex forms or Tooltip Dialog for lightweight interactive overlays. ' +
+            'See https://garden.zendesk.com/components/tooltip-dialog'
+        );
+      }
+    }
+  }, [isToggletip, visibility]);
+
   /*
    * Prop getters
    */
@@ -250,15 +291,7 @@ export const useTooltip = <T extends HTMLElement = HTMLElement>({
         return {
           ...baseProps,
           onClick: composeEventHandlers(onClick, handleToggletipTriggerClick),
-          onBlur: composeEventHandlers(onBlur, event => {
-            // For toggletips: only close on blur if focus moved to an element
-            // outside the tooltip. If relatedTarget is null (clicked non-focusable element)
-            // or inside tooltip, let the outside click handler decide.
-            const focusMovedToTooltip = tooltipRef.current?.contains(event.relatedTarget as Node);
-            if (event.relatedTarget && !focusMovedToTooltip) {
-              closeTooltip(0);
-            }
-          })
+          onBlur: composeEventHandlers(onBlur, handleToggletipBlur)
         };
       }
 
@@ -282,6 +315,7 @@ export const useTooltip = <T extends HTMLElement = HTMLElement>({
       isLabel,
       isToggletip,
       handleToggletipTriggerClick,
+      handleToggletipBlur,
       handleEscapeKey,
       closeTooltip,
       openTooltip,
@@ -290,7 +324,13 @@ export const useTooltip = <T extends HTMLElement = HTMLElement>({
   );
 
   const getTooltipProps = useCallback<IUseTooltipReturnValue['getTooltipProps']>(
-    ({ role = isToggletip ? 'status' : 'tooltip', onMouseEnter, onMouseLeave, ...other } = {}) => {
+    ({
+      role = isToggletip ? 'status' : 'tooltip',
+      onMouseEnter,
+      onMouseLeave,
+      onBlur,
+      ...other
+    } = {}) => {
       const baseProps = {
         role,
         'aria-hidden': !visibility,
@@ -299,10 +339,11 @@ export const useTooltip = <T extends HTMLElement = HTMLElement>({
       };
 
       if (isToggletip) {
-        // Toggletip: needs ref for outside click detection, no mouse handlers
+        // Toggletip: needs ref for outside click detection and blur handling, no mouse handlers
         return {
           ...baseProps,
-          ref: tooltipRef as any
+          ref: tooltipRef as any,
+          onBlur: composeEventHandlers(onBlur, handleToggletipBlur)
         };
       }
 
@@ -312,7 +353,7 @@ export const useTooltip = <T extends HTMLElement = HTMLElement>({
         onMouseLeave: composeEventHandlers(onMouseLeave, () => closeTooltip())
       };
     },
-    [_id, isToggletip, tooltipRef, closeTooltip, openTooltip, visibility]
+    [_id, isToggletip, tooltipRef, handleToggletipBlur, closeTooltip, openTooltip, visibility]
   );
 
   return useMemo<IUseTooltipReturnValue>(
