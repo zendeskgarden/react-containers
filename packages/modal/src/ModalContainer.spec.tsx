@@ -25,7 +25,12 @@ describe('FocusJailContainer', () => {
     onClose: jest.Mock;
     closeOnBlur?: boolean;
   }) => (
-    <ModalContainer modalRef={modalRef} onClose={onClose} idPrefix={MODAL_ID} closeOnBlur={closeOnBlur}>
+    <ModalContainer
+      modalRef={modalRef}
+      onClose={onClose}
+      idPrefix={MODAL_ID}
+      closeOnBlur={closeOnBlur}
+    >
       {({
         getBackdropProps,
         getModalProps,
