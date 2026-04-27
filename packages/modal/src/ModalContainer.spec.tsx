@@ -18,8 +18,14 @@ describe('FocusJailContainer', () => {
   const MODAL_ID = 'TEST_ID';
   const modalRef: React.RefObject<HTMLDivElement> = createRef();
 
-  const BasicExample = ({ onClose }: { onClose: jest.Mock }) => (
-    <ModalContainer modalRef={modalRef} onClose={onClose} idPrefix={MODAL_ID}>
+  const BasicExample = ({
+    onClose,
+    closeOnBlur
+  }: {
+    onClose: jest.Mock;
+    closeOnBlur?: boolean;
+  }) => (
+    <ModalContainer modalRef={modalRef} onClose={onClose} idPrefix={MODAL_ID} closeOnBlur={closeOnBlur}>
       {({
         getBackdropProps,
         getModalProps,
@@ -110,22 +116,46 @@ describe('FocusJailContainer', () => {
     });
 
     describe('onBlur', () => {
-      it('closes modal on blur', async () => {
-        render(<BasicExample onClose={onCloseSpy} />);
+      describe('closeOnBlur: true', () => {
+        it('closes modal when focus moves outside', async () => {
+          render(<BasicExample onClose={onCloseSpy} closeOnBlur />);
 
-        await waitFor(async () => {
-          await user.click(document.body);
+          await waitFor(async () => {
+            await user.click(document.body);
+          });
+
+          expect(onCloseSpy).toHaveBeenCalledTimes(1);
         });
 
-        expect(onCloseSpy).toHaveBeenCalledTimes(1);
+        it('does not close modal when focusing inside modal', async () => {
+          const { getByTestId } = render(<BasicExample onClose={onCloseSpy} closeOnBlur />);
+
+          await user.click(getByTestId('button'));
+
+          expect(onCloseSpy).not.toHaveBeenCalled();
+        });
       });
 
-      it('does not close modal when focusing inside modal', async () => {
-        const { getByTestId } = render(<BasicExample onClose={onCloseSpy} />);
+      describe.each([
+        ['omitted (default false)', undefined],
+        ['false', false]
+      ])('closeOnBlur: %s', (_, closeOnBlur) => {
+        it('does not close modal when focus moves outside', async () => {
+          render(<BasicExample onClose={onCloseSpy} closeOnBlur={closeOnBlur} />);
 
-        await user.click(getByTestId('button'));
+          await waitFor(async () => {
+            await user.click(document.body);
+          });
 
-        expect(onCloseSpy).not.toHaveBeenCalled();
+          expect(onCloseSpy).not.toHaveBeenCalled();
+        });
+      });
+
+      it('still closes modal on ESC when closeOnBlur is false', () => {
+        const { getByRole } = render(<BasicExample onClose={onCloseSpy} closeOnBlur={false} />);
+
+        fireEvent.keyDown(getByRole('dialog'), { key: KEYS.ESCAPE });
+        expect(onCloseSpy).toHaveBeenCalledTimes(1);
       });
     });
   });

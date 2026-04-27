@@ -11,12 +11,13 @@ import { useFocusJail } from '@zendeskgarden/container-focusjail';
 import { IUseModalProps, IUseModalReturnValue } from './types';
 
 export const useModal = <T extends Element = Element>({
-  onClose,
-  modalRef,
-  idPrefix,
+  closeOnBlur,
+  environment,
   focusOnMount,
-  restoreFocus,
-  environment
+  idPrefix,
+  modalRef,
+  onClose,
+  restoreFocus
 }: IUseModalProps<T>): IUseModalReturnValue => {
   const prefix = useId(idPrefix);
   const titleId = `${prefix}__title`;
@@ -76,21 +77,28 @@ export const useModal = <T extends Element = Element>({
     'aria-modal': true,
     'aria-labelledby': titleId,
     'aria-describedby': contentId,
-    onBlur: composeEventHandlers(onBlur, event => {
-      const doc = environment || document;
-      const relatedTarget = event.relatedTarget as Element | null;
+    onBlur: composeEventHandlers(
+      onBlur,
+      closeOnBlur
+        ? event => {
+            const doc = environment || document;
+            const relatedTarget = event.relatedTarget as Element | null;
 
-      if (relatedTarget === null || !modalRef.current?.contains(relatedTarget)) {
-        // Timeout is required to ensure blur is handled after focus
-        setTimeout(() => {
-          const activeElement = doc.activeElement;
+            if (relatedTarget === null || !modalRef.current?.contains(relatedTarget)) {
+              // Timeout is required to ensure blur is handled after focus
+              setTimeout(() => {
+                const activeElement = doc.activeElement;
 
-          if (!(isBackdropMouseDownRef.current || modalRef.current?.contains(activeElement))) {
-            closeModal(event);
+                if (
+                  !(isBackdropMouseDownRef.current || modalRef.current?.contains(activeElement))
+                ) {
+                  closeModal(event);
+                }
+              });
+            }
           }
-        });
-      }
-    }),
+        : undefined
+    ),
     onMouseDown: composeEventHandlers(onMouseDown, () => {
       isModalMouseDownRef.current = true;
     }),
