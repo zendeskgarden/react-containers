@@ -20,6 +20,12 @@ export interface IUseModalProps<T = Element> {
   restoreFocus?: boolean;
   /** Sets the environment where the modal is rendered */
   environment?: Document;
+  /**
+   * Closes the modal when focus moves outside the dialog element.
+   * Set to `true` only for non-modal popovers (e.g. `TooltipDialog`)
+   * where light-dismiss on focus loss is intentional.
+   */
+  closeOnBlur?: boolean;
 }
 
 export interface IUseModalReturnValue {
