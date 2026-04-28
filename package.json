@@ -89,7 +89,7 @@
     "prettier-package-json": "2.8.0",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "rollup": "4.53.3",
+    "rollup": "4.59.0",
     "rollup-plugin-analyzer": "4.0.0",
     "rollup-plugin-cleanup": "3.2.1",
     "rollup-plugin-delete": "2.2.0",
