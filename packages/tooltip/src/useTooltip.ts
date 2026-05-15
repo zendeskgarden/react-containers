@@ -209,7 +209,10 @@ export const useTooltip = <T extends HTMLElement = HTMLElement>({
 
     const _document = getDocument(windowProp, documentProp);
 
-    const handleOutsideClick = (event: MouseEvent) => {
+    // Use mousedown instead of click to avoid timing issues with the opening click.
+    // mousedown fires before React state updates, so by the time this effect runs
+    // and attaches the listener, the opening mousedown has already passed.
+    const handleOutsideMouseDown = (event: MouseEvent) => {
       const target = event.target as Node;
       const clickedTrigger = triggerRef.current?.contains(target);
 
@@ -221,16 +224,10 @@ export const useTooltip = <T extends HTMLElement = HTMLElement>({
       }
     };
 
-    // Defer adding the listener until after the current event loop completes
-    // This ensures the opening click (or any click that triggers visibility change)
-    // finishes propagating before we start listening for outside clicks
-    const timeoutId = setTimeout(() => {
-      _document.addEventListener('click', handleOutsideClick);
-    }, 0);
+    _document.addEventListener('mousedown', handleOutsideMouseDown);
 
     return () => {
-      clearTimeout(timeoutId);
-      _document.removeEventListener('click', handleOutsideClick);
+      _document.removeEventListener('mousedown', handleOutsideMouseDown);
     };
   }, [isToggletip, visibility, triggerRef, closeTooltip, windowProp, documentProp]);
 
