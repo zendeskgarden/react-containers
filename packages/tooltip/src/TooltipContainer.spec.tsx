@@ -145,8 +145,8 @@ describe('TooltipContainer', () => {
         await user.hover(getByText('trigger'));
 
         unmount();
-        // 3 total clearTimeouts occur during this action
-        expect(spy).toHaveBeenCalledTimes(3);
+        // 5 total clearTimeouts occur: open, close, announcement, blur timeouts + one from hover action
+        expect(spy).toHaveBeenCalledTimes(5);
 
         spy.mockRestore();
       });

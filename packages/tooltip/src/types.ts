@@ -63,6 +63,7 @@ export interface ITooltipContainerProps<T = HTMLElement> extends IUseTooltipProp
     getTriggerProps: IUseTooltipReturnValue['getTriggerProps'];
     /* state */
     isVisible?: boolean;
+    isAnnouncementReady?: boolean;
     /* actions */
     openTooltip: IUseTooltipReturnValue['openTooltip'];
     closeTooltip: IUseTooltipReturnValue['closeTooltip'];
