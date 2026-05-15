@@ -89,12 +89,38 @@ const Toggletip = () => {
 - Use `isAnnouncementReady` to control when content is populated for screen reader
   re-announcements
 
-**Content recommendations:**
+**Content requirements:**
 
-Toggletip content should ideally be text-only. When the toggletip opens, screen readers announce
+Toggletip content should be text-only. When the toggletip opens, screen readers announce
 the text content via the `role="status"` live region. If the content includes interactive elements
 (buttons, links) or complex markup, screen readers will only announce the text portion. For complex
 interactive content, consider using a popover or dialog pattern instead.
+
+**Accessibility requirements:**
+
+The following requirements are essential for toggletip accessibility:
+
+- Toggletip triggers **must** be native `<button>` elements (not `<div role="button">` or other
+  elements). Native buttons provide correct keyboard focus behavior and screen reader semantics
+  automatically.
+- Toggletip triggers **must** have an accessible name via visible text content, `aria-label`, or
+  `aria-labelledby`.
+- Toggletip content **should not** contain interactive elements (links, buttons, form controls).
+  Use [Tooltip Dialog](https://garden.zendesk.com/components/tooltip-dialog) for lightweight
+  interactive overlays, or [Modal](https://garden.zendesk.com/components/modal) for complex forms.
+
+For TypeScript users, the `IUseToggletipProps` helper type enforces `HTMLButtonElement` as the
+trigger ref type:
+
+```tsx
+import { useTooltip, IUseToggletipProps } from '@zendeskgarden/container-tooltip';
+
+const triggerRef = useRef<HTMLButtonElement>(null);
+const tooltip = useTooltip({
+  isToggletip: true,
+  triggerRef
+} satisfies IUseToggletipProps);
+```
 
 ### TooltipContainer
 

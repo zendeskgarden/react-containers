@@ -23,6 +23,8 @@ export interface IUseTooltipProps<T = HTMLElement> {
    * Enables toggletip behavior (click-to-toggle) instead of tooltip behavior (hover/focus).
    * When true, tooltip opens/closes on click, closes on outside clicks and Escape key,
    * and uses role="status" for live region announcements.
+   *
+   * Note: Toggletip triggers must be `<button>` elements for proper accessibility.
    */
   isToggletip?: boolean;
   /** Provides ref access to the underlying trigger element */
@@ -32,6 +34,20 @@ export interface IUseTooltipProps<T = HTMLElement> {
   /** Sets the document where the tooltip is rendered (for SSR compatibility) */
   document?: Document | ShadowRoot;
 }
+
+/**
+ * Helper type for toggletip usage that enforces HTMLButtonElement as the trigger type.
+ * Use this when calling useTooltip with isToggletip: true to get compile-time
+ * enforcement that the trigger ref points to a button element.
+ *
+ * @example
+ * const triggerRef = useRef<HTMLButtonElement>(null);
+ * const tooltip = useTooltip<HTMLButtonElement>({
+ *   isToggletip: true,
+ *   triggerRef
+ * } satisfies IUseToggletipProps);
+ */
+export type IUseToggletipProps = IUseTooltipProps<HTMLButtonElement> & { isToggletip: true };
 
 export interface IUseTooltipReturnValue {
   getTooltipProps: <T extends Element>(props?: HTMLProps<T>) => HTMLProps<T>;
