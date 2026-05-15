@@ -145,8 +145,8 @@ describe('TooltipContainer', () => {
         await user.hover(getByText('trigger'));
 
         unmount();
-        // 3 total clearTimeouts occur during this action
-        expect(spy).toHaveBeenCalledTimes(3);
+        // 5 total clearTimeouts occur: open, close, announcement, blur timeouts + one from hover action
+        expect(spy).toHaveBeenCalledTimes(5);
 
         spy.mockRestore();
       });
@@ -335,6 +335,615 @@ describe('TooltipContainer', () => {
       });
 
       expect(getByText('tooltip')).toHaveAttribute('aria-hidden', 'true');
+    });
+  });
+
+  describe('Toggletip behavior', () => {
+    interface ITestToggletipProps extends Omit<ITooltipContainerProps, 'triggerRef'> {
+      triggerProps?: HTMLAttributes<HTMLButtonElement>;
+      tooltipProps?: HTMLAttributes<HTMLDivElement>;
+    }
+
+    const ToggletipExample = ({ triggerProps, tooltipProps, ...props }: ITestToggletipProps) => {
+      const triggerRef = createRef<HTMLButtonElement>();
+
+      return (
+        <TooltipContainer id={TOOLTIP_ID} {...props} isToggletip triggerRef={triggerRef}>
+          {({ getTooltipProps, getTriggerProps, isAnnouncementReady }) => (
+            <>
+              <button {...getTriggerProps(triggerProps)} type="button">
+                Info
+              </button>
+              <div {...getTooltipProps(tooltipProps)}>
+                {isAnnouncementReady ? 'tooltip content' : null}
+              </div>
+            </>
+          )}
+        </TooltipContainer>
+      );
+    };
+
+    describe('ARIA attributes', () => {
+      it('uses role="status" for toggletips', () => {
+        const { getByRole } = render(<ToggletipExample />);
+
+        expect(getByRole('status', { hidden: true })).toBeInTheDocument();
+      });
+
+      it('does not add aria-describedby or aria-labelledby to trigger by default', () => {
+        const { getByRole } = render(<ToggletipExample />);
+        const trigger = getByRole('button');
+
+        expect(trigger).not.toHaveAttribute('aria-describedby');
+        expect(trigger).not.toHaveAttribute('aria-labelledby');
+      });
+
+      it('adds aria-expanded="false" when toggletip is closed', () => {
+        const { getByRole } = render(<ToggletipExample />);
+
+        expect(getByRole('button', { expanded: false })).toBeInTheDocument();
+      });
+
+      it('adds aria-expanded="true" when toggletip is open', () => {
+        const { getByRole } = render(<ToggletipExample />);
+        const trigger = getByRole('button');
+
+        fireEvent.click(trigger);
+        act(() => {
+          jest.runOnlyPendingTimers();
+        });
+
+        expect(getByRole('button', { expanded: true })).toBeInTheDocument();
+      });
+
+      it('adds aria-controls pointing to tooltip ID', () => {
+        const { getByRole } = render(<ToggletipExample />);
+        const trigger = getByRole('button');
+
+        expect(trigger).toHaveAttribute('aria-controls', TOOLTIP_ID);
+      });
+    });
+
+    describe('Does not respond to hover/focus', () => {
+      it('does not open on hover', async () => {
+        const { getByRole } = render(<ToggletipExample />);
+        const trigger = getByRole('button');
+
+        await user.hover(trigger);
+        act(() => {
+          jest.runOnlyPendingTimers();
+        });
+
+        expect(getByRole('status', { hidden: true })).toBeInTheDocument();
+      });
+
+      it('does not open on focus', async () => {
+        const { getByRole } = render(<ToggletipExample />);
+
+        await user.tab();
+        act(() => {
+          jest.runOnlyPendingTimers();
+        });
+
+        expect(getByRole('status', { hidden: true })).toBeInTheDocument();
+      });
+    });
+
+    describe('Click interaction', () => {
+      it('opens on first click', () => {
+        const { getByRole } = render(<ToggletipExample />);
+        const trigger = getByRole('button');
+
+        fireEvent.click(trigger);
+        act(() => {
+          jest.runOnlyPendingTimers();
+        });
+
+        expect(getByRole('status')).toBeInTheDocument();
+        expect(getByRole('status')).toHaveTextContent('tooltip content');
+      });
+
+      it('keeps tooltip visible when re-clicking (for re-announcement)', () => {
+        const { getByRole } = render(<ToggletipExample />);
+        const trigger = getByRole('button');
+
+        // First click - opens
+        fireEvent.click(trigger);
+        act(() => {
+          jest.runOnlyPendingTimers();
+        });
+
+        expect(getByRole('status')).toBeInTheDocument();
+
+        // Second click - should keep it open
+        fireEvent.click(trigger);
+
+        expect(getByRole('status')).toBeInTheDocument();
+      });
+
+      it('clears and repopulates content after 100ms on re-click for screen reader re-announcement', () => {
+        const { getByRole } = render(<ToggletipExample />);
+        const trigger = getByRole('button');
+
+        // First click - opens
+        fireEvent.click(trigger);
+        act(() => {
+          jest.runOnlyPendingTimers();
+        });
+        expect(getByRole('status')).toHaveTextContent('tooltip content');
+
+        // Second click - triggers re-announcement
+        fireEvent.click(trigger);
+
+        // Content should be cleared immediately
+        expect(getByRole('status')).toHaveTextContent('');
+
+        // After 100ms, content should be repopulated
+        act(() => {
+          jest.advanceTimersByTime(100);
+        });
+
+        expect(getByRole('status')).toHaveTextContent('tooltip content');
+      });
+    });
+
+    describe('Blur behavior', () => {
+      // Toggletips use blur handlers on both trigger and tooltip to detect when focus
+      // leaves the entire toggletip container (trigger + tooltip content).
+      // After blur, we check document.activeElement to see if focus is still within
+      // the container. This works for both keyboard navigation and mouse interactions.
+
+      it('defers to outside click handler when blur has null relatedTarget', () => {
+        const { getByRole } = render(<ToggletipExample />);
+        const trigger = getByRole('button');
+
+        fireEvent.click(trigger);
+        act(() => {
+          jest.runOnlyPendingTimers();
+        });
+
+        expect(getByRole('status')).toBeInTheDocument();
+
+        // Simulate blur with null relatedTarget (happens when clicking non-focusable elements)
+        // Blur handler should NOT close - it defers the decision to outside click handler
+        fireEvent.blur(trigger, { relatedTarget: null });
+
+        expect(getByRole('status')).toBeInTheDocument();
+      });
+
+      it('does not close when focus moves into tooltip content', () => {
+        const ToggletipWithFocusableContent = () => {
+          const triggerRef = createRef<HTMLButtonElement>();
+
+          return (
+            <TooltipContainer id={TOOLTIP_ID} isToggletip triggerRef={triggerRef}>
+              {({ getTooltipProps, getTriggerProps, isAnnouncementReady }) => (
+                <>
+                  <button {...getTriggerProps()} type="button">
+                    Info
+                  </button>
+                  <div {...getTooltipProps()}>
+                    {isAnnouncementReady ? <button type="button">Inside button</button> : null}
+                  </div>
+                </>
+              )}
+            </TooltipContainer>
+          );
+        };
+
+        const { getByRole } = render(<ToggletipWithFocusableContent />);
+        const trigger = getByRole('button', { name: 'Info' });
+
+        fireEvent.click(trigger);
+        act(() => {
+          jest.runOnlyPendingTimers();
+        });
+
+        expect(getByRole('status')).toBeInTheDocument();
+
+        const insideButton = getByRole('button', { name: 'Inside button' });
+
+        // Simulate focus moving from trigger into tooltip content
+        // Blur handler should NOT close because focus stayed within the tooltip
+        fireEvent.blur(trigger, { relatedTarget: insideButton });
+
+        expect(getByRole('status')).toBeInTheDocument();
+      });
+
+      it('closes immediately when focus moves to element outside tooltip', async () => {
+        const { getByRole } = render(<ToggletipExample />);
+        const trigger = getByRole('button');
+
+        fireEvent.click(trigger);
+        act(() => {
+          jest.runOnlyPendingTimers();
+        });
+
+        expect(getByRole('status')).toBeInTheDocument();
+
+        // Tab to move focus to next element (keyboard navigation)
+        // Blur handler should close immediately since focus moved to another element
+        await user.tab();
+
+        await waitFor(() => {
+          expect(getByRole('status', { hidden: true })).toBeInTheDocument();
+        });
+      });
+
+      it('closes immediately when blur relatedTarget is outside tooltip', () => {
+        const { getByRole } = render(
+          <div>
+            <ToggletipExample />
+            <button type="button">Outside button</button>
+          </div>
+        );
+        const trigger = getByRole('button', { name: 'Info' });
+        const outsideButton = getByRole('button', { name: 'Outside button' });
+
+        fireEvent.click(trigger);
+        act(() => {
+          jest.runOnlyPendingTimers();
+        });
+
+        expect(getByRole('status')).toBeInTheDocument();
+
+        // Simulate blur where relatedTarget is an element outside the tooltip
+        // Blur handler should close immediately
+        fireEvent.blur(trigger, { relatedTarget: outsideButton });
+
+        expect(getByRole('status', { hidden: true })).toBeInTheDocument();
+      });
+
+      it('closes when Shift+Tab moves focus backward out of tooltip content', () => {
+        const ToggletipWithFocusableContent = () => {
+          const triggerRef = createRef<HTMLButtonElement>();
+
+          return (
+            <TooltipContainer id={TOOLTIP_ID} isToggletip triggerRef={triggerRef}>
+              {({ getTooltipProps, getTriggerProps, isAnnouncementReady }) => (
+                <>
+                  <button {...getTriggerProps()} type="button">
+                    Info
+                  </button>
+                  <div {...getTooltipProps()}>
+                    {isAnnouncementReady ? <button type="button">Inside button</button> : null}
+                  </div>
+                </>
+              )}
+            </TooltipContainer>
+          );
+        };
+
+        const { getByRole } = render(
+          <div>
+            <button type="button">Before button</button>
+            <ToggletipWithFocusableContent />
+          </div>
+        );
+        const trigger = getByRole('button', { name: 'Info' });
+
+        fireEvent.click(trigger);
+        act(() => {
+          jest.runOnlyPendingTimers();
+        });
+
+        expect(getByRole('status')).toBeInTheDocument();
+
+        const insideButton = getByRole('button', { name: 'Inside button' });
+        insideButton.focus();
+
+        // Simulate Shift+Tab: blur from tooltip content with null relatedTarget (or previous element)
+        // The blur handler on tooltip checks activeElement after timeout
+        fireEvent.blur(insideButton, { relatedTarget: null });
+
+        // Since we can't actually move focus in jsdom, simulate the check by advancing time
+        act(() => {
+          jest.advanceTimersByTime(10);
+        });
+
+        // In real browser, focus would have moved outside the toggletip container
+        // For this test, we verify the blur handler was attached
+        expect(getByRole('status', { hidden: true })).toBeInTheDocument();
+      });
+    });
+
+    describe('Outside click detection', () => {
+      it('closes on clicks outside trigger and tooltip', () => {
+        const { getByRole } = render(
+          <div>
+            <ToggletipExample />
+            <button type="button">Outside button</button>
+          </div>
+        );
+        const trigger = getByRole('button', { name: 'Info' });
+
+        fireEvent.click(trigger);
+        act(() => {
+          jest.runOnlyPendingTimers();
+        });
+
+        expect(getByRole('status')).toBeInTheDocument();
+
+        fireEvent.click(getByRole('button', { name: 'Outside button' }));
+
+        expect(getByRole('status', { hidden: true })).toBeInTheDocument();
+      });
+
+      it('does not close when clicking the trigger', () => {
+        const { getByRole } = render(<ToggletipExample />);
+        const trigger = getByRole('button');
+
+        fireEvent.click(trigger);
+        act(() => {
+          jest.runOnlyPendingTimers();
+        });
+
+        expect(getByRole('status')).toBeInTheDocument();
+
+        fireEvent.click(trigger);
+
+        expect(getByRole('status')).toBeInTheDocument();
+      });
+
+      it('closes when clicking inside tooltip content', () => {
+        const { getByRole } = render(<ToggletipExample />);
+        const trigger = getByRole('button');
+
+        fireEvent.click(trigger);
+        act(() => {
+          jest.runOnlyPendingTimers();
+        });
+
+        const tooltip = getByRole('status');
+        expect(tooltip).toBeInTheDocument();
+
+        // Per Inclusive Components: clicking the tooltip dismisses it
+        fireEvent.click(tooltip);
+
+        expect(getByRole('status', { hidden: true })).toBeInTheDocument();
+      });
+    });
+
+    describe('Escape key behavior', () => {
+      it('closes on Escape key from trigger', () => {
+        const { getByRole } = render(<ToggletipExample />);
+        const trigger = getByRole('button');
+
+        fireEvent.click(trigger);
+        act(() => {
+          jest.runOnlyPendingTimers();
+        });
+
+        expect(getByRole('status')).toBeInTheDocument();
+
+        fireEvent.keyDown(trigger, { key: KEYS.ESCAPE });
+
+        expect(getByRole('status', { hidden: true })).toBeInTheDocument();
+      });
+
+      it('closes on Escape key from document and restores focus when focus is inside tooltip', () => {
+        const ToggletipWithFocusableContent = () => {
+          const triggerRef = createRef<HTMLButtonElement>();
+
+          return (
+            <TooltipContainer id={TOOLTIP_ID} isToggletip triggerRef={triggerRef}>
+              {({ getTooltipProps, getTriggerProps, isAnnouncementReady }) => (
+                <>
+                  <button {...getTriggerProps()} type="button">
+                    Info
+                  </button>
+                  <div {...getTooltipProps()}>
+                    {isAnnouncementReady ? <button type="button">Inside button</button> : null}
+                  </div>
+                </>
+              )}
+            </TooltipContainer>
+          );
+        };
+
+        const { getByRole } = render(<ToggletipWithFocusableContent />);
+        const trigger = getByRole('button', { name: 'Info' });
+
+        fireEvent.click(trigger);
+        act(() => {
+          jest.runOnlyPendingTimers();
+        });
+
+        const insideButton = getByRole('button', { name: 'Inside button' });
+        insideButton.focus();
+        expect(insideButton).toHaveFocus();
+
+        fireEvent.keyDown(document, { key: KEYS.ESCAPE });
+
+        expect(getByRole('status', { hidden: true })).toBeInTheDocument();
+        expect(trigger).toHaveFocus();
+      });
+
+      it('closes on Escape key but preserves focus when focus is elsewhere', () => {
+        const { getByRole } = render(
+          <div>
+            <ToggletipExample />
+            <button type="button">Other button</button>
+          </div>
+        );
+        const trigger = getByRole('button', { name: 'Info' });
+        const otherButton = getByRole('button', { name: 'Other button' });
+
+        fireEvent.click(trigger);
+        act(() => {
+          jest.runOnlyPendingTimers();
+        });
+
+        otherButton.focus();
+        expect(otherButton).toHaveFocus();
+
+        fireEvent.keyDown(document, { key: KEYS.ESCAPE });
+
+        expect(getByRole('status', { hidden: true })).toBeInTheDocument();
+        expect(otherButton).toHaveFocus();
+      });
+    });
+
+    describe('SSR compatibility', () => {
+      it('works with custom window and document props', () => {
+        const mockDocument = document;
+        const mockWindow = window;
+
+        const { getByRole } = render(
+          <ToggletipExample window={mockWindow} document={mockDocument} />
+        );
+        const trigger = getByRole('button');
+
+        fireEvent.click(trigger);
+        act(() => {
+          jest.runOnlyPendingTimers();
+        });
+
+        expect(getByRole('status')).toBeInTheDocument();
+
+        fireEvent.click(document.body);
+
+        expect(getByRole('status', { hidden: true })).toBeInTheDocument();
+      });
+    });
+
+    describe('DOM order independence', () => {
+      it('works when tooltip is rendered before trigger in DOM', () => {
+        const ToggletipWithReversedOrder = () => {
+          const triggerRef = createRef<HTMLButtonElement>();
+
+          return (
+            <TooltipContainer id={TOOLTIP_ID} isToggletip triggerRef={triggerRef}>
+              {({ getTooltipProps, getTriggerProps, isAnnouncementReady }) => (
+                <>
+                  {/* Tooltip before trigger - common pattern for positioning */}
+                  <div {...getTooltipProps()}>
+                    {isAnnouncementReady ? <button type="button">Inside button</button> : null}
+                  </div>
+                  <button {...getTriggerProps()} type="button">
+                    Info
+                  </button>
+                </>
+              )}
+            </TooltipContainer>
+          );
+        };
+
+        const { getByRole } = render(<ToggletipWithReversedOrder />);
+        const trigger = getByRole('button', { name: 'Info' });
+
+        // Open toggletip
+        fireEvent.click(trigger);
+        act(() => {
+          jest.runOnlyPendingTimers();
+        });
+
+        expect(getByRole('status')).toBeInTheDocument();
+
+        // Tab into interactive content inside tooltip
+        const insideButton = getByRole('button', { name: 'Inside button' });
+        fireEvent.blur(trigger, { relatedTarget: insideButton });
+
+        // Should stay open
+        expect(getByRole('status')).toBeInTheDocument();
+
+        // Shift+Tab backward out of tooltip
+        fireEvent.blur(insideButton, { relatedTarget: null });
+        act(() => {
+          jest.advanceTimersByTime(10);
+        });
+
+        // Should close
+        expect(getByRole('status', { hidden: true })).toBeInTheDocument();
+      });
+    });
+
+    describe('Screen reader re-announcement', () => {
+      it('re-announces content after closing via Escape key', () => {
+        const { getByRole } = render(<ToggletipExample />);
+        const trigger = getByRole('button');
+
+        // First open
+        fireEvent.click(trigger);
+        act(() => {
+          jest.runOnlyPendingTimers();
+        });
+
+        expect(getByRole('status')).toHaveTextContent('tooltip content');
+
+        // Close via Escape key
+        fireEvent.keyDown(trigger, { key: KEYS.ESCAPE });
+        act(() => {
+          jest.runOnlyPendingTimers();
+        });
+
+        // Reopen - verify content is present again (proving it was cleared and restored)
+        fireEvent.click(trigger);
+        act(() => {
+          jest.runOnlyPendingTimers();
+        });
+
+        expect(getByRole('status')).toHaveTextContent('tooltip content');
+      });
+
+      it('re-announces content after closing via outside click', () => {
+        const { getByRole } = render(
+          <div>
+            <ToggletipExample />
+            <button type="button">Outside button</button>
+          </div>
+        );
+        const trigger = getByRole('button', { name: 'Info' });
+
+        // First open
+        fireEvent.click(trigger);
+        act(() => {
+          jest.runOnlyPendingTimers();
+        });
+
+        expect(getByRole('status')).toHaveTextContent('tooltip content');
+
+        // Close via outside click
+        fireEvent.click(getByRole('button', { name: 'Outside button' }));
+        act(() => {
+          jest.runOnlyPendingTimers();
+        });
+
+        // Reopen - verify content is present again (proving it was cleared and restored)
+        fireEvent.click(trigger);
+        act(() => {
+          jest.runOnlyPendingTimers();
+        });
+
+        expect(getByRole('status')).toHaveTextContent('tooltip content');
+      });
+
+      it('re-announces content after closing via blur', async () => {
+        const { getByRole } = render(<ToggletipExample />);
+        const trigger = getByRole('button');
+
+        // First open
+        fireEvent.click(trigger);
+        act(() => {
+          jest.runOnlyPendingTimers();
+        });
+
+        expect(getByRole('status')).toHaveTextContent('tooltip content');
+
+        // Close via blur (tab away)
+        await user.tab();
+        act(() => {
+          jest.runOnlyPendingTimers();
+        });
+
+        // Reopen - verify content is present again (proving it was cleared and restored)
+        fireEvent.click(trigger);
+        act(() => {
+          jest.runOnlyPendingTimers();
+        });
+
+        expect(getByRole('status')).toHaveTextContent('tooltip content');
+      });
     });
   });
 });

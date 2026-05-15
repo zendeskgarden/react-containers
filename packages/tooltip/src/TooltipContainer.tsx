@@ -10,14 +10,14 @@ import PropTypes from 'prop-types';
 import { useTooltip } from './useTooltip';
 import { ITooltipContainerProps } from './types';
 
-export const TooltipContainer: FC<ITooltipContainerProps> = props => {
-  const { children, render = children, ...options } = props;
-
-  return <>{render!(useTooltip(options))}</>;
-};
-
-TooltipContainer.defaultProps = {
-  delayMilliseconds: 500
+export const TooltipContainer: FC<ITooltipContainerProps> = ({
+  children,
+  render = children,
+  delayMilliseconds = 500,
+  isToggletip = false,
+  ...options
+}) => {
+  return <>{render!(useTooltip({ delayMilliseconds, isToggletip, ...options }))}</>;
 };
 
 TooltipContainer.propTypes = {
@@ -26,6 +26,9 @@ TooltipContainer.propTypes = {
   delayMilliseconds: PropTypes.number,
   id: PropTypes.string,
   isLabel: PropTypes.bool,
+  isToggletip: PropTypes.bool,
   isVisible: PropTypes.bool,
-  triggerRef: PropTypes.any.isRequired
+  triggerRef: PropTypes.any.isRequired,
+  window: PropTypes.any,
+  document: PropTypes.any
 };

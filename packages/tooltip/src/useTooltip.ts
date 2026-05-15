@@ -9,19 +9,37 @@ import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import { KEYS, composeEventHandlers, useId } from '@zendeskgarden/container-utilities';
 import { IUseTooltipProps, IUseTooltipReturnValue } from './types';
 
+/**
+ * Returns the document object from the window or document prop.
+ * For SSR compatibility, use within useEffect hooks.
+ */
+function getDocument(win?: Window, doc?: Document | ShadowRoot): Document {
+  if (doc) {
+    return doc instanceof Document ? doc : (doc.ownerDocument ?? document);
+  }
+  return win ? win.document : window.document;
+}
+
 export const useTooltip = <T extends HTMLElement = HTMLElement>({
   delayMilliseconds = 500,
   id,
   isLabel,
   isVisible,
-  triggerRef
+  isToggletip,
+  triggerRef,
+  window: windowProp,
+  document: documentProp
 }: IUseTooltipProps<T>): IUseTooltipReturnValue => {
   const _id = useId(id);
   const [visibility, setVisibility] = useState(isVisible);
   const isMounted = useRef(false);
   const openTooltipTimeoutId = useRef<number>();
   const closeTooltipTimeoutId = useRef<number>();
+  const announcementTimeoutId = useRef<number>();
+  const blurTimeoutId = useRef<number>();
   const isTriggerPopupExpanded = useRef(false);
+  const tooltipRef = useRef<HTMLElement>(null);
+  const [isAnnouncementReady, setIsAnnouncementReady] = useState(false);
 
   /**
    * 1. Prevent scheduling a tooltip open if a popup is already expanded.
@@ -60,13 +78,76 @@ export const useTooltip = <T extends HTMLElement = HTMLElement>({
       const timerId = setTimeout(() => {
         if (isMounted.current) {
           setVisibility(false);
+          // Reset announcement state together with visibility to avoid flash
+          if (isToggletip) {
+            setIsAnnouncementReady(false);
+          }
         }
       }, delayMs);
 
       closeTooltipTimeoutId.current = Number(timerId);
     },
-    [delayMilliseconds]
+    [delayMilliseconds, isToggletip]
   );
+
+  const handleEscapeKey = useCallback(() => {
+    if (!visibility) return;
+
+    const _document = getDocument(windowProp, documentProp);
+    const activeElement = _document.activeElement;
+    const focusInTooltip = tooltipRef.current?.contains(activeElement as Node);
+
+    closeTooltip(0);
+
+    // Only restore focus if current focus is inside tooltip content
+    // (which will be hidden), otherwise preserve user's current focus
+    if (focusInTooltip) {
+      triggerRef.current?.focus();
+    }
+  }, [visibility, closeTooltip, windowProp, documentProp, triggerRef]);
+
+  const handleToggletipTriggerClick = useCallback(() => {
+    // Inclusive Components pattern: every click clears then repopulates the live region
+    // after 100ms. This ensures screen readers announce the content on every click,
+    // whether opening for the first time or re-clicking when already open.
+    if (!visibility) {
+      openTooltip(0);
+    }
+
+    setIsAnnouncementReady(false);
+    clearTimeout(announcementTimeoutId.current);
+    announcementTimeoutId.current = Number(
+      setTimeout(() => {
+        if (isMounted.current) {
+          setIsAnnouncementReady(true);
+        }
+      }, 100)
+    );
+  }, [visibility, openTooltip]);
+
+  const handleToggletipBlur = useCallback(() => {
+    // Use setTimeout to check where focus actually ended up, similar to useMenu approach.
+    // This works regardless of event.relatedTarget being null or not.
+    clearTimeout(blurTimeoutId.current);
+    blurTimeoutId.current = Number(
+      setTimeout(() => {
+        if (!isMounted.current) return;
+
+        const _document = getDocument(windowProp, documentProp);
+        const activeElement = _document.activeElement;
+
+        // Check if focus is still within trigger or tooltip
+        const isTriggerOrTooltipFocused =
+          tooltipRef.current?.contains(activeElement as Node) ||
+          triggerRef.current?.contains(activeElement as Node);
+
+        // If focus left the trigger and tooltip entirely, close
+        if (!isTriggerOrTooltipFocused) {
+          closeTooltip(0);
+        }
+      }, 0)
+    );
+  }, [closeTooltip, windowProp, documentProp, triggerRef, tooltipRef]);
 
   /*
    * Effects
@@ -88,8 +169,10 @@ export const useTooltip = <T extends HTMLElement = HTMLElement>({
     return () => {
       clearTimeout(openTooltipTimeoutId.current);
       clearTimeout(closeTooltipTimeoutId.current);
+      clearTimeout(announcementTimeoutId.current);
+      clearTimeout(blurTimeoutId.current);
     };
-  }, [closeTooltipTimeoutId, openTooltipTimeoutId]);
+  }, []);
 
   useEffect(() => {
     // Prevent tooltip from competing with a trigger popup (i.e. menu, dialog, etc.)
@@ -120,57 +203,169 @@ export const useTooltip = <T extends HTMLElement = HTMLElement>({
     return () => mutationObserver.disconnect();
   }, [triggerRef]);
 
+  useEffect(() => {
+    if (!isToggletip || !visibility) return undefined;
+
+    const _document = getDocument(windowProp, documentProp);
+
+    // Use mousedown instead of click to avoid timing issues with the opening click.
+    // mousedown fires before React state updates, so by the time this effect runs
+    // and attaches the listener, the opening mousedown has already passed.
+    const handleOutsideMouseDown = (event: MouseEvent) => {
+      const target = event.target as Node;
+      const clickedTrigger = triggerRef.current?.contains(target);
+
+      // Close if clicking anywhere except the trigger itself
+      // Per Inclusive Components: clicking the tooltip content should close it
+      // (but keyboard focus into tooltip content should keep it open - handled by blur)
+      if (!clickedTrigger) {
+        closeTooltip(0);
+      }
+    };
+
+    _document.addEventListener('mousedown', handleOutsideMouseDown);
+
+    return () => {
+      _document.removeEventListener('mousedown', handleOutsideMouseDown);
+    };
+  }, [isToggletip, visibility, triggerRef, closeTooltip, windowProp, documentProp]);
+
+  useEffect(() => {
+    if (!isToggletip || !visibility) return undefined;
+
+    const _document = getDocument(windowProp, documentProp);
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === KEYS.ESCAPE) {
+        handleEscapeKey();
+      }
+    };
+
+    _document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      _document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isToggletip, visibility, handleEscapeKey, windowProp, documentProp]);
+
   /*
    * Prop getters
    */
 
   const getTriggerProps = useCallback<IUseTooltipReturnValue['getTriggerProps']>(
-    ({ tabIndex = 0, onMouseEnter, onMouseLeave, onFocus, onBlur, onKeyDown, ...other } = {}) => ({
-      tabIndex,
-      onMouseEnter: composeEventHandlers(onMouseEnter, () => openTooltip()),
-      onMouseLeave: composeEventHandlers(onMouseLeave, () => closeTooltip()),
-      onFocus: composeEventHandlers(onFocus, event => {
-        // Prevent tooltip on implicit focus (i.e. `restoreFocus` in modals)
-        if (event.currentTarget.matches(':focus-visible')) {
-          openTooltip();
-        }
-      }),
-      // Close menu immediately when blurred
-      onBlur: composeEventHandlers(onBlur, () => closeTooltip(0)),
-      onKeyDown: composeEventHandlers(onKeyDown, (event: KeyboardEvent) => {
-        if (event.key === KEYS.ESCAPE && visibility) {
-          closeTooltip(0);
-        }
-      }),
-      [isLabel ? 'aria-labelledby' : 'aria-describedby']: _id,
-      'data-garden-container-id': 'containers.tooltip',
-      'data-garden-container-version': PACKAGE_VERSION,
-      ref: triggerRef as any,
+    ({
+      tabIndex = 0,
+      onClick,
+      onMouseEnter,
+      onMouseLeave,
+      onFocus,
+      onBlur,
+      onKeyDown,
       ...other
-    }),
-    [_id, isLabel, closeTooltip, openTooltip, triggerRef, visibility]
+    } = {}) => {
+      const baseProps = {
+        tabIndex,
+        'data-garden-container-id': 'containers.tooltip',
+        'data-garden-container-version': PACKAGE_VERSION,
+        ref: triggerRef as any,
+        ...other
+      };
+
+      if (isToggletip) {
+        // Toggletip: click to toggle, Escape handled by document listener
+        return {
+          ...baseProps,
+          onKeyDown,
+          'aria-expanded': visibility ? 'true' : 'false',
+          'aria-controls': _id,
+          onClick: composeEventHandlers(onClick, handleToggletipTriggerClick),
+          onBlur: composeEventHandlers(onBlur, handleToggletipBlur)
+        };
+      }
+
+      // Regular tooltip: Escape handled here (trigger must have focus)
+      return {
+        ...baseProps,
+        onKeyDown: composeEventHandlers(onKeyDown, (event: React.KeyboardEvent) => {
+          if (event.key === KEYS.ESCAPE) {
+            handleEscapeKey();
+          }
+        }),
+        onBlur: composeEventHandlers(onBlur, () => closeTooltip(0)),
+        onMouseEnter: composeEventHandlers(onMouseEnter, () => openTooltip()),
+        onMouseLeave: composeEventHandlers(onMouseLeave, () => closeTooltip()),
+        onFocus: composeEventHandlers(onFocus, event => {
+          // Prevent tooltip on implicit focus (i.e. `restoreFocus` in modals)
+          if (event.currentTarget.matches(':focus-visible')) {
+            openTooltip();
+          }
+        }),
+        [isLabel ? 'aria-labelledby' : 'aria-describedby']: _id
+      };
+    },
+    [
+      _id,
+      isLabel,
+      isToggletip,
+      visibility,
+      handleToggletipTriggerClick,
+      handleToggletipBlur,
+      handleEscapeKey,
+      closeTooltip,
+      openTooltip,
+      triggerRef
+    ]
   );
 
   const getTooltipProps = useCallback<IUseTooltipReturnValue['getTooltipProps']>(
-    ({ role = 'tooltip', onMouseEnter, onMouseLeave, ...other } = {}) => ({
-      role,
-      onMouseEnter: composeEventHandlers(onMouseEnter, () => openTooltip()),
-      onMouseLeave: composeEventHandlers(onMouseLeave, () => closeTooltip()),
-      'aria-hidden': !visibility,
-      id: _id,
+    ({
+      role = isToggletip ? 'status' : 'tooltip',
+      onMouseEnter,
+      onMouseLeave,
+      onBlur,
       ...other
-    }),
-    [_id, closeTooltip, openTooltip, visibility]
+    } = {}) => {
+      const baseProps = {
+        role,
+        id: _id,
+        ...other
+      };
+
+      if (isToggletip) {
+        return {
+          ...baseProps,
+          ref: tooltipRef as any,
+          onBlur: composeEventHandlers(onBlur, handleToggletipBlur)
+        };
+      }
+
+      return {
+        ...baseProps,
+        'aria-hidden': !visibility,
+        onMouseEnter: composeEventHandlers(onMouseEnter, () => openTooltip()),
+        onMouseLeave: composeEventHandlers(onMouseLeave, () => closeTooltip())
+      };
+    },
+    [_id, isToggletip, tooltipRef, handleToggletipBlur, closeTooltip, openTooltip, visibility]
   );
 
   return useMemo<IUseTooltipReturnValue>(
     () => ({
       isVisible: visibility,
+      isAnnouncementReady: isToggletip ? isAnnouncementReady : undefined,
       getTooltipProps,
       getTriggerProps,
       openTooltip,
       closeTooltip
     }),
-    [closeTooltip, getTooltipProps, getTriggerProps, openTooltip, visibility]
+    [
+      closeTooltip,
+      getTooltipProps,
+      getTriggerProps,
+      openTooltip,
+      visibility,
+      isToggletip,
+      isAnnouncementReady
+    ]
   );
 };
