@@ -253,7 +253,7 @@ export const useTooltip = <T extends HTMLElement = HTMLElement>({
   useEffect(() => {
     if (isToggletip && tooltipRef.current && visibility) {
       const interactiveElements = tooltipRef.current.querySelectorAll(
-        'a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        'a, button, input, select, textarea, [tabindex]:not([tabindex="-1"]), [contenteditable]'
       );
 
       if (interactiveElements.length > 0) {
