@@ -251,21 +251,62 @@ export const useTooltip = <T extends HTMLElement = HTMLElement>({
 
   // Warn developers if interactive elements are added to toggletips
   useEffect(() => {
-    if (isToggletip && tooltipRef.current && visibility) {
-      const interactiveElements = tooltipRef.current.querySelectorAll(
-        'a, button, input, select, textarea, [tabindex]:not([tabindex="-1"]), [contenteditable]'
-      );
-
-      if (interactiveElements.length > 0) {
-        // eslint-disable-next-line no-console
-        console.warn(
-          'Garden Warning: Toggletips should not contain interactive elements. ' +
-            'Use Modal for complex forms or Tooltip Dialog for lightweight interactive overlays. ' +
-            'See https://garden.zendesk.com/components/tooltip-dialog'
+    if (process.env.NODE_ENV !== 'production') {
+      if (isToggletip && tooltipRef.current && visibility) {
+        const interactiveElements = tooltipRef.current.querySelectorAll(
+          'a, button, input, select, textarea, [tabindex]:not([tabindex="-1"]), [contenteditable]'
         );
+
+        if (interactiveElements.length > 0) {
+          // eslint-disable-next-line no-console
+          console.warn(
+            'Garden Warning: Toggletips should not contain interactive elements. ' +
+              'Use Modal for complex forms or Tooltip Dialog for lightweight interactive overlays. ' +
+              'See https://garden.zendesk.com/components/tooltip-dialog'
+          );
+        }
       }
     }
   }, [isToggletip, visibility]);
+
+  // Warn developers if toggletip trigger is not a button element
+  useEffect(() => {
+    if (process.env.NODE_ENV !== 'production') {
+      if (!isToggletip || !triggerRef.current) return;
+
+      const trigger = triggerRef.current;
+      const tagName = trigger.tagName.toLowerCase();
+
+      if (tagName !== 'button') {
+        // eslint-disable-next-line no-console
+        console.warn(
+          'Garden Warning: Toggletip trigger must be a <button> element. ' +
+            'Using role="button" on non-button elements does not provide equivalent ' +
+            'keyboard focus behavior and screen reader semantics.'
+        );
+      }
+    }
+  }, [isToggletip, triggerRef]);
+
+  // Warn developers if toggletip trigger lacks an accessible name
+  useEffect(() => {
+    if (process.env.NODE_ENV !== 'production') {
+      if (!isToggletip || !triggerRef.current) return;
+
+      const trigger = triggerRef.current;
+      const hasAriaLabel = trigger.hasAttribute('aria-label');
+      const hasAriaLabelledBy = trigger.hasAttribute('aria-labelledby');
+      const hasVisibleText = (trigger.textContent?.trim().length ?? 0) > 0;
+
+      if (!hasAriaLabel && !hasAriaLabelledBy && !hasVisibleText) {
+        // eslint-disable-next-line no-console
+        console.warn(
+          'Garden Warning: Toggletip trigger should have an accessible name. ' +
+            'Add visible text content, aria-label, or aria-labelledby.'
+        );
+      }
+    }
+  }, [isToggletip, triggerRef]);
 
   /*
    * Prop getters

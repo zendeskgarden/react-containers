@@ -945,5 +945,126 @@ describe('TooltipContainer', () => {
         expect(getByRole('status')).toHaveTextContent('tooltip content');
       });
     });
+
+    describe('Development warnings', () => {
+      let consoleWarnSpy: jest.SpyInstance;
+
+      beforeEach(() => {
+        consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation();
+      });
+
+      afterEach(() => {
+        consoleWarnSpy.mockRestore();
+      });
+
+      it('warns when trigger is not a button element', () => {
+        const ToggletipWithDivTrigger = () => {
+          const triggerRef = createRef<HTMLDivElement>();
+
+          return (
+            <TooltipContainer id={TOOLTIP_ID} isToggletip triggerRef={triggerRef}>
+              {({ getTooltipProps, getTriggerProps, isAnnouncementReady }) => (
+                <>
+                  <div {...getTriggerProps()} data-testid="div-trigger">
+                    trigger
+                  </div>
+                  <div {...getTooltipProps()}>{isAnnouncementReady ? 'tooltip content' : null}</div>
+                </>
+              )}
+            </TooltipContainer>
+          );
+        };
+
+        render(<ToggletipWithDivTrigger />);
+
+        expect(consoleWarnSpy).toHaveBeenCalledWith(
+          expect.stringContaining('must be a <button> element')
+        );
+      });
+
+      it('warns when trigger has role="button" instead of being a button element', () => {
+        const ToggletipWithRoleButton = () => {
+          const triggerRef = createRef<HTMLDivElement>();
+
+          return (
+            <TooltipContainer id={TOOLTIP_ID} isToggletip triggerRef={triggerRef}>
+              {({ getTooltipProps, getTriggerProps, isAnnouncementReady }) => (
+                <>
+                  {/* eslint-disable-next-line jsx-a11y/prefer-tag-over-role */}
+                  <div {...getTriggerProps()} role="button">
+                    trigger
+                  </div>
+                  <div {...getTooltipProps()}>{isAnnouncementReady ? 'tooltip content' : null}</div>
+                </>
+              )}
+            </TooltipContainer>
+          );
+        };
+
+        render(<ToggletipWithRoleButton />);
+
+        expect(consoleWarnSpy).toHaveBeenCalledWith(
+          expect.stringContaining('must be a <button> element')
+        );
+      });
+
+      it('warns when trigger lacks an accessible name', () => {
+        const ToggletipWithoutName = () => {
+          const triggerRef = createRef<HTMLButtonElement>();
+
+          return (
+            <TooltipContainer id={TOOLTIP_ID} isToggletip triggerRef={triggerRef}>
+              {({ getTooltipProps, getTriggerProps, isAnnouncementReady }) => (
+                <>
+                  <button {...getTriggerProps()} type="button">
+                    {/* No text content */}
+                  </button>
+                  <div {...getTooltipProps()}>{isAnnouncementReady ? 'tooltip content' : null}</div>
+                </>
+              )}
+            </TooltipContainer>
+          );
+        };
+
+        render(<ToggletipWithoutName />);
+
+        expect(consoleWarnSpy).toHaveBeenCalledWith(
+          expect.stringContaining('should have an accessible name')
+        );
+      });
+
+      it('does not warn when trigger has aria-label', () => {
+        const ToggletipWithAriaLabel = () => {
+          const triggerRef = createRef<HTMLButtonElement>();
+
+          return (
+            <TooltipContainer id={TOOLTIP_ID} isToggletip triggerRef={triggerRef}>
+              {({ getTooltipProps, getTriggerProps, isAnnouncementReady }) => (
+                <>
+                  <button {...getTriggerProps()} type="button" aria-label="More info">
+                    {/* Icon only, no text */}
+                  </button>
+                  <div {...getTooltipProps()}>{isAnnouncementReady ? 'tooltip content' : null}</div>
+                </>
+              )}
+            </TooltipContainer>
+          );
+        };
+
+        render(<ToggletipWithAriaLabel />);
+
+        expect(consoleWarnSpy).not.toHaveBeenCalledWith(
+          expect.stringContaining('should have an accessible name')
+        );
+      });
+
+      it('does not warn when trigger has visible text', () => {
+        render(<ToggletipExample />);
+
+        expect(consoleWarnSpy).not.toHaveBeenCalledWith(
+          expect.stringContaining('should have an accessible name')
+        );
+      });
+    });
   });
 });
