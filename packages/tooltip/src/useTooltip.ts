@@ -78,15 +78,14 @@ export const useTooltip = <T extends HTMLElement = HTMLElement>({
       const timerId = setTimeout(() => {
         if (isMounted.current) {
           setVisibility(false);
+          // Reset announcement state together with visibility to avoid flash
+          if (isToggletip) {
+            setIsAnnouncementReady(false);
+          }
         }
       }, delayMs);
 
       closeTooltipTimeoutId.current = Number(timerId);
-
-      // Reset announcement state immediately for toggletips
-      if (isToggletip) {
-        setIsAnnouncementReady(false);
-      }
     },
     [delayMilliseconds, isToggletip]
   );
@@ -108,22 +107,22 @@ export const useTooltip = <T extends HTMLElement = HTMLElement>({
   }, [visibility, closeTooltip, windowProp, documentProp, triggerRef]);
 
   const handleToggletipTriggerClick = useCallback(() => {
-    if (visibility) {
-      // Re-announcement pattern: clear live region content, wait 100ms, then repopulate
-      // Visual tooltip stays open, only announcement content changes
-      setIsAnnouncementReady(false);
-      clearTimeout(announcementTimeoutId.current);
-      announcementTimeoutId.current = Number(
-        setTimeout(() => {
-          if (isMounted.current) {
-            setIsAnnouncementReady(true);
-          }
-        }, 100)
-      );
-    } else {
+    // Inclusive Components pattern: every click clears then repopulates the live region
+    // after 100ms. This ensures screen readers announce the content on every click,
+    // whether opening for the first time or re-clicking when already open.
+    if (!visibility) {
       openTooltip(0);
-      setIsAnnouncementReady(true);
     }
+
+    setIsAnnouncementReady(false);
+    clearTimeout(announcementTimeoutId.current);
+    announcementTimeoutId.current = Number(
+      setTimeout(() => {
+        if (isMounted.current) {
+          setIsAnnouncementReady(true);
+        }
+      }, 100)
+    );
   }, [visibility, openTooltip]);
 
   const handleToggletipBlur = useCallback(() => {
