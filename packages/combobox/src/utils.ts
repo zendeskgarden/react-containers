@@ -46,6 +46,9 @@ export const toType = (downshiftType: string) => {
   return typeMap[downshiftType] || downshiftType;
 };
 
+export const EXPANSION_CHANGE_TYPE = toType(useDownshift.stateChangeTypes.FunctionOpenMenu);
+export const INPUT_CHANGE_TYPE = toType(useDownshift.stateChangeTypes.InputChange);
+
 /**
  * Convert the given option value to a label.
  *

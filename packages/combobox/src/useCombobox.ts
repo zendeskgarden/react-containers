@@ -27,7 +27,7 @@ import {
   UseComboboxStateChangeTypes as IDownshiftStateChangeType
 } from 'downshift';
 import { IOption, IUseComboboxProps, IUseComboboxReturnValue, OptionValue } from './types';
-import { toLabel, toType } from './utils';
+import { EXPANSION_CHANGE_TYPE, INPUT_CHANGE_TYPE, toLabel, toType } from './utils';
 
 export const useCombobox = <
   T extends HTMLElement = HTMLElement,
@@ -78,6 +78,7 @@ export const useCombobox = <
   const [downshiftInputValue, setDownshiftInputValue] = useState(inputValue);
   const [matchValue, setMatchValue] = useState('');
   const useInputValueRef = useRef(true);
+  const skipNextInputChangeRef = useRef(false);
   const matchTimeoutRef = useRef<number>();
   const previousStateRef = useRef<IPreviousState>();
   const prefix = useId(idPrefix);
@@ -187,15 +188,36 @@ export const useCombobox = <
   const handleDownshiftStateChange = useCallback<
     NonNullable<IUseDownshiftProps<OptionValue | OptionValue[]>['onStateChange']>
   >(
-    ({ type, isOpen, selectedItem, inputValue: _inputValue, highlightedIndex }) =>
+    ({ type, isOpen, selectedItem, inputValue: _inputValue, highlightedIndex }) => {
+      const mappedType = toType(type);
+
+      if (mappedType === EXPANSION_CHANGE_TYPE && isOpen === undefined) {
+        return;
+      }
+
+      if (mappedType === INPUT_CHANGE_TYPE && skipNextInputChangeRef.current) {
+        skipNextInputChangeRef.current = false;
+
+        return;
+      }
+
+      const resolvedInputValue =
+        mappedType === INPUT_CHANGE_TYPE
+          ? (_inputValue ?? inputRef.current?.value ?? downshiftInputValue)
+          : _inputValue;
+      // Omit inputValue when closing via fn:setExpansion to avoid overwriting the controlled value.
+      const shouldIncludeInputValue = mappedType !== EXPANSION_CHANGE_TYPE || isOpen === true;
+
       onChange({
-        type: toType(type),
+        type: mappedType,
         ...(isOpen !== undefined && { isExpanded: isOpen }),
         ...(selectedItem !== undefined && { selectionValue: selectedItem }),
-        ...(_inputValue !== undefined && { inputValue: _inputValue }),
+        ...(shouldIncludeInputValue &&
+          resolvedInputValue !== undefined && { inputValue: resolvedInputValue }),
         ...(highlightedIndex !== undefined && { activeIndex: highlightedIndex })
-      }),
-    [onChange]
+      });
+    },
+    [downshiftInputValue, inputRef, onChange]
   );
 
   const stateReducer: IUseDownshiftProps<any /* vs. state/changes `selectedItem` type flipping */>['stateReducer'] =
@@ -675,6 +697,15 @@ export const useCombobox = <
                 type: useDownshift.stateChangeTypes.InputChange,
                 inputValue: event.target.value
               });
+            } else {
+              // For controlled inputs, Downshift omits inputValue from onStateChange.
+              // Call onChange directly and suppress the subsequent Downshift mirror event.
+              skipNextInputChangeRef.current = true;
+              onChange({
+                type: INPUT_CHANGE_TYPE,
+                isExpanded: true,
+                inputValue: event.target.value
+              });
             }
           }
         };
@@ -746,6 +777,7 @@ export const useCombobox = <
       hasMessage,
       inputValue,
       inputRef,
+      onChange,
       triggerRef,
       disabled,
       isAutocomplete,
