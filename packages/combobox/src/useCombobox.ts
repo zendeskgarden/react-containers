@@ -78,7 +78,7 @@ export const useCombobox = <
   const [downshiftInputValue, setDownshiftInputValue] = useState(inputValue);
   const [matchValue, setMatchValue] = useState('');
   const useInputValueRef = useRef(true);
-  const skipNextInputChangeRef = useRef(false);
+  const skipNextInputChangeRef = useRef<string | null>(null);
   const matchTimeoutRef = useRef<number>();
   const previousStateRef = useRef<IPreviousState>();
   const prefix = useId(idPrefix);
@@ -195,10 +195,13 @@ export const useCombobox = <
         return;
       }
 
-      if (mappedType === INPUT_CHANGE_TYPE && skipNextInputChangeRef.current) {
-        skipNextInputChangeRef.current = false;
+      if (mappedType === INPUT_CHANGE_TYPE && skipNextInputChangeRef.current !== null) {
+        const resolvedForSkipCheck = _inputValue ?? inputRef.current?.value ?? downshiftInputValue;
+        const skip = skipNextInputChangeRef.current === resolvedForSkipCheck;
 
-        return;
+        skipNextInputChangeRef.current = null;
+
+        if (skip) return;
       }
 
       const resolvedInputValue =
@@ -700,7 +703,7 @@ export const useCombobox = <
             } else {
               // For controlled inputs, Downshift omits inputValue from onStateChange.
               // Call onChange directly and suppress the subsequent Downshift mirror event.
-              skipNextInputChangeRef.current = true;
+              skipNextInputChangeRef.current = event.target.value;
               onChange({
                 type: INPUT_CHANGE_TYPE,
                 isExpanded: true,

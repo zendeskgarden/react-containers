@@ -892,6 +892,21 @@ describe('ComboboxContainer', () => {
           expect(changeTypes).toMatchObject(['input:change', 'input:change']);
         });
 
+        it('includes inputValue in input:change payload for controlled input', () => {
+          fireEvent.change(input, { target: { value: 'a' } });
+
+          const inputChangeCall = handleChange.mock.calls.find(
+            ([change]) => change.type === 'input:change'
+          );
+
+          expect(inputChangeCall).toBeDefined();
+          expect(inputChangeCall![0]).toMatchObject({
+            type: 'input:change',
+            isExpanded: true,
+            inputValue: 'a'
+          });
+        });
+
         it('handles controlled selection as expected', () => {
           const _options = [{ value: 'test-1' }, { value: 'test-2' }, { value: 'test-3' }];
 
