@@ -457,6 +457,23 @@ describe('ComboboxContainer', () => {
             listboxOptions[0].getAttribute('id')
           );
         });
+
+        it('decouples activation from expansion — opens without activating, then activates on arrow', async () => {
+          // Expansion must not imply activation: opening the listbox leaves
+          // `aria-activedescendant` empty, and only an explicit arrow press
+          // activates an option.
+          await user.click(input);
+
+          expect(input).toHaveAttribute('aria-expanded', 'true');
+          expect(input).toHaveAttribute('aria-activedescendant', '');
+
+          await user.keyboard('{ArrowDown}');
+
+          expect(input).toHaveAttribute(
+            'aria-activedescendant',
+            listboxOptions[0].getAttribute('id')
+          );
+        });
       });
 
       describe('on selection', () => {
