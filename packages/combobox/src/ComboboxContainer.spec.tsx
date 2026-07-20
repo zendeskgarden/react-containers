@@ -405,6 +405,60 @@ describe('ComboboxContainer', () => {
         });
       });
 
+      describe('when editing with list autocomplete', () => {
+        // For an editable autocomplete combobox, `aria-activedescendant` must
+        // stay empty while the user types and deletes so assistive technology
+        // echoes the edited character. It becomes populated only once the user
+        // arrows into the listbox — the APG "list autocomplete with manual
+        // selection" behavior:
+        // https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-autocomplete-list/
+        let input: HTMLElement;
+        let listboxOptions: HTMLElement[];
+
+        beforeEach(() => {
+          const { getByTestId, getAllByRole } = render(
+            <TestCombobox layout={layout} options={options} />
+          );
+
+          input = getByTestId('input');
+          listboxOptions = getAllByRole('option');
+
+          input.focus();
+        });
+
+        it('activates no option when the listbox opens', async () => {
+          await user.click(input);
+
+          expect(input).toHaveAttribute('aria-expanded', 'true');
+          expect(input).toHaveAttribute('aria-activedescendant', '');
+        });
+
+        it('activates no option while typing', async () => {
+          await user.click(input);
+          await user.keyboard('Test');
+
+          expect(input).toHaveAttribute('aria-activedescendant', '');
+        });
+
+        it('activates no option while deleting', async () => {
+          await user.click(input);
+          await user.keyboard('Test');
+          await user.keyboard('{Backspace}');
+
+          expect(input).toHaveAttribute('aria-activedescendant', '');
+        });
+
+        it('activates the first option once the user arrows into the listbox', async () => {
+          await user.click(input);
+          await user.keyboard('{ArrowDown}');
+
+          expect(input).toHaveAttribute(
+            'aria-activedescendant',
+            listboxOptions[0].getAttribute('id')
+          );
+        });
+      });
+
       describe('on selection', () => {
         let input: HTMLElement;
         let listboxOptions: HTMLElement[];

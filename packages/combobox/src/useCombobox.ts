@@ -145,13 +145,11 @@ export const useCombobox = <
   const initialInputValue = isMultiselectable
     ? ''
     : toLabel(cache.labels, initialSelectionValue as string);
-  const _defaultActiveIndex = useMemo(() => {
-    if (defaultActiveIndex === undefined) {
-      return isAutocomplete && isEditable ? 0 : undefined;
-    }
-
-    return defaultActiveIndex;
-  }, [defaultActiveIndex, isAutocomplete, isEditable]);
+  // Do not auto-activate the first option for editable autocomplete:
+  // `aria-activedescendant` must stay empty while typing/deleting so AT
+  // echoes edited characters (APG list autocomplete with manual selection).
+  // Consumers can still opt in via `defaultActiveIndex`.
+  const _defaultActiveIndex = defaultActiveIndex;
 
   if (useInputValueRef.current && inputValue !== downshiftInputValue) {
     // Update local state with Downshift `inputValue` for non-buggy cases.
