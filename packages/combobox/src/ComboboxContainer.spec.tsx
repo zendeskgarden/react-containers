@@ -476,6 +476,30 @@ describe('ComboboxContainer', () => {
         });
       });
 
+      describe('when editing with a controlled active index', () => {
+        // A controlled `activeIndex` must take precedence over the (now
+        // opt-in) `defaultActiveIndex` layer that the deleted-character fix
+        // changed. Removing the auto-activate default only affects uncontrolled
+        // usage: an editable autocomplete combobox driven by a controlled
+        // `activeIndex` still activates that option, so the fix does not
+        // interfere with controlled comboboxes.
+        it('activates the controlled option on open', async () => {
+          const { getByTestId, getAllByRole } = render(
+            <TestCombobox layout={layout} options={options} activeIndex={0} />
+          );
+          const input = getByTestId('input');
+          const listboxOptions = getAllByRole('option');
+
+          await user.click(input);
+
+          expect(input).toHaveAttribute('aria-expanded', 'true');
+          expect(input).toHaveAttribute(
+            'aria-activedescendant',
+            listboxOptions[0].getAttribute('id')
+          );
+        });
+      });
+
       describe('on selection', () => {
         let input: HTMLElement;
         let listboxOptions: HTMLElement[];
