@@ -405,6 +405,154 @@ describe('ComboboxContainer', () => {
         });
       });
 
+      describe('when editing with list autocomplete', () => {
+        // For an editable autocomplete combobox, `aria-activedescendant` must
+        // stay empty while the user types and deletes so assistive technology
+        // echoes the edited character. It becomes populated only once the user
+        // arrows into the listbox — the APG "list autocomplete with manual
+        // selection" behavior:
+        // https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-autocomplete-list/
+        let input: HTMLElement;
+        let listboxOptions: HTMLElement[];
+
+        beforeEach(() => {
+          const { getByTestId, getAllByRole } = render(
+            <TestCombobox layout={layout} options={options} />
+          );
+
+          input = getByTestId('input');
+          listboxOptions = getAllByRole('option');
+
+          input.focus();
+        });
+
+        it('activates no option when the listbox opens', async () => {
+          await user.click(input);
+
+          expect(input).toHaveAttribute('aria-expanded', 'true');
+          expect(input).toHaveAttribute('aria-activedescendant', '');
+        });
+
+        it('activates no option while typing', async () => {
+          await user.click(input);
+          await user.keyboard('Test');
+
+          expect(input).toHaveAttribute('aria-activedescendant', '');
+        });
+
+        it('activates no option while deleting', async () => {
+          await user.click(input);
+          await user.keyboard('Test');
+          await user.keyboard('{Backspace}');
+
+          expect(input).toHaveAttribute('aria-activedescendant', '');
+        });
+
+        it('activates the first option once the user arrows into the listbox', async () => {
+          await user.click(input);
+          await user.keyboard('{ArrowDown}');
+
+          expect(input).toHaveAttribute(
+            'aria-activedescendant',
+            listboxOptions[0].getAttribute('id')
+          );
+        });
+
+        it('clears activation when editing resumes after keyboard navigation', async () => {
+          // Resuming editing after arrowing into the listbox must clear
+          // `aria-activedescendant` again so assistive technology echoes the
+          // edited character instead of the active option.
+          await user.click(input);
+          await user.keyboard('{ArrowDown}');
+
+          expect(input).toHaveAttribute(
+            'aria-activedescendant',
+            listboxOptions[0].getAttribute('id')
+          );
+
+          await user.keyboard('T');
+
+          expect(input).toHaveAttribute('aria-activedescendant', '');
+
+          await user.keyboard('{Backspace}');
+
+          expect(input).toHaveAttribute('aria-activedescendant', '');
+        });
+
+        it('decouples activation from expansion — opens without activating, then activates on arrow', async () => {
+          // Expansion must not imply activation: opening the listbox leaves
+          // `aria-activedescendant` empty, and only an explicit arrow press
+          // activates an option.
+          await user.click(input);
+
+          expect(input).toHaveAttribute('aria-expanded', 'true');
+          expect(input).toHaveAttribute('aria-activedescendant', '');
+
+          await user.keyboard('{ArrowDown}');
+
+          expect(input).toHaveAttribute(
+            'aria-activedescendant',
+            listboxOptions[0].getAttribute('id')
+          );
+        });
+      });
+
+      describe('when editing with a controlled active index', () => {
+        // A controlled `activeIndex` must take precedence over the (now
+        // opt-in) `defaultActiveIndex` layer that the deleted-character fix
+        // changed. Removing the auto-activate default only affects uncontrolled
+        // usage: an editable autocomplete combobox driven by a controlled
+        // `activeIndex` still activates that option, so the fix does not
+        // interfere with controlled comboboxes.
+        it('activates the controlled option on open', async () => {
+          const { getByTestId, getAllByRole } = render(
+            <TestCombobox layout={layout} options={options} activeIndex={0} />
+          );
+          const input = getByTestId('input');
+          const listboxOptions = getAllByRole('option');
+
+          await user.click(input);
+
+          expect(input).toHaveAttribute('aria-expanded', 'true');
+          expect(input).toHaveAttribute(
+            'aria-activedescendant',
+            listboxOptions[0].getAttribute('id')
+          );
+        });
+      });
+
+      describe('when editing with an opt-in default active index', () => {
+        // `defaultActiveIndex={0}` is the documented escape hatch for restoring
+        // the pre-fix auto-activation on a fresh, uncontrolled combobox. It is
+        // NOT accessible for editable autocomplete: it keeps
+        // `aria-activedescendant` populated while typing, which is the
+        // char-echo regression the fix removed (APG list autocomplete with
+        // manual selection). Asserted here so the tradeoff is explicit.
+        it('activates the default option on open and keeps it active while typing', async () => {
+          const { getByTestId, getAllByRole } = render(
+            <TestCombobox layout={layout} options={options} defaultActiveIndex={0} />
+          );
+          const input = getByTestId('input');
+          const listboxOptions = getAllByRole('option');
+
+          await user.click(input);
+
+          expect(input).toHaveAttribute('aria-expanded', 'true');
+          expect(input).toHaveAttribute(
+            'aria-activedescendant',
+            listboxOptions[0].getAttribute('id')
+          );
+
+          // Tradeoff: activation persists through editing rather than clearing.
+          await user.keyboard('Te');
+
+          expect(input).toHaveAttribute(
+            'aria-activedescendant',
+            listboxOptions[0].getAttribute('id')
+          );
+        });
+      });
+
       describe('on selection', () => {
         let input: HTMLElement;
         let listboxOptions: HTMLElement[];
