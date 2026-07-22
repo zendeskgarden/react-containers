@@ -145,10 +145,11 @@ export const useCombobox = <
   const initialInputValue = isMultiselectable
     ? ''
     : toLabel(cache.labels, initialSelectionValue as string);
-  // Do not auto-activate the first option for editable autocomplete:
+  // Do not auto-activate the first option for editable autocomplete.
   // `aria-activedescendant` must stay empty while typing/deleting so AT
   // echoes edited characters (APG list autocomplete with manual selection).
-  // Consumers can still opt in via `defaultActiveIndex`.
+  // Consumers can restore automatic first-option activation by passing defaultActiveIndex={0};
+  // the active index remains uncontrolled afterward.
   const _defaultActiveIndex = defaultActiveIndex;
 
   if (useInputValueRef.current && inputValue !== downshiftInputValue) {
