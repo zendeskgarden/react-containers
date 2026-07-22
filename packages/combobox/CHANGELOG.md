@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.9](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-combobox@2.0.8...@zendeskgarden/container-combobox@2.0.9) (2026-07-22)
+
+### Bug Fixes
+
+- **combobox:** don't auto-activate first option while editing autocomplete ([#737](https://github.com/zendeskgarden/react-containers/issues/737)) ([4757716](https://github.com/zendeskgarden/react-containers/commit/4757716971ccc6325d8b75d871ce9eda322216a8))
+
 ## [2.0.8](https://github.com/zendeskgarden/react-containers/compare/@zendeskgarden/container-combobox@2.0.7...@zendeskgarden/container-combobox@2.0.8) (2025-12-15)
 
 **Note:** Version bump only for package @zendeskgarden/container-combobox
