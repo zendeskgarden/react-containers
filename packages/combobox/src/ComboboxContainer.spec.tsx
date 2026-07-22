@@ -458,6 +458,27 @@ describe('ComboboxContainer', () => {
           );
         });
 
+        it('clears activation when editing resumes after keyboard navigation', async () => {
+          // Resuming editing after arrowing into the listbox must clear
+          // `aria-activedescendant` again so assistive technology echoes the
+          // edited character instead of the active option.
+          await user.click(input);
+          await user.keyboard('{ArrowDown}');
+
+          expect(input).toHaveAttribute(
+            'aria-activedescendant',
+            listboxOptions[0].getAttribute('id')
+          );
+
+          await user.keyboard('T');
+
+          expect(input).toHaveAttribute('aria-activedescendant', '');
+
+          await user.keyboard('{Backspace}');
+
+          expect(input).toHaveAttribute('aria-activedescendant', '');
+        });
+
         it('decouples activation from expansion — opens without activating, then activates on arrow', async () => {
           // Expansion must not imply activation: opening the listbox leaves
           // `aria-activedescendant` empty, and only an explicit arrow press
@@ -493,6 +514,38 @@ describe('ComboboxContainer', () => {
           await user.click(input);
 
           expect(input).toHaveAttribute('aria-expanded', 'true');
+          expect(input).toHaveAttribute(
+            'aria-activedescendant',
+            listboxOptions[0].getAttribute('id')
+          );
+        });
+      });
+
+      describe('when editing with an opt-in default active index', () => {
+        // `defaultActiveIndex={0}` is the documented escape hatch for restoring
+        // the pre-fix auto-activation on a fresh, uncontrolled combobox. It is
+        // NOT accessible for editable autocomplete: it keeps
+        // `aria-activedescendant` populated while typing, which is the
+        // char-echo regression the fix removed (APG list autocomplete with
+        // manual selection). Asserted here so the tradeoff is explicit.
+        it('activates the default option on open and keeps it active while typing', async () => {
+          const { getByTestId, getAllByRole } = render(
+            <TestCombobox layout={layout} options={options} defaultActiveIndex={0} />
+          );
+          const input = getByTestId('input');
+          const listboxOptions = getAllByRole('option');
+
+          await user.click(input);
+
+          expect(input).toHaveAttribute('aria-expanded', 'true');
+          expect(input).toHaveAttribute(
+            'aria-activedescendant',
+            listboxOptions[0].getAttribute('id')
+          );
+
+          // Tradeoff: activation persists through editing rather than clearing.
+          await user.keyboard('Te');
+
           expect(input).toHaveAttribute(
             'aria-activedescendant',
             listboxOptions[0].getAttribute('id')
