@@ -19,14 +19,46 @@ export interface IUseTooltipProps<T = HTMLElement> {
   isLabel?: boolean;
   /** Displays the tooltip on initial render */
   isVisible?: boolean;
+  /**
+   * Enables toggletip behavior (click-to-toggle) instead of tooltip behavior (hover/focus).
+   * When true, tooltip opens/closes on click, closes on outside clicks and Escape key,
+   * and uses role="status" for live region announcements.
+   *
+   * Note: Toggletip triggers must be `<button>` elements for proper accessibility.
+   */
+  isToggletip?: boolean;
   /** Provides ref access to the underlying trigger element */
   triggerRef: RefObject<T>;
+  /** Sets the window where the tooltip is rendered (for SSR compatibility) */
+  window?: Window;
+  /** Sets the document where the tooltip is rendered (for SSR compatibility) */
+  document?: Document | ShadowRoot;
 }
+
+/**
+ * Helper type for toggletip usage that enforces HTMLButtonElement as the trigger type.
+ * Use this when calling useTooltip with isToggletip: true to get compile-time
+ * enforcement that the trigger ref points to a button element.
+ *
+ * @example
+ * const triggerRef = useRef<HTMLButtonElement>(null);
+ * const tooltip = useTooltip<HTMLButtonElement>({
+ *   isToggletip: true,
+ *   triggerRef
+ * } satisfies IUseToggletipProps);
+ */
+export type IUseToggletipProps = IUseTooltipProps<HTMLButtonElement> & { isToggletip: true };
 
 export interface IUseTooltipReturnValue {
   getTooltipProps: <T extends Element>(props?: HTMLProps<T>) => HTMLProps<T>;
   getTriggerProps: <T extends Element>(props?: HTMLProps<T>) => HTMLProps<T>;
   isVisible?: boolean;
+  /**
+   * Controls whether toggletip content should be populated in the live region for screen reader announcements.
+   * When re-clicking an open toggletip, this toggles false→true to trigger re-announcement.
+   * Only defined when isToggletip is true.
+   */
+  isAnnouncementReady?: boolean;
   openTooltip: (delayMs?: number) => void;
   closeTooltip: (delayMs?: number) => void;
 }
@@ -47,6 +79,7 @@ export interface ITooltipContainerProps<T = HTMLElement> extends IUseTooltipProp
     getTriggerProps: IUseTooltipReturnValue['getTriggerProps'];
     /* state */
     isVisible?: boolean;
+    isAnnouncementReady?: boolean;
     /* actions */
     openTooltip: IUseTooltipReturnValue['openTooltip'];
     closeTooltip: IUseTooltipReturnValue['closeTooltip'];
