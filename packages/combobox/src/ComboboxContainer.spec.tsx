@@ -206,6 +206,7 @@ describe('ComboboxContainer', () => {
         expect(input).toHaveAttribute('aria-expanded', 'false');
         expect(input).toHaveAttribute('aria-labelledby', label.getAttribute('id'));
         expect(input).toHaveAttribute('autocomplete', 'off');
+        expect(trigger).not.toHaveAttribute('aria-describedby');
         expect(listbox).toHaveAttribute('role', 'listbox');
         expect(listbox).toHaveAttribute('aria-label', 'Options');
         expect(option).toHaveAttribute('role', 'option');
@@ -218,16 +219,49 @@ describe('ComboboxContainer', () => {
           <TestCombobox layout={layout} options={options} isEditable={false} />
         );
         const label = getByTestId('label');
+        const hint = getByTestId('hint');
         const trigger = getByTestId('trigger');
         const input = getByTestId('input');
+        const message = getByTestId('message');
 
         expect(label).not.toHaveAttribute('for');
+        expect(trigger).toHaveAttribute('role', 'combobox');
         expect(trigger).toHaveAttribute('aria-haspopup', 'listbox');
+        expect(trigger).toHaveAttribute('aria-labelledby', label.getAttribute('id'));
+        expect(trigger).toHaveAttribute(
+          'aria-describedby',
+          `${hint.getAttribute('id')} ${message.getAttribute('id')}`
+        );
         expect(trigger).toHaveAttribute('tabIndex', '0');
         expect(input).not.toHaveAttribute('role');
         expect(input).toHaveAttribute('readOnly');
         expect(input).toHaveAttribute('aria-hidden', 'true');
         expect(input).toHaveAttribute('tabIndex', '-1');
+      });
+
+      it('omits non-editable trigger description without hint or message', () => {
+        const { getByTestId } = render(
+          <TestCombobox
+            layout={layout}
+            options={options}
+            isEditable={false}
+            hasHint={false}
+            hasMessage={false}
+          />
+        );
+
+        expect(getByTestId('trigger')).not.toHaveAttribute('aria-describedby');
+      });
+
+      it('describes the non-editable trigger by the message alone', () => {
+        const { getByTestId } = render(
+          <TestCombobox layout={layout} options={options} isEditable={false} hasHint={false} />
+        );
+
+        expect(getByTestId('trigger')).toHaveAttribute(
+          'aria-describedby',
+          getByTestId('message').getAttribute('id')
+        );
       });
 
       it('is in the tab sequence', async () => {

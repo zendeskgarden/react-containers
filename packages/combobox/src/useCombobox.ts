@@ -383,6 +383,22 @@ export const useCombobox = <
     getMessageProps: getFieldMessageProps
   } = useField({ hasHint, hasMessage });
 
+  // Describe the focusable combobox element (editable input or select-only
+  // trigger) by the field hint and message.
+  const ariaDescribedBy = useMemo(() => {
+    const describedBy = [];
+
+    if (hasHint) {
+      describedBy.push(idRef.current.hint);
+    }
+
+    if (hasMessage) {
+      describedBy.push(idRef.current.message);
+    }
+
+    return describedBy.length > 0 ? describedBy.join(' ') : undefined;
+  }, [hasHint, hasMessage]);
+
   /*
    * Effects
    */
@@ -583,6 +599,7 @@ export const useCombobox = <
           'aria-activedescendant': ariaActiveDescendant,
           'aria-haspopup': 'listbox',
           'aria-labelledby': idRef.current.label,
+          'aria-describedby': ariaDescribedBy,
           'aria-disabled': disabled || undefined,
           disabled: undefined,
           role: 'combobox',
@@ -613,7 +630,8 @@ export const useCombobox = <
       isAutocomplete,
       isEditable,
       isMultiselectable,
-      inputRef
+      inputRef,
+      ariaDescribedBy
     ]
   );
 
@@ -683,16 +701,6 @@ export const useCombobox = <
           triggerRef.current?.contains(event.target) &&
           event.stopPropagation();
 
-        const describedBy = [];
-
-        if (hasHint) {
-          describedBy.push(idRef.current.hint);
-        }
-
-        if (hasMessage) {
-          describedBy.push(idRef.current.message);
-        }
-
         return getDownshiftInputProps<any>({
           ...inputProps,
           disabled,
@@ -703,7 +711,7 @@ export const useCombobox = <
           ...getFieldInputProps({
             id: idRef.current.input,
             'aria-labelledby': idRef.current.label,
-            'aria-describedby': describedBy.length > 0 ? describedBy.join(' ') : undefined
+            'aria-describedby': ariaDescribedBy
           }),
           ...other
         } as IDownshiftInputProps);
@@ -741,8 +749,7 @@ export const useCombobox = <
       getDownshiftInputProps,
       getFieldInputProps,
       handleDownshiftStateChange,
-      hasHint,
-      hasMessage,
+      ariaDescribedBy,
       inputValue,
       inputRef,
       triggerRef,
