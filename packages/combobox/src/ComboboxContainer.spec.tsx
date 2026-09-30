@@ -26,6 +26,7 @@ interface ITestComboboxProps extends Omit<
   optGroupTestIdPrefix?: string;
   optionTestIdPrefix?: string;
   messageTestId?: string;
+  triggerDescribedBy?: string;
 }
 
 describe('ComboboxContainer', () => {
@@ -46,6 +47,7 @@ describe('ComboboxContainer', () => {
     optGroupTestIdPrefix = 'optgroup',
     optionTestIdPrefix = 'option',
     messageTestId = 'message',
+    triggerDescribedBy,
     ...props
   }: ITestComboboxProps) => {
     const triggerRef = createRef<HTMLDivElement>();
@@ -86,7 +88,10 @@ describe('ComboboxContainer', () => {
               </div>
             )}
             {layout === 'Garden' ? (
-              <div data-test-id={triggerTestId} {...getTriggerProps()}>
+              <div
+                data-test-id={triggerTestId}
+                {...getTriggerProps({ 'aria-describedby': triggerDescribedBy })}
+              >
                 {Array.isArray(selection) &&
                   selection.map(option => (
                     <button
@@ -104,7 +109,7 @@ describe('ComboboxContainer', () => {
             ) : (
               <div
                 data-test-id={!isEditable && triggerTestId}
-                {...(!isEditable && getTriggerProps())}
+                {...(!isEditable && getTriggerProps({ 'aria-describedby': triggerDescribedBy }))}
               >
                 {Array.isArray(selection) &&
                   selection.map(option => (
@@ -120,7 +125,11 @@ describe('ComboboxContainer', () => {
                   ))}
                 <input data-test-id={inputTestId} {...getInputProps()} />
                 {!!isEditable && (
-                  <button data-test-id={triggerTestId} {...getTriggerProps()} type="button" />
+                  <button
+                    data-test-id={triggerTestId}
+                    {...getTriggerProps({ 'aria-describedby': triggerDescribedBy })}
+                    type="button"
+                  />
                 )}
               </div>
             )}
@@ -262,6 +271,19 @@ describe('ComboboxContainer', () => {
           'aria-describedby',
           getByTestId('message').getAttribute('id')
         );
+      });
+
+      it('keeps a provided non-editable trigger description', () => {
+        const { getByTestId } = render(
+          <TestCombobox
+            layout={layout}
+            options={options}
+            isEditable={false}
+            triggerDescribedBy="custom"
+          />
+        );
+
+        expect(getByTestId('trigger')).toHaveAttribute('aria-describedby', 'custom');
       });
 
       it('is in the tab sequence', async () => {

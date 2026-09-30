@@ -599,7 +599,8 @@ export const useCombobox = <
           'aria-activedescendant': ariaActiveDescendant,
           'aria-haspopup': 'listbox',
           'aria-labelledby': idRef.current.label,
-          'aria-describedby': ariaDescribedBy,
+          /* Prefer a provided description, as `useField` does for the input */
+          'aria-describedby': other['aria-describedby'] || ariaDescribedBy,
           'aria-disabled': disabled || undefined,
           disabled: undefined,
           role: 'combobox',
