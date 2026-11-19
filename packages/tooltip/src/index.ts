@@ -11,4 +11,9 @@ export { useTooltip } from './useTooltip';
 /* Render-props */
 export { TooltipContainer } from './TooltipContainer';
 
-export type { ITooltipContainerProps, IUseTooltipProps, IUseTooltipReturnValue } from './types';
+export type {
+  ITooltipContainerProps,
+  IUseTooltipProps,
+  IUseTooltipReturnValue,
+  IUseToggletipProps
+} from './types';

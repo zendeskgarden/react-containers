@@ -9,6 +9,7 @@ import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { FocusStory } from './stories/FocusStory';
 import { MenuStory } from './stories/MenuStory';
+import { ToggletipStory } from './stories/ToggletipStory';
 
 const meta: Meta = { title: 'Packages/Tooltip/[patterns]' };
 
@@ -22,4 +23,9 @@ export const Focus: StoryObj<typeof FocusStory> = {
 export const Menu: StoryObj<typeof MenuStory> = {
   render: args => <MenuStory {...args} />,
   name: 'Menu'
+};
+
+export const Toggletip: StoryObj<typeof ToggletipStory> = {
+  render: args => <ToggletipStory {...args} />,
+  name: 'Toggletip'
 };
