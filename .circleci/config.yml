@@ -6,7 +6,9 @@ references:
   executor: &executor
     executor:
       name: node/default
-      tag: lts
+      # `netlifyDeploy` from @zendeskgarden/scripts runs netlify-cli@15.11.0,
+      # which crashes on Node 26. Return to `lts` once scripts supports Node 26.
+      tag: '24'
 
   workspace_root: &workspace_root ~/project
 
